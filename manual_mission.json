@@ -1,0 +1,4 @@
+{
+  "agent_id": "2",
+  "objective": "Use the 'db_health' tool to check the database status. Then use the 'write_file' tool to save the resulting JSON report to a file named 'health.log'. No conversation. Just execute."
+}

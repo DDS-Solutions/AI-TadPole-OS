@@ -1,0 +1,37 @@
+
+> tadpole-os@1.0.0 lint
+> eslint .
+
+
+C:\Users\Home Office_PC\.gemini\antigravity\playground\tadpole-os\src\App.tsx
+  1:31  error  'lazy' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\Home Office_PC\.gemini\antigravity\playground\tadpole-os\src\components\HierarchyNode.tsx
+  3:10  error  'Settings' is defined but never used      @typescript-eslint/no-unused-vars
+  3:20  error  'ChevronDown' is defined but never used   @typescript-eslint/no-unused-vars
+  3:33  error  'ChevronRight' is defined but never used  @typescript-eslint/no-unused-vars
+  3:47  error  'Activity' is defined but never used      @typescript-eslint/no-unused-vars
+  3:57  error  'Target' is defined but never used        @typescript-eslint/no-unused-vars
+
+C:\Users\Home Office_PC\.gemini\antigravity\playground\tadpole-os\src\components\ui\HeaderCarousel.tsx
+  50:8  warning  React Hook useEffect has a missing dependency: 'nextSlide'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\Home Office_PC\.gemini\antigravity\playground\tadpole-os\src\components\ui\PortalWindow.tsx
+  107:8  warning  React Hook useEffect has a missing dependency: 'title'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\Home Office_PC\.gemini\antigravity\playground\tadpole-os\src\hooks\useDashboardData.ts
+  57:36  error  Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+C:\Users\Home Office_PC\.gemini\antigravity\playground\tadpole-os\src\hooks\useDashboardData.ts:57:36
+  55 |     const recruitVelocity = useMemo(() => {
+  56 |         // We use a stable threshold for this render cycle
+> 57 |         const twentyFourHoursAgo = Date.now() - (24 * 60 * 60 * 1000);
+     |                                    ^^^^^^^^^^ Cannot call impure function
+  58 |         return agentsList.filter(a => {
+  59 |             const createdTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+  60 |             return createdTime > twentyFourHoursAgo;  react-hooks/purity
+
+Γ£û 9 problems (7 errors, 2 warnings)
+

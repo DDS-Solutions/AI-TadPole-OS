@@ -1,0 +1,19 @@
+    Checking server-rs v1.0.0 (C:\Users\Home Office_PC\.gemini\antigravity\playground\tadpole-os\server-rs)
+src\agent\continuity\scheduler.rs:2:5: warning: unused import: `std::sync::Arc`
+src\agent\continuity\scheduler.rs:8:5: warning: unused import: `crate::state::AppState`
+src\agent\continuity\scheduler.rs:260:36: warning: unused import: `Timelike`
+src\agent\memory.rs:2:5: warning: unused import: `std::path::PathBuf`
+src\agent\memory.rs:8:31: warning: unused imports: `FixedSizeListArray`, `Float32Array`, `RecordBatchReader`, and `StringBuilder`
+src\agent\memory.rs:116:36: error[E0599]: no method named `len` found for reference `&GenericByteArray<GenericStringType<i32>>` in the current scope: method not found in `&GenericByteArray<GenericStringType<i32>>`
+src\agent\memory.rs:98:19: error[E0277]: the trait bound `RecordBatchIterator<Map<IntoIter<...>, ...>>: RecordBatchReader` is not satisfied: unsatisfied trait bound
+src\agent\memory.rs:98:37: error[E0599]: the method `execute` exists for struct `AddDataBuilder<Box<RecordBatchIterator<Map<IntoIter<...>, ...>>>>`, but its trait bounds were not satisfied: method cannot be called due to unsatisfied trait bounds
+src\agent\memory.rs:55:54: error[E0277]: the trait bound `RecordBatchIterator<Map<IntoIter<...>, ...>>: RecordBatchReader` is not satisfied: unsatisfied trait bound
+src\agent\benchmarks.rs:64:28: warning: value assigned to `target_value` is never read
+src\agent\benchmarks.rs:65:20: warning: value assigned to `name` is never read
+src\agent\benchmarks.rs:66:24: warning: value assigned to `category` is never read
+src\agent\runner\tools.rs:215:9: warning: unused variable: `usage`: help: if this is intentional, prefix it with an underscore: `_usage`
+src\agent\runner\tools.rs:345:9: warning: unused variable: `usage`: help: if this is intentional, prefix it with an underscore: `_usage`
+src\agent\runner\tools.rs:372:9: warning: unused variable: `usage`: help: if this is intentional, prefix it with an underscore: `_usage`
+src\agent\runner\tools.rs:422:9: warning: unused variable: `usage`: help: if this is intentional, prefix it with an underscore: `_usage`
+warning: `server-rs` (bin "server-rs") generated 12 warnings
+error: could not compile `server-rs` (bin "server-rs") due to 4 previous errors; 12 warnings emitted

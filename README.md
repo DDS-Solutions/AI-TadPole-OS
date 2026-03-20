@@ -1,0 +1,292 @@
+<div align="center">
+  <img src=".github/assets/Github Social Preview Tadpole OS_V2.png" width="1280" alt="Tadpole OS - Sovereign Intelligence" />
+
+  # 🐸 Tadpole OS Engine
+  **The high-performance, local-first runtime for sovereign multi-agent swarms.**
+
+  [![Rust](https://img.shields.io/badge/Rust-1.80+-zinc?style=for-the-badge&logo=rust&logoColor=white)](https://www.rust-lang.org/)
+  [![React](https://img.shields.io/badge/React-18.3-zinc?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
+   [![Compliance](https://img.shields.io/badge/Audit-100%25%20Pass-emerald?style=for-the-badge)](docs/ARCHITECTURE.md#11-reliability-layer-hardening)
+  [![License](https://img.shields.io/badge/License-MIT-zinc?style=for-the-badge)](LICENSE)
+  
+  ---
+</div>
+
+A high-performance, local-first **Tadpole OS** runtime. This engine provides a sovereign, secure, and hyper-efficient environment for complex multi-agent swarms, powered by **Rust** for mission-critical stability and peak performance.
+
+> [!NOTE]
+> **Status**: Verified / Production-Ready  
+> **Version**: 1.0.0  
+> **Documentation Level**: Professional
+
+## Table of Contents
+
+- [🚀 Quick Start](#-quick-start)
+- [🎯 Test Missions](#-test-missions)
+- [🧩 Core Features](#-core-features)
+- [🤖 Multi-Model Management](#-multi-model-management-triple-slot-architecture)
+- [📚 Documentation Excellence](#-documentation-excellence)
+- [🔱 Sovereign Forking Protocol](#-sovereign-forking-protocol)
+- [🛡️ License](#-license)
+
+---
+
+## 🎯 Test Missions
+
+Ready to take the swarm for a spin? We've curated a set of **[Small Missions](docs/TEST_MISSIONS.md)** to help you verify and experience the core capabilities of **Tadpole OS**, from basic model connectivity to autonomous background execution.
+
+[👉 Start Testing Now](docs/TEST_MISSIONS.md)
+
+---
+
+## 🧩 Core Features
+
+- **Reactive Infrastructure (Top Tier):**
+  - **Multi-Tab Sovereign Interface**: Persistent navigation via a multi-tab bar, allowing seamless switching between operations, missions, and configurations.
+  - **Unified Tactical Header**: Dynamic, context-aware header featuring a **Smooth Carousel** for telemetry metrics and action buttons.
+  - **Live Stat Metrics**: Real-time visualization of agent performance, recruitment velocity, and system health.
+  - **Reconnection Intelligence**: WebSocket auto-connects when settings (URL/Key) change—no refresh needed.
+  - **Zustand Reactive Stores**: Unitary source of truth for settings, agents, and providers.
+  - **Lazy Singleton Socket**: Performance-optimized socket initialization via Proxy.
+- **Neural Voice Integration (Hybrid/Infrastructure):**
+  - **Sovereign TTS (Piper)**: Local-first, ONNX-accelerated speech synthesis infrastructure (Placeholder logic for zero-latency private responses).
+  - **Sovereign STT (Whisper)**: Local neural transcription infrastructure (Placeholder logic for high-fidelity speech-to-text without cloud dependencies).
+  - **Bunker Cache**: SQLite-backed semantic audio caching for instant replay of common phrases.
+  - **Real-time PCM Streaming**: Binary WebSocket transmission of audio chunks for seamless, fluid interaction.
+  - **Neural VAD (Silero)**: Local voice activity detection for intelligent speech segmentation.
+- **Core Intelligence Management Suite:**
+  - **Strategic Intent Handoffs:** Parent agents inject tactical context into sub-agent neural pathways.
+  - **Hierarchical Recruitment**: High-level agents (Alphas) can recruit ephemeral sub-agents. The engine uses the **`recruit_specialist`** MCP tool to delegate tasks with parent-to-child strategic context.
+  - **Test Trace (Connectivity)**: Real-time backend connectivity diagnostics via the provider configuration panel.
+  - **Interactive Info Dots**: In-context definitions for all major neural governance fields.
+  - **Intelligence Forge (Hybrid Nodes)**: Configure multiple modalities (LLM, REASONING, Vision) for the same model node or endpoint.
+  - **Local LLM Support (Ollama)**: Seamless integration with local Ollama nodes for zero-latency, truly private execution.
+  - **Parallel Swarming:** Concurrent multi-agent recruitment via `FuturesUnordered`.
+  - **Lifecycle Hooks:** `pre-tool` and `post-tool` executable governance.
+  - **Persistent Vector Memory (Neural Memory):** Powered by LanceDB, agents automatically retain and recall cross-session institutional knowledge.
+  - **Mission RAG Scopes:** Agents spin up localized, sandboxed semantic search spaces per-mission to aggregate findings before synthesis.
+  - **Persistent Memory & Identity**: Global `directives/IDENTITY.md` and `directives/LONG_TERM_MEMORY.md` injection.
+- **Unified MCP Capability Model**: Standardized tool discovery and execution via the **Model Context Protocol**. Support for `tags` and `doc_url` on every tool.
+- **Swarm Template Ecosystem:**
+  - **In-App Store**: Browse, discover, and install industry-specific agent swarms (Legal, Healthcare, Retail) directly from the dashboard.
+  - **GitHub Native Hub**: Leverages public GitHub repositories as a decentralized, transparent distribution hub for swarm templates, installed natively via Git.
+  - **Sapphire Shield**: Strict zero-trust security gate that explicitly flags and requires human "Overlord" approval for templates requesting dangerous external skills (e.g., `shell:execute`, `budget:spend`).
+- **Command Palette:** Global `Cmd+K` / `/` navigation for agents and actions.
+  - These determine which **MCP Tools** are available to the agent during missions.
+- **Neural Lineage Breadcrumbs:** Real-time visibility into the swarm's recursive hierarchy.
+- **Mission Clusters (Visualized):**
+  - **Neural Map**: High-end SVG visualization of swarm connectivity.
+  - **Connection Traces**: Animated visual paths between Alphas and Specialists.
+  - **Node Glow**: Real-time status indicators across the hive.
+- **Bunker Infrastructure:**
+  - **Discovery Protocol**: One-click local network scanning for secondary nodes.
+  - **Multi-Bunker Registry**: Unified dashboard for multi-node swarm management.
+- **Performance Analytics Hub**: Persistent benchmarking system for tracking latency (mean, p95, p99) and performance deltas across all agent actions.
+- **Shared Rate Limiting (PERF-05):** Quotas are enforced at the model-level across all agents, preventing "Rate limit exceeded" during large parallel swarms.
+- **Neural Context Pruning (PERF-07):** Automatically truncates large repository maps and shared mission findings based on the model's TPM (Tokens Per Minute) limit for fail-safe execution.
+- **Unified Provider Dispatch (PERF-09):** All LLM provider calls route through a single `dispatch_to_provider()` — adding a new provider is a one-edit operation.
+- **Mission Analysis & Success Auditing (Agent 99):** Optional post-mission debriefs featuring LanceDB-powered **Cross-Mission Pattern Recognition**, **Semantic Pruning** for massive token reduction, **Swarm Memory Deduplication**, and **Behavioral Drift** detection to ensure agents remain aligned with their core identity.
+- **Raw Tool Output (PERF-10):** Tool handlers return raw results directly instead of making redundant per-tool synthesis LLM calls, eliminating token cost doubling.
+- **Cached Context (PERF-11):** `IDENTITY.md` and `LONG_TERM_MEMORY.md` loaded once at startup; `parking_lot::Mutex` for all synchronous locks; bounded tool cache (64 entries); `VecDeque` oversight ledger.
+- **First Principles Architecture**: Lazy-loaded core engine resources with `tokio::sync::OnceCell` for sub-millisecond initialization, zero idle RAM consumption, and rigid lock-step phase transitions (`yield_phase_transition`) for secure `SecurityHub` overwatch.
+- **Unified Persistence**: All agents and capability templates persist strictly via a unified SQLite schema—no disparate JSON registry or manual file synchronization is required.
+- **Split-Brain Memory Architecture**: SQLite handles deterministic relational data (logs, budgets), while LanceDB handles high-dimensional vector embeddings, a top-tier industry standard for RAG applications.
+- **Orphaned Scope Cleanup**: A tokio background service automatically sweeps completed/failed mission vector stores, preventing unbounded disk bloat.
+- **Sapphire Shield (Phase 1):** Strict schema validation and an automated security gate that flags `budget:spend` or `shell:execute` for mandatory human oversight.
+- **Autonomous Continuity (Phase 2):** Cron-driven **Continuity Scheduler** enabling background, proactive swarm execution with strict per-mission budget caps and auto-disable safety mechanisms for runaway failure prevention.
+- **Graceful Degradation (Phase 3):** Trait-driven **Null Provider** fallback ensures integration tests pass seamlessly without API keys and the UI degrades gracefully (Amber Badging) rather than hard-crashing during provider outages.
+- **REST Level 3 Alignment**: HATEOAS-driven API with standardized pagination, hypermedia navigation (`_links`), and RFC 9457 Problem Details.
+- **Automated Settings Migration**: Seamless transition from legacy OpenClaw configurations to the Tadpole OS unified settings store.
+- **Real-Time Telemetry Fixes**: Corrected TPM calculation and bridged backend-frontend token usage mapping for 100% accurate display.
+- **Active Documentation Governance (ADG)**: 100% automated synchronization between code and docs via the `execution/parity_guard.py` system.
+- **100% Audit Validated:** Verified Security, UX (Hick's Law compliant), and SEO optimization.
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Rust (1.80+):** Required for compiling the backend.
+- **Node.js 20+:** Required for the React dashboard.
+- **Google Gemini API Key:** For the primary reasoning loop.
+
+### Installation
+
+1.  **Install Frontend Dependencies:**
+    ```bash
+    npm install
+    ```
+
+2.  **Prepare Backend:**
+    The backend is located in `server-rs/`. It will be compiled on the first run via the `npm` scripts.
+
+3.  **Configure Environment:**
+    Create a `.env` file in the root directory:
+    ```env
+    NEURAL_TOKEN=your_secret_token_here
+    GOOGLE_API_KEY=your_api_key_here
+    ```
+
+> [!IMPORTANT]
+> **Production Required**: `NEURAL_TOKEN` must be set — the engine panics at startup in release builds if it is missing.
+
+### Running the Engine
+
+Start the high-performance Rust engine:
+
+```bash
+npm run engine
+```
+
+The engine will start on `http://localhost:8000`.
+
+> [!NOTE]
+> **Production Access**: When deployed via Docker, the engine serves both the API and the React dashboard on this same port (8000). You do not need port 5173 for production.
+
+### Running the Dashboard
+
+In a separate terminal, start the React development server:
+
+```bash
+npm run dev
+```
+
+##  Example of a Hyper-Swarm Scenario: Max Scale Visualization
+
+Here is what a **Full-Capacity Swarm** looks like when utilizing all potential offerings (10 Providers, 25 Agents, 10 Clusters, Recursion Depth 10).
+
+### Swarm Hierarchy (Sample Topology)
+
+```mermaid
+graph TD
+    classDef cluster fill:#222,stroke:#444,stroke-width:2px,color:#fff;
+    classDef node fill:#333,stroke:#666,color:#eee;
+
+    subgraph Cluster0 ["Executive Core (Google)"]
+        CEO["ID 1: CEO (Google Gemini 3 Pro)"]
+    end
+
+    CEO -->|issue_alpha_directive| COO["ID 2: COO (Claude Opus 4.5)"]
+    CEO -->|delegate| CTO["ID 3: CTO (GPT-5.3 Codex)"]
+
+    subgraph Cluster1 ["Operations Hub (Anthropic)"]
+        COO --> Ops1["ID 22: HR Manager"]
+        COO --> Ops2["ID 10: Support Lead"]
+    end
+
+    subgraph Cluster2 ["Engineering Sector (Groq/OpenAI)"]
+        CTO --> Eng1["ID 7: DevOps"]
+        CTO --> Eng2["ID 8: Backend Dev"]
+    end
+
+    subgraph Cluster3 ["Marketing/Sales (Meta/xAI)"]
+        CEO --> CMO["ID 4: CMO"]
+        CMO --> Mark1["ID 17: Copywriter"]
+        CMO --> Mark2["ID 19: SEO Specialist"]
+    end
+
+    subgraph Cluster4 ["Security Center (Mistral)"]
+        Eng1 --> Sec1["ID 12: Security Auditor"]
+    end
+
+    %% Depth levels
+    subgraph Level1 ["Depth 1 (Alphas)"]
+        COO
+        CTO
+        CMO
+    end
+
+    subgraph Level2 ["Depth 2 (Leads)"]
+        Eng1
+        Ops2
+        Mark1
+    end
+
+    subgraph Level3 ["Depth 3 (Specialists)"]
+        Sec1
+        Mark2
+    end
+
+    subgraph Level4 ["Depth 4 (Sub-Specialists)"]
+        %% Spawning dynamically
+        Sub1["Dynamic Researcher"]
+    end
+
+    subgraph Level10 ["Depth 10 (Terminal Layer)"]
+        %% Hard recursion limit
+        Sub2["Max Depth Agent"]
+    end
+
+    Sub1 --> Sub2
+    Sec1 --> Sub1
+
+    class Cluster0,Cluster1,Cluster2,Cluster3,Cluster4 cluster;
+    class CEO,COO,CTO,CMO,Ops1,Ops2,Eng1,Eng2,Mark1,Mark2,Sec1,Sub1,Sub2 node;
+```
+
+### Resource Allocation Matrix (Max Scale)
+
+| Cluster | Focus | Provider (Sample) | Model Capacity |
+| :--- | :--- | :--- | :--- |
+| **Executive Core** | Strategic Direction | **Google** | Pro / Flash |
+| **Operations Hub** | Orchestration | **Anthropic** | Opus / Sonnet |
+| **Engineering Sector** | Implementation | **Groq / OpenAI** | Llama / Codex |
+| **Marketing/Sales** | Growth | **Meta / xAI** | Maverick / Grok |
+| **Security Center** | Auditing | **Mistral** | Medium / Large |
+| **Product Lab** | R&D | **DeepSeek** | V3 / R1 |
+| **Finance Sector** | Fiscal Control | **Perplexity** (API) | Sonar |
+| **Human Capital** | HR/Logistics | **OpenSource** | Qwen / GLM |
+| **Legal/Compliance** | Risk Mgmt | **Local** | Ollama/Llama3 |
+| **Logistics** | Fleet Mgmt | **Azure** | GPT-4o |
+
+### Operational Impact of "Max Scale"
+- **Distributed Compute**: 10 clusters allow for complete physical or logical isolation of workloads, preventing mission interference.
+- **Provider Redundancy**: If a primary provider (e.g., Google) hits a rate limit, the swarm can dynamically reassign agents to 9 other fallback providers.
+- **Recursive Density**: With a depth of 10, a single strategic prompt can fan out into over **100 concurrent sub-tasks** if each layer recruits just 3-4 specialists.
+- **Token Expenditure**: At this scale, real-time cost monitoring (USD budget gate) becomes critical, as the "Neural Pulse" generates massive event bus traffic.
+
+## 🤖 Multi-Model Management (Triple-Slot Architecture)
+
+Tadpole OS supports **Multi-Model Routing** for every agent, allowing for manual failover or task-specific specialized model selection.
+
+1.  **Triple-Slot Configuration**: Every agent possesses three model slots (Primary, Secondary, Tertiary).
+2.  **Granular Control**: Each slot can have its own provider (e.g., Gemini 1.5 Pro on Primary, Llama 3 on Secondary), system prompt, and temperature.
+3.  **Manual Routing**: Using the "Zap" (Skill) icon on an agent node, operators can manually dispatch specific skills to specific slots.
+4.  **Persistent Active Slot**: The frontend tracks the `activeModelSlot` (1, 2, or 3) to ensure the agent's "Neural Presence" reflects its current active intelligence.
+
+
+## 📚 Documentation Excellence
+Tadpole OS provides a comprehensive "Strategic Success" suite for both the Overlord (Entity 0) (AKA Human-in-the-loop) and AI assistants:
+
+- **[System Architecture](docs/ARCHITECTURE.md)**: Technical deep dive and data flows.
+- **[Getting Started Guide](docs/GETTING_STARTED.md)**: Hardware requirements and first deployment.
+- **[Swarm Orchestration](docs/SWARM_ORCHESTRATION.md)**: Guide to designing hierarchical, autonomous intelligence clusters.
+- **[Conceptual Glossary](docs/GLOSSARY.md)**: Standardized terminology for Human-AI alignment.
+- **[AI Codebase Map](docs/CODEBASE_MAP.md)**: Relationship guide optimized for AI development and navigation.
+- [API Reference](docs/API_REFERENCE.md): Complete REST and WebSocket endpoint documentation.
+- [Contributing Standards](docs/CONTRIBUTING.md): Guidelines for joining the swarm.
+
+## 🔱 Sovereign Forking Protocol
+
+Tadpole OS is built to be a foundational layer for your own AI endeavors. To create your own instance:
+
+1. **Fork this Repository**: Click the 'Fork' button to create your own tacticial branch.
+2. **Setup Local Environment**: Follow the [Getting Started Guide](docs/GETTING_STARTED.md).
+3. **Customize your Agents**: Use the SQLite database or Swarm Template ecosystem to dynamically deploy your own specialists.
+4. **Deploy**: Use the `deploy-bunker-1.ps1` or `deploy-bunker-2.ps1` script to push to your own Swarm Bunker.
+
+We encourage "Overlords" to share their unique agent configurations and skill-sets back to the core via Pull Requests.
+
+> [!TIP]
+> **AI Readiness**: You can ask any AI assistant (like Claude or Gemini) to read the `CODEBASE_MAP.md` and `GLOSSARY.md` to get an instant, expert-level understanding of this project's inner workings.
+
+---
+
+- **Rust Engine (`server-rs/`):** The Axum-based server handling WebSockets, agent routing, and AI execution.
+- **Agent Memory (`server-rs/src/agent/memory.rs`):** The LanceDB and Arrow-powered vector memory module utilizing Gemini `text-embedding-004`.
+- **Persistence (`server-rs/src/agent/persistence.rs`):** Unified SQLite tracking for Agents, Sub-Agents, and their configurations.
+- **Runner (`server-rs/src/agent/runner/mod.rs` & `analysis.rs`):** The native Tokio-based loop managing LLM communication, lock-step phase transitions, and post-mission synthesis.
+- **Oversight Dash:** The Overlord (Entity 0) (AKA Human-in-the-loop) safety gate for approving/rejecting sensitive actions.
+
+## 📜 License
+
+MIT

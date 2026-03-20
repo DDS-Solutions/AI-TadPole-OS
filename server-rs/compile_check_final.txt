@@ -1,0 +1,67 @@
+    Checking server-rs v1.0.0 (C:\Users\Home Office_PC\.gemini\antigravity\playground\tadpole-os\server-rs)
+warning: unused import: `serde_json::Value`
+ --> src\main.rs:3:5
+  |
+3 | use serde_json::Value;
+  |     ^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `serde_json::Value`
+  --> src\state.rs:11:5
+   |
+11 | use serde_json::Value;
+   |     ^^^^^^^^^^^^^^^^^
+
+warning: unused import: `opentelemetry::trace::TraceContextExt`
+  --> src\agent\runner\mod.rs:64:17
+   |
+64 |             use opentelemetry::trace::TraceContextExt;
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `crate::telemetry::TelemetryLayer`
+ --> src\startup.rs:2:5
+  |
+2 | use crate::telemetry::TelemetryLayer;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `tokio::sync::broadcast`
+ --> src\startup.rs:3:5
+  |
+3 | use tokio::sync::broadcast;
+  |     ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `serde_json::json`
+ --> src\telemetry.rs:4:5
+  |
+4 | use serde_json::json;
+  |     ^^^^^^^^^^^^^^^^
+
+error[E0599]: no method named `span` found for struct `opentelemetry::Context` in the current scope
+   --> src\telemetry.rs:37:47
+    |
+ 37 |             trace_id = Some(otel_cx.parent_cx.span().span_context().trace_id().to_string());
+    |                                               ^^^^ private field, not a method
+    |
+   ::: C:\Users\Home Office_PC\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\opentelemetry-0.21.0\src\trace\context.rs:252:8
+    |
+252 |     fn span(&self) -> SpanRef<'_>;
+    |        ---- the method is available for `opentelemetry::Context` here
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `TraceContextExt` which provides `span` is implemented but not in scope; perhaps you want to import it
+    |
+  1 + use opentelemetry::trace::TraceContextExt;
+    |
+
+warning: unused variable: `span`
+  --> src\telemetry.rs:78:13
+   |
+78 |         let span = ctx.span(&id).expect("Span not found");
+   |             ^^^^ help: if this is intentional, prefix it with an underscore: `_span`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+For more information about this error, try `rustc --explain E0599`.
+warning: `server-rs` (bin "server-rs") generated 7 warnings
+error: could not compile `server-rs` (bin "server-rs") due to 1 previous error; 7 warnings emitted

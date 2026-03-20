@@ -1,0 +1,125 @@
+import { useMemo } from 'react';
+import { Activity, ShieldCheck, Zap, HardDrive, Cpu as CpuIcon } from 'lucide-react';
+import { useEngineStatus } from '../hooks/useEngineStatus';
+import { SectorBoundary } from '../components/ErrorBoundary';
+import { SwarmTelemetry } from '../components/SwarmTelemetry';
+import { useSettingsStore } from '../stores/settingsStore';
+import { Tooltip } from '../components/ui';
+import { i18n } from '../i18n';
+
+const TelemetryVisualizer = ({ isOnline }: { isOnline: boolean }) => {
+    // Generate stable "random" pseudo-telemetry bars using useMemo
+    const bars = useMemo(() => {
+        return [...Array(48)].map((_, i) => ({
+            height: `${20 + (Math.sin(i * 0.5) * 40 + 40)}%`,
+            opacity: 0.3 + (Math.cos(i * 0.8) * 0.35 + 0.35)
+        }));
+    }, []);
+
+    return (
+        <div className="grid grid-cols-12 gap-1 h-32 w-full max-w-2xl">
+            {bars.map((bar, i) => (
+                <div
+                    key={i}
+                    className={`h-full rounded-sm transition-all duration-300 ${isOnline ? 'bg-emerald-500/20' : 'bg-zinc-800/10'}`}
+                    style={{
+                        height: isOnline ? bar.height : '10%',
+                        opacity: isOnline ? bar.opacity : 0.1
+                    }}
+                />
+            ))}
+        </div>
+    );
+};
+
+/**
+ * Real-time monitoring center for the Tadpole Engine.
+ * Visualizes high-frequency system telemetry via Neural Pulse event streams.
+ */
+export default function EngineDashboard() {
+    const { isOnline, cpu, memory, latency, connectionState, activeAgents, maxDepth, tpm, recruitCount } = useEngineStatus();
+    const { settings } = useSettingsStore();
+
+    const stats = [
+        { label: i18n.t('engine_dashboard.label_cpu'), value: `${cpu.toFixed(1)}%`, icon: CpuIcon, color: cpu > 80 ? 'text-red-400' : 'text-emerald-400' },
+        { label: i18n.t('engine_dashboard.label_memory'), value: `${memory.toFixed(1)}GB`, icon: HardDrive, color: 'text-emerald-400' },
+        { label: i18n.t('engine_dashboard.label_latency'), value: `${latency.toFixed(0)}ms`, icon: Zap, color: latency > 150 ? 'text-yellow-400' : 'text-emerald-400' },
+    ];
+
+    return (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                    <Tooltip content={i18n.t('engine_dashboard.tooltip_main')} position="right">
+                        <div className="p-2 bg-zinc-900 border border-zinc-800 rounded-lg shadow-xl ring-1 ring-zinc-800 cursor-help">
+                            <Activity className="w-5 h-5 text-emerald-500 animate-pulse" />
+                        </div>
+                    </Tooltip>
+                    <div>
+                        <h2 className="text-2xl font-bold tracking-tight text-zinc-100 italic">{i18n.t('engine_dashboard.title')}</h2>
+                        <p className="text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-bold font-mono">{i18n.t('engine_dashboard.subtitle')}</p>
+                    </div>
+                </div>
+                <Tooltip content={i18n.t('engine_dashboard.tooltip_conn', { status: connectionState })} position="left">
+                    <div className="flex items-center gap-2 px-3 py-1 bg-zinc-950 border border-zinc-800 rounded-full cursor-help">
+                        <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-emerald-500 animate-pulse' : 'bg-red-500'}`} />
+                        <span className="text-[10px] font-bold font-mono text-zinc-400 uppercase tracking-widest">{connectionState}</span>
+                    </div>
+                </Tooltip>
+            </div>
+
+            <SwarmTelemetry
+                activeAgents={activeAgents}
+                maxDepth={maxDepth}
+                tpm={tpm}
+                recruitCount={recruitCount}
+                maxDensity={settings.maxAgents}
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {stats.map((stat) => (
+                    <Tooltip key={stat.label} content={
+                        stat.label === i18n.t('engine_dashboard.label_cpu') ? i18n.t('engine_dashboard.tooltip_cpu') :
+                            stat.label === i18n.t('engine_dashboard.label_memory') ? i18n.t('engine_dashboard.tooltip_memory') :
+                                i18n.t('engine_dashboard.tooltip_latency')
+                    } position="top">
+                        <div className="p-5 border border-zinc-800 rounded-2xl bg-zinc-900/50 backdrop-blur-xl group hover:border-zinc-700 transition-all shadow-lg cursor-help">
+                            <div className="flex justify-between items-start mb-3">
+                                <div className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">{stat.label}</div>
+                                <stat.icon size={14} className="text-zinc-700 group-hover:text-zinc-500 transition-colors" />
+                            </div>
+                            <div className={`text-3xl font-mono ${stat.color} tracking-tighter`}>{stat.value}</div>
+                            <div className="mt-3 flex items-center gap-1.5">
+                                <div className={`h-1 w-full rounded-full bg-zinc-800 overflow-hidden`}>
+                                    <div
+                                        className={`h-full bg-current transition-all duration-100 ${stat.color}`}
+                                        style={{ width: stat.label === 'CPU Usage' ? `${cpu}%` : stat.label === 'Memory' ? `${(memory / 16) * 100}%` : '50%' }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </Tooltip>
+                ))}
+            </div>
+
+            <div className="p-8 border border-zinc-800 rounded-3xl bg-zinc-950 relative overflow-hidden group shadow-2xl">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(16,185,129,0.05),transparent)] pointer-events-none" />
+                <div className="relative z-10 flex flex-col items-center gap-6">
+                    <div className="flex items-center gap-2 text-zinc-600 font-mono text-[10px] uppercase tracking-[0.3em] font-bold">
+                        <ShieldCheck size={12} className="text-emerald-500/50" /> {i18n.t('engine_dashboard.label_websocket')}
+                    </div>
+                    <SectorBoundary name={i18n.t('engine_dashboard.tooltip_main')}>
+                        <TelemetryVisualizer isOnline={isOnline} />
+                    </SectorBoundary>
+                    <div className="text-center">
+                        <p className="text-zinc-100 text-sm font-bold tracking-tighter flex items-center justify-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                            {i18n.t('engine_dashboard.label_status')}
+                        </p>
+                        <p className="text-zinc-600 text-[10px] mt-1 font-mono uppercase tracking-[0.2em]">{i18n.t('engine_dashboard.label_node', { stream: isOnline ? i18n.t('engine_dashboard.stream_active') : i18n.t('engine_dashboard.stream_offline') })}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}

@@ -1,0 +1,4 @@
+{
+  "model_id": "gemini-flash-latest",
+  "skills": ["db_health", "filesystem", "schedule_meeting", "Resource Check", "recruit_specialist"]
+}

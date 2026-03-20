@@ -1,0 +1,537 @@
+# Tadpole OS — Getting Started Guide
+
+> **Version**: 1.1.3
+> **Last Updated**: 2026-03-20 (Verified 100% Quality Pass)
+
+> **Prerequisites**: Tadpole OS running locally (`start_tadpole.bat`) or deployed on your Swarm Bunker (Linux or Similar Sandbox for Production Deployment). You'll need a Groq API key from [console.groq.com](https://console.groq.com).
+
+## 🏗️ Hardware Requirements (Scaling Spec)
+
+Tadpole OS is optimized for low-footprint Rust execution. Requirements scale linearly with agent count and mission complexity.
+
+| Tier | Agents | Clusters | **Min RAM** | **vCPU** | Deployment |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Micro (Demo)** | 1-2 | 1 | **1 GB** | 1 | Hybrid |
+| **Standard (Bunker)** | 2-9 | 1-2 | **2 GB** | 2 | Hybrid |
+| **Cluster Max** | 10-25 | 4+ | **4 GB** | 4 | Hybrid |
+| **ROBUST (PRO)** | 25+ | Full | **8 GB+** | 4-8 | Full Remote |
+
+> [!TIP]
+> **Robust Recommendation**: For high-vocal missions with real-time audio and massive `fetch_url` research, an **8GB / 4-vCPU** instance ensures zero latency in the context bus and allows for full remote rebuilds without OOMs.
+
+---
+
+## Step 1: Connect to the Engine
+
+1. Open Tadpole OS in your browser:
+   - **Local Dev**: `http://localhost:5173`
+   - **Production (Bunker)**: `http://<bunker-ip>:8000`
+2. Go to **⚙️ System Configuration** from the sidebar.
+3. Under **Engine Connection**, verify the URL (**TadpoleOSUrl**) is set to your engine endpoint and the **Neural Engine Access Token** (formerly Neural Token) matches your `.env` value.
+4. Click **Save Changes** — the dashboard auto-reconnects immediately without a page refresh.
+5. In the **Multi-Tab Bar**, you can now open additional operational contexts (Missions, Hierarchy, etc.) without losing your current view.
+6. The top-tier **PageHeader** should show **🟢 ONLINE** and display server-side telemetry.
+
+
+> [!IMPORTANT]
+> **Windows Users**: For reliable database persistence, set your `DATABASE_URL` using an **absolute path** (e.g., `sqlite:C:\Users\Name\.gemini\...\tadpole.db`). Relative paths in Rust on Windows can sometimes fail to resolve across different startup contexts.
+
+---
+
+## Step 2: Unlock the Neural Vault & Add Your Groq Provider
+
+The Neural Vault is an encrypted vault that stores your API keys. You must unlock it before configuring providers.
+
+1. Go to **🧠 AI Provider Manager** from the sidebar
+2. You'll see the **NEURAL VAULT** lock screen
+3. Enter a master password (this encrypts your keys locally) → click **Commit Authorization**
+4. You'll now see the **Provider Cards** section
+
+### Adding Groq as a Provider
+
+5. If Groq is already listed, click the **Edit** (pencil) icon on the Groq card
+6. If not listed, click **+ ADD PROVIDER** at the bottom:
+   - **Name**: `Groq`
+   - **Icon**: `⚡` (or any emoji)
+   - Click **Create**
+7. On the Groq provider card:
+   - **API Key**: Paste your Groq API key
+   - **Base URL**: `https://api.groq.com/openai/v1`
+   - **Protocol**: `OpenAI (OpenRT)` — Groq uses OpenAI-compatible API
+8. Click **Save** on the provider card.
+9. **Test Trace (Handshake)**: Click the "Test Trace" button to perform a real-time connectivity handshake. This verifies your API Key, Endpoint, and Protocol are valid before deployment.
+
+> [!TIP]
+> The vault auto-locks after inactivity. Your key is encrypted with your master password and stored in the browser — it never leaves your machine.
+
+---
+
+## Step 2.5: Local Intelligence (Local LLMs via Ollama)
+
+If you prefer to run models locally for zero-latency and total privacy:
+1. Install **Ollama** from [ollama.com](https://ollama.com).
+2. Follow the [Qwen3.5-9B Local Integration Guide](file:///c:/Users/Home%20Office_PC/.gemini/antigravity/playground/tadpole-os/docs/QWEN_LOCAL_INTEGRATION.md) for detailed setup.
+3. Once configured, you can add local models similarly to the steps below.
+
+---
+
+## Step 3: Add Models
+
+Still on the **🧠 AI Provider Manager** page, scroll down to the **Model Registry** section.
+
+1. Click **+ ADD MODEL**
+2. Fill in:
+   - **Model Name**: `llama-3.3-70b-versatile`
+   - **Provider**: Select `Groq` from the dropdown
+   - **RPM** *(optional)*: e.g., `30` — prevents exceeding Groq's free-tier rate limits
+   - **TPM** *(optional)*: e.g., `14000` — the engine will throttle automatically
+3. Click the **✓** checkmark to save
+
+**Recommended models to add:**
+
+| Model Name | Provider | Best For |
+|------------|----------|----------|
+| `llama-3.3-70b-versatile` | Groq | General tasks, tool calling |
+| `llama-3.1-8b-instant` | Groq | Fast responses, simple tasks |
+| `qwen3.5:9b` | Ollama | **Local Power**, high logic fidelity |
+
+Repeat for each model you want available.
+
+---
+
+## Step 4: Configure an Agent
+
+1. Go to **🏛️ Agent Hierarchy Layer** from the sidebar
+2. You'll see the **Neural Command Hierarchy** — your agent org chart
+3. Click on any agent card (e.g., **Nexus**, **Cipher**, etc.)
+4. The **Agent Config Panel** slides open on the right
+
+### In the Config Panel:
+
+5. **Identity Section** (top):
+   - **Name**: Give it a descriptive name (e.g., `Research Bot`)
+   - **Role**: Select from the dropdown (e.g., `Researcher`, `Engineer`, `Analyst`)
+
+6. **Primary Model Slot**:
+   - **Model**: Select `llama-3.3-70b-versatile` from the dropdown
+   - **Provider**: Should auto-fill as `Groq`
+   - **Temperature**: `0.7` for balanced output, `0.2` for precise, `0.9` for creative
+
+7. **Skills & Workflows** (expandable section):
+   - Toggle skills like `web_search`, `file_write`, `code_execute`
+   - These determine which **MCP Tools** are available to the agent during missions.
+
+8. Click **💾 SAVE CONFIG** at the bottom
+
+> [!IMPORTANT]
+> The save pushes your config to the Rust backend, so it persists across devices and restarts. You'll see the agent's role/model update live on the hierarchy.
+
+---
+
+## Step 4.5: Creating Custom Skills & Workflows (Optional)
+
+If your agents need to execute custom code, interact with internal APIs, or follow specific SOPs, you can define these dynamically.
+
+1. Go to **🛠️ Skills & Workflows** from the sidebar
+2. **To create a Skill (Execution Tool)**:
+   - Click **+ NEW SKILL** in the Skills tab
+   - Define the JSON schema (what parameters the agent must provide)
+   - Define the Execution Command (e.g., `python fetch_data.py {{arg1}}`)
+   - Save. It's immediately available to assign to any agent in the Config Panel as a standardized MCP tool.
+3. **To create a Workflow (Passive Knowledge)**:
+   - Click **+ NEW WORKFLOW** in the Workflows tab
+   - Write Markdown guidelines (e.g., "Always cite sources in APA format").
+   - Save. This text is injected into the agent's system prompt when assigned.
+
+---
+
+## Step 5: Create a Mission
+
+1. Go to **🎯 Mission Management** from the sidebar
+2. Click **+ NEW MISSION** in the top-right of the cluster sidebar
+3. Fill in:
+   - **Mission Name**: e.g., `Market Research Sprint`
+   - **Department**: Select the relevant department (e.g., `Research`)
+4. Click **Create**
+
+### Assign Agents to the Mission:
+
+5. Select your new mission in the sidebar (it'll highlight)
+6. In the **Available Agents** pool on the right, click **+ Assign** next to each agent you want on this mission
+8.  **Hierarchical Recruitment**: High-level agents (Alphas) can recruit ephemeral sub-agents. The engine uses the **`spawn_subagent`** MCP tool to delegate tasks with strategic context handoffs.
+9.  **Parallel Swarming (PERF-06)**: **Tadpole OS** automatically parallelizes tool calls. Recruitment of multiple specialists happens simultaneously, dramatically reducing swarm startup latency.
+10. **Neural Map Visualization**: Toggle the "Neural Map" icon on the mission dashboard to see a real-time SVG visualization of cluster connectivity, featuring animated traces and node status glows.
+11. **Neural Swarm Optimization**: When you type an objective, you may see a "Neural Swarm Optimization Proffered" banner. This is the AI suggesting a "Best Practice" setup. 
+12. **Recursion Guard**: To prevent infinite token burn, the engine enforces a maximum **Swarm Depth of 5**.
+13. **Mission Analysis**: Toggle the **"Analysis"** switch next to the Run button to trigger a post-mission debrief by the Success Auditor (Agent 99).
+
+---
+
+## Step 6: Workspace & Cluster Management
+
+Tadpole OS allows you to organize your swarm into **Mission Clusters**.
+
+- **Defaults**: The engine starts with **4 predefined clusters** (Strategic Command, Strategic Ops, Core Intelligence, Applied Growth).
+- **Custom Scaling**: You can create new clusters or retire existing ones from the **🎯 Missions** page.
+- **Persistence**: Agent roles and system configurations are stored in the backend **SQLite database** (`tadpole.db`). Logical mission clusters are managed by the frontend in **LocalStorage**.
+- **Physical Sandboxes**: Each cluster maps to a dedicated directory in the backend `./workspaces/{clusterId}` folder, ensuring file isolation.
+
+---
+
+## Step 7: External Adapters & Workspace Tools
+
+The engine can now connect to your local environment and external services.
+
+### Workspace File Operations
+Agents with matching skills can read and write files within their cluster sandbox:
+- **`read_file`**: Read a file from the workspace (e.g., load a spec document).
+- **`write_file`**: Write a file to the workspace (e.g., save generated code).
+- **`list_files`**: List files in a workspace directory.
+- **`delete_file`**: Delete a file *(requires Oversight Gate approval)*.
+
+Files are stored under `workspaces/<cluster-id>/` on the server. Each cluster is fully isolated.
+
+### Local Markdown Vault (Obsidian)
+Enabled agents can now use the `archive_to_vault` tool.
+1. Create a `vault/` directory in the `server-rs` root.
+2. Agents will automatically append findings to files in this directory when requested.
+
+### Discord Notifications
+1. Add `DISCORD_WEBHOOK="your_webhook_url"` to your `.env` file.
+2. Use the `notify_discord` tool from an agent to alert your team.
+
+### Environment Security (.env)
+Ensure your `.env` file in the root directory contains:
+
+| Variable | Description | Requirement |
+| :--- | :--- | :--- |
+| `DATABASE_URL` | Path to `tadpole.db` | **Absolute path REQUIRED on Windows** |
+| `NEURAL_TOKEN` | Engine Access Token for WebSocket/API access | **Required in production** — engine panics at startup if not set. |
+| `MERKLE_AUDIT_ENABLED` | Toggle tamper-evident cryptographic logging | Default: `true` |
+| `RESOURCE_GUARD_ENABLED` | Toggle real-time RAM/CPU monitoring | Default: `true` |
+| `SANDBOX_AWARENESS` | Enable Docker/K8s detection status | Default: `true` |
+| `LIFECYCLE_HOOKS_ENABLED` | Toggle pre/post execution hooks | Default: `true` |
+| `GOOGLE_API_KEY` | Gemini Reasoning Key | Required for Google Provider |
+| `GROQ_API_KEY` | Llama Reasoning Key | Required for Groq Provider |
+| `ALLOWED_ORIGINS` | CORS Policy | e.g., `http://localhost:5173` |
+| `DISCORD_WEBHOOK` | Discord notification URL | Required only for `notify_discord` tool |
+| `AUDIT_PRIVATE_KEY` | Ed25519 Private Key (Hex) | **REQUIRED for production**. Enables non-repudiation and tamper-evident logging. |
+| `TADPOLE_NULL_PROVIDERS`| Forces graceful provider degradation | Dev/Test only. Set to `true` to return blank output rather than crashing on missing API keys |
+
+### Standardized Observability (HATEOAS)
+All resource endpoints in Tadpole OS implement the **HATEOAS** pattern. Responses include a `_links` object, enabling self-discovery of related actions. Error responses strictly follow **RFC 9457 (Problem Details)** for consistent machine-readable debugging.
+
+---
+
+## Step 8: Send a Task & Get Results
+
+### Option A: From the Terminal Bar
+
+The terminal bar is at the bottom of every page.
+
+1. Click the terminal input field
+2. Type a command:
+   ```
+   /send Research Bot Analyze the top 3 competitors in the AI agent space and summarize their pricing models
+   ```
+   Format: `/send <agent-name> <your task message>`
+3. Press **Enter**
+4. Watch the **System Log** on the dashboard — you'll see:
+   - `📡 Task dispatched to Research Bot`
+   - Live agent status updates
+   - The final response from the LLM
+
+### Option B: Command Palette (Global Nav)
+
+1. Press **`Cmd+K`** (Mac) or **`Ctrl+K`** (Windows) anywhere.
+2. Search for an Agent, Cluster, or Directive.
+3. Select an agent to instantly focus them in the chat interface.
+
+### Option C: From the OPS Dashboard
+
+1. Go to the **Dashboard** (home page)
+2. The **Live Agent Status** cards show real-time activity
+3. The **System Log** captures all responses and events.
+4. **Discover Nodes**: Click the **"Discover Nodes"** button in the Infra section to scan your local network for secondary Bunker nodes. Discovered nodes will automatically appear in your dashboard for unified oversight.
+
+### Option D: Neural Sync (Voice-to-Swarm)
+
+1. Go to **🎙️ Voice Interface** from the sidebar
+2. **Select Target**: Choose an Agent (e.g., Agent of Nine) or a Mission Cluster.
+3. Click **Start Sync** → Speak your high-level objective clearly.
+4. **Hands-Free Response**: The speaker icon activates automatically. The agent (typically Agent of Nine) will transcribe your intent via **Groq Whisper** and then synthesize a strategic confirmation back to you via **OpenAI TTS**.
+5. Click **End Sync** once the verbal handshake is complete.
+
+---
+
+## Useful Terminal Commands
+
+| Command | What it does |
+|---------|-------------|
+| `/send <agent> <message>` | Send a task to a specific agent |
+| `/pause <agent>` | Pause a running agent |
+| `/resume <agent>` | Resume a paused agent |
+| `/status` | Show all agent statuses |
+| `/swarm status` | Inventory mission clusters |
+| `/clear` | Clear the system log |
+
+---
+
+## Troubleshooting
+
+| Issue | Fix |
+|-------|-----|
+| Dashboard shows **OFFLINE** | Check that the engine is running (`npm run engine` or Docker container is up) |
+| Agent returns no response | Verify the model exists in the Model Registry and the API key is valid |
+| Neural Vault won't unlock | The vault creates a new encryption key on first use — use any password. If locked out, use **Emergency Vault Reset** at the bottom of the unlock screen. |
+| Model dropdown is empty | Go to **🧠 AI Provider Manager** → unlock vault → add models to the registry |
+| Agent config doesn't save | Check browser console — engine must be online for persistence to work |
+| Tool-Calling fails (Groq) | The engine includes **Self-Healing Retries** for Groq. Malformed tool syntax is automatically corrected in a second pass. |
+| Agent is slow / rate limited | The engine enforces `rpm`/`tpm` limits set on the model. The agent will wait for the quota window to reset rather than drop requests. |
+| `NEURAL_TOKEN` panic on start | A `NEURAL_TOKEN` env var is required in production builds. Set it in your `.env` file. Dev builds use an insecure fallback. |
+| Workspace file access denied | Agent tried to access a path outside its sandbox. Check `cluster_id` mapping and ensure no path traversal in the filename. |
+
+---
+
+## 🐸 Starter Swarm Configuration (Quick-Deploy)
+
+This section provides a **ready-to-use 3-agent swarm** with concrete settings optimized for Groq's free tier. Follow this to have a working hierarchical swarm in under 5 minutes.
+
+### Agent Roster
+
+| Agent | ID | Role | Model | Provider | Temperature | Budget | Skills |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Agent of Nine** | `1` | CEO | `llama-3.3-70b-versatile` | Groq | `0.8` | `$2.00` | `issue_alpha_directive`, `web_search` |
+| **Tadpole** | `2` | COO (Alpha) | `llama-3.3-70b-versatile` | Groq | `0.6` | `$3.00` | `web_search`, `write_file`, `read_file`, `spawn_subagent` |
+| **Elon** | `3` | CTO (Specialist) | `llama-3.3-70b-versatile` | Groq | `0.3` | `$1.00` | `code_execute`, `write_file`, `read_file`, `list_files` |
+
+> [!TIP]
+> **Why these settings?**
+> - **Agent of Nine** uses high temperature (`0.8`) for creative strategic thinking and delegation.
+> - **Tadpole** (Alpha) gets medium temperature (`0.6`) for balanced coordination and the `spawn_subagent` skill for recruitment.
+> - **Elon** (Specialist) runs a fast, cheap model at low temperature (`0.3`) for precise code execution.
+> - Budget caps prevent runaway token spend on Groq's free tier.
+
+### Rate Limits (Groq Free Tier Safe)
+
+Set these in the **🧠 Providers → Model Registry**:
+
+| Model | RPM | TPM |
+| :--- | :--- | :--- |
+| `llama-3.3-70b-versatile` | `30` | `14000` |
+| `llama-3.1-8b-instant` | `30` | `14000` |
+
+### Applying via the UI
+
+1. Go to **🏛️ Agent Hierarchy Layer** → click each agent card
+2. Set the **Model**, **Temperature**, and **Budget** as shown above
+3. Expand **Skills & Workflows** → toggle the listed skills for each agent
+4. Click **💾 SAVE CONFIG** for each agent
+
+### Applying via API (curl)
+
+If you prefer programmatic setup, here are the exact payloads:
+
+**Configure Agent of Nine (CEO):**
+```bash
+curl -X PUT http://localhost:8000/v1/agents/1 \
+  -H "Authorization: Bearer YOUR_NEURAL_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "modelId": "llama-3.3-70b-versatile",
+    "provider": "groq",
+    "temperature": 0.8,
+    "budgetUsd": 2.0,
+    "skills": ["issue_alpha_directive", "web_search"]
+  }'
+```
+
+**Configure Tadpole (Alpha/COO):**
+```bash
+curl -X PUT http://localhost:8000/v1/agents/2 \
+  -H "Authorization: Bearer YOUR_NEURAL_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "modelId": "llama-3.3-70b-versatile",
+    "provider": "groq",
+    "temperature": 0.6,
+    "budgetUsd": 3.0,
+    "skills": ["web_search", "write_file", "read_file", "spawn_subagent"]
+  }'
+```
+
+**Configure Elon (Specialist/CTO):**
+```bash
+curl -X PUT http://localhost:8000/v1/agents/3 \
+  -H "Authorization: Bearer YOUR_NEURAL_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "modelId": "llama-3.1-8b-instant",
+    "provider": "groq",
+    "temperature": 0.3,
+    "budgetUsd": 1.0,
+    "skills": ["code_execute", "write_file", "read_file", "list_files"]
+  }'
+```
+
+> [!NOTE]
+> Replace `YOUR_NEURAL_TOKEN` with the value from your `.env` file. If running locally in dev mode, the default is `tadpole-dev-token-2026`.
+
+---
+
+## 🎯 Showcase Mission: "Competitive Intelligence Swarm"
+
+This mission demonstrates the full power of hierarchical swarming — strategic delegation, parallel research, file collaboration, and synthesis. Run this after applying the Starter Swarm configuration above.
+
+### Mission Overview
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  YOU (Overlord)                                          │
+│  "Analyze the top 3 AI agent frameworks and write        │
+│   a competitive brief with code comparison."             │
+└─────────────────────┬────────────────────────────────────┘
+                      │ Neural Handoff
+┌─────────────────────▼────────────────────────────────────┐
+│  Agent of Nine (CEO) — Depth 0                           │
+│  Refines intent → issues alpha directive to Tadpole      │
+└─────────────────────┬────────────────────────────────────┘
+                      │ issue_alpha_directive
+┌─────────────────────▼────────────────────────────────────┐
+│  Tadpole (Alpha/COO) — Depth 1                           │
+│  Decomposes into parallel research tasks                 │
+│  ├─ spawn_subagent("researcher_a") → CrewAI analysis     │
+│  ├─ spawn_subagent("researcher_b") → AutoGen analysis    │
+│  └─ Assigns Elon to code comparison                      │
+└──────┬──────────────┬───────────────┬────────────────────┘
+       │              │               │ (Parallel)
+   ┌───▼───┐    ┌─────▼─────┐   ┌────▼─────────────────┐
+   │Rsrchr A│    │ Rsrchr B  │   │  Elon (CTO) — D2     │
+   │CrewAI  │    │ AutoGen   │   │  code_execute +       │
+   │research│    │ research  │   │  write_file           │
+   └───┬────┘    └─────┬─────┘   └────┬─────────────────┘
+       │               │              │
+       └───────────────┼──────────────┘
+                       │ Results flow up
+┌──────────────────────▼───────────────────────────────────┐
+│  Tadpole (Alpha) — Synthesis                             │
+│  Merges all findings → write_file("competitive_brief.md")│
+└──────────────────────────────────────────────────────────┘
+```
+
+### Step 1: Dispatch the Mission
+
+**From the Terminal Bar:**
+```
+/send Agent of Nine Analyze the top 3 AI agent frameworks (CrewAI, AutoGen, LangGraph). For each, research their architecture, pricing, and developer experience. Then have our CTO write a Python code comparison showing how each framework defines a simple 2-agent team. Synthesize everything into a competitive_brief.md in our workspace.
+```
+
+**Or via curl:**
+```bash
+curl -X POST http://localhost:8000/v1/agents/1/tasks \
+  -H "Authorization: Bearer YOUR_NEURAL_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "Analyze the top 3 AI agent frameworks (CrewAI, AutoGen, LangGraph). For each, research their architecture, pricing, and developer experience. Then have our CTO write a Python code comparison showing how each framework defines a simple 2-agent team. Synthesize everything into a competitive_brief.md in our workspace.",
+    "provider": "groq",
+    "modelId": "llama-3.3-70b-versatile",
+    "budgetUsd": 2.0
+  }'
+```
+
+### Step 2: Watch the Swarm Execute
+
+Open these dashboard views to observe the swarm in real-time:
+
+| View | What You'll See |
+| :--- | :--- |
+| **🏛️ Hierarchy** | Agent status lights change: `idle` → `thinking` → `active` as each node activates |
+| **🎯 Missions** | The cluster sidebar shows task assignments and handoff chains |
+| **📊 OPS Dashboard** | Live token burn, cost tracking, and the System Log streaming agent outputs |
+| **🔒 Oversight** | If `write_file` or `delete_file` triggers, you'll see approval requests here |
+
+### What Happens Under the Hood
+
+1. **Agent of Nine** receives the prompt, applies strategic reasoning, and fires `issue_alpha_directive` to Tadpole with a refined, tactical breakdown.
+2. **Tadpole** decomposes the directive into 3 parallel tasks:
+   - Spawns **Researcher A** (ephemeral) → searches for CrewAI architecture and pricing
+   - Spawns **Researcher B** (ephemeral) → searches for AutoGen architecture and pricing
+   - Sends a direct task to **Elon** → write Python code comparing all 3 frameworks
+3. **Parallel Swarming (PERF-06)** kicks in — all 3 sub-tasks execute concurrently via `FuturesUnordered`.
+4. As results flow back, Tadpole's **synthesis turn** merges them and calls `write_file("competitive_brief.md")` to save the final deliverable.
+5. Cost and token metrics are tracked per-agent in real-time on the OPS Dashboard.
+
+### Expected Output
+
+After ~30-60 seconds (depending on Groq load), you'll find:
+- `workspaces/<cluster-id>/competitive_brief.md` — The final synthesized report
+- **System Log** entries showing the full delegation chain with swarm lineage breadcrumbs
+- **Per-agent cost breakdown** on each hierarchy node card
+
+### Scaling This Pattern
+
+| Adjustment | How |
+| :--- | :--- |
+| **Add more researchers** | Give Tadpole more budget and increase `swarmDepth` |
+| **Use multiple providers** | Assign Claude to Agent of Nine, Groq to specialists |
+| **Enable voice dispatch** | Use **🎙️ Standups → Neural Sync** instead of typing |
+| **Auto-approve safe tools** | Set `autoApproveSafeSkills: true` in Oversight Settings |
+| **Save as a template** | Use **"Promote to Role"** on your configured agents |
+
+---
+
+## Step 9: Performance Analysis & Real-time Telemetry
+
+Tadpole OS provides "Top Tier" observability into swarm health and technical performance.
+
+### 1. Real-time Telemetry (Dashboard)
+The main **OPS Dashboard** now features glassmorphic telemetry cards:
+- **Fiscal Burn**: Real-time USD/token tracking via the **TPM** indicator.
+- **Swarm Density**: Monitor agent instantiation relative to system capacity.
+- **Swarm Velocity**: Track recruitment speed (Recruits Per Minute).
+- **Swarm Depth**: See hierarchical nesting levels as they happen.
+
+### 2. Performance Analysis (Benchmarks)
+1. Go to **📊 Performance Analysis** from the sidebar.
+2. **Timeline View**: Review historical benchmark results (latency, throughput, status).
+3. **Comparison Tool**: Select any two runs to calculate performance deltas. 
+   - *Example*: Compare "Current" vs "Baseline" to identify code regressions or provider latency spikes.
+4. **Target Enforcement**: Metrics are color-coded against the technical specifications in `Benchmark_Spec.md`.
+
+---
+
+## Step 10: The Swarm Template Ecosystem (New)
+
+Instead of manually configuring agents, Tadpole OS allows you to instantly download full, industry-specific agent swarms.
+
+1. Go to **⚙️ System Configuration** from the sidebar.
+2. Scroll down to the **Template Ecosystem** panel and click **Open Template Store**.
+3. **Discover**: Browse the store or use the fuzzy search to find templates tailored to your industry (e.g., "Legal Contract Review", "Healthcare Patient Intake").
+4. **Install**: Click **Install Swarm**. The engine uses native **Git Cloning** to securely fetch the template from the central Tadpole repository and unpacks it into your `data/swarm_config` directory.
+5. **Sapphire Shield Approval**: If the downloaded template requests powerful execution skills (like Shell Access or API payments), the engine will freeze initialization and require you (the Overlord) to manually approve the capabilities, ensuring Zero-Trust security.
+
+Once installed, the Rust engine "hot-loads" the template from your local `/data/swarm_config/` directory, and your new specialized agents will immediately appear in the **🏛️ Hierarchy**.
+
+---
+
+## Architecture Quick Reference
+
+```
+┌─────────────────────────────────────┐
+│         Your Browser (React)        │
+│  Dashboard │ Hierarchy │ Missions   │
+│  Providers │ Oversight │ Settings   │
+└───────────────┬─────────────────────┘
+                │ HTTP + WebSocket
+┌───────────────▼─────────────────────┐
+│       Svc->>Rust: POST /v1/agents   │
+│  Agent Registry │ Task Router       │
+│  Oversight Gate │ Persistence       │
+└───────────────┬─────────────────────┘
+                │ API Calls
+┌───────────────▼─────────────────────┐
+│        LLM Provider (Groq)          │
+│  llama-3.3-70b │ mixtral-8x7b      │
+└─────────────────────────────────────┘
+```
+

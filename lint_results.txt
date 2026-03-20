@@ -1,0 +1,42 @@
+
+============================================================
+[LINT RUNNER] Unified Linting
+============================================================
+Project: C:\Users\Home Office_PC\.gemini\antigravity\playground\tadpole-os
+Time: 2026-03-19 23:54:13
+Type: node
+Linters: 2
+------------------------------------------------------------
+
+Running: npm lint...
+  [FAIL] npm lint
+
+Running: tsc...
+  [PASS] tsc
+
+============================================================
+SUMMARY
+============================================================
+[FAIL] npm lint
+[PASS] tsc
+
+{
+  "script": "lint_runner",
+  "project": "C:\\Users\\Home Office_PC\\.gemini\\antigravity\\playground\\tadpole-os",
+  "type": "node",
+  "checks": [
+    {
+      "name": "npm lint",
+      "passed": false,
+      "output": "\n> tadpole-os@1.0.0 lint\n> eslint .\n\n\nC:\\Users\\Home Office_PC\\.gemini\\antigravity\\playground\\tadpole-os\\src\\App.tsx\n  9:10  error  'Globe' is defined but never used     @typescript-eslint/no-unused-vars\n  9:17  error  'Server' is defined but never used    @typescript-eslint/no-unused-vars\n  9:25  error  'Activity' is defined but never used  @typescript-eslint/no-unused-vars\n  9:35  error  'Lock' is defined but never used      @typescript-eslint/no-unused-vars\n  9:41  error  'Users' is defined but never used     @typescript-eslint/no-unused-vars\n  9:48  error  'Target' is defined but never used    @typescript-eslint/no-unused-vars\n  9:56  error  'BookOpen' is defined but never used  @typescript-eslint/no-unused-vars\n  9:66  error  'Settings' is defined but never used  @typescript-eslint/no-unused-vars\n\nC:\\Users\\Home Office_PC\\.gemini\\antigravity\\playground\\tadpole-os\\src\\pages\\AgentManager.tsx\n  81:65  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any\n\nC:\\Users\\Home Office_PC\\.gemini\\antigravity\\playground\\tadpole-os\\src\\pages\\BenchmarkAnalytics.tsx\n  83:87  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any\n\n\u2716 10 problems (10 errors, 0 warnings)\n\n",
+      "error": ""
+    },
+    {
+      "name": "tsc",
+      "passed": true,
+      "output": "",
+      "error": ""
+    }
+  ],
+  "passed": false
+}

@@ -1,0 +1,403 @@
+import type { Agent, Task } from '../types';
+
+export const agents: Agent[] = [
+  // Executive
+  {
+    id: '1',
+    name: 'Agent of Nine',
+    role: 'CEO',
+    department: 'Executive',
+    status: 'active',
+    activeModelSlot: 2,
+    tokensUsed: 1200,
+    model: 'GPT-5.2',
+    model2: 'Claude Opus 4.5',
+    model3: 'LLaMA 4 Maverick',
+    modelConfig: {
+      modelId: 'gpt-5.2',
+      provider: 'openai',
+      temperature: 0.7,
+      systemPrompt: 'You are the primary strategic intelligence.',
+      skills: ['deep_research', 'system_audit', 'issue_alpha_directive'],
+      workflows: ['deploy_to_prod', 'neural_handoff']
+    },
+    modelConfig2: {
+      modelId: 'claude-opus-4.5',
+      provider: 'anthropic',
+      temperature: 0.5,
+      systemPrompt: 'You are the critical reviewer and risk assessor.',
+      skills: ['code_review', 'risk_analysis'],
+      workflows: ['emergency_shutdown']
+    },
+    modelConfig3: {
+      modelId: 'llama-4-maverick',
+      provider: 'meta',
+      temperature: 0.9,
+      systemPrompt: 'You are the creative divergent thinker.',
+      skills: ['brainstorming', 'content_generation'],
+      workflows: ['market_research']
+    },
+    workspacePath: './workspaces/agent-of-nine',
+    currentTask: 'Overlord',
+    capabilities: ['deep_research', 'system_audit', 'issue_alpha_directive'],
+    workflows: ['deploy_to_prod', 'emergency_shutdown', 'neural_handoff', 'Deep Analysis'],
+    voiceId: 'onyx',
+    voiceEngine: 'openai'
+  },
+  {
+    id: '2',
+    name: 'Tadpole',
+    role: 'COO',
+    department: 'Operations',
+    status: 'active',
+    activeModelSlot: 1,
+    tokensUsed: 15400,
+    model: 'Claude Opus 4.5',
+    model2: 'GPT-5.2',
+    model3: 'Gemini 3 Pro',
+    modelConfig: {
+      modelId: 'claude-opus-4.5',
+      provider: 'anthropic',
+      skills: ['schedule_meeting', 'task_prioritization'],
+      workflows: ['resource_allocation']
+    },
+    modelConfig2: {
+      modelId: 'gpt-5.2',
+      provider: 'openai',
+      temperature: 0.6,
+      systemPrompt: 'Backup strategic model',
+      skills: ['performance_tracking'],
+      workflows: ['sprint_planning']
+    },
+    modelConfig3: {
+      modelId: 'gemini-3-pro',
+      provider: 'google',
+      temperature: 0.8,
+      systemPrompt: 'Creative input',
+      skills: ['brainstorming'],
+      workflows: ['team_retrospective']
+    },
+    workspacePath: './workspaces/tadpole',
+    currentTask: 'Coordinating daily standup',
+    reportsTo: '1',
+    capabilities: ['schedule_meeting'],
+    workflows: ['resource_allocation'],
+    activeMission: {
+      id: 'm-001',
+      objective: 'Establish Swarm Goal Protocol for multi-agent coordination, ensuring that all neural uplinks are synchronized with zero-latency overhead and robust retry logic for Groq and OpenAI providers in the neural sector.',
+      constraints: ['Zero token waste', 'Persistence required'],
+      priority: 'high'
+    }
+  },
+  {
+    id: '3',
+    name: 'Elon',
+    role: 'CTO',
+    department: 'Engineering',
+    status: 'thinking',
+    activeModelSlot: 3,
+    tokensUsed: 42000,
+    model: 'Claude Sonnet 4.5',
+    model2: 'GPT-5.3 Codex',
+    model3: 'DeepSeek V3.2',
+    modelConfig: {
+      modelId: 'claude-sonnet-4.5',
+      provider: 'anthropic',
+      temperature: 0.1, // Precision for coding
+      skills: ['code_review', 'debug', 'git_push'],
+      workflows: ['system_architecture_review']
+    },
+    modelConfig2: {
+      modelId: 'gpt-5.3-codex',
+      provider: 'openai',
+      temperature: 0.05,
+      systemPrompt: 'Code generation expert',
+      skills: ['code_generation', 'unit_testing'],
+      workflows: ['ci/cd_pipeline']
+    },
+    modelConfig3: {
+      modelId: 'deepseek-v3.2',
+      provider: 'deepseek',
+      temperature: 0.2,
+      systemPrompt: 'Legacy code refactoring',
+      skills: ['refactoring', 'documentation'],
+      workflows: ['incident_response']
+    },
+    workspacePath: './workspaces/elon',
+    currentTask: 'Reviewing PR #405 for Auth Service',
+    reportsTo: '1',
+    capabilities: ['code_review', 'debug', 'git_push'],
+    workflows: ['system_architecture_review', 'incident_response'],
+    activeMission: {
+      id: 'm-002',
+      objective: 'Refactor Auth Module',
+      constraints: ['No downtime', 'Maintain 100% test coverage'],
+      priority: 'high'
+    }
+  },
+  {
+    id: '4',
+    name: 'Gary',
+    role: 'CMO',
+    department: 'Marketing',
+    status: 'idle',
+    tokensUsed: 8000,
+    model: 'GPT-5.2',
+    model2: 'Claude Sonnet 4',
+    workspacePath: './workspaces/gary',
+    currentTask: undefined,
+    reportsTo: '1',
+    capabilities: ['copywriting', 'seo_analysis'],
+    workflows: ['campaign_launch', 'market_trend_analysis']
+  },
+  {
+    id: '5',
+    name: 'Warren',
+    role: 'CRO',
+    department: 'Sales',
+    status: 'offline',
+    tokensUsed: 5000,
+    model: 'GPT-4.1',
+    model2: 'Claude Sonnet 4',
+    workspacePath: './workspaces/warren',
+    currentTask: undefined,
+    reportsTo: '1',
+    capabilities: ['lead_qualification', 'update_crm'],
+    workflows: ['quarterly_forecasting', 'client_onboarding']
+  },
+  {
+    id: '6',
+    name: 'Ada',
+    role: 'Product Lead',
+    department: 'Product',
+    status: 'active',
+    tokensUsed: 11200,
+    model: 'Claude Opus 4.5',
+    model2: undefined,
+    workspacePath: './workspaces/ada',
+    currentTask: 'Writing specs for Dashboard v2',
+    reportsTo: '1',
+    capabilities: ['user_interview', 'write_spec'],
+    workflows: ['sprint_planning', 'feature_roadmap']
+  },
+  {
+    id: '7',
+    name: 'Grace',
+    role: 'DevOps',
+    department: 'Engineering',
+    status: 'active',
+    tokensUsed: 28000,
+    model: 'Gemini 3 Flash',
+    model2: undefined,
+    workspacePath: './workspaces/grace',
+    currentTask: 'Optimizing CI/CD pipeline',
+    reportsTo: '3',
+    capabilities: ['check_server_health', 'view_logs'],
+    workflows: ['pipeline_optimization', 'database_migration']
+  },
+  {
+    id: '8',
+    name: 'Linus',
+    role: 'Backend Dev',
+    department: 'Engineering',
+    status: 'coding',
+    tokensUsed: 35000,
+    model: 'DeepSeek V3.2',
+    model2: undefined,
+    workspacePath: './workspaces/linus',
+    currentTask: 'Refactoring API endpoints',
+    reportsTo: '3',
+    capabilities: ['api_test', 'database_query'],
+    workflows: ['refactor_microservice', 'api_documentation']
+  },
+  {
+    id: '9',
+    name: 'Steve',
+    role: 'Design Lead',
+    department: 'Product',
+    status: 'active',
+    tokensUsed: 19000,
+    model: 'Gemini 3 Pro',
+    model2: 'GPT-5.2',
+    workspacePath: './workspaces/steve',
+    currentTask: 'Designing new icon set',
+    reportsTo: '6',
+    capabilities: ['generate_image', 'ui_audit'],
+    workflows: ['design_system_update', 'usability_testing']
+  },
+  {
+    id: '10',
+    name: 'Sam',
+    role: 'Support Lead',
+    department: 'Operations',
+    status: 'idle',
+    tokensUsed: 6500,
+    model: 'o4-mini',
+    model2: undefined,
+    workspacePath: './workspaces/sam',
+    currentTask: undefined,
+    reportsTo: '2',
+    capabilities: ['ticket_triage', 'knowledge_base_search'],
+    workflows: ['customer_incident_review', 'support_training']
+  },
+  { id: '11', name: 'Back-3', role: 'Backend Dev', department: 'Engineering', status: 'idle', tokensUsed: 9000, model: 'GPT-5.3 Codex', workspacePath: './workspaces/back-3', currentTask: undefined, reportsTo: '9', capabilities: ['database_query'], workflows: ['refactor_microservice'] },
+
+  // Engineering - Ops/Sec
+  { id: '12', name: 'Sec-1', role: 'Security Auditor', department: 'Engineering', status: 'active', tokensUsed: 1200, model: 'Claude Sonnet 4.5', workspacePath: './workspaces/sec-1', currentTask: 'Running vulnerability scan on auth module', reportsTo: '3', capabilities: ['scan_vulnerabilities'], workflows: ['security_audit'] },
+  { id: '13', name: 'Ops-1', role: 'DevOps', department: 'Engineering', status: 'active', tokensUsed: 25000, model: 'Gemini 3 Flash', workspacePath: './workspaces/ops-1', currentTask: 'Scaling K8s cluster node pool', reportsTo: '3', capabilities: ['check_server_health'], workflows: ['scale_cluster'] },
+
+  // Product
+  { id: '14', name: 'Prod-1', role: 'Product Manager', department: 'Product', status: 'thinking', tokensUsed: 14000, model: 'GPT-5.2', workspacePath: './workspaces/prod-1', currentTask: 'Defining roadmap for Q4', reportsTo: '2', capabilities: ['write_spec'], workflows: ['sprint_planning'] },
+  { id: '15', name: 'Des-1', role: 'Designer', department: 'Product', status: 'active', tokensUsed: 15000, model: 'Gemini 3 Pro', workspacePath: './workspaces/des-1', currentTask: 'Generating assets for landing page', reportsTo: '14', capabilities: ['generate_image'], workflows: ['design_system_update'] },
+  { id: '16', name: 'Res-1', role: 'Researcher', department: 'Product', status: 'idle', tokensUsed: 5000, model: 'DeepSeek R1', workspacePath: './workspaces/res-1', currentTask: undefined, reportsTo: '14', capabilities: ['market_research'], workflows: ['User Feedback Analysis'] },
+
+  // Marketing
+  { id: '17', name: 'Copy-1', role: 'Copywriter', department: 'Marketing', status: 'active', tokensUsed: 8000, model: 'Claude Sonnet 4', workspacePath: './workspaces/copy-1', currentTask: 'Drafting launch newsletter', reportsTo: '4', capabilities: ['copywriting'], workflows: ['campaign_launch'] },
+  { id: '18', name: 'Social-1', role: 'Social Media', department: 'Marketing', status: 'active', tokensUsed: 12000, model: 'Grok 4.1', workspacePath: './workspaces/social-1', currentTask: 'Scheduling tweets for improved engagement', reportsTo: '4', capabilities: ['post_update'], workflows: ['social_strategy'] },
+  { id: '19', name: 'SEO-1', role: 'SEO Specialist', department: 'Marketing', status: 'thinking', tokensUsed: 11000, model: 'GPT-5.2', workspacePath: './workspaces/seo-1', currentTask: 'Analyzing keyword density for blog posts', reportsTo: '4', capabilities: ['seo_analysis'], workflows: ['market_trend_analysis'] },
+
+  // Sales
+  { id: '20', name: 'SDR-1', role: 'Sales Rep', department: 'Sales', status: 'offline', tokensUsed: 2000, model: 'o4-mini', workspacePath: './workspaces/sdr-1', currentTask: undefined, reportsTo: '5', capabilities: ['lead_qualification'], workflows: ['quarterly_forecasting'] },
+  { id: '21', name: 'SDR-2', role: 'Sales Rep', department: 'Sales', status: 'offline', tokensUsed: 2000, model: 'o4-mini', workspacePath: './workspaces/sdr-2', currentTask: undefined, reportsTo: '5', capabilities: ['lead_qualification'], workflows: ['quarterly_forecasting'] },
+
+  // Operations
+  { id: '22', name: 'Hr-1', role: 'HR Manager', department: 'Operations', status: 'idle', tokensUsed: 3000, model: 'Claude Sonnet 4', workspacePath: './workspaces/hr-1', currentTask: undefined, reportsTo: '2', capabilities: ['employee_onboarding'], workflows: ['policy_review'] },
+  { id: '23', name: 'Fin-1', role: 'Finance Analyst', department: 'Operations', status: 'thinking', tokensUsed: 9000, model: 'GPT-5.2', workspacePath: './workspaces/fin-1', currentTask: 'Forecasting burn rate', reportsTo: '2', capabilities: ['analyze_budget'], workflows: ['finance_review'] },
+  { id: '24', name: 'Leg-1', role: 'Legal Advisor', department: 'Operations', status: 'idle', tokensUsed: 4000, model: 'Claude Opus 4.5', workspacePath: './workspaces/leg-1', currentTask: undefined, reportsTo: '2', capabilities: ['contract_review'], workflows: ['risk_assessment'] },
+  { id: '25', name: 'Sup-1', role: 'Support Agent', department: 'Operations', status: 'active', tokensUsed: 16000, model: 'Qwen 3', workspacePath: './workspaces/sup-1', currentTask: 'Resolving ticket #9281', reportsTo: '2', capabilities: ['ticket_triage'], workflows: ['customer_incident_review'] },
+  { id: '26', name: 'Checkmate', role: 'Quality Auditor', department: 'Quality Assurance', status: 'active', tokensUsed: 500, model: 'Claude Sonnet 4.5', workspacePath: './workspaces/checkmate', currentTask: 'Verifying system robustness', reportsTo: '1', capabilities: ['code_audit', 'system_audit'], workflows: ['compliance_check'] },
+  {
+    id: '99',
+    name: 'QA-99',
+    role: 'Quality Assurance',
+    department: 'Quality Assurance',
+    status: 'idle',
+    tokensUsed: 0,
+    costUsd: 0,
+    budgetUsd: 10.0,
+    model: 'Gemini 3 Pro',
+    workspacePath: './workspaces/qa-99',
+    capabilities: [],
+    workflows: [],
+    modelConfig: {
+      modelId: 'gemini-3-pro',
+      provider: 'google',
+      temperature: 0.7,
+      systemPrompt: 'You are the quality assurance agent. Analyze missions for correctness and completeness.',
+      skills: [],
+      workflows: []
+    }
+  }
+];
+
+export const ROLE_ACTIONS: Record<string, { capabilities: string[], workflows: string[] }> = {
+  'CEO': {
+    capabilities: ['deep_research', 'system_audit', 'fetch_url', 'issue_alpha_directive'],
+    workflows: ['deploy_to_prod', 'emergency_shutdown', 'neural_handoff', 'Deep Analysis']
+  },
+  'COO': {
+    capabilities: ['schedule_meeting', 'Resource Check'],
+    workflows: ['resource_allocation', 'Ops Review']
+  },
+  'CTO': {
+    capabilities: ['code_review', 'debug', 'git_push', 'fetch_url'],
+    workflows: ['system_architecture_review', 'incident_response']
+  },
+  'CMO': {
+    capabilities: ['copywriting', 'seo_analysis'],
+    workflows: ['campaign_launch', 'market_trend_analysis']
+  },
+  'CRO': {
+    capabilities: ['lead_qualification', 'update_crm'],
+    workflows: ['quarterly_forecasting', 'client_onboarding']
+  },
+  'Product Lead': {
+    capabilities: ['user_interview', 'write_spec'],
+    workflows: ['sprint_planning', 'feature_roadmap']
+  },
+  'DevOps': {
+    capabilities: ['check_server_health', 'view_logs'],
+    workflows: ['pipeline_optimization', 'database_migration']
+  },
+  'Backend Dev': {
+    capabilities: ['api_test', 'database_query'],
+    workflows: ['refactor_microservice', 'api_documentation']
+  },
+  'Design Lead': {
+    capabilities: ['generate_image', 'ui_audit'],
+    workflows: ['design_system_update', 'usability_testing']
+  },
+  'Support Lead': {
+    capabilities: ['ticket_triage', 'knowledge_base_search'],
+    workflows: ['customer_incident_review', 'support_training']
+  },
+  'Security Auditor': {
+    capabilities: ['scan_vulnerabilities', 'code_audit', 'fetch_url'],
+    workflows: ['security_audit', 'compliance_check']
+  },
+  'Product Manager': {
+    capabilities: ['write_spec', 'analyze_feedback'],
+    workflows: ['sprint_planning', 'product_sync']
+  },
+  'Designer': {
+    capabilities: ['generate_image', 'figma_sync'],
+    workflows: ['design_system_update', 'prototype_review']
+  },
+  'Researcher': {
+    capabilities: ['market_research', 'data_analysis', 'fetch_url'],
+    workflows: ['User Feedback Analysis', 'competitive_audit']
+  },
+  'Copywriter': {
+    capabilities: ['copywriting', 'edit_content'],
+    workflows: ['campaign_launch', 'newsletter_draft']
+  },
+  'Social Media': {
+    capabilities: ['post_update', 'monitor_mentions'],
+    workflows: ['social_strategy', 'engagement_report']
+  },
+  'SEO Specialist': {
+    capabilities: ['seo_analysis', 'keyword_research'],
+    workflows: ['market_trend_analysis', 'search_optimization']
+  },
+  'Sales Rep': {
+    capabilities: ['lead_qualification', 'cold_call'],
+    workflows: ['quarterly_forecasting', 'pipeline_management']
+  },
+  'HR Manager': {
+    capabilities: ['employee_onboarding', 'conflict_resolution'],
+    workflows: ['policy_review', 'team_building']
+  },
+  'Finance Analyst': {
+    capabilities: ['analyze_budget', 'expense_tracking'],
+    workflows: ['finance_review', 'burn_rate_forecast']
+  },
+  'Legal Advisor': {
+    capabilities: ['contract_review', 'risk_analysis'],
+    workflows: ['risk_assessment', 'legal_filing']
+  },
+  'Support Agent': {
+    capabilities: ['ticket_triage', 'customer_chat'],
+    workflows: ['customer_incident_review', 'feedback_collection']
+  },
+  'Quality Auditor': {
+    capabilities: ['code_audit', 'system_audit', 'unit_testing'],
+    workflows: ['compliance_check', 'security_audit', 'quality_gate_review']
+  }
+};
+
+export const tasks: Task[] = [
+  { id: '101', title: 'Refactor Authentication Middleware', assignedTo: '3', status: 'in-progress', priority: 'high', createdAt: '2023-10-26T10:00:00Z', logs: ['Started analysis', 'Found deprecation warning', 'Updating dependencies'] },
+  { id: '102', title: 'Monthly Newsletter Draft', assignedTo: '4', status: 'pending', priority: 'medium', createdAt: '2023-10-27T09:00:00Z', logs: [] },
+  { id: '103', title: 'Fix Navbar Responsiveness', assignedTo: '6', status: 'in-progress', priority: 'medium', createdAt: '2023-10-27T11:30:00Z', logs: ['Reproduced issue on mobile', 'Applying flex-wrap fix'] },
+  { id: '104', title: 'Scale Kubernetes Cluster', assignedTo: '13', status: 'completed', priority: 'high', createdAt: '2023-10-26T08:00:00Z', logs: ['Adding 2 worker nodes', 'Scaling successful'] },
+  { id: '105', title: 'Analyze Q3 Churn', assignedTo: '23', status: 'pending', priority: 'low', createdAt: '2023-10-27T14:00:00Z', logs: [] },
+  { id: '106', title: 'Update Legal Terms', assignedTo: '24', status: 'in-progress', priority: 'high', createdAt: '2023-10-25T16:00:00Z', logs: ['Drafting new privacy policy clause'] },
+];
+
+/**
+ * @deprecated Use `loadAgents` from `../services/agentService` instead.
+ * That module handles TadpoleOS → Agent normalization, local overrides,
+ * and workspace path resolution. This file should only export static mock data.
+ */
+
+

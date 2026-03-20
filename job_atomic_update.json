@@ -1,0 +1,3 @@
+{
+  "prompt": "[DIRECTIVE] Use the 'db_health' tool with the argument '--output health.log' to check the database status and save the report. No conversation. Just execute."
+}
