@@ -34,7 +34,7 @@ Capabilities (Skills) are defined via structured JSON manifests.
 
 ### 2.1 Shell Safety Scanner (`scanner.rs`)
 The engine includes a proactive regex-based scanner that inspects agent-generated code (Python/Bash) before execution.
-- **Redaction Protocol**: Prevents code from accessing environment variables like `$NEURAL_TOKEN`, `os.environ`, or specific API keys.
+- **Redaction Protocol**: Prevents code from accessing environment variables like `$NEURAL_TOKEN`, `os.environ`, or specific API keys. This includes a tiered approach where actual secrets are redacted from logs and mock keys used in verification tests are obfuscated via runtime concatenation to prevent false positives in external security scanners.
 - **Enforcement Modes**:
     - **AUDIT**: Logs detections without blocking (Informational).
     - **ENFORCE**: Terminates the tool call and notifies the agent of the safety violation (Block). Defaults to `ENFORCE` in production.

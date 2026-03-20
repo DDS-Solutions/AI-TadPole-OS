@@ -7,7 +7,7 @@
 
 > **Status**: In-Progress / Parity Guard Enabled
 > **Version**: 1.1.4
-> **Last Updated**: 2026-03-20 (Verified 100% Quality Pass - Neural Health Update)
+> **Last Updated**: 2026-03-20 (Verified 100% Quality Pass - CI/CD Stabilization Update)
 
 Welcome to the **Tadpole OS Operations Manual**. This document is a comprehensive guide to the system's interface, interactive elements, and headless background processes. Use this as your primary reference for mastering the command-and-control surface of the Tadpole OS agent swarm.
 

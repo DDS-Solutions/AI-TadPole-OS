@@ -54,7 +54,7 @@ The entry point for the backend, built using the **Axum** framework. Refactored 
 
 ### 2. Agent Persistence & Swarm Ecosystem (`server-rs/src/agent/persistence.rs`)
 The "source of truth" for the agent swarm, architected around a unified persistence model.
-- **Unified SQLite State**: Discards declarative JSON file-sync in favor of a robust SQLite schema via `tadpole.db`. This eliminates data drift and ensures transactional consistency at the DB layer.
+- **Unified SQLite State**: Discards declarative JSON file-sync in favor of a robust SQLite schema via `tadpole.db`. This eliminates data drift and ensures transactional consistency at the DB layer. To prevent migration collisions during automated testing, the engine automatically utilizes an in-memory database (`sqlite::memory:`) in test environments.
 - **GitHub Native Hub**: The in-app Template Store connects natively to a designated public GitHub repository (e.g., `tadpole-os-templates`), functioning as an app store for industry-specific swarms (Legal, Healthcare, etc.).
 - **Sapphire Shield Protocol**: Enforces zero-trust execution for downloaded templates. Templates are restricted from containing compiled executables. Any dangerous skills (e.g., shell execution, real-world bug bounty) require mandatory, manual "Overlord" approval before the swarm can initialize.
 - **Metadata Support**: Flexible metadata structures allow the frontend to render premium designs, including hierarchical **Resource Monitoring** (real-time cost/token tracking).
