@@ -51,10 +51,8 @@ pub async fn create_job_handler(
     Json(req): Json<CreateJobRequest>,
 ) -> Result<impl IntoResponse, AppError> {
     // Validate agent exists (skip if it's a workflow job with an empty agent_id)
-    if !req.agent_id.is_empty() || req.workflow_id.is_none() {
-        if !state.registry.agents.contains_key(&req.agent_id) {
-            return Err(AppError::NotFound(format!("Agent '{}' not found", req.agent_id)));
-        }
+    if (!req.agent_id.is_empty() || req.workflow_id.is_none()) && !state.registry.agents.contains_key(&req.agent_id) {
+        return Err(AppError::NotFound(format!("Agent '{}' not found", req.agent_id)));
     }
 
     let job = create_job(&state.resources.pool, req).await

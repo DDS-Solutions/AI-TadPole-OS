@@ -1,0 +1,112 @@
+    Checking server-rs v1.0.0 (C:\Users\Home Office_PC\.gemini\antigravity\playground\tadpole-os\server-rs)
+error: this `if` statement can be collapsed
+   --> src\agent\memory.rs:450:25
+    |
+450 | /                         if should_delete {
+451 | |                             if tokio::fs::remove_dir_all(&scope_path).await.is_ok() {
+452 | |                                 deleted_count += 1;
+453 | |                             }
+454 | |                         }
+    | |_________________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.93.0/index.html#collapsible_if
+    = note: `-D clippy::collapsible-if` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+    |
+450 ~                         if should_delete
+451 ~                             && tokio::fs::remove_dir_all(&scope_path).await.is_ok() {
+452 |                                 deleted_count += 1;
+453 ~                             }
+    |
+
+error: this `else { if .. }` block can be collapsed
+   --> src\agent\openai.rs:185:20
+    |
+185 |               } else {
+    |  ____________________^
+186 | |                 if !self.config.supports_native_tools() {
+187 | |                     tracing::warn!(
+188 | |                         "🛡️ [Provider] Suppressing tools for '{}' (Incompatible with bridge)",
+...   |
+195 | |             },
+    | |_____________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.93.0/index.html#collapsible_else_if
+    = note: `-D clippy::collapsible-else-if` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::collapsible_else_if)]`
+help: collapse nested if block
+    |
+185 ~             } else if !self.config.supports_native_tools() {
+186 +                 tracing::warn!(
+187 ~                     "🛡️ [Provider] Suppressing tools for '{}' (Incompatible with bridge)",
+188 +                     self.config.model_id
+189 +                 );
+190 +                 None
+191 +             } else {
+192 +                 openai_tools
+193 ~             },
+    |
+
+error: struct update has no effect, all the fields in the struct have already been specified
+  --> src\agent\persistence.rs:91:15
+   |
+91 |             ..Default::default()
+   |               ^^^^^^^^^^^^^^^^^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.93.0/index.html#needless_update
+   = note: `-D clippy::needless-update` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::needless_update)]`
+
+error: this boolean expression can be simplified
+   --> src\agent\runner\mission_tools.rs:272:12
+    |
+272 |         if !tokio::fs::metadata(&final_path).await.is_ok() {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `tokio::fs::metadata(&final_path).await.is_err()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.93.0/index.html#nonminimal_bool
+    = note: `-D clippy::nonminimal-bool` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::nonminimal_bool)]`
+
+error: this boolean expression can be simplified
+   --> src\agent\runner\mission_tools.rs:281:12
+    |
+281 |         if !tokio::fs::metadata(&final_path).await.is_ok() && !path_str.contains("/") && !path_str.contains("\\") {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: try: `tokio::fs::metadata(&final_path).await.is_err()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.93.0/index.html#nonminimal_bool
+
+error: match can be simplified with `.unwrap_or_default()`
+   --> src\routes\oversight.rs:313:24
+    |
+313 |       let agent_quotas = match state.security.budget_guard.get_all_quotas().await {
+    |  ________________________^
+314 | |         Ok(q) => q,
+315 | |         Err(_) => Vec::new(),
+316 | |     };
+    | |_____^ help: ascribe the type std::vec::Vec<security::metering::Quota> and replace your expression with: `state.security.budget_guard.get_all_quotas().await.unwrap_or_default()`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.93.0/index.html#manual_unwrap_or_default
+    = note: `-D clippy::manual-unwrap-or-default` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::manual_unwrap_or_default)]`
+
+error: this `if` statement can be collapsed
+  --> src\routes\continuity.rs:54:5
+   |
+54 | /     if !req.agent_id.is_empty() || req.workflow_id.is_none() {
+55 | |         if !state.registry.agents.contains_key(&req.agent_id) {
+56 | |             return Err(AppError::NotFound(format!("Agent '{}' not found", req.agent_id)));
+57 | |         }
+58 | |     }
+   | |_____^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.93.0/index.html#collapsible_if
+help: collapse nested if block
+   |
+54 ~     if (!req.agent_id.is_empty() || req.workflow_id.is_none()) {
+55 ~         && !state.registry.agents.contains_key(&req.agent_id) {
+56 |             return Err(AppError::NotFound(format!("Agent '{}' not found", req.agent_id)));
+57 ~         }
+   |
+
+error: could not compile `server-rs` (bin "server-rs") due to 7 previous errors

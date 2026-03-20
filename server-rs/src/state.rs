@@ -213,7 +213,11 @@ impl AppState {
         let deploy_token = std::env::var("NEURAL_TOKEN").expect("🚨 FATAL: NEURAL_TOKEN environment variable MUST be set for the engine to start.");
 
         // Initialize DB
-        let database_url = std::env::var("DATABASE_URL").unwrap_or_else(|_| "sqlite:data/tadpole.db".to_string());
+        let database_url = if cfg!(test) {
+            "sqlite::memory:".to_string()
+        } else {
+            std::env::var("DATABASE_URL").unwrap_or_else(|_| "sqlite:data/tadpole.db".to_string())
+        };
         let pool = crate::db::init_db(&database_url).await.expect("Failed to initialize database");
 
         // Load Registries

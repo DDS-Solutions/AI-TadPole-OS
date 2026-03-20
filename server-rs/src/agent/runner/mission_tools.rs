@@ -269,7 +269,7 @@ impl AgentRunner {
         }
         // 🧩 Breadcrumb Resolution: If the direct path fails, try to resolve from recent history.
         let mut final_path = target_path.clone();
-        if !tokio::fs::metadata(&final_path).await.is_ok() {
+        if tokio::fs::metadata(&final_path).await.is_err() {
             let breadcrumbs = ctx.last_accessed_files.lock().unwrap();
             if let Some(resolved) = breadcrumbs.iter().find(|p| p.ends_with(path_str)) {
                 tracing::info!("🧩 [Context] Resolved ambiguous codebase path '{}' to '{}' via breadcrumbs", path_str, resolved);
@@ -278,7 +278,7 @@ impl AgentRunner {
         }
 
         // 🧩 Deep Resolution: If it's just a filename, try to find it in the src/ directory.
-        if !tokio::fs::metadata(&final_path).await.is_ok() && !path_str.contains("/") && !path_str.contains("\\") {
+        if tokio::fs::metadata(&final_path).await.is_err() && !path_str.contains("/") && !path_str.contains("\\") {
             let common_dirs = ["src", "src/agent", "server-rs/src", "server-rs/src/agent"];
             for dir in common_dirs {
                 let alt_path = root.join(dir).join(path_str);

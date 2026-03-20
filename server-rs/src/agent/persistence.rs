@@ -88,7 +88,6 @@ pub async fn load_agents_db(pool: &SqlitePool) -> Result<Vec<EngineAgent>> {
             current_task: None,
             failure_count: row.get::<Option<i64>, _>("failure_count").unwrap_or(0) as u32,
             last_failure_at: row.get::<Option<chrono::DateTime<chrono::Utc>>, _>("last_failure_at"),
-            ..Default::default()
         };
         agents.push(agent);
     }

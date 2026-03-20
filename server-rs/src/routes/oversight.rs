@@ -310,10 +310,7 @@ pub async fn get_security_quotas(
         total_spent += entry.value().cost_usd;
     }
 
-    let agent_quotas = match state.security.budget_guard.get_all_quotas().await {
-        Ok(q) => q,
-        Err(_) => Vec::new(),
-    };
+    let agent_quotas: Vec<crate::security::metering::Quota> = state.security.budget_guard.get_all_quotas().await.unwrap_or_default();
 
     let system_defense = state.security.system_monitor.get_system_defense_stats();
     let merkle_integrity = if state.security.audit_trail.verify_last_n(10, None).await.unwrap_or(false) { 1.0 } else { 0.0 };

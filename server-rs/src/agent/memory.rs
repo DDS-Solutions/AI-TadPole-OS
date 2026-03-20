@@ -447,10 +447,8 @@ pub async fn cleanup_orphaned_scopes(pool: &sqlx::SqlitePool) {
                             _ => false,    // Active or Pending
                         };
 
-                        if should_delete {
-                            if tokio::fs::remove_dir_all(&scope_path).await.is_ok() {
-                                deleted_count += 1;
-                            }
+                        if should_delete && tokio::fs::remove_dir_all(&scope_path).await.is_ok() {
+                            deleted_count += 1;
                         }
                     }
                 }

@@ -182,16 +182,14 @@ impl OpenAIProvider {
             user: self.config.external_id.clone(),
             tools: if openai_tools.as_ref().is_none_or(|t| t.is_empty()) {
                 None
+            } else if !self.config.supports_native_tools() {
+                tracing::warn!(
+                    "🛡️ [Provider] Suppressing tools for '{}' (Incompatible with bridge)",
+                    self.config.model_id
+                );
+                None
             } else {
-                if !self.config.supports_native_tools() {
-                    tracing::warn!(
-                        "🛡️ [Provider] Suppressing tools for '{}' (Incompatible with bridge)",
-                        self.config.model_id
-                    );
-                    None
-                } else {
-                    openai_tools
-                }
+                openai_tools
             },
         };
 

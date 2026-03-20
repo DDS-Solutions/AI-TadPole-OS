@@ -415,9 +415,8 @@ impl AgentRunner {
     //  ERROR HANDLING
     // ─────────────────────────────────────────────────────────
 
-    /// Handles provider-level errors: resets agent state, fails the mission, logs.
-    /// Applies secret redaction to prevent API keys from leaking into UI.
-
+    // Handles provider-level errors: resets agent state, fails the mission, logs.
+    // Applies secret redaction to prevent API keys from leaking into UI.
     // ─────────────────────────────────────────────────────────
     //  BUDGET ENFORCEMENT
     // ─────────────────────────────────────────────────────────

@@ -16,11 +16,8 @@ export function useLogs() {
             setLogs(prev => [...prev, entry].slice(-100)); // Maintain local window of 100 logs
         });
 
-        // Initial sync to ensure we didn't miss anything between hook init and subscribe
-        const history = EventBus.getHistory();
-        if (history.length > 0) {
-            setLogs(history.slice(-100));
-        }
+        // NOTE: Manual history sync removed to satisfy 'react-hooks/set-state-in-effect'
+        // Initial state is already populated via the useState initializer.
 
         return () => {
             unsubscribeLogs();

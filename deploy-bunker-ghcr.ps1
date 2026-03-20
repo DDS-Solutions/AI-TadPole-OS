@@ -9,6 +9,10 @@ $ghcrImage = "ghcr.io/dds-solutions/ai-tadpole-os:latest"
 
 Write-Host "[DEPLOY] Starting Tadpole OS Image-Based Deployment to $remoteHost..." -ForegroundColor Cyan
 
+# Step 0: Sync docker-compose.yml to Bunker
+Write-Host "[DEPLOY] Syncing docker-compose.yml to $remoteHost..." -ForegroundColor Yellow
+scp.exe -i $identityFile .\docker-compose.yml "$($remoteHost):$($remoteDir)/docker-compose.yml"
+
 # Step 1: Remote Pull & Restart
 Write-Host "[DEPLOY] Triggering remote image pull and restart on Swarm Bunker..." -ForegroundColor Yellow
 
