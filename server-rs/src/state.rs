@@ -209,8 +209,14 @@ impl AppState {
         let (audio_stream_tx, _) = broadcast::channel(5000);
         let telemetry_tx = crate::telemetry::TELEMETRY_TX.clone();
 
-        // Security: Load Neural Token (Mandatory)
-        let deploy_token = std::env::var("NEURAL_TOKEN").expect("🚨 FATAL: NEURAL_TOKEN environment variable MUST be set for the engine to start.");
+        // Security: Load Neural Token (Mandatory, but relaxed for tests)
+        let deploy_token = std::env::var("NEURAL_TOKEN").unwrap_or_else(|_| {
+            if cfg!(test) {
+                "ci-test-token-placeholder".to_string()
+            } else {
+                panic!("🚨 FATAL: NEURAL_TOKEN environment variable MUST be set for the engine to start.");
+            }
+        });
 
         // Initialize DB
         let database_url = if cfg!(test) {
