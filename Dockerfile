@@ -16,16 +16,14 @@ COPY . .
 RUN npm run build
 
 # --- Stage 2: Build the Rust Backend ---
-FROM rust:1.88-slim AS builder
+FROM ubuntu:24.04 AS builder
 
-# Increase stack size and drastically limit jobs to save memory
-ENV RUST_MIN_STACK=16777216
-ENV CARGO_BUILD_JOBS=1
-ENV CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
-ENV PROTOC=/usr/bin/protoc
+# Prevent interactive prompts during apt-get
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Install build dependencies
+# Install build dependencies and Rust
 RUN apt-get update && apt-get install -y \
+    curl \
     pkg-config \
     libssl-dev \
     build-essential \
@@ -33,7 +31,18 @@ RUN apt-get update && apt-get install -y \
     cmake \
     clang \
     lld \
+    git \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Rust
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# Increase stack size and drastically limit jobs to save memory
+ENV RUST_MIN_STACK=16777216
+ENV CARGO_BUILD_JOBS=1
+ENV CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
+ENV PROTOC=/usr/bin/protoc
 
 WORKDIR /usr/src/app
 
@@ -49,7 +58,10 @@ ENV RUSTFLAGS="-C lto=off -C opt-level=z -C debuginfo=0 -C link-arg=-fuse-ld=lld
 RUN cd server-rs && cargo build --target-dir /tmp/target --release
 
 # --- Stage 3: Final Runtime Image (Ultra-lightweight) ---
-FROM debian:bookworm-slim
+FROM ubuntu:24.04
+
+# Prevent interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /app
 
