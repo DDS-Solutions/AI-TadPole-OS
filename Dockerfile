@@ -86,8 +86,8 @@ COPY data /app/data
 # Create workspaces directory for agent sandboxes
 RUN mkdir -p /app/workspaces
 
-# Create non-root user with UID 1000 (standard for first local user)
-RUN groupadd -g 1000 tadpole && useradd -r -u 1000 -g tadpole tadpole
+# Create non-root user (UID 1001 to avoid conflict with default ubuntu user 1000)
+RUN groupadd -g 1001 tadpole && useradd -r -u 1001 -g tadpole tadpole
 RUN chown -R tadpole:tadpole /app
 
 # Single port — Axum serves both API and frontend
