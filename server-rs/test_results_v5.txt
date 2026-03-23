@@ -1,0 +1,181 @@
+   Compiling server-rs v1.0.0 (C:\Users\Home Office_PC\.gemini\antigravity\playground\tadpole-os\server-rs)
+warning: unused import: `serde_json::Value`
+ --> src\main.rs:3:5
+  |
+3 | use serde_json::Value;
+  |     ^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `serde_json::Value`
+  --> src\state.rs:11:5
+   |
+11 | use serde_json::Value;
+   |     ^^^^^^^^^^^^^^^^^
+
+warning: unused import: `opentelemetry::trace::TraceContextExt`
+  --> src\agent\runner\mod.rs:65:17
+   |
+65 |             use opentelemetry::trace::TraceContextExt;
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `crate::telemetry::TelemetryLayer`
+ --> src\startup.rs:2:5
+  |
+2 | use crate::telemetry::TelemetryLayer;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `tokio::sync::broadcast`
+ --> src\startup.rs:3:5
+  |
+3 | use tokio::sync::broadcast;
+  |     ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `serde_json::json`
+ --> src\telemetry.rs:4:5
+  |
+4 | use serde_json::json;
+  |     ^^^^^^^^^^^^^^^^
+
+warning: unused variable: `analysis_prompt`
+   --> src\agent\runner\mod.rs:637:25
+    |
+637 |                     let analysis_prompt = format!(
+    |                         ^^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_analysis_prompt`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `span`
+  --> src\telemetry.rs:79:13
+   |
+79 |         let span = ctx.span(&id).expect("Span not found");
+   |             ^^^^ help: if this is intentional, prefix it with an underscore: `_span`
+
+warning: type alias `TelemetrySender` is never used
+   --> src\state.rs:127:10
+    |
+127 | pub type TelemetrySender = tokio::sync::broadcast::Sender<::serde_json::Value>;
+    |          ^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `speak` and `is_speaking` are never used
+   --> src\agent\audio.rs:117:18
+    |
+ 13 | impl NeuralAudioEngine {
+    | ---------------------- methods in this implementation
+...
+117 |     pub async fn speak(&self, text: &str) -> Result<Vec<u8>> {
+    |                  ^^^^^
+...
+131 |     pub async fn is_speaking(&self, _pcm_chunk: &[f32]) -> Result<bool> {
+    |                  ^^^^^^^^^^^
+
+warning: `server-rs` (bin "server-rs" test) generated 10 warnings (run `cargo fix --bin "server-rs" -p server-rs --tests` to apply 8 suggestions)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 59.98s
+     Running unittests src\main.rs (target\debug\deps\server_rs-7a9efbedf517b491.exe)
+
+running 81 tests
+test adapter::tests_filesystem::tests::filesystem_rejects_path_traversal_dotdot ... ok
+test agent::continuity::scheduler::tests::test_compute_next_run_daily_cron ... ok
+test agent::continuity::scheduler::tests::test_compute_next_run_invalid_cron ... ok
+test adapter::tests_filesystem::tests::filesystem_list_empty_dir ... ok
+test agent::continuity::scheduler::tests::test_compute_next_run_shorthand_hourly ... ok
+test adapter::tests_filesystem::tests::filesystem_rejects_absolute_path_escape ... ok
+test adapter::tests_filesystem::tests::filesystem_delete_file_removes_it ... ok
+test adapter::tests_filesystem::tests::filesystem_list_shows_directories_with_suffix ... ok
+test agent::mcp_tests::tests::test_call_tool_not_found ... ok
+test adapter::tests_filesystem::tests::filesystem_list_files_returns_sorted ... ok
+test agent::groq::tests::test_groq_regex ... ok
+test agent::groq::tests::test_groq_regex_missing_bracket_with_curlies ... ok
+test agent::groq::tests::test_groq_regex_with_parens ... ok
+test agent::mcp_tests::tests::test_list_tools_includes_system_tools ... ok
+test agent::mcp_tests::tests::test_list_tools_includes_agent_skills ... ok
+test agent::mcp_tests::tests::test_call_tool_system_delegate ... ok
+test agent::rates::tests::test_calculate_cost_gemini ... ok
+test agent::rates::tests::test_calculate_cost_gpt4o ... ok
+test agent::null_provider::tests::null_provider_returns_ok_not_err ... ok
+test agent::rates::tests::test_calculate_cost_unknown ... ok
+test adapter::tests_filesystem::tests::filesystem_write_and_read_roundtrip ... ok
+test adapter::tests_filesystem::tests::filesystem_nested_directory_creation ... ok
+test agent::mcp_tests::tests::test_call_tool_native_delegate ... ok
+test agent::runner::synthesis::tests::test_build_system_prompt_pruning ... ok
+test agent::runner::tests::validate_input_accepts_normal_message ... ok
+test agent::runner::tests::validate_input_allows_non_circular_lineage ... ok
+test agent::runner::tests::validate_input_detects_circular_recursion ... ok
+test agent::runner::tests::validate_input_enforces_depth_limit ... FAILED
+test agent::runner::tests::build_system_prompt_includes_role_and_department ... ok
+test agent::runner::tests::build_system_prompt_includes_lineage_when_present ... ok
+test agent::skill_manifest::tests::test_manifest_budget_gate ... ok
+test agent::skill_manifest::tests::test_manifest_schema_validation ... ok
+test agent::sanitizer::tests::test_sanitizer_override ... ok
+test agent::skill_manifest::tests::test_manifest_security_gate ... ok
+test agent::sanitizer::tests::test_sanitizer_safe ... ok
+test agent::sanitizer::tests::test_sanitizer_token ... ok
+test agent::test_sanitizer::tests::test_sanitization_detects_token_leakage ... ok
+test agent::test_sanitizer::tests::test_sanitization_detects_instruction_override ... ok
+test agent::test_sanitizer::tests::test_sanitization_ignores_harmless_text ... ok
+test agent::tests_rate_limiter::tests::rate_limiter_acquires_under_tpm_limit ... ok
+test agent::tests_rate_limiter::tests::rate_limiter_acquires_under_rpm_limit ... ok
+test agent::tests_rate_limiter::tests::rate_limiter_active_with_both ... ok
+test agent::tests_rate_limiter::tests::rate_limiter_active_with_rpm ... ok
+test agent::tests_rate_limiter::tests::rate_limiter_active_with_tpm ... ok
+test agent::tests_rate_limiter::tests::rate_limiter_records_usage ... ok
+test agent::tests_rate_limiter::tests::rate_limiter_inactive_without_limits ... ok
+test middleware::auth_rate_limit::tests::test_brute_force_blocking ... ok
+test agent::runner::tools::tests::test_propose_capability_validation_rejection ... ok
+test agent::memory::tests::test_check_memory_duplicate ... ok
+test agent::runner::tests::validate_input_rejects_oversized_message ... FAILED
+test agent::runner::tests::test_finalize_run_fallback_on_empty_output ... ok
+test routes::agent_tests::test_get_agents_pagination ... ok
+test routes::agent_tests::test_create_agent_invalid_payload ... ok
+test routes::audio::tests::test_speak_browser_fallback ... ok
+test routes::agent_tests::test_create_agent_success ... ok
+test routes::agent_tests::test_get_agents_empty ... ok
+test routes::audio::tests::test_speak_missing_text ... ok
+test routes::audio::tests::test_transcribe_missing_audio ... ok
+test routes::auth_tests::test_auth_invalid_bearer_token ... ok
+test routes::agent::tests::test_create_agent_handler ... ok
+test agent::tests_rate_limiter::tests::rate_limiter_tpm_blocks_when_exceeded ... ok
+test routes::pagination::tests::paginated_response_empty_collection ... ok
+test routes::pagination::tests::paginated_response_generates_hateoas_links ... ok
+test routes::pagination::tests::paginated_response_no_next_on_last_page ... ok
+test routes::pagination::tests::paginated_response_slices_correctly ... ok
+test routes::pagination::tests::pagination_caps_per_page ... ok
+test routes::pagination::tests::pagination_defaults ... ok
+test routes::auth_tests::test_auth_valid_ws_subprotocol ... ok
+test routes::auth_tests::test_auth_invalid_ws_subprotocol ... ok
+test agent::test_oversight::test_e2e_oversight_approval_loop ... ok
+test routes::auth_tests::test_auth_missing_header ... ok
+test utils::graph::tests::test_generate_summary ... ok
+test routes::auth_tests::test_auth_valid_bearer_token ... ok
+test routes::mcp_test::tests::test_execute_system_tool_api_returns_accepted ... ok
+test utils::graph::tests::test_code_graph_scan ... ok
+test routes::ws_tests::test_ws_invalid_origin_blocked ... ok
+test routes::mcp_test::tests::test_list_mcp_tools_endpoint ... ok
+test routes::ws_tests::test_ws_missing_origin_allowed ... ok
+test utils::parser::tests::test_extract_rust_symbols ... ok
+test utils::parser::tests::test_extract_typescript_symbols ... ok
+test routes::ws_tests::test_ws_valid_connection_and_auth ... ok
+
+failures:
+
+---- agent::runner::tests::validate_input_enforces_depth_limit stdout ----
+
+thread 'agent::runner::tests::validate_input_enforces_depth_limit' (22964) panicked at src\agent\runner\mod.rs:943:9:
+assertion failed: result.is_err()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- agent::runner::tests::validate_input_rejects_oversized_message stdout ----
+
+thread 'agent::runner::tests::validate_input_rejects_oversized_message' (30164) panicked at src\agent\runner\mod.rs:903:9:
+assertion failed: result.is_err()
+
+
+failures:
+    agent::runner::tests::validate_input_enforces_depth_limit
+    agent::runner::tests::validate_input_rejects_oversized_message
+
+test result: FAILED. 79 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.53s
+
+error: test failed, to rerun pass `--bin server-rs`

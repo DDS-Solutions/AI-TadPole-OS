@@ -1,0 +1,76 @@
+   Compiling server-rs v1.0.0 (C:\Users\Home Office_PC\.gemini\antigravity\playground\tadpole-os\server-rs)
+warning: unused import: `serde_json::Value`
+ --> src\main.rs:3:5
+  |
+3 | use serde_json::Value;
+  |     ^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `serde_json::Value`
+  --> src\state.rs:11:5
+   |
+11 | use serde_json::Value;
+   |     ^^^^^^^^^^^^^^^^^
+
+warning: unused import: `opentelemetry::trace::TraceContextExt`
+  --> src\agent\runner\mod.rs:65:17
+   |
+65 |             use opentelemetry::trace::TraceContextExt;
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `crate::telemetry::TelemetryLayer`
+ --> src\startup.rs:2:5
+  |
+2 | use crate::telemetry::TelemetryLayer;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `tokio::sync::broadcast`
+ --> src\startup.rs:3:5
+  |
+3 | use tokio::sync::broadcast;
+  |     ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `serde_json::json`
+ --> src\telemetry.rs:4:5
+  |
+4 | use serde_json::json;
+  |     ^^^^^^^^^^^^^^^^
+
+error[E0521]: borrowed data escapes outside of method
+   --> src\agent\runner\mod.rs:544:13
+    |
+423 |           ctx: &RunContext,
+    |           ---  - let's call the lifetime of this reference `'1`
+    |           |
+    |           `ctx` is a reference that is only valid in the method body
+...
+544 | /             std::thread::spawn(move || {
+545 | |                 let rt = tokio::runtime::Builder::new_current_thread()
+546 | |                     .enable_all()
+547 | |                     .build()
+...   |
+664 | |                 });
+665 | |             });
+    | |              ^
+    | |              |
+    | |______________`ctx` escapes the method body here
+    |                argument requires that `'1` must outlive `'static`
+
+warning: unused variable: `analysis_prompt`
+   --> src\agent\runner\mod.rs:636:25
+    |
+636 |                     let analysis_prompt = format!(
+    |                         ^^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_analysis_prompt`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `span`
+  --> src\telemetry.rs:79:13
+   |
+79 |         let span = ctx.span(&id).expect("Span not found");
+   |             ^^^^ help: if this is intentional, prefix it with an underscore: `_span`
+
+For more information about this error, try `rustc --explain E0521`.
+warning: `server-rs` (bin "server-rs" test) generated 8 warnings
+error: could not compile `server-rs` (bin "server-rs" test) due to 1 previous error; 8 warnings emitted

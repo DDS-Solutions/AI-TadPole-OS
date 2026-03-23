@@ -1,0 +1,18 @@
+# Build artifacts
+node_modules/
+target/
+server-rs/target/
+
+# Version control
+.git/
+
+# IDE & OS
+.vscode/
+.idea/
+*.swp
+*.swo
+Thumbs.db
+.DS_Store
+
+# Deployment artifacts
+tadpole-deploy.tar

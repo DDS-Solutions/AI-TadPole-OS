@@ -1,0 +1,35 @@
+services:
+  tadpole:
+    # Build from GHCR (Pre-compiled Image)
+    image: ghcr.io/dds-solutions/ai-tadpole-os:latest
+    container_name: tadpole-os
+    # SECURE BINDING: 
+    # Tailscale entirely restricts access to this machine. We bind to 10.0.0.1 so that 
+    # the Windows PC can connect; SSH rebuilds were stripping the volatile TAILSCALE_IP env var.
+    ports:
+      - "10.0.0.1:8000:8000"
+    environment:
+      # Inject necessary environment variables into the container
+      # NEURAL_TOKEN is REQUIRED — container will fail to start if unset.
+      - NEURAL_TOKEN=${NEURAL_TOKEN:?NEURAL_TOKEN must be set in .env}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - INCEPTION_API_KEY=${INCEPTION_API_KEY}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-}
+      - DATABASE_URL=sqlite:/app/data/tadpole.db
+    volumes:
+      # Mount the workspaces directory (sandboxed at data/workspaces)
+      - ./data/workspaces:/app/data/workspaces
+      # Persist the unified data directory (database, skills, workflows)
+      - ./data:/app/data
+      # Persist database backups
+      - ./backups:/app/backups
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-sf", "http://localhost:8000/engine/health" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

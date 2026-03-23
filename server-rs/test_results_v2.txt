@@ -1,0 +1,157 @@
+   Compiling server-rs v1.0.0 (C:\Users\Home Office_PC\.gemini\antigravity\playground\tadpole-os\server-rs)
+warning: unused import: `serde_json::Value`
+ --> src\main.rs:3:5
+  |
+3 | use serde_json::Value;
+  |     ^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `serde_json::Value`
+  --> src\state.rs:11:5
+   |
+11 | use serde_json::Value;
+   |     ^^^^^^^^^^^^^^^^^
+
+warning: unused import: `opentelemetry::trace::TraceContextExt`
+  --> src\agent\runner\mod.rs:64:17
+   |
+64 |             use opentelemetry::trace::TraceContextExt;
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `crate::telemetry::TelemetryLayer`
+ --> src\startup.rs:2:5
+  |
+2 | use crate::telemetry::TelemetryLayer;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `tokio::sync::broadcast`
+ --> src\startup.rs:3:5
+  |
+3 | use tokio::sync::broadcast;
+  |     ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `serde_json::json`
+ --> src\telemetry.rs:4:5
+  |
+4 | use serde_json::json;
+  |     ^^^^^^^^^^^^^^^^
+
+error[E0560]: struct `TaskPayload` has no field named `skills`
+   --> src\agent\runner\mod.rs:657:25
+    |
+657 |                         skills: None, // Added
+    |                         ^^^^^^ `TaskPayload` does not have this field
+    |
+    = note: all struct fields are already assigned
+
+error[E0560]: struct `TaskPayload` has no field named `workflows`
+   --> src\agent\runner\mod.rs:658:25
+    |
+658 |                         workflows: None, // Added
+    |                         ^^^^^^^^^ `TaskPayload` does not have this field
+    |
+    = note: all struct fields are already assigned
+
+error[E0308]: mismatched types
+   --> src\agent\runner\mod.rs:343:25
+    |
+343 |                 skills: a.skills.clone(), // Added
+    |                         ^^^^^^^^^^^^^^^^ expected `Option<Vec<String>>`, found `Vec<String>`
+    |
+    = note: expected enum `std::option::Option<Vec<_>>`
+             found struct `Vec<_>`
+help: try wrapping the expression in `Some`
+    |
+343 |                 skills: Some(a.skills.clone()), // Added
+    |                         +++++                +
+
+error[E0308]: mismatched types
+   --> src\agent\runner\mod.rs:344:28
+    |
+344 |                 workflows: a.workflows.clone(), // Added
+    |                            ^^^^^^^^^^^^^^^^^^^ expected `Option<Vec<String>>`, found `Vec<String>`
+    |
+    = note: expected enum `std::option::Option<Vec<_>>`
+             found struct `Vec<_>`
+help: try wrapping the expression in `Some`
+    |
+344 |                 workflows: Some(a.workflows.clone()), // Added
+    |                            +++++                   +
+
+error[E0609]: no field `skills` on type `&TaskPayload`
+   --> src\agent\runner\mod.rs:359:35
+    |
+359 |         if let Some(s) = &payload.skills { resolved_config.skills = Some(s.clone()); } // Added
+    |                                   ^^^^^^ unknown field
+    |
+    = note: available fields are: `message`, `cluster_id`, `department`, `provider`, `model_id` ... and 11 others
+
+error[E0282]: type annotations needed
+   --> src\agent\runner\mod.rs:359:74
+    |
+359 |         if let Some(s) = &payload.skills { resolved_config.skills = Some(s.clone()); } // Added
+    |                                                                          ^ cannot infer type
+
+error[E0609]: no field `workflows` on type `&TaskPayload`
+   --> src\agent\runner\mod.rs:360:35
+    |
+360 |         if let Some(w) = &payload.workflows { resolved_config.workflows = Some(w.clone()); } // Added
+    |                                   ^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `message`, `cluster_id`, `department`, `provider`, `model_id` ... and 11 others
+
+error[E0282]: type annotations needed
+   --> src\agent\runner\mod.rs:360:80
+    |
+360 |         if let Some(w) = &payload.workflows { resolved_config.workflows = Some(w.clone()); } // Added
+    |                                                                                ^ cannot infer type
+
+error[E0560]: struct `runner::RunContext` has no field named `traceparent`
+   --> src\agent\runner\mod.rs:411:13
+    |
+411 |             traceparent: payload.traceparent.clone(), // Added
+    |             ^^^^^^^^^^^ `runner::RunContext` does not have this field
+    |
+    = note: all struct fields are already assigned
+
+error[E0560]: struct `TaskPayload` has no field named `skills`
+   --> src\agent\runner\mod.rs:828:13
+    |
+828 |             skills: None, // Added
+    |             ^^^^^^ `TaskPayload` does not have this field
+    |
+    = note: all struct fields are already assigned
+
+error[E0560]: struct `TaskPayload` has no field named `workflows`
+   --> src\agent\runner\mod.rs:829:13
+    |
+829 |             workflows: None, // Added
+    |             ^^^^^^^^^ `TaskPayload` does not have this field
+    |
+    = note: all struct fields are already assigned
+
+error[E0063]: missing fields `skills` and `workflows` in initializer of `ModelConfig`
+   --> src\agent\runner\mod.rs:959:27
+    |
+959 |             model_config: crate::agent::types::ModelConfig {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ missing `skills` and `workflows`
+
+error[E0063]: missing fields `skills` and `workflows` in initializer of `ModelConfig`
+   --> src\agent\runner\mod.rs:992:27
+    |
+992 |             model_config: crate::agent::types::ModelConfig {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ missing `skills` and `workflows`
+
+warning: unused variable: `span`
+  --> src\telemetry.rs:79:13
+   |
+79 |         let span = ctx.span(&id).expect("Span not found");
+   |             ^^^^ help: if this is intentional, prefix it with an underscore: `_span`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+Some errors have detailed explanations: E0063, E0282, E0308, E0560, E0609.
+For more information about an error, try `rustc --explain E0063`.
+warning: `server-rs` (bin "server-rs" test) generated 7 warnings
+error: could not compile `server-rs` (bin "server-rs" test) due to 13 previous errors; 7 warnings emitted

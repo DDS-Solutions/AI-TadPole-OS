@@ -1,0 +1,41 @@
+[
+    {
+        "id": "1812a795-dec8-496e-93f4-ca3dd871c4f2",
+        "name": "Agent Runner Baseline",
+        "category": "Runner",
+        "test_id": "BM-RUN-01",
+        "mean_ms": 29.035999999999998,
+        "p95_ms": 29.616719999999997,
+        "p99_ms": 30.4878,
+        "target_value": "< 100ms",
+        "status": "PASS",
+        "metadata": "Self-triggered via Dashboard",
+        "created_at": "2026-03-04T18:27:51.827896200+00:00"
+    },
+    {
+        "id": "c7aed5a4-4249-40bc-848f-78ca42fca2be",
+        "name": "Persistence Stress (50 Writes)",
+        "category": "Database",
+        "test_id": "BM-DB-01",
+        "mean_ms": 109.7032,
+        "p95_ms": 111.89726399999999,
+        "p99_ms": 115.18836,
+        "target_value": "< 200ms",
+        "status": "PASS",
+        "metadata": "Self-triggered via Dashboard",
+        "created_at": "2026-03-04T18:27:52.942653300+00:00"
+    },
+    {
+        "id": "44f71b04-228b-4b5c-bebd-14155c780e15",
+        "name": "Rate Limiter Overhead",
+        "category": "Rate Limiter",
+        "test_id": "BM-RL-01",
+        "mean_ms": 0.245,
+        "p95_ms": 0.2499,
+        "p99_ms": 0.25725,
+        "target_value": "< 1ms",
+        "status": "PASS",
+        "metadata": "100 cycles of acquire/record",
+        "created_at": "2026-03-04T18:27:53.947822200+00:00"
+    }
+]

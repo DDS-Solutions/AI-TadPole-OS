@@ -1,0 +1,83 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment and Secrets
+.env
+.env.*
+!.env.example
+*.local
+**/*_providers.json
+**/infra_providers.json
+
+# Database
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+*.db.bak
+
+# Dependencies
+node_modules/
+server-rs/target/
+
+# Build and IDE
+dist/
+dist-ssr/
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Test payloads and local data
+*payload.json
+agents_audit.json
+agents_final*.json
+agents_sync*.json
+debug_db.py
+debug_fks.py
+repro_fk.py
+engine_log.txt
+server_log.txt
+vite_log.txt
+lint_output.txt
+test_output.txt
+db_schema_output.txt
+test_results.json
+coverage/
+playwright-report/
+test-results/
+**/data/*.json
+
+# Lint and test reports
+lint_report*.txt
+lint_failures*.txt
+lint_results*.json
+test_report*.txt
+
+# Deployment artifacts
+*.tar
+
+# Build error logs
+build_errors.txt
+
+# Agent Workspaces and Local State
+workspaces/
+
+#
+Temporary
+files
+test-output.txt
+test_results.json
+coverage_report.txt
+.tmp/
