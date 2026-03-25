@@ -1,0 +1,17 @@
+{
+  "name": "monitor_mentions",
+  "description": "Auto-migrated skill: Monitor Mentions",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Monitor Mentions"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Monitor Mentions\""
+}

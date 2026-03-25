@@ -1,0 +1,9 @@
+{
+  "name": "test_skill",
+  "description": "Test skill description",
+  "execution_command": "cmd /c echo Hello skills",
+  "schema": {
+    "properties": {},
+    "type": "object"
+  }
+}
