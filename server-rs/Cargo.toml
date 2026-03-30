@@ -73,7 +73,7 @@ arrow-array = { version = "57.3.0", optional = true }
 # Neural Audio (Optional for Legacy CPUs)
 ort = { version = "2.0.0-rc.9", optional = true }
 hound = { version = "3.5", optional = true }
-ndarray = { version = "0.15", optional = true }
+ndarray = { version = "0.17", optional = true }
 whisper-rs = { version = "0.11", optional = true }
 mdns-sd = "0.18.2"
 local-ip-address = "0.6"
