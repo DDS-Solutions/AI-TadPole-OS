@@ -5547,7 +5547,7 @@ dependencies = [
  "tree-sitter",
  "tree-sitter-rust",
  "tree-sitter-typescript",
- "tungstenite 0.21.0",
+ "tungstenite 0.28.0",
  "unicode-normalization",
  "uuid",
  "walkdir",

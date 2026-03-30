@@ -55,7 +55,7 @@ unicode-normalization = "0.1"
 base64 = "0.22"
 backoff = { version = "0.4", features = ["tokio"] }
 tokio-tungstenite = "0.21"
-tungstenite = "0.21"
+tungstenite = "0.28"
 
 # Hydra-RS: Code Intelligence Dependencies
 tree-sitter = "0.24"
