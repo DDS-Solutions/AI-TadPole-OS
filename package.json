@@ -16,7 +16,7 @@
     "tauri:icon": "tauri icon"
   },
   "dependencies": {
-    "@google/genai": "^1.46.0",
+    "@google/genai": "^1.47.0",
     "@types/dagre": "^0.7.53",
     "clsx": "^2.1.1",
     "dagre": "^0.8.5",
