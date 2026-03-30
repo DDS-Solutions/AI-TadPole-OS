@@ -1,0 +1,29 @@
+commit 280a98c6d0d4c0d433bc7b2d2795d1e19aae83c4
+Author: Overlord <prowificameraremote@gmail.com>
+Date:   Sat Mar 28 13:23:12 2026 -0400
+
+    Harden engine reliability and sync docs to v1.1.4
+
+commit e33686e24d7d3e080bd7b800aa58113b7c5d05d9
+Author: Overlord <prowificameraremote@gmail.com>
+Date:   Sat Mar 28 13:06:15 2026 -0400
+
+    Add context summarization, prompt caching, and stable agent loading
+
+commit 953f302eb94cc7d3347ecfd2a91620e2b09dbaa6
+Author: Overlord <prowificameraremote@gmail.com>
+Date:   Sat Mar 28 11:05:47 2026 -0400
+
+    ci: install protoc explicitly for release builds
+
+commit 1ffd3e65f49abe428b404934128a27f3cdd72877
+Author: Overlord <prowificameraremote@gmail.com>
+Date:   Fri Mar 27 23:56:32 2026 -0400
+
+    Harden memory and migration persistence parity handling
+
+commit 7d5d3039c720aa5f2dd395c1a982f93d056ccdb3
+Author: Overlord <prowificameraremote@gmail.com>
+Date:   Fri Mar 27 23:09:06 2026 -0400
+
+    Anchor workflow and memory paths to base dir and add connector migration

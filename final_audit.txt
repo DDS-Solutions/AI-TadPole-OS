@@ -1,0 +1,178 @@
+--- Tadpole OS Parity Audit ---
+
+Found 62 routes in router.rs
+[OK] [CODE->OPENAPI] GET /agents (Legacy/Internal)
+[OK] [CODE->OPENAPI] GET /v1/agents
+[OK] [CODE->OPENAPI] POST /agents (Legacy/Internal)
+[OK] [CODE->OPENAPI] POST /v1/agents
+[OK] [CODE->OPENAPI] POST /agents/{id}/tasks (Legacy/Internal)
+[OK] [CODE->OPENAPI] POST /v1/agents/{id}/tasks
+[OK] [CODE->OPENAPI] PUT /agents/{id} (Legacy/Internal)
+[OK] [CODE->OPENAPI] PUT /v1/agents/{id}
+[OK] [CODE->OPENAPI] POST /agents/{id}/reset (Legacy/Internal)
+[OK] [CODE->OPENAPI] POST /v1/agents/{id}/reset
+[OK] [CODE->OPENAPI] POST /agents/{id}/pause (Legacy/Internal)
+[OK] [CODE->OPENAPI] POST /v1/agents/{id}/pause
+[OK] [CODE->OPENAPI] POST /agents/{id}/resume (Legacy/Internal)
+[OK] [CODE->OPENAPI] POST /v1/agents/{id}/resume
+[OK] [CODE->OPENAPI] POST /agents/{id}/mission (Legacy/Internal)
+[OK] [CODE->OPENAPI] POST /v1/agents/{id}/mission
+[OK] [CODE->OPENAPI] GET /search/memory (Legacy/Internal)
+[OK] [CODE->OPENAPI] GET /v1/search/memory
+[OK] [CODE->OPENAPI] GET /oversight/pending (Legacy/Internal)
+[OK] [CODE->OPENAPI] GET /v1/oversight/pending
+[OK] [CODE->OPENAPI] GET /oversight/ledger (Legacy/Internal)
+[OK] [CODE->OPENAPI] GET /v1/oversight/ledger
+[OK] [CODE->OPENAPI] GET /infra/models (Legacy/Internal)
+[OK] [CODE->OPENAPI] GET /v1/infra/models
+[OK] [CODE->OPENAPI] GET /infra/nodes (Legacy/Internal)
+[OK] [CODE->OPENAPI] GET /v1/infra/nodes
+[OK] [CODE->OPENAPI] POST /infra/nodes/discover (Legacy/Internal)
+[OK] [CODE->OPENAPI] POST /v1/infra/nodes/discover
+[OK] [CODE->OPENAPI] GET /skills (Legacy/Internal)
+[OK] [CODE->OPENAPI] GET /v1/skills
+[OK] [CODE->OPENAPI] GET /skills/manifests (Legacy/Internal)
+[OK] [CODE->OPENAPI] GET /v1/skills/manifests
+[OK] [CODE->OPENAPI] GET /skills/mcp-tools (Legacy/Internal)
+[OK] [CODE->OPENAPI] GET /v1/skills/mcp-tools
+[OK] [CODE->OPENAPI] POST /skills/import (Legacy/Internal)
+[OK] [CODE->OPENAPI] POST /v1/skills/import
+[OK] [CODE->OPENAPI] PUT /skills/scripts/{name} (Legacy/Internal)
+[OK] [CODE->OPENAPI] PUT /v1/skills/scripts/{name}
+[OK] [CODE->OPENAPI] PUT /skills/hooks/{name} (Legacy/Internal)
+[OK] [CODE->OPENAPI] PUT /v1/skills/hooks/{name}
+[OK] [CODE->OPENAPI] GET /benchmarks (Legacy/Internal)
+[OK] [CODE->OPENAPI] GET /v1/benchmarks
+[OK] [CODE->OPENAPI] POST /benchmarks (Legacy/Internal)
+[OK] [CODE->OPENAPI] POST /v1/benchmarks
+[OK] [CODE->OPENAPI] GET /docs/knowledge (Legacy/Internal)
+[OK] [CODE->OPENAPI] GET /v1/docs/knowledge
+[OK] [CODE->OPENAPI] GET /env-schema (Legacy/Internal)
+[OK] [CODE->OPENAPI] GET /v1/env-schema
+[OK] [CODE->OPENAPI] GET /engine/health (Legacy/Internal)
+[OK] [CODE->OPENAPI] GET /v1/engine/health
+[OK] [CODE->OPENAPI] POST /engine/deploy (Legacy/Internal)
+[OK] [CODE->OPENAPI] POST /v1/engine/deploy
+[OK] [CODE->OPENAPI] POST /engine/kill (Legacy/Internal)
+[OK] [CODE->OPENAPI] POST /v1/engine/kill
+[OK] [CODE->OPENAPI] GET /engine/ws (Legacy/Internal)
+[OK] [CODE->OPENAPI] GET /v1/engine/ws
+[OK] [CODE->OPENAPI] POST /engine/transcribe (Legacy/Internal)
+[OK] [CODE->OPENAPI] POST /v1/engine/transcribe
+[OK] [CODE->OPENAPI] POST /engine/speak (Legacy/Internal)
+[OK] [CODE->OPENAPI] POST /v1/engine/speak
+[OK] [CODE->OPENAPI] POST /api/pull (Legacy/Internal)
+[OK] [CODE->OPENAPI] POST /v1/api/pull
+
+Scanning for Documentation Tags (@docs)...
+[OK] [ADG-TAG] ARCHITECTURE:BootSequence synchronized
+[OK] [ADG-TAG] ARCHITECTURE:StatePersistence synchronized
+[OK] [ADG-TAG] OPERATIONS_MANUAL:Governance synchronized
+[OK] [ADG-TAG] API_REFERENCE:GetAgents synchronized
+[OK] [ADG-TAG] API_REFERENCE:SendTask synchronized
+[OK] [ADG-TAG] API_REFERENCE:ResetAgent synchronized
+[OK] [ADG-TAG] OPERATIONS_MANUAL:EmergencyKill synchronized
+[OK] [ADG-TAG] API_REFERENCE:GetAgentMemory synchronized
+[OK] [ADG-TAG] API_REFERENCE:GetPendingOversight synchronized
+[OK] [ADG-TAG] API_REFERENCE:GetOversightLedger synchronized
+[OK] [ADG-TAG] OPERATIONS_MANUAL:GovernanceSettings synchronized
+[OK] [ADG-TAG] API_REFERENCE:DecideOversight synchronized
+[OK] [ADG-TAG] API_REFERENCE:UpdateAgentQuota synchronized
+[OK] [ADG-TAG] API_REFERENCE:GetQuotas synchronized
+[OK] [ADG-TAG] API_REFERENCE:GetAuditTrail synchronized
+[OK] [ADG-TAG] API_REFERENCE:GetIntegrityStatus synchronized
+[OK] [ADG-TAG] OPERATIONS_MANUAL:AgentHealth synchronized
+[OK] [ADG-TAG] SECURITY:ScanningPolicies synchronized
+
+Scanning for Environment Variables...
+[OK] [ENV-VAR] OLLAMA_HOST documented
+[OK] [ENV-VAR] AUTO_APPROVE_SAFE_SKILLS documented
+[OK] [ENV-VAR] LANCEDB_DEDUPE_THRESHOLD documented
+[OK] [ENV-VAR] DATABASE_URL documented
+[OK] [ENV-VAR] TADPOLE_NULL_PROVIDERS documented
+[OK] [ENV-VAR] STATIC_DIR documented
+[OK] [ENV-VAR] AUDIT_PRIVATE_KEY documented
+[OK] [ENV-VAR] PORT documented
+[OK] [ENV-VAR] PIPER_MODEL_PATH documented
+[OK] [ENV-VAR] MAX_AGENTS documented
+[OK] [ENV-VAR] OPENAI_API_KEY documented
+[OK] [ENV-VAR] MAX_SWARM_DEPTH documented
+[OK] [ENV-VAR] NEURAL_TOKEN documented
+[OK] [ENV-VAR] ALLOWED_ORIGINS documented
+[OK] [ENV-VAR] DISCORD_WEBHOOK documented
+[OK] [ENV-VAR] DEFAULT_AGENT_BUDGET_USD documented
+[OK] [ENV-VAR] WORKSPACE_ROOT documented
+[OK] [ENV-VAR] MAX_CLUSTERS documented
+[OK] [ENV-VAR] MAX_TASK_LENGTH documented
+[OK] [ENV-VAR] LANCEDB_DRIFT_THRESHOLD documented
+[OK] [ENV-VAR] PRIVACY_MODE documented
+[OK] [ENV-VAR] WHISPER_MODEL_PATH documented
+[OK] [ENV-VAR] HEARTBEAT_INTERVAL_SECS documented
+[OK] [ENV-VAR] KUBERNETES_SERVICE_HOST documented
+[OK] [ENV-VAR] GROQ_API_KEY documented
+[OK] [ENV-VAR] VAD_MODEL_PATH documented
+[OK] [ENV-VAR] CLUSTER_ID documented
+
+Scanning Skills & Workflows...
+[OK] [SKILL-MANIFEST] [analyze_budget] echo "Simulated execution of Analyze Budget" verified
+[OK] [SKILL-MANIFEST] [analyze_feedback] echo "Simulated execution of Analyze Feedback" verified
+[OK] [SKILL-MANIFEST] [api_test] echo "Simulated execution of API Test" verified
+[OK] [SKILL-MANIFEST] [archive_to_vault] (Native Execution Mode) verified
+[OK] [SKILL-MANIFEST] [brainstorming] echo 'Initiating brainstorming session...' verified
+[OK] [SKILL-MANIFEST] [check_server_health] echo "Simulated execution of Check Server Health" verified
+[OK] [SKILL-MANIFEST] [code_audit] echo "Simulated execution of Code Audit" verified
+[OK] [SKILL-MANIFEST] [code_generation] echo 'Generating code...' verified
+[OK] [SKILL-MANIFEST] [code_review] echo "Simulated execution of Code Review" verified
+[OK] [SKILL-MANIFEST] [cold_call] echo "Simulated execution of Cold Call" verified
+[OK] [SKILL-MANIFEST] [conflict_resolution] echo "Simulated execution of Conflict Resolution" verified
+[OK] [SKILL-MANIFEST] [content_generation] echo 'Generating content...' verified
+[OK] [SKILL-MANIFEST] [contract_review] echo "Simulated execution of Contract Review" verified
+[OK] [SKILL-MANIFEST] [copywriting] echo "Simulated execution of Copywriting" verified
+[OK] [SKILL-MANIFEST] [customer_chat] echo "Simulated execution of Customer Chat" verified
+[OK] [SKILL-MANIFEST] [database_query] echo "Simulated execution of Database Query" verified
+[OK] [SKILL-MANIFEST] [data_analysis] echo "Simulated execution of Data Analysis" verified
+[OK] [SKILL-MANIFEST] [debug] echo "Simulated execution of Debug" verified
+[OK] [SKILL-MANIFEST] [deep_research] echo "Simulated execution of Deep Research" verified
+[OK] [SKILL-MANIFEST] [delete_file] (Native Execution Mode) verified
+[OK] [SKILL-MANIFEST] [documentation] echo 'Generating documentation...' verified
+[OK] [SKILL-MANIFEST] [edit_content] echo "Simulated execution of Edit Content" verified
+[OK] [SKILL-MANIFEST] [employee_onboarding] echo "Simulated execution of Employee Onboarding" verified
+[OK] [SKILL-MANIFEST] [expense_tracking] echo "Simulated execution of Expense Tracking" verified
+[OK] [SKILL-MANIFEST] [fetch_url] (Native Execution Mode) verified
+[OK] [SKILL-MANIFEST] [figma_sync] echo "Simulated execution of Figma Sync" verified
+[OK] [SKILL-MANIFEST] [generate_image] echo "Simulated execution of Generate Image" verified
+[OK] [SKILL-MANIFEST] [git_push] echo "Simulated execution of Git Push" verified
+[OK] [SKILL-MANIFEST] [issue_alpha_directive] (Native Execution Mode) verified
+[OK] [SKILL-MANIFEST] [keyword_research] echo "Simulated execution of Keyword Research" verified
+[OK] [SKILL-MANIFEST] [knowledge_base_search] echo "Simulated execution of Knowledge Base Search" verified
+[OK] [SKILL-MANIFEST] [lead_qualification] echo "Simulated execution of Lead Qualification" verified
+[OK] [SKILL-MANIFEST] [list_files] (Native Execution Mode) verified
+[OK] [SKILL-MANIFEST] [market_research] echo "Simulated execution of Market Research" verified
+[OK] [SKILL-MANIFEST] [monitor_mentions] echo "Simulated execution of Monitor Mentions" verified
+[OK] [SKILL-MANIFEST] [notify_discord] (Native Execution Mode) verified
+[OK] [SKILL-MANIFEST] [performance_tracking] echo 'Generating performance report...' verified
+[OK] [SKILL-MANIFEST] [post_update] echo "Simulated execution of Post Update" verified
+[OK] [SKILL-MANIFEST] [query_financial_logs] (Native Execution Mode) verified
+[OK] [SKILL-MANIFEST] [read_file] (Native Execution Mode) verified
+[OK] [SKILL-MANIFEST] [refactoring] echo 'Refactoring code...' verified
+[OK] [SKILL-MANIFEST] [Resource Check] echo "Simulated execution of Resource Check" verified
+[OK] [SKILL-MANIFEST] [risk_analysis] echo "Simulated execution of Risk Analysis" verified
+[OK] [SKILL-MANIFEST] [scan_vulnerabilities] echo "Simulated execution of Scan Vulnerabilities" verified
+[OK] [SKILL-MANIFEST] [schedule_meeting] echo "Simulated execution of Schedule Meeting" verified
+[OK] [SKILL-MANIFEST] [seo_analysis] echo "Simulated execution of SEO Analysis" verified
+[OK] [SKILL-MANIFEST] [system_audit] echo "Simulated execution of System Audit" verified
+[OK] [SKILL-MANIFEST] [task_prioritization] echo 'Prioritizing tasks...' verified
+[OK] [SKILL-MANIFEST] [test_skill] echo 'Test skill executed successfully.' verified
+[OK] [SKILL-MANIFEST] [ticket_triage] echo "Simulated execution of Ticket Triage" verified
+[OK] [SKILL-MANIFEST] [ui_audit] echo "Simulated execution of UI Audit" verified
+[OK] [SKILL-MANIFEST] [unit_testing] echo "Simulated execution of Unit Testing" verified
+[OK] [SKILL-MANIFEST] [update_crm] echo "Simulated execution of Update CRM" verified
+[OK] [SKILL-MANIFEST] [user_interview] echo "Simulated execution of User Interview" verified
+[OK] [SKILL-MANIFEST] [view_logs] echo "Simulated execution of View Logs" verified
+[OK] [SKILL-MANIFEST] [write_file] (Native Execution Mode) verified
+[OK] [SKILL-MANIFEST] [write_spec] echo "Simulated execution of Write Spec" verified
+
+Checking API Documentation Parity...
+[OK] [DOCS-PARITY] API_REFERENCE.md is synchronized
+
+Audit Complete. Errors found: 0

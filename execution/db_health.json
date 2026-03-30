@@ -1,0 +1,5 @@
+{
+  "name": "db_health",
+  "description": "Checks the database status and integrity and saves to health.log.",
+  "executionCommand": "python \"D:\\TadpoleOS-Dev\\execution\\db_health_check.py\" --output \"D:\\TadpoleOS-Dev\\data\\workspaces\\executive-core\\health.log\""
+}

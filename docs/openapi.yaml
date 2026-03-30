@@ -1,0 +1,1948 @@
+openapi: 3.1.0
+info:
+  title: Tadpole OS Engine API
+  version: 1.1.4
+  description: |
+    All primary business endpoints (agents, oversight, infrastructure, benchmarks, MCP)
+    are versioned under the `/v1/` prefix. Engine-level control routes (health, 
+    deploy, kill, shutdown, ws, audio) are available at both the root level and 
+    nested under `/v1/engine/` for consistent client-side orchestration.
+    All list endpoints return paginated responses. Errors follow RFC 9457.
+  contact:
+    name: Tadpole OS
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:8000
+    description: Local Development
+  - url: http://remote-engine.tadpole.local:8000
+    description: Swarm Bunker (Tailscale)
+
+security:
+  - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: NEURAL_TOKEN from the .env file
+
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+      description: Page number (1-indexed).
+    PerPageParam:
+      name: per_page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 25
+        minimum: 1
+        maximum: 100
+      description: Items per page. Clamped to 1–100.
+
+  schemas:
+    EngineAgent:
+      type: object
+      description: Represents a registered agent in the swarm.
+      required: [id, name, role, department, status]
+      properties:
+        id:
+          type: string
+          example: "1"
+        name:
+          type: string
+          example: "Agent of Nine"
+        role:
+          type: string
+          example: "CEO"
+        department:
+          type: string
+          example: "Executive"
+        status:
+          type: string
+          enum: [idle, thinking, active, paused]
+        model_id:
+          type: ['string', 'null']
+        budget_usd:
+          type: number
+          format: double
+        cost_usd:
+          type: number
+          format: double
+        skills:
+          type: array
+          items:
+            type: string
+        workflows:
+          type: array
+          items:
+            type: string
+        mcp_tools:
+          type: array
+          items:
+            type: string
+        failureCount:
+          type: integer
+          description: Number of consecutive failures before throttling.
+          example: 0
+        lastFailureAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: Timestamp of the last recorded failure.
+        category:
+          type: string
+          enum: [user, ai]
+          description: Categorization for UI filtering and registry placement.
+        requires_oversight:
+          type: boolean
+          description: Toggle for manual gate enforcement.
+        working_memory:
+          type: object
+          description: Initial working memory state.
+          default: false
+
+    TaskPayload:
+      type: object
+      description: Payload for dispatching a task to an agent.
+      required: [message]
+      properties:
+        message:
+          type: string
+        clusterId:
+          type: ['string', 'null']
+        department:
+          type: string
+        provider:
+          type: string
+        modelId:
+          type: string
+        apiKey:
+          type: ['string', 'null']
+        baseUrl:
+          type: ['string', 'null']
+        rpm:
+          type: ['integer', 'null']
+        tpm:
+          type: ['integer', 'null']
+        budgetUsd:
+          type: number
+          format: double
+        swarmDepth:
+          type: integer
+          default: 0
+        swarmLineage:
+          type: array
+          items:
+            type: string
+        externalId:
+          type: ['string', 'null']
+        analysis:
+          type: boolean
+          default: false
+          description: If true, triggers a Mission Analysis (Agent 99) sub-mission upon completion to perform LanceDB semantic pruning, drift detection, memory deduplication, and strategy debriefing.
+          
+    VoiceRequest:
+      type: object
+      description: Request payload for text-to-speech synthesis.
+      required: [text]
+      properties:
+        text:
+          type: string
+          example: "Neural uplink established."
+        voice:
+          type: string
+          default: "onyx"
+        model:
+          type: string
+          default: "tts-1"
+
+    ProblemDetails:
+      type: object
+      description: RFC 9457 Problem Details for HTTP APIs.
+      properties:
+        type:
+          type: string
+          format: uri
+          example: "https://tadpole.os/errors/404"
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+        message:
+          type: string
+          description: Backward-compatible alias for detail
+
+    OversightEntry:
+      type: object
+      description: An oversight governance entry awaiting or recording a decision.
+      properties:
+        id:
+          type: string
+        agent_id:
+          type: string
+        tool_name:
+          type: string
+        args:
+          type: object
+        decision:
+          type: ['string', 'null']
+          enum: [pending, approved, rejected, null]
+
+    HATEOASLink:
+      type: object
+      description: A HATEOAS hypermedia link.
+      properties:
+        href:
+          type: string
+          description: The URI of the linked resource.
+        method:
+          type: string
+          description: The HTTP method for the link.
+
+    PaginatedResponse:
+      type: object
+      description: Standard paginated response envelope with HATEOAS navigation links.
+      required: [data, page, per_page, total, total_pages]
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+          description: Array of resources for the current page.
+        page:
+          type: integer
+          example: 1
+        per_page:
+          type: integer
+          example: 25
+        total:
+          type: integer
+          example: 42
+        total_pages:
+          type: integer
+          example: 2
+        _links:
+          type: object
+          description: HATEOAS navigation links for pagination.
+          properties:
+            self:
+              $ref: '#/components/schemas/HATEOASLink'
+            first:
+              $ref: '#/components/schemas/HATEOASLink'
+            next:
+              $ref: '#/components/schemas/HATEOASLink'
+            last:
+              $ref: '#/components/schemas/HATEOASLink'
+            prev:
+              $ref: '#/components/schemas/HATEOASLink'
+
+    McpTool:
+      type: object
+      description: A Model Context Protocol tool definition with real-time telemetry.
+      required: [name, description, source]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        input_schema:
+          type: object
+          description: JSON Schema for the tool's expected arguments.
+        source:
+          type: string
+          example: "system"
+        stats:
+          $ref: '#/components/schemas/McpToolStats'
+
+    McpToolStats:
+      type: object
+      description: Real-time telemetry for an MCP tool.
+      required: [total_invocations, successful_invocations, failed_invocations, avg_latency_ms]
+      properties:
+        total_invocations:
+          type: integer
+        successful_invocations:
+          type: integer
+        failed_invocations:
+          type: integer
+        avg_latency_ms:
+          type: number
+          format: double
+        last_executed_at:
+          type: string
+          format: date-time
+          nullable: true
+    BenchmarkResult:
+      type: object
+      description: A recorded performance benchmark result.
+      required: [id, name, category, test_id, mean_ms, status, created_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "Token Latency Test"
+        category:
+          type: string
+          example: "LLM Performance"
+        test_id:
+          type: string
+          example: "gemini-flash-p95"
+        mean_ms:
+          type: number
+          format: double
+        p95_ms:
+          type: number
+          format: double
+          nullable: true
+        p99_ms:
+          type: number
+          format: double
+          nullable: true
+        target_value:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [PASS, FAIL, NEEDS_INVESTIGATION]
+        metadata:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+
+    SystemDefense:
+      type: object
+      description: Real-time hardware-level security and performance telemetry.
+      properties:
+        ram_pressure:
+          type: number
+          format: double
+          description: Percentage of host RAM in use.
+        cpu_load:
+          type: number
+          format: double
+          description: Percentage of host CPU load.
+        sandbox_type:
+          type: string
+          example: "Docker"
+        is_sandboxed:
+          type: boolean
+
+    SecurityIntegrityResponse:
+      type: object
+      description: Outcome of the Merkle Chain health check.
+      properties:
+        status:
+          type: string
+          example: "Verified"
+        score:
+          type: number
+          format: double
+          example: 100.0
+        chain_length:
+          type: integer
+          example: 1450
+        verified_at:
+          type: string
+          format: date-time
+
+    SecurityQuotaResponse:
+      type: object
+      description: Combined budget and system defense telemetry.
+      properties:
+        budget:
+          type: object
+          properties:
+            total_usd: { type: number, format: double }
+            remaining_usd: { type: number, format: double }
+            reset_at: { type: string, format: date-time }
+        systemDefense:
+          $ref: '#/components/schemas/SystemDefense'
+
+    McpToolsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/McpTool'
+      example:
+        - name: "list_file_symbols"
+          description: "Lists symbols via Hydra-RS"
+        - name: "get_symbol_body"
+          description: "Retrieves symbol source"
+
+    SkillManifest:
+      type: object
+      description: A declarative definition for an agent skill with Sapphire safety constraints.
+      required: [schema_version, name, description, version, danger_level]
+      properties:
+        schema_version: { type: string, example: "1" }
+        name: { type: string }
+        display_name: { type: string, nullable: true }
+        description: { type: string }
+        version: { type: string, example: "1.0.0" }
+        author: { type: string, nullable: true }
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Permission'
+        toolset_group: { type: string, nullable: true }
+        danger_level:
+          $ref: '#/components/schemas/DangerLevel'
+        requires_oversight:
+          type: boolean
+          default: false
+        parameters:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/SkillParameter'
+        hooks:
+          type: object
+          nullable: true
+          properties:
+            before_execute: { type: string, nullable: true }
+            after_execute: { type: string, nullable: true }
+        category:
+          type: string
+          default: "user"
+
+    SkillParameter:
+      type: object
+      required: [type]
+      properties:
+        type: { type: string }
+        required: { type: boolean, nullable: true }
+        default: { type: object, nullable: true }
+
+    DangerLevel:
+      type: string
+      enum: [low, medium, high, critical]
+
+    Permission:
+      type: string
+      enum:
+        - "network:outbound"
+        - "filesystem:read"
+        - "filesystem:write"
+        - "shell:execute"
+        - "budget:spend"
+
+    ScheduledJob:
+      type: object
+      description: An autonomous scheduled background mission (Continuity Scheduler).
+      required: [id, name, cron_schedule, mission_payload, is_active]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        cron_schedule:
+          type: string
+          example: "0 * * * *"
+        mission_payload:
+          $ref: '#/components/schemas/TaskPayload'
+        is_active:
+          type: boolean
+          default: true
+        budget_usd:
+          type: number
+          format: double
+        cost_usd:
+          type: number
+          format: double
+        failed_runs:
+          type: integer
+          default: 0
+        max_failures:
+          type: integer
+          default: 3
+
+    SwarmNode:
+      type: object
+      description: A discovered or registered Bunker node in the local swarm.
+      properties:
+        id: { type: string }
+        name: { type: string }
+        address: { type: string }
+        status: { type: string, enum: [online, offline, throttled] }
+        last_seen: { type: string, format: date-time }
+        metadata:
+          type: object
+          additionalProperties: { type: string }
+        _links:
+          type: object
+          properties:
+            self: { $ref: '#/components/schemas/HATEOASLink' }
+            pull: { $ref: '#/components/schemas/HATEOASLink' }
+
+    ModelCatalogEntry:
+      type: object
+      description: A model available for download via the Model Store.
+      properties:
+        id: { type: string }
+        name: { type: string }
+        provider: { type: string }
+        vram_required_gb: { type: number, format: double }
+        description: { type: string }
+    RegisterCapabilityResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "registered"
+        name:
+          type: string
+          example: "my_new_skill"
+
+    CapabilityImportResponse:
+      type: object
+      required: [type, data, preview]
+      properties:
+        type:
+          type: string
+          enum: [skill, workflow, hook]
+        data:
+          type: object
+          description: The structured definition (SkillDefinition, WorkflowDefinition, or HookDefinition).
+        preview:
+          type: string
+          description: The raw content of the imported file for visual verification.
+
+    RegisterCapabilityRequest:
+      type: object
+      required: [type, data, category]
+      properties:
+        type:
+          type: string
+          enum: [skill, workflow, hook]
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/SkillDefinition'
+            - $ref: '#/components/schemas/WorkflowDefinition'
+            - $ref: '#/components/schemas/HookDefinition'
+        category:
+          type: string
+          enum: [user, ai]
+
+    SkillDefinition:
+      type: object
+      required: [name, description, execution_command]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        description: { type: string }
+        execution_command: { type: string }
+        schema: { type: object, description: "JSON Schema for skill arguments" }
+        oversight_required: { type: boolean, default: true }
+        doc_url: { type: string, nullable: true }
+        tags: { type: array, items: { type: string } }
+        full_instructions: { type: string, nullable: true }
+        category: { type: string, default: "user" }
+
+    WorkflowDefinition:
+      type: object
+      required: [name, content]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        content: { type: string }
+        doc_url: { type: string, nullable: true }
+        tags: { type: array, items: { type: string } }
+        category: { type: string, default: "user" }
+
+    HookDefinition:
+      type: object
+      required: [name, description, hook_type, content]
+      properties:
+        name: { type: string }
+        description: { type: string }
+        hook_type: { type: string, example: "post-tool" }
+        content: { type: string }
+        active: { type: boolean, default: true }
+        category: { type: string, default: "user" }
+
+    ProviderConfig:
+      type: object
+      required: [id, name, protocol]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        icon: { type: string, nullable: true }
+        apiKey: { type: string, nullable: true }
+        baseUrl: { type: string, nullable: true }
+        protocol:
+          type: string
+          enum: [openai, anthropic, google, ollama, xai, deepseek, inception]
+        externalId: { type: string, nullable: true }
+        customHeaders:
+          type: object
+          additionalProperties: { type: string }
+        defaultConfig:
+          $ref: '#/components/schemas/ModelConfig'
+        audioModel: { type: string, nullable: true }
+
+    ModelEntry:
+      type: object
+      required: [id, name, providerId]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        providerId: { type: string }
+        modality:
+          type: string
+          enum: [text, vision, multimodal, audio]
+        max_tokens: { type: integer, nullable: true }
+        context_window: { type: integer, nullable: true }
+        cost_per_1k_tokens: { type: number, format: double, nullable: true }
+
+    ModelConfig:
+       type: object
+       properties:
+         temperature: { type: number, format: double }
+         top_p: { type: number, format: double }
+         max_tokens: { type: integer, nullable: true }
+         presence_penalty: { type: number, format: double }
+         frequency_penalty: { type: number, format: double }
+         stop_sequences: { type: array, items: { type: string } }
+         extra_parameters:
+           type: object
+           additionalProperties: { type: object }
+
+paths:
+  /v1/engine/health:
+    get:
+      operationId: getEngineHealth
+      summary: Engine Terminal Diagnostics
+      description: Returns 200 OK with realtime engine diagnostics.
+      security: []
+      tags: [Engine]
+      responses:
+        '200':
+          description: Engine is healthy
+
+  /v1/engine/ws:
+    get:
+      operationId: engineWs
+      summary: WebSocket Hub
+      responses:
+        '101': { description: Switching Protocols }
+
+  /v1/engine/live-voice:
+    get:
+      operationId: engineLiveVoice
+      summary: Gemini Multimodal Live WebSocket
+      description: |
+        Upgrades the connection to a persistent WebSocket for real-time 
+        multimodal interaction with Gemini 3 Pro/Flash. 
+        Requires 'bearer.<token>' subprotocol for authentication in the browser.
+      tags: [Engine]
+      responses:
+        '101': { description: Switching Protocols }
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /v1/engine/health:
+    get:
+      $ref: '#/paths/~1v1~1health'
+
+  /v1/engine/deploy:
+    post:
+      operationId: engineDeploy
+      summary: Trigger Deployment
+      description: Triggers a production deployment via PowerShell.
+      tags: [Engine]
+      responses:
+        '202': { description: Deployment initiated }
+
+  /v1/engine/kill:
+    post:
+      operationId: engineKill
+      summary: Kill All Agents
+      description: Halts all running agents. Server remains online.
+      tags: [Engine]
+      responses:
+        '200': { description: Agents halted }
+
+  /v1/engine/transcribe:
+    post:
+      operationId: engineTranscribe
+      summary: Audio Transcription
+      description: Transcribes audio via Groq Whisper (Cloud). Local Whisper is experimental.
+      tags: [Engine]
+      responses:
+        '200': { description: Transcription successful }
+
+  /v1/engine/speak:
+    post:
+      operationId: engineSpeak
+      summary: Text-to-Speech Synthesis
+      description: Synthesizes text to high-fidelity audio using the server-side TTS engine.
+      tags: [Engine]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoiceRequest'
+      responses:
+        '200':
+          description: Audio stream returned
+          content:
+            audio/mpeg:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid text provided
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /v1/engine/shutdown:
+    post:
+      operationId: engineShutdown
+      summary: Graceful Shutdown
+      description: Graceful server shutdown. Persists state before exit.
+      tags: [Engine]
+      responses:
+        '200': { description: Shutdown sequence initiated }
+
+  /v1/agents:
+    get:
+      operationId: listAgents
+      summary: List all agents
+      description: Returns a paginated list of all registered agents from DashMap and DB.
+      tags: [Agents]
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Paginated list of registered agents
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/EngineAgent'
+        '401':
+          description: Unauthorized — missing or invalid Bearer token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+    post:
+      operationId: createAgent
+      summary: Create a new agent
+      description: Creates or registers a new agent. Returns 201 with a Location header.
+      tags: [Agents]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EngineAgent'
+      responses:
+        '201':
+          description: Agent created
+          headers:
+            Location:
+              schema:
+                type: string
+              description: URI of the newly created agent
+        '400':
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /v1/agents/{id}/tasks:
+    post:
+      operationId: sendAgentTask
+      summary: Send a task to an agent
+      description: Dispatches a task resource to the agent for async processing. Returns 202 Accepted.
+      tags: [Agents]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique agent identifier.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskPayload'
+      responses:
+        '202':
+          description: Task accepted for async processing
+        '404':
+          description: Agent not found
+        '404':
+          description: Agent not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /v1/agents/{id}/pause:
+    post:
+      operationId: pauseAgent
+      summary: Pause Agent
+      tags: [Agents]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Agent paused }
+
+  /v1/agents/{id}/resume:
+    post:
+      operationId: resumeAgent
+      summary: Resume Agent
+      tags: [Agents]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Agent resumed }
+ 
+  /v1/agents/{id}/reset:
+    post:
+      operationId: resetAgent
+      summary: Reset Agent Failure Count
+      description: Resets an agent's failure count and returns it to idle status.
+      tags: [Agents]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Agent failure count reset
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: "ok" }
+                  message: { type: string, example: "Failure count reset." }
+
+  /v1/agents/{id}:
+    put:
+      operationId: updateAgent
+      summary: Update an agent
+      description: Modifies an existing agent's configuration (role, model, budget, etc.).
+      tags: [Agents]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EngineAgent'
+      responses:
+        '200': { description: Agent updated }
+        '404': { $ref: '#/components/responses/NotFound' }
+    delete:
+      operationId: deleteAgent
+      summary: De-register an agent
+      tags: [Agents]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '204': { description: Agent removed }
+ 
+  /v1/agents/{id}/mission:
+    post:
+      operationId: syncMission
+      summary: Sync Mission State
+      tags: [Agents]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Arbitrary mission state JSON.
+      responses:
+        '200': { description: Mission synced }
+
+  /v1/search/memory:
+    get:
+      operationId: searchMemory
+      summary: Semantic Memory Search
+      description: Performs a vector search across agent working memories and mission logs.
+      tags: [System]
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema: { type: string }
+        - name: agent_id
+          in: query
+          required: false
+          schema: { type: string }
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string }
+                  entries:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MemoryEntry'
+
+  /v1/infra/providers:
+    get:
+      operationId: listProviders
+      summary: List Providers
+      tags: [Infrastructure]
+      responses:
+        '200': { description: Success }
+
+  /v1/infra/providers/{id}:
+    put:
+      operationId: updateProvider
+      summary: Update a provider
+      description: Modifies an existing provider configuration in the registry.
+      tags: [Infrastructure]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProviderConfig'
+      responses:
+        '200': { description: Provider updated }
+        '400': { description: Validation failed }
+        '404': { description: Provider not found }
+    delete:
+      operationId: deleteProvider
+      summary: Delete a provider
+      description: Removes a provider from the registry.
+      tags: [Infrastructure]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '204': { description: Provider removed }
+
+  /v1/infra/providers/{id}/test:
+    post:
+      operationId: testProvider
+      summary: Test Provider Connectivity
+      tags: [Infrastructure]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Handshake successful }
+
+  /v1/infra/models:
+    get:
+      operationId: listModels
+      summary: List Models
+      tags: [Infrastructure]
+      responses:
+        '200': { description: Success }
+
+  /v1/infra/models/{id}:
+    put:
+      operationId: updateModel
+      summary: Update a model entry
+      description: Modifies an existing model entry in the registry.
+      tags: [Infrastructure]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelEntry'
+      responses:
+        '200': { description: Model updated }
+        '400': { description: Validation failed }
+        '404': { description: Model not found }
+    delete:
+      operationId: deleteModel
+      summary: Delete a model entry
+      description: Removes a model from the registry.
+      tags: [Infrastructure]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '204': { description: Model removed }
+
+  /v1/infra/nodes:
+    get:
+      operationId: listNodes
+      summary: List Nodes
+      tags: [Infrastructure]
+      responses:
+        '200': { description: Success }
+
+  /v1/infra/nodes/discover:
+    post:
+      operationId: discoverNodes
+      summary: Discover Network Nodes
+      tags: [Infrastructure]
+      responses:
+        '200': { description: Discovery started }
+
+  /v1/infra/model-store/catalog:
+    get:
+      operationId: getModelStoreCatalog
+      summary: Get Model Catalog
+      description: Returns the VRAM-aware model catalog from configured local inference nodes.
+      tags: [Infrastructure]
+      responses:
+        '200':
+          description: List of available models
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ModelCatalogEntry'
+
+  /v1/infra/model-store/pull:
+    post:
+      operationId: pullModel
+      summary: Pull Model to Swarm Node
+      description: Proxies a model pull request to a specific Swarm node's local inference engine.
+      tags: [Infrastructure]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [nodeId, modelName]
+              properties:
+                nodeId: { type: string }
+                modelName: { type: string }
+                insecure: { type: boolean, default: false }
+      responses:
+        '202': { description: Model pull initiated }
+        '404': { description: Node or Model not found }
+
+  /v1/agents/{agent_id}/memories:
+    get:
+      operationId: getAgentMemory
+      summary: Get Agent Memories
+      description: Returns a paginated list of long-term vector memory entries for a specific agent.
+      tags: [Agents]
+      parameters:
+        - name: agent_id
+          in: path
+          required: true
+          description: The unique agent identifier.
+          schema:
+            type: string
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Memory entries retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "ok"
+                  entries:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id: { type: string }
+                        text: { type: string }
+                        mission_id: { type: string }
+                        timestamp: { type: number, format: double }
+        '404':
+          description: Agent or memory not found
+        '500':
+          description: Failed to query vector database
+    post:
+      operationId: saveAgentMemory
+      summary: Record New Memory
+      description: Manually records a new text memory for an agent (triggers embedding).
+      tags: [Agents]
+      parameters:
+        - name: agent_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: The text content of the memory.
+                mission_id:
+                  type: string
+                  description: Optional mission ID associated with the memory.
+              required:
+                - text
+      responses:
+        '201':
+          description: Memory recorded successfully
+        '400':
+          description: Invalid request body
+        '404':
+          description: Agent not found
+  /v1/agents/{agent_id}/memories/{row_id}:
+    delete:
+      operationId: deleteAgentMemory
+      summary: Delete Memory Entry
+      description: Deletes a specific vector memory entry by its underlying row ID.
+      tags: [Agents]
+      parameters:
+        - name: agent_id
+          in: path
+          required: true
+          description: The unique agent identifier.
+          schema:
+            type: string
+        - name: row_id
+          in: path
+          required: true
+          description: The LanceDB row index.
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Memory deleted successfully
+        '404':
+          description: Agent or memory not found
+        '500':
+          description: Failed to query vector database
+
+  /v1/skills/{name}:
+    get:
+      operationId: getSkill
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Success }
+
+  /v1/docs/knowledge:
+    get:
+      operationId: listKnowledge
+      responses:
+        '200': { description: Success }
+
+  /v1/env-schema:
+    get:
+      operationId: getEnvSchema
+      responses:
+        '200': { description: Success }
+
+  /v1/engine/templates/install:
+    post:
+      operationId: installTemplate
+      responses:
+        '200': { description: Success }
+
+  /v1/oversight/pending:
+    get:
+      operationId: listPendingOversight
+      summary: List pending oversight entries
+      description: Returns a paginated list of oversight entries awaiting approval.
+      tags: [Oversight]
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Paginated list of pending entries
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/OversightEntry'
+        '401':
+          description: Unauthorized — missing or invalid Bearer token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /v1/oversight/ledger:
+    get:
+      operationId: listOversightLedger
+      summary: List recently decided oversight entries
+      description: Returns a paginated list of recently decided oversight entries (bounded).
+      tags: [Oversight]
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Paginated list of decided entries
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/OversightEntry'
+        '401':
+          description: Unauthorized — missing or invalid Bearer token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /v1/oversight/{id}/decide:
+    post:
+      operationId: decideOversightEntry
+      summary: Approve or reject an oversight entry
+      description: Records an approval or rejection decision for a pending oversight entry.
+      tags: [Oversight]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The oversight entry identifier.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Decision recorded
+        '404':
+          description: Oversight entry not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /v1/oversight/security/quotas:
+    get:
+      operationId: getSecurityQuotas
+      summary: Get active resource quotas and system defense
+      description: Returns current budget usage and hardware telemetry.
+      tags: [Oversight]
+      responses:
+        '200':
+          description: Quota and defense metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityQuotaResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /v1/oversight/security/integrity:
+    get:
+      operationId: getSecurityIntegrity
+      summary: Get Merkle integrity status
+      description: Returns the global Merkle Chain health and verification score.
+      tags: [Oversight]
+      responses:
+        '200':
+          description: Integrity status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecurityIntegrityResponse'
+
+  /v1/oversight/security/audit-trail:
+    get:
+      operationId: getAuditTrail
+      summary: Get Merkle audit logs
+      description: Returns a paginated list of signed audit entries.
+      tags: [Oversight]
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Paginated audit logs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResponse'
+
+  /v1/oversight/settings:
+    put:
+      operationId: updateOversightSettings
+      summary: Update global oversight settings
+      description: Modifies global security policies (approval thresholds, notification defaults).
+      tags: [Oversight]
+      responses:
+        '200': { description: Settings updated }
+
+  /v1/oversight/security/missions/quotas:
+    get:
+      operationId: listMissionQuotas
+      summary: List all mission quotas
+      description: Returns a list of all active mission budgets and their utilization.
+      tags: [Oversight]
+      responses:
+        '200': { description: Success }
+
+  /v1/oversight/security/missions/{id}/quota:
+    put:
+      operationId: updateMissionQuota
+      summary: Update specific mission quota
+      description: Modifies the budget limit for a specific mission instance.
+      tags: [Oversight]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Quota updated }
+
+  /v1/oversight/security/health:
+    get:
+      operationId: getSecurityHealth
+      summary: Security health pulse
+      description: Returns critical security subsystem status (Sandboxes, Scanning, Audit Trail).
+      tags: [Oversight]
+      responses:
+        '200': { description: Health check passed }
+
+  /v1/skills:
+    get:
+      operationId: getCapabilities
+      summary: List all system skills
+      description: Returns a consolidated view of skills, workflows, and MCP tools.
+      tags: [System]
+      responses:
+        '200':
+          description: System skills
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /v1/skills/import:
+    post:
+      operationId: importCapability
+      summary: Import Capability from File
+      description: Parses a markdown or script file into a structured capability preview.
+      tags: [Skills]
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Parsed capability preview
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CapabilityImportResponse'
+
+  /v1/skills/register:
+    post:
+      operationId: registerCapability
+      summary: Register Parsed Capability
+      description: Finalizes registration of a previewed capability into the system registry.
+      tags: [Skills]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterCapabilityRequest'
+      responses:
+        '200':
+          description: Capability registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterCapabilityResponse'
+
+  /v1/skills/skills/{name}:
+    put:
+      operationId: saveSkill
+      summary: Save or update a skill
+      description: Persists a skill definition to the system registry.
+      tags: [Skills]
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SkillDefinition'
+      responses:
+        '200':
+          description: Skill saved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: "saved" }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+    delete:
+      operationId: deleteSkill
+      summary: Delete a skill
+      description: Removes a skill from the system registry.
+      tags: [Skills]
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Skill deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: "deleted" }
+        '404': { description: Skill not found }
+
+  /v1/skills/scripts/{name}:
+    put:
+      operationId: saveScript
+      summary: Save or update a script skill
+      description: Persists a raw Python/JS script to the execution engine.
+      tags: [Skills]
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SkillDefinition'
+      responses:
+        '200':
+          description: Script saved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: "saved" }
+    delete:
+      operationId: deleteScript
+      summary: Delete a script skill
+      tags: [Skills]
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Script deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: "deleted" }
+
+  /v1/skills/workflows/{name}:
+    put:
+      operationId: saveWorkflow
+      summary: Save or update a workflow
+      description: Persists a workflow definition to the system registry.
+      tags: [Skills]
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkflowDefinition'
+      responses:
+        '200':
+          description: Workflow saved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: "saved" }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+    delete:
+      operationId: deleteWorkflow
+      summary: Delete a workflow
+      description: Removes a workflow from the system registry.
+      tags: [Skills]
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Workflow deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: "deleted" }
+        '404': { description: Workflow not found }
+
+  /v1/skills/hooks/{name}:
+    put:
+      operationId: saveHook
+      summary: Save or update a system hook
+      tags: [Skills]
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HookDefinition'
+      responses:
+        '200':
+          description: Hook saved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: "saved" }
+    delete:
+      operationId: deleteHook
+      summary: Delete a system hook
+      tags: [Skills]
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Hook deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: "deleted" }
+      summary: Delete a system hook
+      tags: [System]
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Hook deleted }
+
+  /v1/skills/mcp-tools:
+    get:
+      operationId: listMcpTools
+      summary: List all available MCP tools
+      description: Returns a consolidated list of system tools, legacy skills, and external skills.
+      tags: [MCP]
+      responses:
+        '200':
+          description: List of MCP tools
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/McpTool'
+
+  /v1/skills/mcp-tools/{name}/execute:
+    post:
+      operationId: executeMcpTool
+      summary: Execute an MCP tool
+      description: Direct execution of a tool by name. Returns 200 for immediate result or 202 for delegation.
+      tags: [MCP]
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Arguments for the tool.
+      responses:
+        '200':
+          description: Tool executed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/McpExecuteResponse'
+        '202':
+          description: Tool execution delegated (accepted)
+        '404':
+          description: Tool not found
+        '500':
+          description: Execution error
+
+
+  /v1/continuity/jobs:
+    get:
+      operationId: listScheduledJobs
+      summary: List all scheduled background tasks
+      description: Returns a list of all active and inactive cron jobs managed by the Continuity Scheduler.
+      tags: [Continuity]
+      responses:
+        '200':
+          description: List of Scheduled Jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScheduledJob'
+    post:
+      operationId: createScheduledJob
+      summary: Create a new scheduled job
+      description: Registers a new task to execute autonomously based on a cron sequence.
+      tags: [Continuity]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduledJob'
+      responses:
+        '201':
+          description: Job scheduled successfully
+
+  /v1/continuity/jobs/{id}:
+    put:
+      operationId: updateScheduledJob
+      summary: Update a scheduled job
+      description: Modifies cron timing or payloads of an existing background job.
+      tags: [Continuity]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduledJob'
+      responses:
+        '200':
+          description: Job updated successfully
+    delete:
+      operationId: deleteScheduledJob
+      summary: Delete a scheduled job
+      description: Removes a recurring background mission completely.
+      tags: [Continuity]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Job deleted successfully
+
+  /v1/continuity/jobs/{id}/runs:
+    get:
+      operationId: listJobRuns
+      summary: List job execution runs
+      description: Returns historical execution runs and their status for a specific job.
+      tags: [Continuity]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of recent execution runs.
+          
+  /v1/continuity/jobs/{id}/enable:
+    post:
+      operationId: enableScheduledJob
+      summary: Enable an inactive scheduled job
+      description: Re-enables a suspended cron job to resume autonomous execution.
+      tags: [Continuity]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Job enabled successfully
+          
+  /v1/continuity/jobs/{id}/disable:
+    post:
+      operationId: disableScheduledJob
+      summary: Disable an active scheduled job
+      description: Suspends a cron job without deleting its configuration.
+      tags: [Continuity]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Job disabled successfully
+
+  /v1/benchmarks:
+    get:
+      operationId: listBenchmarks
+      summary: List all benchmark results
+      description: Returns a paginated list of historical benchmark runs.
+      tags: [Benchmarks]
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        '200':
+          description: Paginated list of benchmark results
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/BenchmarkResult'
+    post:
+      operationId: createBenchmark
+      summary: Record a new benchmark result
+      description: Saves a performance benchmark result to the persistent store.
+      tags: [Benchmarks]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BenchmarkResult'
+      responses:
+        '201':
+          description: Benchmark result recorded
+        '400':
+          description: Invalid request body
+
+  /v1/benchmarks/{test_id}:
+    get:
+      operationId: getBenchmarkHistory
+      summary: Get history for a specific benchmark test
+      description: Returns the last 10 runs of a specific test ID for comparison.
+      tags: [Benchmarks]
+      parameters:
+        - name: test_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of historical results for the test
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BenchmarkResult'
+        '404':
+          description: Test ID not found
+    post:
+      operationId: triggerBenchmark
+      summary: Trigger a real-time benchmark
+      description: Executes a specific benchmark test and returns the result.
+      tags: [Benchmarks]
+      parameters:
+        - name: test_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Benchmark executed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BenchmarkResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Test ID not found
+
+
+  /v1/skills/manifests:
+    get:
+      operationId: listSkillManifests
+      summary: List Skill Manifests
+      description: Returns all declarative skill manifests (built-in and local).
+      tags: [Skills]
+      responses:
+        '200':
+          description: List of skill manifests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SkillManifest'
+
+  /v1/skills/manifests/{name}:
+    get:
+      operationId: getSkillManifest
+      summary: Get Skill Manifest
+      description: Returns a single declarative skill manifest by name.
+      tags: [Skills]
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Skill manifest found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkillManifest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/api/pull:
+    post:
+      operationId: proxyModelPull
+      summary: Proxy Model Pull
+      description: High-level proxy to pull models to the primary engine node.
+      tags: [Infrastructure]
+      responses:
+        '202':
+          description: Pull initiated
+
+responses:
+  Unauthorized:
+    description: Unauthorized — missing or invalid Bearer token
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/ProblemDetails'

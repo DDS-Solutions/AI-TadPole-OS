@@ -1,0 +1,17 @@
+{
+  "id": null,
+  "name": "github-scout",
+  "description": "Scouting and analysis for GitHub repositories.",
+  "execution_command": "python C:\\Users\\HOMEOF~1\\GEMINI~1\\ANTIGR~1\\PLAYGR~1\\TADPOL~1\\scout.py",
+  "schema": {
+    "properties": {},
+    "type": "object"
+  },
+  "oversight_required": false,
+  "doc_url": null,
+  "tags": null,
+  "full_instructions": "# GitHub Scouting Workflow\n\n1. Search Phase: Use github:search_repositories to find the target repository.\n2. Structural Analysis: List the repository contents.\n3. Content Synthesis: Read key files.\n4. Final Report: Synthesize findings.\n5. Archiving: Commit findings.",
+  "negative_constraints": null,
+  "verification_script": null,
+  "category": "user"
+}

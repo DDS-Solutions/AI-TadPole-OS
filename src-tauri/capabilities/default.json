@@ -1,0 +1,23 @@
+{
+  "identifier": "default",
+  "description": "Default bundle for Tadpole OS",
+  "windows": ["main"],
+  "permissions": [
+    "core:path:default",
+    "core:event:default",
+    "core:window:default",
+    "core:app:default",
+    "core:resources:default",
+    "core:menu:default",
+    "core:tray:default",
+    {
+      "identifier": "shell:allow-spawn",
+      "allow": [
+        {
+          "name": "server-rs",
+          "sidecar": true
+        }
+      ]
+    }
+  ]
+}

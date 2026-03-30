@@ -1,0 +1,318 @@
+{
+  "project": ".",
+  "timestamp": "2026-03-26T10:55:30.437589",
+  "scan_type": "all",
+  "scans": {
+    "dependencies": {
+      "tool": "dependency_scanner",
+      "findings": [
+        {
+          "type": "Missing Lock File",
+          "severity": "high",
+          "message": "yarn: No lock file found. Supply chain integrity at risk."
+        },
+        {
+          "type": "Missing Lock File",
+          "severity": "high",
+          "message": "pnpm: No lock file found. Supply chain integrity at risk."
+        }
+      ],
+      "status": "[OK] Secure"
+    },
+    "secrets": {
+      "tool": "secret_scanner",
+      "findings": [
+        {
+          "file": "launch_mission.py",
+          "type": "Token",
+          "severity": "high",
+          "count": 1
+        },
+        {
+          "file": "re_register_agents.py",
+          "type": "Token",
+          "severity": "high",
+          "count": 1
+        },
+        {
+          "file": ".agent\\skills\\vulnerability-scanner\\scripts\\security_scan.py",
+          "type": "Bearer Token",
+          "severity": "critical",
+          "count": 1
+        },
+        {
+          "file": ".tmp\\public-release\\.agent\\skills\\vulnerability-scanner\\scripts\\security_scan.py",
+          "type": "Bearer Token",
+          "severity": "critical",
+          "count": 1
+        },
+        {
+          "file": ".tmp\\public-release\\docs\\openapi.yaml",
+          "type": "Bearer Token",
+          "severity": "critical",
+          "count": 5
+        },
+        {
+          "file": ".tmp\\public-release\\execution\\swarm_stress_test.py",
+          "type": "API Key",
+          "severity": "high",
+          "count": 1
+        },
+        {
+          "file": ".tmp\\public-release\\execution\\swarm_stress_test.py",
+          "type": "Bearer Token",
+          "severity": "critical",
+          "count": 1
+        },
+        {
+          "file": ".tmp\\public-release\\execution\\swarm_stress_test.py",
+          "type": "GCP Credential",
+          "severity": "critical",
+          "count": 1
+        },
+        {
+          "file": ".tmp\\public-release\\execution\\skills\\vulnerability-scanner\\scripts\\security_scan.py",
+          "type": "Bearer Token",
+          "severity": "critical",
+          "count": 1
+        },
+        {
+          "file": ".tmp\\public-release\\src\\stores\\settingsStore.test.ts",
+          "type": "API Key",
+          "severity": "high",
+          "count": 1
+        },
+        {
+          "file": ".tmp\\public-release\\src\\stores\\settingsStore.ts",
+          "type": "API Key",
+          "severity": "high",
+          "count": 2
+        },
+        {
+          "file": ".tmp\\public-release\\src\\utils\\crypto.test.ts",
+          "type": "Password",
+          "severity": "high",
+          "count": 1
+        },
+        {
+          "file": "docs\\openapi.yaml",
+          "type": "Bearer Token",
+          "severity": "critical",
+          "count": 5
+        },
+        {
+          "file": "execution\\swarm_stress_test.py",
+          "type": "API Key",
+          "severity": "high",
+          "count": 1
+        },
+        {
+          "file": "execution\\swarm_stress_test.py",
+          "type": "Bearer Token",
+          "severity": "critical",
+          "count": 1
+        }
+      ],
+      "status": "[!!] CRITICAL: Secrets exposed!",
+      "scanned_files": 6276,
+      "by_severity": {
+        "critical": 18,
+        "high": 13,
+        "medium": 0
+      }
+    },
+    "code_patterns": {
+      "tool": "pattern_scanner",
+      "findings": [
+        {
+          "file": ".agent\\skills\\vulnerability-scanner\\scripts\\security_scan.py",
+          "line": 63,
+          "pattern": "eval() usage",
+          "severity": "critical",
+          "category": "Code Injection risk",
+          "snippet": "(r'eval\\s*\\(', \"eval() usage\", \"critical\", \"Code Injection risk\"),"
+        },
+        {
+          "file": ".agent\\skills\\vulnerability-scanner\\scripts\\security_scan.py",
+          "line": 64,
+          "pattern": "exec() usage",
+          "severity": "critical",
+          "category": "Code Injection risk",
+          "snippet": "(r'exec\\s*\\(', \"exec() usage\", \"critical\", \"Code Injection risk\"),"
+        },
+        {
+          "file": ".agent\\skills\\vulnerability-scanner\\scripts\\security_scan.py",
+          "line": 70,
+          "pattern": "dangerouslySetInnerHTML",
+          "severity": "high",
+          "category": "XSS risk",
+          "snippet": "(r'dangerouslySetInnerHTML', \"dangerouslySetInnerHTML\", \"high\", \"XSS risk\"),"
+        },
+        {
+          "file": ".agent\\skills\\vulnerability-scanner\\scripts\\security_scan.py",
+          "line": 80,
+          "pattern": "Insecure flag",
+          "severity": "medium",
+          "category": "Security disabled",
+          "snippet": "(r'--insecure', \"Insecure flag\", \"medium\", \"Security disabled\"),"
+        },
+        {
+          "file": ".tmp\\public-release\\.agent\\skills\\vulnerability-scanner\\scripts\\security_scan.py",
+          "line": 63,
+          "pattern": "eval() usage",
+          "severity": "critical",
+          "category": "Code Injection risk",
+          "snippet": "(r'eval\\s*\\(', \"eval() usage\", \"critical\", \"Code Injection risk\"),"
+        },
+        {
+          "file": ".tmp\\public-release\\.agent\\skills\\vulnerability-scanner\\scripts\\security_scan.py",
+          "line": 64,
+          "pattern": "exec() usage",
+          "severity": "critical",
+          "category": "Code Injection risk",
+          "snippet": "(r'exec\\s*\\(', \"exec() usage\", \"critical\", \"Code Injection risk\"),"
+        },
+        {
+          "file": ".tmp\\public-release\\.agent\\skills\\vulnerability-scanner\\scripts\\security_scan.py",
+          "line": 70,
+          "pattern": "dangerouslySetInnerHTML",
+          "severity": "high",
+          "category": "XSS risk",
+          "snippet": "(r'dangerouslySetInnerHTML', \"dangerouslySetInnerHTML\", \"high\", \"XSS risk\"),"
+        },
+        {
+          "file": ".tmp\\public-release\\.agent\\skills\\vulnerability-scanner\\scripts\\security_scan.py",
+          "line": 80,
+          "pattern": "Insecure flag",
+          "severity": "medium",
+          "category": "Security disabled",
+          "snippet": "(r'--insecure', \"Insecure flag\", \"medium\", \"Security disabled\"),"
+        },
+        {
+          "file": ".tmp\\public-release\\execution\\final_terminology_purge.py",
+          "line": 25,
+          "pattern": "SQL f-string",
+          "severity": "critical",
+          "category": "SQL Injection risk",
+          "snippet": "print(f\"Updated: {file_path}\")"
+        },
+        {
+          "file": ".tmp\\public-release\\execution\\parity_guard.py",
+          "line": 263,
+          "pattern": "SQL f-string",
+          "severity": "critical",
+          "category": "SQL Injection risk",
+          "snippet": "print_result(\"ADG-DRIFT\", False, f\"{info['file']} updated but {doc_name}.md is o"
+        },
+        {
+          "file": ".tmp\\public-release\\execution\\skills\\vulnerability-scanner\\scripts\\security_scan.py",
+          "line": 63,
+          "pattern": "eval() usage",
+          "severity": "critical",
+          "category": "Code Injection risk",
+          "snippet": "(r'eval\\s*\\(', \"eval() usage\", \"critical\", \"Code Injection risk\"),"
+        },
+        {
+          "file": ".tmp\\public-release\\execution\\skills\\vulnerability-scanner\\scripts\\security_scan.py",
+          "line": 64,
+          "pattern": "exec() usage",
+          "severity": "critical",
+          "category": "Code Injection risk",
+          "snippet": "(r'exec\\s*\\(', \"exec() usage\", \"critical\", \"Code Injection risk\"),"
+        },
+        {
+          "file": ".tmp\\public-release\\execution\\skills\\vulnerability-scanner\\scripts\\security_scan.py",
+          "line": 70,
+          "pattern": "dangerouslySetInnerHTML",
+          "severity": "high",
+          "category": "XSS risk",
+          "snippet": "(r'dangerouslySetInnerHTML', \"dangerouslySetInnerHTML\", \"high\", \"XSS risk\"),"
+        },
+        {
+          "file": ".tmp\\public-release\\execution\\skills\\vulnerability-scanner\\scripts\\security_scan.py",
+          "line": 80,
+          "pattern": "Insecure flag",
+          "severity": "medium",
+          "category": "Security disabled",
+          "snippet": "(r'--insecure', \"Insecure flag\", \"medium\", \"Security disabled\"),"
+        },
+        {
+          "file": ".tmp\\public-release\\src\\components\\ui\\PortalWindow.tsx",
+          "line": 48,
+          "pattern": "innerHTML assignment",
+          "severity": "medium",
+          "category": "XSS risk",
+          "snippet": "childDoc.body.innerHTML = '';"
+        },
+        {
+          "file": ".tmp\\public-release\\src\\logic\\commandProcessor.ts",
+          "line": 30,
+          "pattern": "exec() usage",
+          "severity": "critical",
+          "category": "Code Injection risk",
+          "snippet": "while ((match = regex.exec(commandText)) !== null) {"
+        },
+        {
+          "file": "execution\\final_terminology_purge.py",
+          "line": 25,
+          "pattern": "SQL f-string",
+          "severity": "critical",
+          "category": "SQL Injection risk",
+          "snippet": "print(f\"Updated: {file_path}\")"
+        },
+        {
+          "file": "execution\\parity_guard.py",
+          "line": 263,
+          "pattern": "SQL f-string",
+          "severity": "critical",
+          "category": "SQL Injection risk",
+          "snippet": "print_result(\"ADG-DRIFT\", False, f\"{info['file']} updated but {doc_name}.md is o"
+        },
+        {
+          "file": "execution\\skills\\vulnerability-scanner\\scripts\\security_scan.py",
+          "line": 63,
+          "pattern": "eval() usage",
+          "severity": "critical",
+          "category": "Code Injection risk",
+          "snippet": "(r'eval\\s*\\(', \"eval() usage\", \"critical\", \"Code Injection risk\"),"
+        },
+        {
+          "file": "execution\\skills\\vulnerability-scanner\\scripts\\security_scan.py",
+          "line": 64,
+          "pattern": "exec() usage",
+          "severity": "critical",
+          "category": "Code Injection risk",
+          "snippet": "(r'exec\\s*\\(', \"exec() usage\", \"critical\", \"Code Injection risk\"),"
+        }
+      ],
+      "status": "[!!] CRITICAL: 14 dangerous patterns",
+      "scanned_files": 510,
+      "by_category": {
+        "Code Injection risk": 10,
+        "XSS risk": 6,
+        "Security disabled": 4,
+        "SQL Injection risk": 4
+      }
+    },
+    "configuration": {
+      "tool": "config_scanner",
+      "findings": [
+        {
+          "issue": "No security headers configuration found",
+          "severity": "medium",
+          "recommendation": "Configure CSP, HSTS, X-Frame-Options headers"
+        }
+      ],
+      "status": "[?] Minor configuration issues",
+      "checks": {
+        "security_headers_config": false
+      }
+    }
+  },
+  "summary": {
+    "total_findings": 38,
+    "critical": 21,
+    "high": 12,
+    "overall_status": "[!!] CRITICAL ISSUES FOUND"
+  }
+}
