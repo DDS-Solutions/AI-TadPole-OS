@@ -30,7 +30,7 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 opentelemetry = { version = "0.21.0", features = ["trace"] }
 opentelemetry_sdk = { version = "0.21.0", features = ["trace"] }
 tracing-opentelemetry = "0.22.0"
-opentelemetry-stdout = { version = "0.2.0", features = ["trace"] }
+opentelemetry-stdout = { version = "0.31.0", features = ["trace"] }
 
 # HTTP Client (for Gemini API)
 reqwest = { version = "0.12", features = ["json", "rustls-tls", "multipart"], default-features = false }
