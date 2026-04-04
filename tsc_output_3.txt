@@ -1,0 +1,147 @@
+src/App.tsx(6,10): error TS2724: '"./constants/routes"' has no exported member named 'get_route_by_path'. Did you mean 'getRouteByPath'?
+src/components/agent-config/Cognition_Section.tsx(4,15): error TS2724: '"../../stores/provider_store"' has no exported member named 'ModelEntry'. Did you mean 'Model_Entry'?
+src/components/agent-config/Cognition_Section.tsx(4,27): error TS2724: '"../../stores/provider_store"' has no exported member named 'ProviderConfig'. Did you mean 'Provider_Config'?
+src/components/agent-config/Cognition_Section.tsx(5,15): error TS2724: '"../../services/tadpoleos_service"' has no exported member named 'SkillManifest'. Did you mean 'Skill_Manifest'?
+src/components/agent-config/Cognition_Section.tsx(6,15): error TS2724: '"../../stores/skill_store"' has no exported member named 'SkillDefinition'. Did you mean 'Skill_Definition'?
+src/components/agent-config/Cognition_Section.tsx(6,32): error TS2724: '"../../stores/skill_store"' has no exported member named 'McpToolHubDefinition'. Did you mean 'Mcp_Tool_Hub_Definition'?
+src/components/agent-config/Memory_Section.tsx(1,8): error TS6133: 'React' is declared but its value is never read.
+src/components/agent-config/Model_Slot_Config.tsx(4,15): error TS2724: '"../../stores/provider_store"' has no exported member named 'ModelEntry'. Did you mean 'Model_Entry'?
+src/components/agent-config/Model_Slot_Config.tsx(4,27): error TS2724: '"../../stores/provider_store"' has no exported member named 'ProviderConfig'. Did you mean 'Provider_Config'?
+src/components/agent-config/Model_Slot_Config.tsx(5,15): error TS2724: '"../../services/tadpoleos_service"' has no exported member named 'SkillManifest'. Did you mean 'Skill_Manifest'?
+src/components/agent-config/Model_Slot_Config.tsx(6,15): error TS2724: '"../../stores/skill_store"' has no exported member named 'SkillDefinition'. Did you mean 'Skill_Definition'?
+src/components/agent-config/Model_Slot_Config.tsx(6,32): error TS2724: '"../../stores/skill_store"' has no exported member named 'McpToolHubDefinition'. Did you mean 'Mcp_Tool_Hub_Definition'?
+src/components/dashboard/Dashboard_Header.tsx(4,15): error TS2724: '"../../types"' has no exported member named 'SwarmNode'. Did you mean 'Swarm_Node'?
+src/components/dashboard/Dashboard_Header_Actions.tsx(5,15): error TS2724: '"../../types"' has no exported member named 'SwarmNode'. Did you mean 'Swarm_Node'?
+src/components/Import_Preview_Modal.tsx(2,15): error TS2724: '"../stores/skill_store"' has no exported member named 'SkillDefinition'. Did you mean 'Skill_Definition'?
+src/components/Import_Preview_Modal.tsx(2,32): error TS2724: '"../stores/skill_store"' has no exported member named 'WorkflowDefinition'. Did you mean 'Workflow_Definition'?
+src/components/Import_Preview_Modal.tsx(2,52): error TS2724: '"../stores/skill_store"' has no exported member named 'HookDefinition'. Did you mean 'Hook_Definition'?
+src/components/Import_Preview_Modal.tsx(37,27): error TS7006: Parameter 'prev' implicitly has an 'any' type.
+src/components/layout/Org_Header.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/components/missions/Agent_Team_View.tsx(5,15): error TS2724: '"../../stores/workspace_store"' has no exported member named 'MissionCluster'. Did you mean 'Mission_Cluster'?
+src/components/missions/Agent_Team_View.tsx(33,55): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/components/missions/Cluster_Sidebar.tsx(5,15): error TS2724: '"../../stores/workspace_store"' has no exported member named 'MissionCluster'. Did you mean 'Mission_Cluster'?
+src/components/missions/Cluster_Sidebar.tsx(254,68): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/components/missions/Mission_Header.tsx(5,15): error TS2724: '"../../stores/workspace_store"' has no exported member named 'MissionCluster'. Did you mean 'Mission_Cluster'?
+src/components/missions/Neural_Map.tsx(4,15): error TS2724: '"../../stores/workspace_store"' has no exported member named 'MissionCluster'. Did you mean 'Mission_Cluster'?
+src/components/model/Add_Node_Dialog.tsx(3,15): error TS2724: '"../../stores/provider_store"' has no exported member named 'ModelEntry'. Did you mean 'Model_Entry'?
+src/components/model/Add_Node_Dialog.tsx(3,27): error TS2724: '"../../stores/provider_store"' has no exported member named 'ProviderConfig'. Did you mean 'Provider_Config'?
+src/components/model/Model_Inventory_Table.tsx(4,15): error TS2724: '"../../stores/provider_store"' has no exported member named 'ModelEntry'. Did you mean 'Model_Entry'?
+src/components/model/Model_Inventory_Table.tsx(4,27): error TS2724: '"../../stores/provider_store"' has no exported member named 'ProviderConfig'. Did you mean 'Provider_Config'?
+src/components/model/Model_Row.tsx(5,15): error TS2724: '"../../stores/provider_store"' has no exported member named 'ModelEntry'. Did you mean 'Model_Entry'?
+src/components/model/Model_Row.tsx(5,27): error TS2724: '"../../stores/provider_store"' has no exported member named 'ProviderConfig'. Did you mean 'Provider_Config'?
+src/components/model/Provider_Card.tsx(4,15): error TS2724: '"../../stores/provider_store"' has no exported member named 'ProviderConfig'. Did you mean 'Provider_Config'?
+src/components/model/Provider_Card.tsx(53,119): error TS2322: Type '{ children: Element; content: string; position: "bottom"; className: string; }' is not assignable to type 'IntrinsicAttributes & Tooltip_Props'.
+  Property 'className' does not exist on type 'IntrinsicAttributes & Tooltip_Props'. Did you mean 'class_name'?
+src/components/model/Provider_Grid.tsx(4,15): error TS2724: '"../../stores/provider_store"' has no exported member named 'ProviderConfig'. Did you mean 'Provider_Config'?
+src/components/model/Provider_Grid.tsx(4,31): error TS2724: '"../../stores/provider_store"' has no exported member named 'ModelEntry'. Did you mean 'Model_Entry'?
+src/components/model/use_model_manager.ts(5,15): error TS2724: '"../../stores/provider_store"' has no exported member named 'ModelEntry'. Did you mean 'Model_Entry'?
+src/components/model/use_model_manager.ts(11,27): error TS2339: Property 'resetVault' does not exist on type 'Vault_State'.
+src/components/model/use_model_manager.ts(12,24): error TS2339: Property 'addProvider' does not exist on type 'Provider_State'.
+src/components/model/use_model_manager.ts(13,21): error TS2339: Property 'addModel' does not exist on type 'Model_State'.
+src/components/model/use_model_manager.ts(13,31): error TS2339: Property 'editModel' does not exist on type 'Model_State'.
+src/components/model/Vault_Lock_Screen.tsx(87,17): error TS2322: Type '{ isOpen: boolean; title: string; message: string; confirmLabel: string; onConfirm: () => void; onCancel: () => void; variant: "danger"; }' is not assignable to type 'IntrinsicAttributes & Confirm_Dialog_Props'.
+  Property 'isOpen' does not exist on type 'IntrinsicAttributes & Confirm_Dialog_Props'. Did you mean 'is_open'?
+src/components/Neural_Waterfall.tsx(4,32): error TS6133: 'Trace_Span' is declared but its value is never read.
+src/components/skills/Hook_Card.tsx(3,15): error TS2724: '"../../stores/skill_store"' has no exported member named 'HookDefinition'. Did you mean 'Hook_Definition'?
+src/components/skills/Hook_List.tsx(4,15): error TS2724: '"../../stores/skill_store"' has no exported member named 'HookDefinition'. Did you mean 'Hook_Definition'?
+src/components/skills/Hook_Modal.tsx(3,15): error TS2724: '"../../stores/skill_store"' has no exported member named 'HookDefinition'. Did you mean 'Hook_Definition'?
+src/components/skills/Mcp_Lab_Modal.tsx(4,15): error TS2724: '"../../stores/skill_store"' has no exported member named 'McpToolHubDefinition'. Did you mean 'Mcp_Tool_Hub_Definition'?
+src/components/skills/Mcp_Tool_Card.tsx(5,15): error TS2724: '"../../stores/skill_store"' has no exported member named 'McpToolHubDefinition'. Did you mean 'Mcp_Tool_Hub_Definition'?
+src/components/skills/Mcp_Tool_List.tsx(4,15): error TS2724: '"../../stores/skill_store"' has no exported member named 'McpToolHubDefinition'. Did you mean 'Mcp_Tool_Hub_Definition'?
+src/components/skills/Skill_Card.tsx(5,15): error TS2724: '"../../stores/skill_store"' has no exported member named 'SkillDefinition'. Did you mean 'Skill_Definition'?
+src/components/skills/Skill_Edit_Modal.tsx(4,15): error TS2724: '"../../stores/skill_store"' has no exported member named 'SkillDefinition'. Did you mean 'Skill_Definition'?
+src/components/skills/Skill_List.tsx(5,15): error TS2724: '"../../stores/skill_store"' has no exported member named 'SkillDefinition'. Did you mean 'Skill_Definition'?
+src/components/skills/Workflow_Card.tsx(5,15): error TS2724: '"../../stores/skill_store"' has no exported member named 'WorkflowDefinition'. Did you mean 'Workflow_Definition'?
+src/components/skills/Workflow_Edit_Modal.tsx(4,15): error TS2724: '"../../stores/skill_store"' has no exported member named 'WorkflowDefinition'. Did you mean 'Workflow_Definition'?
+src/components/skills/Workflow_List.tsx(5,15): error TS2724: '"../../stores/skill_store"' has no exported member named 'WorkflowDefinition'. Did you mean 'Workflow_Definition'?
+src/components/Swarm_Telemetry.tsx(30,51): error TS2322: Type '{ children: Element; content: string; position: "top"; className: string; }' is not assignable to type 'IntrinsicAttributes & Tooltip_Props'.
+  Property 'className' does not exist on type 'IntrinsicAttributes & Tooltip_Props'. Did you mean 'class_name'?
+src/components/Telemetry_Graph.tsx(15,32): error TS2724: '"../stores/trace_store"' has no exported member named 'TraceSpan'. Did you mean 'Trace_Span'?
+src/components/Telemetry_Graph.tsx(122,20): error TS2339: Property 'clearAll' does not exist on type 'Trace_Store_State'.
+src/components/Telemetry_Graph.tsx(159,22): error TS2551: Property 'parentId' does not exist on type 'Trace_Span'. Did you mean 'parent_id'?
+src/components/Telemetry_Graph.tsx(159,45): error TS2551: Property 'parentId' does not exist on type 'Trace_Span'. Did you mean 'parent_id'?
+src/components/Telemetry_Graph.tsx(161,35): error TS2551: Property 'parentId' does not exist on type 'Trace_Span'. Did you mean 'parent_id'?
+src/components/Telemetry_Graph.tsx(162,34): error TS2551: Property 'parentId' does not exist on type 'Trace_Span'. Did you mean 'parent_id'?
+src/components/ui/Connection_Banner.tsx(3,34): error TS2724: '"../../services/socket"' has no exported member named 'ConnectionState'. Did you mean 'Connection_State'?
+src/components/ui/Page_Header.tsx(5,15): error TS2724: '"../../services/socket"' has no exported member named 'ConnectionState'. Did you mean 'Connection_State'?
+src/hooks/use_engine_status.ts(2,51): error TS2724: '"../services/socket"' has no exported member named 'EngineHealthEvent'. Did you mean 'Engine_Health_Event'?
+src/layouts/Dashboard_Layout.tsx(4,34): error TS2724: '"../services/socket"' has no exported member named 'ConnectionState'. Did you mean 'Connection_State'?
+src/layouts/Dashboard_Layout.tsx(150,22): error TS2322: Type '{ nav_item_class: ({ isActive }: { isActive: boolean; }) => string; }' is not assignable to type 'IntrinsicAttributes & SidebarProps'.
+  Property 'nav_item_class' does not exist on type 'IntrinsicAttributes & SidebarProps'. Did you mean 'navItemClass'?
+src/pages/Agent_Manager.tsx(226,21): error TS2322: Type '{ agent: Agent; onClose: () => void; onUpdate: (id: string, updates: Partial<Agent>) => void; is_new: boolean; }' is not assignable to type 'IntrinsicAttributes & Agent_Config_Panel_Props'.
+  Property 'onClose' does not exist on type 'IntrinsicAttributes & Agent_Config_Panel_Props'. Did you mean 'on_close'?
+src/pages/Missions.tsx(5,34): error TS2724: '"../services/socket"' has no exported member named 'HandoffEvent'. Did you mean 'Handoff_Event'?
+src/pages/Missions.tsx(109,36): error TS2551: Property 'setActiveTrace' does not exist on type 'Trace_Store_State'. Did you mean 'set_active_trace'?
+src/pages/Missions.tsx(281,41): error TS2322: Type '{ mission_id: string; className: string; }' is not assignable to type 'IntrinsicAttributes & Buffered_Transcript_View_Props'.
+  Property 'className' does not exist on type 'IntrinsicAttributes & Buffered_Transcript_View_Props'. Did you mean 'class_name'?
+src/pages/Model_Manager.tsx(19,13): error TS2339: Property 'isLocked' does not exist on type 'Vault_State'.
+src/pages/Model_Manager.tsx(21,54): error TS2551: Property 'setActions' does not exist on type 'Header_State'. Did you mean 'set_actions'?
+src/pages/Model_Manager.tsx(22,56): error TS2551: Property 'clearActions' does not exist on type 'Header_State'. Did you mean 'clear_actions'?
+src/pages/Model_Manager.tsx(153,21): error TS2322: Type '{ provider: Provider_Config; onClose: () => void; }' is not assignable to type 'IntrinsicAttributes & Provider_Config_Panel_Props'.
+  Property 'onClose' does not exist on type 'IntrinsicAttributes & Provider_Config_Panel_Props'. Did you mean 'on_close'?
+src/pages/Model_Manager.tsx(158,17): error TS2322: Type '{ isOpen: boolean; title: string; message: string; confirmLabel: string; onConfirm: () => Promise<void>; onCancel: () => void; variant: "danger"; }' is not assignable to type 'IntrinsicAttributes & Confirm_Dialog_Props'.
+  Property 'isOpen' does not exist on type 'IntrinsicAttributes & Confirm_Dialog_Props'. Did you mean 'is_open'?
+src/pages/Model_Store.tsx(4,15): error TS2724: '"../services/tadpoleos_service"' has no exported member named 'StoreModel'. Did you mean 'Store_Model'?
+src/pages/Model_Store.tsx(4,27): error TS2724: '"../services/tadpoleos_service"' has no exported member named 'SwarmNode'. Did you mean 'Swarm_Node'?
+src/pages/Ops_Dashboard.tsx(196,29): error TS2322: Type '{ agents: Agent[]; assigned_agent_ids: Set<string>; available_roles: string[]; clusters: Mission_Cluster[]; onSkillTrigger: (agent_id: string, skill: string, slot?: 2 | ... 1 more ... | 3) => Promise<...>; ... 6 more ...; onToggleCluster: (cluster_id: string) => void; }' is not assignable to type 'IntrinsicAttributes & Agent_Status_Grid_Props'.
+  Property 'onSkillTrigger' does not exist on type 'IntrinsicAttributes & Agent_Status_Grid_Props'. Did you mean 'on_skill_trigger'?
+src/pages/Ops_Dashboard.tsx(201,48): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/pages/Ops_Dashboard.tsx(212,25): error TS2322: Type '{ agent: Agent | undefined; on_close: () => void; onUpdate: (id: any, updates: any) => void; is_new: boolean; }' is not assignable to type 'IntrinsicAttributes & Agent_Config_Panel_Props'.
+  Property 'onUpdate' does not exist on type 'IntrinsicAttributes & Agent_Config_Panel_Props'. Did you mean 'on_update'?
+src/pages/Ops_Dashboard.tsx(212,36): error TS7006: Parameter 'id' implicitly has an 'any' type.
+src/pages/Ops_Dashboard.tsx(212,40): error TS7006: Parameter 'updates' implicitly has an 'any' type.
+src/pages/Oversight_Dashboard.tsx(208,95): error TS2322: Type '{ children: Element; content: string; position: "top"; className: string; }' is not assignable to type 'IntrinsicAttributes & Tooltip_Props'.
+  Property 'className' does not exist on type 'IntrinsicAttributes & Tooltip_Props'. Did you mean 'class_name'?
+src/pages/Oversight_Dashboard.tsx(217,88): error TS2322: Type '{ children: Element; content: string; position: "top"; className: string; }' is not assignable to type 'IntrinsicAttributes & Tooltip_Props'.
+  Property 'className' does not exist on type 'IntrinsicAttributes & Tooltip_Props'. Did you mean 'class_name'?
+src/pages/Oversight_Dashboard.tsx(226,88): error TS2322: Type '{ children: Element; content: string; position: "top"; className: string; }' is not assignable to type 'IntrinsicAttributes & Tooltip_Props'.
+  Property 'className' does not exist on type 'IntrinsicAttributes & Tooltip_Props'. Did you mean 'class_name'?
+src/pages/Oversight_Dashboard.tsx(235,91): error TS2322: Type '{ children: Element; content: string; position: "top"; className: string; }' is not assignable to type 'IntrinsicAttributes & Tooltip_Props'.
+  Property 'className' does not exist on type 'IntrinsicAttributes & Tooltip_Props'. Did you mean 'class_name'?
+src/pages/Oversight_Dashboard.tsx(245,91): error TS2322: Type '{ children: Element; content: string; position: "top"; className: string; }' is not assignable to type 'IntrinsicAttributes & Tooltip_Props'.
+  Property 'className' does not exist on type 'IntrinsicAttributes & Tooltip_Props'. Did you mean 'class_name'?
+src/pages/Oversight_Dashboard.tsx(258,102): error TS2322: Type '{ children: Element; content: string; position: "top"; className: string; }' is not assignable to type 'IntrinsicAttributes & Tooltip_Props'.
+  Property 'className' does not exist on type 'IntrinsicAttributes & Tooltip_Props'. Did you mean 'class_name'?
+src/pages/Security_Dashboard.tsx(16,48): error TS2724: '"../services/tadpoleos_service"' has no exported member named 'AuditEntry'. Did you mean 'Audit_Entry'?
+src/pages/Security_Dashboard.tsx(16,65): error TS2724: '"../services/tadpoleos_service"' has no exported member named 'AgentHealth'. Did you mean 'Agent_Health'?
+src/pages/Settings.tsx(5,10): error TS2724: '"../stores/settings_store"' has no exported member named 'getSettings'. Did you mean 'get_settings'?
+src/pages/Skills.tsx(2,32): error TS2724: '"../stores/skill_store"' has no exported member named 'SkillDefinition'. Did you mean 'Skill_Definition'?
+src/pages/Skills.tsx(2,54): error TS2724: '"../stores/skill_store"' has no exported member named 'WorkflowDefinition'. Did you mean 'Workflow_Definition'?
+src/pages/Skills.tsx(2,79): error TS2724: '"../stores/skill_store"' has no exported member named 'McpToolHubDefinition'. Did you mean 'Mcp_Tool_Hub_Definition'?
+src/pages/Skills.tsx(2,106): error TS2724: '"../stores/skill_store"' has no exported member named 'HookDefinition'. Did you mean 'Hook_Definition'?
+src/pages/Standups.tsx(110,42): error TS2551: Property 'alphaId' does not exist on type 'Mission_Cluster'. Did you mean 'alpha_id'?
+src/pages/Standups.tsx(111,87): error TS2551: Property 'alphaId' does not exist on type 'Mission_Cluster'. Did you mean 'alpha_id'?
+src/pages/Standups.tsx(115,49): error TS2551: Property 'alphaId' does not exist on type 'Mission_Cluster'. Did you mean 'alpha_id'?
+src/pages/Standups.tsx(270,66): error TS2551: Property 'voiceEngine' does not exist on type 'Agent'. Did you mean 'voice_engine'?
+src/pages/Workspaces.tsx(5,10): error TS2724: '"../services/agent_service"' has no exported member named 'loadAgents'. Did you mean 'load_agents'?
+src/pages/Workspaces.tsx(55,61): error TS2551: Property 'alphaId' does not exist on type 'Mission_Cluster'. Did you mean 'alpha_id'?
+src/pages/Workspaces.tsx(113,96): error TS2551: Property 'pendingTasks' does not exist on type 'Mission_Cluster'. Did you mean 'pending_tasks'?
+src/pages/Workspaces.tsx(113,116): error TS7006: Parameter 't' implicitly has an 'any' type.
+src/pages/Workspaces.tsx(118,46): error TS2551: Property 'pendingTasks' does not exist on type 'Mission_Cluster'. Did you mean 'pending_tasks'?
+src/pages/Workspaces.tsx(123,49): error TS2551: Property 'pendingTasks' does not exist on type 'Mission_Cluster'. Did you mean 'pending_tasks'?
+src/pages/Workspaces.tsx(123,67): error TS7006: Parameter 'task' implicitly has an 'any' type.
+src/services/socket.ts(3,15): error TS2724: '"../stores/sovereign_store"' has no exported member named 'Message_Part'. Did you mean 'MessagePart'?
+src/stores/memory_store.ts(4,15): error TS2724: '"../services/agent_api_service"' has no exported member named 'AgentMemoryEntry'. Did you mean 'Agent_Memory_Entry'?
+tests/dropdownStore.test.ts(6,39): error TS2339: Property 'close' does not exist on type 'Dropdown_State'.
+tests/dropdownStore.test.ts(10,17): error TS2339: Property 'openId' does not exist on type 'Dropdown_State'.
+tests/dropdownStore.test.ts(10,25): error TS2339: Property 'openType' does not exist on type 'Dropdown_State'.
+tests/dropdownStore.test.ts(16,39): error TS2339: Property 'toggle' does not exist on type 'Dropdown_State'.
+tests/dropdownStore.test.ts(18,17): error TS2339: Property 'openId' does not exist on type 'Dropdown_State'.
+tests/dropdownStore.test.ts(18,25): error TS2339: Property 'openType' does not exist on type 'Dropdown_State'.
+tests/dropdownStore.test.ts(24,17): error TS2339: Property 'toggle' does not exist on type 'Dropdown_State'.
+tests/dropdownStore.test.ts(29,17): error TS2339: Property 'openId' does not exist on type 'Dropdown_State'.
+tests/dropdownStore.test.ts(29,25): error TS2339: Property 'openType' does not exist on type 'Dropdown_State'.
+tests/dropdownStore.test.ts(35,17): error TS2339: Property 'toggle' does not exist on type 'Dropdown_State'.
+tests/dropdownStore.test.ts(35,25): error TS2339: Property 'isOpen' does not exist on type 'Dropdown_State'.
+tests/dropdownStore.test.ts(46,17): error TS2339: Property 'toggle' does not exist on type 'Dropdown_State'.
+tests/dropdownStore.test.ts(46,25): error TS2339: Property 'isOpen' does not exist on type 'Dropdown_State'.
+tests/dropdownStore.test.ts(56,17): error TS2339: Property 'toggle' does not exist on type 'Dropdown_State'.
+tests/dropdownStore.test.ts(56,25): error TS2339: Property 'close' does not exist on type 'Dropdown_State'.
+tests/dropdownStore.test.ts(61,17): error TS2339: Property 'openId' does not exist on type 'Dropdown_State'.
+tests/dropdownStore.test.ts(61,25): error TS2339: Property 'openType' does not exist on type 'Dropdown_State'.
+tests/dropdownStore.test.ts(67,17): error TS2339: Property 'toggle' does not exist on type 'Dropdown_State'.
+tests/dropdownStore.test.ts(67,25): error TS2339: Property 'isOpen' does not exist on type 'Dropdown_State'.
+tests/roleStore.test.ts(2,26): error TS2724: '"../src/stores/role_store"' has no exported member named 'selectRoleNames'. Did you mean 'select_role_names'?
+tests/roleStore.test.ts(24,35): error TS2551: Property 'addRole' does not exist on type 'Role_State & Role_Actions'. Did you mean 'add_role'?
+tests/roleStore.test.ts(37,35): error TS2551: Property 'updateRole' does not exist on type 'Role_State & Role_Actions'. Did you mean 'update_role'?
+tests/roleStore.test.ts(47,35): error TS2551: Property 'deleteRole' does not exist on type 'Role_State & Role_Actions'. Did you mean 'delete_role'?

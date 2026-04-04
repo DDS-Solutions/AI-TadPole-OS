@@ -1,0 +1,212 @@
+src/components/agent-config/Cognition_Section.tsx(111,25): error TS2322: Type '{ slotKey: "primary" | "secondary" | "tertiary"; slot: SlotDefinition; providers: ProviderConfig[]; models: ModelEntry[]; allSkills: string[]; ... 7 more ...; onProviderChange: (val: any) => void; }' is not assignable to type 'IntrinsicAttributes & Model_Slot_Config_Props'.
+  Property 'slotKey' does not exist on type 'IntrinsicAttributes & Model_Slot_Config_Props'. Did you mean 'slot_key'?
+src/components/agent-config/Cognition_Section.tsx(121,41): error TS7006: Parameter 'field' implicitly has an 'any' type.
+src/components/agent-config/Cognition_Section.tsx(121,48): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/components/agent-config/Cognition_Section.tsx(122,46): error TS7006: Parameter 'kind' implicitly has an 'any' type.
+src/components/agent-config/Cognition_Section.tsx(122,52): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/components/agent-config/Cognition_Section.tsx(123,44): error TS7006: Parameter 'val' implicitly has an 'any' type.
+src/components/agent-config/Memory_Section.tsx(1,8): error TS6133: 'React' is declared but its value is never read.
+src/components/Agent_Config_Panel.tsx(27,5): error TS2724: '"./agent-config"' has no exported member named 'useAgentConfig'. Did you mean 'use_agent_config'?
+src/components/Agent_Config_Panel.tsx(139,17): error TS2322: Type '{ name: any; role: any; theme_color: any; is_new: boolean; agent_id: string | undefined; availableRoles: string[]; onClose: () => void; onDetach: () => void; isDetached: boolean; onUpdateIdentity: (field: any, value: any) => any; onUpdateThemeColor: (color: any) => any; handleRoleChange: any; }' is not assignable to type 'IntrinsicAttributes & Agent_Config_Header_Props'.
+  Property 'availableRoles' does not exist on type 'IntrinsicAttributes & Agent_Config_Header_Props'. Did you mean 'available_roles'?
+src/components/Agent_Config_Panel.tsx(143,36): error TS7006: Parameter 'field' implicitly has an 'any' type.
+src/components/Agent_Config_Panel.tsx(143,43): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/components/Agent_Config_Panel.tsx(144,38): error TS7006: Parameter 'color' implicitly has an 'any' type.
+src/components/Agent_Config_Panel.tsx(176,29): error TS2322: Type '{ activeTab: any; slots: any; agentStatus: AgentStatus; providers: ProviderConfig[]; models: ModelEntry[]; allSkills: string[]; allWorkflows: string[]; ... 9 more ...; onResume: any; }' is not assignable to type 'IntrinsicAttributes & CognitionSectionProps'.
+  Property 'activeTab' does not exist on type 'IntrinsicAttributes & CognitionSectionProps'. Did you mean 'active_tab'?
+src/components/Agent_Config_Panel.tsx(207,29): error TS2322: Type '{ memories: MemoryEntry[]; connector_configs: any; isLoading: boolean; memory_input: string; theme_color: any; onMemoryInputChange: Dispatch<SetStateAction<string>>; ... 4 more ...; onRemoveConnector: (uri: any) => any; }' is not assignable to type 'IntrinsicAttributes & Memory_Section_Props'.
+  Property 'isLoading' does not exist on type 'IntrinsicAttributes & Memory_Section_Props'. Did you mean 'is_loading'?
+src/components/Agent_Config_Panel.tsx(214,46): error TS7006: Parameter 'uri' implicitly has an 'any' type.
+src/components/Agent_Config_Panel.tsx(215,49): error TS7006: Parameter 'uri' implicitly has an 'any' type.
+src/components/Agent_Config_Panel.tsx(224,29): error TS2322: Type '{ budget_usd: any; requires_oversight: any; cost_usd: number; theme_color: any; onUpdateGovernance: (field: any, value: any) => void; }' is not assignable to type 'IntrinsicAttributes & Governance_Section_Props'.
+  Property 'onUpdateGovernance' does not exist on type 'IntrinsicAttributes & Governance_Section_Props'. Did you mean 'on_update_governance'?
+src/components/Agent_Config_Panel.tsx(224,50): error TS7006: Parameter 'field' implicitly has an 'any' type.
+src/components/Agent_Config_Panel.tsx(224,57): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/components/Agent_Config_Panel.tsx(239,29): error TS2322: Type '{ voice: any; stt_engine: any; theme_color: any; onUpdateVoice: (field: any, value: any) => any; }' is not assignable to type 'IntrinsicAttributes & Voice_Section_Props'.
+  Property 'onUpdateVoice' does not exist on type 'IntrinsicAttributes & Voice_Section_Props'. Did you mean 'on_update_voice'?
+src/components/Agent_Config_Panel.tsx(239,45): error TS7006: Parameter 'field' implicitly has an 'any' type.
+src/components/Agent_Config_Panel.tsx(239,52): error TS7006: Parameter 'value' implicitly has an 'any' type.
+src/components/Agent_Config_Panel.tsx(246,21): error TS2322: Type '{ value: any; onUpdateValue: (val: any) => any; onSend: any; agent_name: any; theme_color: any; }' is not assignable to type 'IntrinsicAttributes & Direct_Message_Console_Props'.
+  Property 'onUpdateValue' does not exist on type 'IntrinsicAttributes & Direct_Message_Console_Props'. Did you mean 'on_update_value'?
+src/components/Agent_Config_Panel.tsx(246,37): error TS7006: Parameter 'val' implicitly has an 'any' type.
+src/components/Agent_Config_Panel.tsx(308,25): error TS2322: Type '{ children: Element; id: string; title: any; onClose: () => void; }' is not assignable to type 'IntrinsicAttributes & Portal_Window_Props'.
+  Property 'onClose' does not exist on type 'IntrinsicAttributes & Portal_Window_Props'. Did you mean 'on_close'?
+src/components/Command_Palette.tsx(26,13): error TS2339: Property 'setSelectedAgentId' does not exist on type 'SovereignState'.
+src/components/Command_Palette.tsx(26,33): error TS2339: Property 'setScope' does not exist on type 'SovereignState'.
+src/components/Command_Palette.tsx(80,197): error TS2551: Property 'clearHistory' does not exist on type 'SovereignState'. Did you mean 'clear_history'?
+src/components/Command_Table.tsx(17,13): error TS2339: Property 'setScope' does not exist on type 'SovereignState'.
+src/components/Command_Table.tsx(17,23): error TS2339: Property 'setDetached' does not exist on type 'SovereignState'.
+src/components/Command_Table.tsx(17,36): error TS2339: Property 'setSelectedAgentId' does not exist on type 'SovereignState'.
+src/components/Command_Table.tsx(124,57): error TS2551: Property 'tokensUsed' does not exist on type 'Agent'. Did you mean 'tokens_used'?
+src/components/dashboard/Agent_Status_Grid.tsx(171,29): error TS2322: Type '{ children: Element; key: string; onClose: () => void; title: string; id: string; }' is not assignable to type 'IntrinsicAttributes & Portal_Window_Props'.
+  Property 'onClose' does not exist on type 'IntrinsicAttributes & Portal_Window_Props'. Did you mean 'on_close'?
+src/components/dashboard/Operation_Tab_Header.tsx(112,29): error TS2551: Property 'isActive' does not exist on type 'MissionCluster'. Did you mean 'is_active'?
+src/components/Hierarchy_Node.tsx(62,23): error TS2339: Property 'activeProposals' does not exist on type 'WorkspaceState'.
+src/components/Hierarchy_Node.tsx(110,65): error TS2322: Type '{ agent: Agent; isActive: boolean; missionObjective: string | undefined; }' is not assignable to type 'IntrinsicAttributes & NodeMissionProps'.
+  Property 'missionObjective' does not exist on type 'IntrinsicAttributes & NodeMissionProps'. Did you mean 'mission_objective'?
+src/components/Hierarchy_Node.tsx(118,21): error TS2322: Type '{ agent: Agent; onModelChange: ((agent_id: string, newModel: string) => void) | undefined; onModel2Change: ((agent_id: string, newModel: string) => void) | undefined; onModel3Change: ((agent_id: string, newModel: string) => void) | undefined; onUpdate: ((agent_id: string, updates: Partial<...>) => void) | undefined; }' is not assignable to type 'IntrinsicAttributes & NodeModelSlotsProps'.
+  Property 'onModelChange' does not exist on type 'IntrinsicAttributes & NodeModelSlotsProps'. Did you mean 'on_model_change'?
+src/components/layout/Org_Header.tsx(15,23): error TS2339: Property 'updateSetting' does not exist on type 'SettingsState'.
+src/components/layout/Org_Header.tsx(18,35): error TS2551: Property 'privacyMode' does not exist on type 'TadpoleSettings'. Did you mean 'privacy_mode'?
+src/components/layout/Org_Header.tsx(56,44): error TS2551: Property 'privacyMode' does not exist on type 'TadpoleSettings'. Did you mean 'privacy_mode'?
+src/components/layout/Org_Header.tsx(59,112): error TS2551: Property 'privacyMode' does not exist on type 'TadpoleSettings'. Did you mean 'privacy_mode'?
+src/components/layout/Org_Header.tsx(64,63): error TS2551: Property 'privacyMode' does not exist on type 'TadpoleSettings'. Did you mean 'privacy_mode'?
+src/components/layout/Org_Header.tsx(66,39): error TS2551: Property 'privacyMode' does not exist on type 'TadpoleSettings'. Did you mean 'privacy_mode'?
+src/components/Lineage_Stream.tsx(14,13): error TS2339: Property 'getAgent' does not exist on type 'AgentState'.
+src/components/missions/Neural_Map.tsx(15,58): error TS2551: Property 'alphaId' does not exist on type 'MissionCluster'. Did you mean 'alpha_id'?
+src/components/missions/Neural_Map.tsx(16,103): error TS2551: Property 'alphaId' does not exist on type 'MissionCluster'. Did you mean 'alpha_id'?
+src/components/model/Provider_Card.tsx(53,119): error TS2322: Type '{ children: Element; content: string; position: "bottom"; className: string; }' is not assignable to type 'IntrinsicAttributes & Tooltip_Props'.
+  Property 'className' does not exist on type 'IntrinsicAttributes & Tooltip_Props'. Did you mean 'class_name'?
+src/components/model/use_model_manager.ts(12,24): error TS2339: Property 'addProvider' does not exist on type 'ProviderState'.
+src/components/model/use_model_manager.ts(13,21): error TS2339: Property 'addModel' does not exist on type 'ModelState'.
+src/components/model/use_model_manager.ts(13,31): error TS2339: Property 'editModel' does not exist on type 'ModelState'.
+src/components/model/Vault_Lock_Screen.tsx(87,17): error TS2322: Type '{ isOpen: boolean; title: string; message: string; confirmLabel: string; onConfirm: () => void; onCancel: () => void; variant: "danger"; }' is not assignable to type 'IntrinsicAttributes & Confirm_Dialog_Props'.
+  Property 'isOpen' does not exist on type 'IntrinsicAttributes & Confirm_Dialog_Props'. Did you mean 'is_open'?
+src/components/Model_Badge.tsx(2,10): error TS2724: '"../utils/model_utils"' has no exported member named 'getModelColor'. Did you mean 'get_model_color'?
+src/components/Neural_Waterfall.tsx(16,13): error TS2339: Property 'getAgent' does not exist on type 'AgentState'.
+src/components/Provider_Config_Panel.tsx(10,10): error TS2724: '"../utils/model_utils"' has no exported member named 'resolveProvider'. Did you mean 'resolve_provider'?
+src/components/Provider_Config_Panel.tsx(30,13): error TS2339: Property 'editProvider' does not exist on type 'ProviderState'.
+src/components/Provider_Config_Panel.tsx(30,27): error TS2339: Property 'setProviderConfig' does not exist on type 'ProviderState'.
+src/components/Provider_Config_Panel.tsx(32,21): error TS2339: Property 'addModel' does not exist on type 'ModelState'.
+src/components/Provider_Config_Panel.tsx(32,31): error TS2339: Property 'editModel' does not exist on type 'ModelState'.
+src/components/skills/Assignment_Modal.tsx(42,72): error TS2551: Property 'mcpTools' does not exist on type 'Agent'. Did you mean 'mcp_tools'?
+src/components/Swarm_Status_Header.tsx(2,10): error TS2724: '"../hooks/use_swarm_metrics"' has no exported member named 'useSwarmMetrics'. Did you mean 'use_swarm_metrics'?
+src/components/Swarm_Status_Header.tsx(21,27): error TS7006: Parameter 'm' implicitly has an 'any' type.
+src/components/Swarm_Status_Header.tsx(21,30): error TS7006: Parameter 'i' implicitly has an 'any' type.
+src/components/Swarm_Telemetry.tsx(30,51): error TS2322: Type '{ children: Element; content: string; position: "top"; className: string; }' is not assignable to type 'IntrinsicAttributes & Tooltip_Props'.
+  Property 'className' does not exist on type 'IntrinsicAttributes & Tooltip_Props'. Did you mean 'class_name'?
+src/components/ui/Connection_Banner.tsx(7,75): error TS2551: Property 'getConnectionState' does not exist on type 'TadpoleOSSocketClient'. Did you mean 'get_connection_state'?
+src/components/ui/Connection_Banner.tsx(10,34): error TS2551: Property 'subscribeStatus' does not exist on type 'TadpoleOSSocketClient'. Did you mean 'subscribe_status'?
+src/components/ui/Connection_Banner.tsx(10,51): error TS7006: Parameter 'newState' implicitly has an 'any' type.
+src/components/ui/Toast_Center.tsx(18,13): error TS2339: Property 'remove_notification' does not exist on type 'NotificationState'.
+src/components/ui/Toast_Center.tsx(58,31): error TS2551: Property 'type_id' does not exist on type 'Notification'. Did you mean 'typeId'?
+src/components/ui/Toast_Center.tsx(60,43): error TS2551: Property 'type_id' does not exist on type 'Notification'. Did you mean 'typeId'?
+src/hooks/use_web_socket_event.ts(40,49): error TS2551: Property 'subscribeAgentUpdates' does not exist on type 'TadpoleOSSocketClient'. Did you mean 'subscribe_agent_updates'?
+src/hooks/use_web_socket_event.ts(40,125): error TS2551: Property 'subscribeAgentUpdates' does not exist on type 'TadpoleOSSocketClient'. Did you mean 'subscribe_agent_updates'?
+src/hooks/use_web_socket_event.ts(43,49): error TS2551: Property 'subscribeHealth' does not exist on type 'TadpoleOSSocketClient'. Did you mean 'subscribe_health'?
+src/hooks/use_web_socket_event.ts(43,119): error TS2551: Property 'subscribeHealth' does not exist on type 'TadpoleOSSocketClient'. Did you mean 'subscribe_health'?
+src/hooks/use_web_socket_event.ts(46,49): error TS2551: Property 'subscribeHandoff' does not exist on type 'TadpoleOSSocketClient'. Did you mean 'subscribe_handoff'?
+src/hooks/use_web_socket_event.ts(46,120): error TS2551: Property 'subscribeHandoff' does not exist on type 'TadpoleOSSocketClient'. Did you mean 'subscribe_handoff'?
+src/hooks/use_web_socket_event.ts(49,49): error TS2551: Property 'subscribeStatus' does not exist on type 'TadpoleOSSocketClient'. Did you mean 'subscribe_status'?
+src/hooks/use_web_socket_event.ts(49,119): error TS2551: Property 'subscribeStatus' does not exist on type 'TadpoleOSSocketClient'. Did you mean 'subscribe_status'?
+src/layouts/Dashboard_Layout.tsx(46,53): error TS2551: Property 'subscribeStatus' does not exist on type 'TadpoleOSSocketClient'. Did you mean 'subscribe_status'?
+src/layouts/Dashboard_Layout.tsx(46,70): error TS7006: Parameter 'state' implicitly has an 'any' type.
+src/layouts/Dashboard_Layout.tsx(50,53): error TS2551: Property 'subscribeHealth' does not exist on type 'TadpoleOSSocketClient'. Did you mean 'subscribe_health'?
+src/layouts/Dashboard_Layout.tsx(50,70): error TS7006: Parameter 'health' implicitly has an 'any' type.
+src/layouts/Dashboard_Layout.tsx(53,52): error TS2551: Property 'subscribePulse' does not exist on type 'TadpoleOSSocketClient'. Did you mean 'subscribe_pulse'?
+src/layouts/Dashboard_Layout.tsx(53,68): error TS7006: Parameter 'pulse' implicitly has an 'any' type.
+src/layouts/Dashboard_Layout.tsx(87,35): error TS2551: Property 'typeId' does not exist on type 'log_entry'. Did you mean 'type_id'?
+src/layouts/Dashboard_Layout.tsx(142,21): error TS2322: Type '{ pathname: string; connectionState: ConnectionState; engineHealth: { uptime: number; agentCount: number; } | null; actions: ReactNode; }' is not assignable to type 'IntrinsicAttributes & PageHeaderProps'.
+  Property 'connectionState' does not exist on type 'IntrinsicAttributes & PageHeaderProps'. Did you mean 'connection_state'?
+src/layouts/Dashboard_Layout.tsx(173,45): error TS2322: Type '{ children: Element; id: string; title: string; onClose: () => void; }' is not assignable to type 'IntrinsicAttributes & Portal_Window_Props'.
+  Property 'onClose' does not exist on type 'IntrinsicAttributes & Portal_Window_Props'. Did you mean 'on_close'?
+src/layouts/Dashboard_Layout.tsx(238,29): error TS2322: Type '{ children: Element; id: string; title: string; onClose: () => void; }' is not assignable to type 'IntrinsicAttributes & Portal_Window_Props'.
+  Property 'onClose' does not exist on type 'IntrinsicAttributes & Portal_Window_Props'. Did you mean 'on_close'?
+src/layouts/Dashboard_Layout.tsx(251,29): error TS2322: Type '{ children: Element; id: string; title: string; onClose: () => void; }' is not assignable to type 'IntrinsicAttributes & Portal_Window_Props'.
+  Property 'onClose' does not exist on type 'IntrinsicAttributes & Portal_Window_Props'. Did you mean 'on_close'?
+src/layouts/Dashboard_Layout.tsx(264,29): error TS2322: Type '{ children: Element; id: string; title: string; onClose: () => void; }' is not assignable to type 'IntrinsicAttributes & Portal_Window_Props'.
+  Property 'onClose' does not exist on type 'IntrinsicAttributes & Portal_Window_Props'. Did you mean 'on_close'?
+src/pages/Agent_Manager.tsx(66,34): error TS2551: Property 'defaultModel' does not exist on type 'TadpoleSettings'. Did you mean 'default_model'?
+src/pages/Agent_Manager.tsx(69,13): error TS2561: Object literal may only specify known properties, but 'tokensUsed' does not exist in type 'Agent'. Did you mean to write 'tokens_used'?
+src/pages/Agent_Manager.tsx(75,40): error TS2551: Property 'defaultModel' does not exist on type 'TadpoleSettings'. Did you mean 'default_model'?
+src/pages/Agent_Manager.tsx(77,44): error TS2551: Property 'defaultTemperature' does not exist on type 'TadpoleSettings'. Did you mean 'default_temperature'?
+src/pages/Agent_Manager.tsx(297,95): error TS2551: Property 'modelConfig' does not exist on type 'Agent'. Did you mean 'model_config'?
+src/pages/Agent_Manager.tsx(327,33): error TS2551: Property 'mcpTools' does not exist on type 'Agent'. Did you mean 'mcp_tools'?
+src/pages/Agent_Manager.tsx(328,56): error TS2551: Property 'mcpTools' does not exist on type 'Agent'. Did you mean 'mcp_tools'?
+src/pages/Agent_Manager.tsx(331,98): error TS2551: Property 'mcpTools' does not exist on type 'Agent'. Did you mean 'mcp_tools'?
+src/pages/Agent_Manager.tsx(352,11): error TS2551: Property 'modelConfig' does not exist on type 'Agent'. Did you mean 'model_config'?
+src/pages/Agent_Manager.tsx(352,42): error TS2551: Property 'modelConfig' does not exist on type 'Agent'. Did you mean 'model_config'?
+src/pages/Agent_Manager.tsx(355,11): error TS2551: Property 'mcpTools' does not exist on type 'Agent'. Did you mean 'mcp_tools'?
+src/pages/Agent_Manager.tsx(355,34): error TS2551: Property 'mcpTools' does not exist on type 'Agent'. Did you mean 'mcp_tools'?
+src/pages/Missions.tsx(281,41): error TS2322: Type '{ mission_id: string; className: string; }' is not assignable to type 'IntrinsicAttributes & Buffered_Transcript_View_Props'.
+  Property 'className' does not exist on type 'IntrinsicAttributes & Buffered_Transcript_View_Props'. Did you mean 'class_name'?
+src/pages/Model_Manager.tsx(158,17): error TS2322: Type '{ isOpen: boolean; title: string; message: string; confirmLabel: string; onConfirm: () => Promise<void>; onCancel: () => void; variant: "danger"; }' is not assignable to type 'IntrinsicAttributes & Confirm_Dialog_Props'.
+  Property 'isOpen' does not exist on type 'IntrinsicAttributes & Confirm_Dialog_Props'. Did you mean 'is_open'?
+src/pages/Org_Chart.tsx(9,10): error TS2724: '"../utils/model_utils"' has no exported member named 'resolveProvider'. Did you mean 'resolve_provider'?
+src/pages/Org_Chart.tsx(21,33): error TS2339: Property 'fetchAgents' does not exist on type 'AgentState'.
+src/pages/Org_Chart.tsx(40,13): error TS2561: Object literal may only specify known properties, but 'currentTask' does not exist in type 'Partial<Agent>'. Did you mean to write 'current_task'?
+src/pages/Org_Chart.tsx(54,56): error TS2561: Object literal may only specify known properties, but 'modelConfig' does not exist in type 'Partial<Agent>'. Did you mean to write 'model_config'?
+src/pages/Org_Chart.tsx(59,57): error TS2561: Object literal may only specify known properties, but 'modelConfig2' does not exist in type 'Partial<Agent>'. Did you mean to write 'model_config2'?
+src/pages/Org_Chart.tsx(64,57): error TS2561: Object literal may only specify known properties, but 'modelConfig3' does not exist in type 'Partial<Agent>'. Did you mean to write 'model_config3'?
+src/pages/Org_Chart.tsx(87,30): error TS2551: Property 'alphaId' does not exist on type 'MissionCluster'. Did you mean 'alpha_id'?
+src/pages/Org_Chart.tsx(89,31): error TS2551: Property 'isActive' does not exist on type 'MissionCluster'. Did you mean 'is_active'?
+src/pages/Org_Chart.tsx(137,56): error TS2551: Property 'isActive' does not exist on type 'MissionCluster'. Did you mean 'is_active'?
+src/pages/Org_Chart.tsx(167,56): error TS2551: Property 'isActive' does not exist on type 'MissionCluster'. Did you mean 'is_active'?
+src/pages/Oversight_Dashboard.tsx(208,95): error TS2322: Type '{ children: Element; content: string; position: "top"; className: string; }' is not assignable to type 'IntrinsicAttributes & Tooltip_Props'.
+  Property 'className' does not exist on type 'IntrinsicAttributes & Tooltip_Props'. Did you mean 'class_name'?
+src/pages/Oversight_Dashboard.tsx(217,88): error TS2322: Type '{ children: Element; content: string; position: "top"; className: string; }' is not assignable to type 'IntrinsicAttributes & Tooltip_Props'.
+  Property 'className' does not exist on type 'IntrinsicAttributes & Tooltip_Props'. Did you mean 'class_name'?
+src/pages/Oversight_Dashboard.tsx(226,88): error TS2322: Type '{ children: Element; content: string; position: "top"; className: string; }' is not assignable to type 'IntrinsicAttributes & Tooltip_Props'.
+  Property 'className' does not exist on type 'IntrinsicAttributes & Tooltip_Props'. Did you mean 'class_name'?
+src/pages/Oversight_Dashboard.tsx(235,91): error TS2322: Type '{ children: Element; content: string; position: "top"; className: string; }' is not assignable to type 'IntrinsicAttributes & Tooltip_Props'.
+  Property 'className' does not exist on type 'IntrinsicAttributes & Tooltip_Props'. Did you mean 'class_name'?
+src/pages/Oversight_Dashboard.tsx(245,91): error TS2322: Type '{ children: Element; content: string; position: "top"; className: string; }' is not assignable to type 'IntrinsicAttributes & Tooltip_Props'.
+  Property 'className' does not exist on type 'IntrinsicAttributes & Tooltip_Props'. Did you mean 'class_name'?
+src/pages/Oversight_Dashboard.tsx(258,102): error TS2322: Type '{ children: Element; content: string; position: "top"; className: string; }' is not assignable to type 'IntrinsicAttributes & Tooltip_Props'.
+  Property 'className' does not exist on type 'IntrinsicAttributes & Tooltip_Props'. Did you mean 'class_name'?
+src/pages/Scheduled_Jobs.tsx(56,36): error TS2551: Property 'fetchAgents' does not exist on type 'AgentState'. Did you mean 'fetch_agents'?
+src/pages/Scheduled_Jobs.tsx(510,17): error TS2322: Type '{ isOpen: boolean; title: string; message: string; confirmLabel: string; onConfirm: () => Promise<void>; onCancel: () => void; variant: "danger"; }' is not assignable to type 'IntrinsicAttributes & Confirm_Dialog_Props'.
+  Property 'isOpen' does not exist on type 'IntrinsicAttributes & Confirm_Dialog_Props'. Did you mean 'is_open'?
+src/pages/Skills.tsx(150,38): error TS2551: Property 'mcpTools' does not exist on type 'Agent'. Did you mean 'mcp_tools'?
+src/pages/Skills.tsx(151,21): error TS2551: Property 'mcpTools' does not exist on type 'Partial<Agent>'. Did you mean 'mcp_tools'?
+src/pages/Skills.tsx(196,56): error TS2551: Property 'importCapability' does not exist on type '{ get_agents: () => Promise<TadpoleOSAgent[]>; update_agent: (agent_id: string, config: AgentConfig) => Promise<boolean>; create_agent: (agent: Agent) => Promise<...>; ... 9 more ...; search_memory: (query: string, agent_id?: string | undefined) => Promise<...>; }'. Did you mean 'import_capability'?
+src/pages/Skills.tsx(214,37): error TS2551: Property 'registerCapability' does not exist on type '{ get_agents: () => Promise<TadpoleOSAgent[]>; update_agent: (agent_id: string, config: AgentConfig) => Promise<boolean>; create_agent: (agent: Agent) => Promise<...>; ... 9 more ...; search_memory: (query: string, agent_id?: string | undefined) => Promise<...>; }'. Did you mean 'register_capability'?
+src/pages/Standups.tsx(11,10): error TS2724: '"../utils/model_utils"' has no exported member named 'resolveAgentModelConfig'. Did you mean 'resolve_agent_model_config'?
+src/pages/Standups.tsx(105,42): error TS2551: Property 'alphaId' does not exist on type 'MissionCluster'. Did you mean 'alpha_id'?
+src/pages/Standups.tsx(106,86): error TS2551: Property 'alphaId' does not exist on type 'MissionCluster'. Did you mean 'alpha_id'?
+src/pages/Standups.tsx(110,49): error TS2551: Property 'alphaId' does not exist on type 'MissionCluster'. Did you mean 'alpha_id'?
+src/pages/Standups.tsx(261,95): error TS2551: Property 'voiceEngine' does not exist on type 'Agent'. Did you mean 'voice_engine'?
+src/pages/Workspaces.tsx(55,61): error TS2551: Property 'alphaId' does not exist on type 'MissionCluster'. Did you mean 'alpha_id'?
+src/pages/Workspaces.tsx(113,96): error TS2551: Property 'pendingTasks' does not exist on type 'MissionCluster'. Did you mean 'pending_tasks'?
+src/pages/Workspaces.tsx(113,116): error TS7006: Parameter 't' implicitly has an 'any' type.
+src/pages/Workspaces.tsx(118,46): error TS2551: Property 'pendingTasks' does not exist on type 'MissionCluster'. Did you mean 'pending_tasks'?
+src/pages/Workspaces.tsx(123,49): error TS2551: Property 'pendingTasks' does not exist on type 'MissionCluster'. Did you mean 'pending_tasks'?
+src/pages/Workspaces.tsx(123,67): error TS7006: Parameter 'task' implicitly has an 'any' type.
+src/services/agent_service.ts(87,9): error TS2561: Object literal may only specify known properties, but 'tokensUsed' does not exist in type 'Agent'. Did you mean to write 'tokens_used'?
+src/services/agent_service.ts(89,78): error TS2551: Property 'modelId' does not exist on type 'TadpoleOSModelConfig'. Did you mean 'model_id'?
+src/services/agent_service.ts(92,92): error TS2551: Property 'currentTask' does not exist on type 'Agent'. Did you mean 'current_task'?
+src/services/agent_service.ts(164,25): error TS2551: Property 'modelConfig' does not exist on type 'AgentOverride'. Did you mean 'model_config'?
+src/services/agent_service.ts(165,43): error TS2551: Property 'modelConfig' does not exist on type 'AgentOverride'. Did you mean 'model_config'?
+src/services/agent_service.ts(175,21): error TS2551: Property 'modelConfig' does not exist on type 'AgentOverride'. Did you mean 'model_config'?
+src/services/agent_service.ts(176,38): error TS2551: Property 'modelConfig' does not exist on type 'AgentOverride'. Did you mean 'model_config'?
+src/services/agent_service.ts(177,39): error TS2551: Property 'modelConfig' does not exist on type 'AgentOverride'. Did you mean 'model_config'?
+src/services/agent_service.ts(178,42): error TS2551: Property 'modelConfig' does not exist on type 'AgentOverride'. Did you mean 'model_config'?
+src/services/agent_service.ts(179,43): error TS2551: Property 'modelConfig' does not exist on type 'AgentOverride'. Did you mean 'model_config'?
+src/services/agent_service.ts(180,37): error TS2551: Property 'modelConfig' does not exist on type 'AgentOverride'. Did you mean 'model_config'?
+src/services/agent_service.ts(181,38): error TS2551: Property 'modelConfig' does not exist on type 'AgentOverride'. Did you mean 'model_config'?
+src/services/agent_service.ts(184,21): error TS2551: Property 'activeModelSlot' does not exist on type 'AgentOverride'. Did you mean 'active_model_slot'?
+src/services/agent_service.ts(184,85): error TS2551: Property 'activeModelSlot' does not exist on type 'AgentOverride'. Did you mean 'active_model_slot'?
+src/services/agent_service.ts(185,21): error TS2551: Property 'modelConfig2' does not exist on type 'AgentOverride'. Did you mean 'model_config2'?
+src/services/agent_service.ts(185,79): error TS2551: Property 'modelConfig2' does not exist on type 'AgentOverride'. Did you mean 'model_config2'?
+src/services/agent_service.ts(186,21): error TS2551: Property 'modelConfig3' does not exist on type 'AgentOverride'. Did you mean 'model_config3'?
+src/services/agent_service.ts(186,79): error TS2551: Property 'modelConfig3' does not exist on type 'AgentOverride'. Did you mean 'model_config3'?
+src/services/agent_service.ts(192,21): error TS2551: Property 'createdAt' does not exist on type 'AgentOverride'. Did you mean 'created_at'?
+src/services/agent_service.ts(192,73): error TS2551: Property 'createdAt' does not exist on type 'AgentOverride'. Did you mean 'created_at'?
+src/services/agent_service.ts(193,21): error TS2551: Property 'lastPulse' does not exist on type 'AgentOverride'. Did you mean 'last_pulse'?
+src/services/agent_service.ts(193,73): error TS2551: Property 'lastPulse' does not exist on type 'AgentOverride'. Did you mean 'last_pulse'?
+src/services/agent_service.ts(194,21): error TS2551: Property 'inputTokens' does not exist on type 'AgentOverride'. Did you mean 'input_tokens'?
+src/services/agent_service.ts(194,77): error TS2551: Property 'inputTokens' does not exist on type 'AgentOverride'. Did you mean 'input_tokens'?
+src/services/agent_service.ts(195,21): error TS2551: Property 'outputTokens' does not exist on type 'AgentOverride'. Did you mean 'output_tokens'?
+src/services/agent_service.ts(195,79): error TS2551: Property 'outputTokens' does not exist on type 'AgentOverride'. Did you mean 'output_tokens'?
+src/services/agent_service.ts(196,21): error TS2551: Property 'tokensUsed' does not exist on type 'AgentOverride'. Did you mean 'tokens_used'?
+src/services/agent_service.ts(196,75): error TS2551: Property 'tokensUsed' does not exist on type 'AgentOverride'. Did you mean 'tokens_used'?
+src/services/agent_service.ts(197,21): error TS2551: Property 'failureCount' does not exist on type 'AgentOverride'. Did you mean 'failure_count'?
+src/services/agent_service.ts(197,79): error TS2551: Property 'failureCount' does not exist on type 'AgentOverride'. Did you mean 'failure_count'?
+src/services/socket.ts(292,50): error TS2551: Property 'appendMessagePart' does not exist on type 'SovereignState'. Did you mean 'append_message_part'?
+src/services/socket.ts(294,36): error TS2551: Property 'addMessage' does not exist on type 'SovereignState'. Did you mean 'add_message'?
+src/services/socket.ts(301,47): error TS2551: Property 'activeScope' does not exist on type 'SovereignState'. Did you mean 'active_scope'?
+src/services/socket.ts(325,46): error TS2551: Property 'appendMessagePart' does not exist on type 'SovereignState'. Did you mean 'append_message_part'?
+src/services/socket.ts(327,32): error TS2551: Property 'addMessage' does not exist on type 'SovereignState'. Did you mean 'add_message'?
+src/services/socket.ts(335,43): error TS2551: Property 'activeScope' does not exist on type 'SovereignState'. Did you mean 'active_scope'?
+src/services/voice_client.ts(79,27): error TS2551: Property 'subscribeAudioStream' does not exist on type 'TadpoleOSSocketClient'. Did you mean 'subscribe_audio_stream'?
+src/services/voice_client.ts(79,49): error TS7006: Parameter 'chunk' implicitly has an 'any' type.
+src/stores/agent_store.ts(145,47): error TS2551: Property 'subscribeAgentUpdates' does not exist on type 'TadpoleOSSocketClient'. Did you mean 'subscribe_agent_updates'?
+src/stores/agent_store.ts(145,70): error TS7006: Parameter 'event' implicitly has an 'any' type.
+src/stores/workspace_store.ts(167,49): error TS2551: Property 'maxClusters' does not exist on type 'TadpoleSettings'. Did you mean 'max_clusters'?
+src/stores/workspace_store.ts(169,72): error TS2551: Property 'maxClusters' does not exist on type 'TadpoleSettings'. Did you mean 'max_clusters'?
+tests/commandProcessor.test.ts(37,9): error TS2352: Conversion of type '{ id: string; name: string; status: "idle"; tokensUsed: number; role: string; }' to type 'Agent' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; name: string; status: "idle"; tokensUsed: number; role: string; }' is missing the following properties from type 'Agent': department, tokens_used, model, category
+tests/commandProcessor.test.ts(38,9): error TS2352: Conversion of type '{ id: string; name: string; status: "active"; tokensUsed: number; role: string; }' to type 'Agent' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type '{ id: string; name: string; status: "active"; tokensUsed: number; role: string; }' is missing the following properties from type 'Agent': department, tokens_used, model, category
+tests/commandProcessor.test.ts(48,23): error TS2551: Property 'shouldClearLogs' does not exist on type 'CommandResult'. Did you mean 'should_clear_logs'?
+tests/commandProcessor.test.ts(56,23): error TS2551: Property 'shouldClearLogs' does not exist on type 'CommandResult'. Did you mean 'should_clear_logs'?

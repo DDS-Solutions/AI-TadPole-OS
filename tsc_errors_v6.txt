@@ -1,0 +1,137 @@
+src/components/agent-config/index.ts(7,15): error TS2307: Cannot find module './useAgentConfig' or its corresponding type declarations.
+src/components/agent-config/use_agent_config.ts(86,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/components/agent-config/use_agent_config.ts(91,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/components/agent-config/use_agent_config.ts(137,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/components/agent-config/use_agent_config.ts(144,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/components/agent-config/use_agent_config.ts(158,19): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/components/agent-config/use_agent_config.ts(169,19): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/components/agent-config/use_agent_config.ts(180,19): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/components/agent-config/use_agent_config.ts(186,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/components/agent-config/use_agent_config.ts(195,19): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/components/Agent_Config_Panel.tsx(27,5): error TS2305: Module '"./agent-config"' has no exported member 'useAgentConfig'.
+src/components/model/index.ts(1,15): error TS2307: Cannot find module './useModelManager' or its corresponding type declarations.
+src/components/model/use_model_manager.ts(87,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/components/model/use_model_manager.ts(111,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/components/Provider_Config_Panel.tsx(73,19): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/components/Provider_Config_Panel.tsx(82,20): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/components/Provider_Config_Panel.tsx(116,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/components/Provider_Config_Panel.tsx(125,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/components/Provider_Config_Panel.tsx(142,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/components/Provider_Config_Panel.tsx(174,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/components/Provider_Config_Panel.tsx(189,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/components/Provider_Config_Panel.tsx(210,19): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/components/Terminal.tsx(48,39): error TS2339: Property 'subscribe_logs' does not exist on type 'event_bus_service'.
+src/components/Terminal.tsx(48,55): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+src/components/Terminal.tsx(131,19): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/components/transcript/Buffered_Transcript_View.tsx(36,39): error TS2339: Property 'subscribe_logs' does not exist on type 'event_bus_service'.
+src/components/transcript/Buffered_Transcript_View.tsx(36,55): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+src/hooks/use_dashboard_data.ts(13,67): error TS2551: Property 'get_history' does not exist on type 'event_bus_service'. Did you mean 'getHistory'?
+src/hooks/use_dashboard_data.ts(23,43): error TS2339: Property 'subscribe_logs' does not exist on type 'event_bus_service'.
+src/hooks/use_dashboard_data.ts(23,59): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+src/hooks/use_engine_status.ts(3,36): error TS2307: Cannot find module './useThrottledStatus' or its corresponding type declarations.
+src/hooks/use_event_bus.ts(35,39): error TS2339: Property 'subscribe_logs' does not exist on type 'event_bus_service'.
+src/hooks/use_logs.ts(10,67): error TS2551: Property 'get_history' does not exist on type 'event_bus_service'. Did you mean 'getHistory'?
+src/hooks/use_logs.ts(15,43): error TS2339: Property 'subscribe_logs' does not exist on type 'event_bus_service'.
+src/hooks/use_logs.ts(15,59): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+src/hooks/use_swarm_metrics.ts(3,33): error TS2307: Cannot find module './useEngineStatus' or its corresponding type declarations.
+src/layouts/Dashboard_Layout.tsx(67,39): error TS2339: Property 'subscribe_logs' does not exist on type 'event_bus_service'.
+src/layouts/Dashboard_Layout.tsx(67,55): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+src/logic/command_processor.ts(56,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(64,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(73,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(96,23): error TS2551: Property 'clear_history' does not exist on type 'event_bus_service'. Did you mean 'clearHistory'?
+src/logic/command_processor.ts(107,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(119,27): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(127,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(135,27): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(142,27): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(157,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(177,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(193,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(211,27): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(223,27): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(234,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(243,27): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(261,31): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(284,27): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(290,27): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(302,39): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(312,27): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(329,31): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(335,31): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(338,27): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(354,31): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(359,35): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(376,39): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(399,35): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(404,39): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(420,43): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(428,31): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(442,27): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(446,27): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/logic/command_processor.ts(463,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Benchmark_Analytics.tsx(65,19): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Benchmark_Analytics.tsx(73,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Benchmark_Analytics.tsx(81,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Missions.tsx(49,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Missions.tsx(68,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Missions.tsx(78,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Missions.tsx(89,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Missions.tsx(98,19): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Missions.tsx(133,27): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Missions.tsx(143,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Model_Store.tsx(30,27): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Model_Store.tsx(46,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Model_Store.tsx(52,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Ops_Dashboard.tsx(70,27): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Ops_Dashboard.tsx(74,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Ops_Dashboard.tsx(114,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Ops_Dashboard.tsx(141,19): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Ops_Dashboard.tsx(144,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Ops_Dashboard.tsx(146,27): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Ops_Dashboard.tsx(150,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Scheduled_Jobs.tsx(118,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Scheduled_Jobs.tsx(154,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Scheduled_Jobs.tsx(163,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Scheduled_Jobs.tsx(177,27): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Scheduled_Jobs.tsx(184,27): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Scheduled_Jobs.tsx(196,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/pages/Standups.tsx(55,42): error TS2339: Property 'subscribe_logs' does not exist on type 'event_bus_service'.
+src/pages/Standups.tsx(55,58): error TS7006: Parameter 'entry' implicitly has an 'any' type.
+src/pages/Standups.tsx(90,35): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/services/Agent_Api_Service.ts(9,27): error TS2307: Cannot find module './eventBus' or its corresponding type declarations.
+src/services/socket.ts(1,27): error TS2307: Cannot find module './eventBus' or its corresponding type declarations.
+src/services/voice_client.ts(1,34): error TS2307: Cannot find module './tadpoleosService' or its corresponding type declarations.
+src/stores/agent_store.ts(6,37): error TS2307: Cannot find module './workspaceStore' or its corresponding type declarations.
+src/stores/agent_store.ts(75,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/stores/agent_store.ts(105,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/stores/agent_store.ts(131,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/stores/agent_store.ts(152,66): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/stores/agent_store.ts(156,42): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/stores/memory_store.ts(54,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/stores/memory_store.ts(62,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/stores/memory_store.ts(82,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/stores/memory_store.ts(90,23): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/stores/node_store.ts(37,35): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/stores/node_store.ts(44,35): error TS2339: Property 'emit_log' does not exist on type 'event_bus_service'.
+src/stores/provider_store.ts(5,33): error TS2307: Cannot find module './vaultStore' or its corresponding type declarations.
+src/stores/provider_store.ts(6,50): error TS2307: Cannot find module './modelStore' or its corresponding type declarations.
+src/stores/provider_store.ts(99,69): error TS7006: Parameter 'm' implicitly has an 'any' type.
+src/stores/provider_store.ts(99,97): error TS7006: Parameter 'm' implicitly has an 'any' type.
+src/stores/provider_store.ts(104,48): error TS7006: Parameter 'mid' implicitly has an 'any' type.
+src/stores/provider_store.ts(113,44): error TS7006: Parameter 'mid' implicitly has an 'any' type.
+src/stores/workspace_store.ts(12,29): error TS2307: Cannot find module './settingsStore' or its corresponding type declarations.
+tests/commandProcessor.test.ts(2,32): error TS2307: Cannot find module '../src/logic/commandProcessor' or its corresponding type declarations.
+tests/commandProcessor.test.ts(3,26): error TS2307: Cannot find module '../src/services/eventBus' or its corresponding type declarations.
+tests/commandProcessor.test.ts(70,50): error TS2307: Cannot find module '../src/services/AgentApiService' or its corresponding type declarations.
+tests/commandProcessor.test.ts(93,50): error TS2307: Cannot find module '../src/services/AgentApiService' or its corresponding type declarations.
+tests/commandProcessor.test.ts(107,50): error TS2307: Cannot find module '../src/services/AgentApiService' or its corresponding type declarations.
+tests/dropdownStore.test.ts(2,34): error TS2307: Cannot find module '../src/stores/dropdownStore' or its corresponding type declarations.
+tests/eventBus.test.ts(10,26): error TS2307: Cannot find module '../src/services/eventBus' or its corresponding type declarations.
+tests/eventBus.test.ts(20,29): error TS7006: Parameter 'event' implicitly has an 'any' type.
+tests/eventBus.test.ts(29,29): error TS7006: Parameter 'event' implicitly has an 'any' type.
+tests/eventBus.test.ts(43,29): error TS7006: Parameter 'event' implicitly has an 'any' type.
+tests/handoff.test.ts(2,35): error TS2307: Cannot find module '../src/stores/workspaceStore' or its corresponding type declarations.
+tests/handoff.test.ts(29,52): error TS7006: Parameter 'c' implicitly has an 'any' type.
+tests/roleStore.test.ts(2,47): error TS2307: Cannot find module '../src/stores/roleStore' or its corresponding type declarations.

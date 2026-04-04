@@ -1,0 +1,179 @@
+--- Tadpole OS Parity Audit ---
+
+Found 22 routes in router.rs
+[FAIL] [CODE->OPENAPI] Route /v1/agents/graph missing in openapi.yaml
+[OK] [CODE->OPENAPI] GET /v1/agents
+[OK] [CODE->OPENAPI] POST /v1/agents
+[OK] [CODE->OPENAPI] GET /v1/infra/providers
+[OK] [CODE->OPENAPI] GET /v1/skills
+[OK] [CODE->OPENAPI] GET /v1/skills/manifests
+[OK] [CODE->OPENAPI] GET /v1/benchmarks
+[OK] [CODE->OPENAPI] POST /v1/benchmarks
+[OK] [CODE->OPENAPI] GET /v1/continuity/jobs
+[OK] [CODE->OPENAPI] POST /v1/continuity/jobs
+[OK] [CODE->OPENAPI] GET /v1/docs/knowledge
+[OK] [CODE->OPENAPI] GET /v1/env-schema
+[OK] [CODE->OPENAPI] GET /v1/engine/health
+[OK] [CODE->OPENAPI] POST /v1/engine/deploy
+[OK] [CODE->OPENAPI] POST /v1/engine/kill
+[OK] [CODE->OPENAPI] POST /v1/engine/shutdown
+[OK] [CODE->OPENAPI] GET /v1/engine/ws
+[OK] [CODE->OPENAPI] GET /v1/engine/live-voice
+[OK] [CODE->OPENAPI] POST /v1/engine/transcribe
+[OK] [CODE->OPENAPI] POST /v1/engine/speak
+[OK] [CODE->OPENAPI] POST /v1/engine/templates/install
+[OK] [CODE->OPENAPI] POST /v1/api/pull
+
+Scanning for Documentation Tags (@docs)...
+[OK] [ADG-TAG] ARCHITECTURE:Persistence synchronized (Grace period)
+[OK] [ADG-TAG] ARCHITECTURE:DatabaseEngine synchronized
+[OK] [ADG-TAG] ARCHITECTURE:EnvironmentSecurity synchronized
+[OK] [ADG-TAG] ARCHITECTURE:Networking synchronized
+[OK] [ADG-TAG] OPERATIONS_MANUAL:Lifecycle synchronized
+[OK] [ADG-TAG] ARCHITECTURE:SecretRedaction synchronized
+[OK] [ADG-TAG] ARCHITECTURE:Agent synchronized (Grace period)
+[OK] [ADG-TAG] ARCHITECTURE:MissionEventHooks synchronized
+[FAIL] [ADG-DRIFT] mod.rs updated but OPERATIONS_MANUAL.md is older (Drift detected)
+[OK] [ADG-TAG] ARCHITECTURE:DegradationProvider synchronized
+[OK] [ADG-TAG] ARCHITECTURE:OpenAiProvider synchronized (Grace period)
+[OK] [ADG-TAG] ARCHITECTURE:LlmProviderInterface synchronized
+[OK] [ADG-TAG] ARCHITECTURE:State synchronized
+[OK] [ADG-TAG] ARCHITECTURE:Runner synchronized
+[OK] [ADG-TAG] OPERATIONS_MANUAL:SwarmOrchestration synchronized (Grace period)
+[OK] [ADG-TAG] ARCHITECTURE:MiddlewarePipeline synchronized (Grace period)
+[OK] [ADG-TAG] OPERATIONS_MANUAL:Security synchronized (Grace period)
+[FAIL] [ADG-DRIFT] agent.rs updated but API_REFERENCE.md is older (Drift detected)
+[FAIL] [ADG-DRIFT] agent.rs updated but API_REFERENCE.md is older (Drift detected)
+[FAIL] [ADG-DRIFT] agent.rs updated but API_REFERENCE.md is older (Drift detected)
+[OK] [ADG-TAG] ARCHITECTURE:AgentExecutionRuntime synchronized (Grace period)
+[OK] [ADG-TAG] OPERATIONS_MANUAL:AgentManagement synchronized (Grace period)
+[OK] [ADG-TAG] OPERATIONS_MANUAL:EmergencyKill synchronized
+[OK] [ADG-TAG] OPERATIONS_MANUAL:MemorySearch synchronized (Grace period)
+[OK] [ADG-TAG] API_REFERENCE:GetAgentMemory synchronized (Grace period)
+[OK] [ADG-TAG] API_REFERENCE:GetPendingOversight synchronized (Grace period)
+[OK] [ADG-TAG] API_REFERENCE:GetOversightLedger synchronized (Grace period)
+[OK] [ADG-TAG] OPERATIONS_MANUAL:GovernanceSettings synchronized (Grace period)
+[OK] [ADG-TAG] API_REFERENCE:DecideOversight synchronized (Grace period)
+[OK] [ADG-TAG] API_REFERENCE:UpdateAgentQuota synchronized (Grace period)
+[OK] [ADG-TAG] API_REFERENCE:GetQuotas synchronized (Grace period)
+[OK] [ADG-TAG] API_REFERENCE:GetAuditTrail synchronized (Grace period)
+[OK] [ADG-TAG] API_REFERENCE:GetIntegrityStatus synchronized (Grace period)
+[OK] [ADG-TAG] OPERATIONS_MANUAL:AgentHealth synchronized (Grace period)
+[OK] [ADG-TAG] ARCHITECTURE:SecurityAudit synchronized
+[OK] [ADG-TAG] ARCHITECTURE:ResourceMetering synchronized (Grace period)
+[OK] [ADG-TAG] ARCHITECTURE:ShieldLayer synchronized
+[OK] [ADG-TAG] OPERATIONS_MANUAL:SecurityAudit synchronized
+[OK] [ADG-TAG] ARCHITECTURE:SystemDefense synchronized (Grace period)
+[OK] [ADG-TAG] ARCHITECTURE:SecurityModel synchronized
+[OK] [ADG-TAG] ARCHITECTURE:VulnerabilityScanning synchronized
+[OK] [ADG-TAG] SECURITY:ScanningPolicies synchronized
+[FAIL] [ADG-DRIFT] mod.rs updated but OPERATIONS_MANUAL.md is older (Drift detected)
+[OK] [ADG-TAG] ARCHITECTURE:ResourceHub synchronized (Grace period)
+[OK] [ADG-TAG] ARCHITECTURE:TelemetryEngine synchronized
+[FAIL] [ADG-DRIFT] pulse_types.rs updated but ARCHITECTURE.md is older (Drift detected)
+[FAIL] [ADG-DRIFT] mod.rs updated but OPERATIONS_MANUAL.md is older (Drift detected)
+[OK] [ADG-TAG] ARCHITECTURE:DataTypes synchronized
+[OK] [ADG-TAG] OPERATIONS_MANUAL:Telemetry synchronized
+[OK] [ADG-TAG] ARCHITECTURE:RagScoring synchronized
+[OK] [ADG-TAG] ARCHITECTURE:RAGSystems synchronized
+[OK] [ADG-TAG] ARCHITECTURE:UtilityFoundation synchronized
+[OK] [ADG-TAG] ARCHITECTURE:CodeBaseIntelligence synchronized
+[OK] [ADG-TAG] ARCHITECTURE:SecurityHardening synchronized
+[OK] [ADG-TAG] ARCHITECTURE:DataProtocols synchronized
+
+Scanning for Environment Variables...
+[OK] [ENV-VAR] BIND_ADDRESS documented
+[OK] [ENV-VAR] SME_SYNC_INTERVAL_MINS documented
+[OK] [ENV-VAR] DATABASE_URL documented
+[OK] [ENV-VAR] KUBERNETES_SERVICE_HOST documented
+[OK] [ENV-VAR] DEFAULT_AGENT_BUDGET_USD documented
+[OK] [ENV-VAR] NEURAL_TOKEN documented
+[OK] [ENV-VAR] GROQ_API_KEY documented
+[OK] [ENV-VAR] DISCORD_WEBHOOK documented
+[OK] [ENV-VAR] PIPER_MODEL_PATH documented
+[OK] [ENV-VAR] HEARTBEAT_INTERVAL_SECS documented
+[OK] [ENV-VAR] VAD_MODEL_PATH documented
+[OK] [ENV-VAR] WORKSPACE_ROOT documented
+[OK] [ENV-VAR] WHISPER_MODEL_PATH documented
+[OK] [ENV-VAR] GOOGLE_API_KEY documented
+[OK] [ENV-VAR] STATIC_DIR documented
+[OK] [ENV-VAR] LANCEDB_DRIFT_THRESHOLD documented
+[OK] [ENV-VAR] LANCEDB_DEDUPE_THRESHOLD documented
+[OK] [ENV-VAR] CLUSTER_ID documented
+[OK] [ENV-VAR] AUDIT_PRIVATE_KEY documented
+[OK] [ENV-VAR] MAX_AGENTS documented
+[OK] [ENV-VAR] PORT documented
+[OK] [ENV-VAR] AUTO_APPROVE_SAFE_SKILLS documented
+[OK] [ENV-VAR] MAX_TASK_LENGTH documented
+[OK] [ENV-VAR] MAX_CLUSTERS documented
+[OK] [ENV-VAR] ALLOWED_ORIGINS documented
+[OK] [ENV-VAR] MAX_SWARM_DEPTH documented
+[OK] [ENV-VAR] PRIVACY_MODE documented
+[OK] [ENV-VAR] TADPOLE_NULL_PROVIDERS documented
+[OK] [ENV-VAR] DISABLE_TELEMETRY documented
+[OK] [ENV-VAR] OPENAI_API_KEY documented
+[OK] [ENV-VAR] OLLAMA_HOST documented
+
+Scanning Skills & Workflows...
+[OK] [SKILL-MANIFEST] [analyze_budget] echo "Simulated execution of Analyze Budget" verified
+[OK] [SKILL-MANIFEST] [analyze_feedback] echo "Simulated execution of Analyze Feedback" verified
+[OK] [SKILL-MANIFEST] [api_test] echo "Simulated execution of API Test" verified
+[OK] [SKILL-MANIFEST] [archive_to_vault] (Native Execution Mode) verified
+[OK] [SKILL-MANIFEST] [brainstorming] echo 'Initiating brainstorming session...' verified
+[OK] [SKILL-MANIFEST] [check_server_health] echo "Simulated execution of Check Server Health" verified
+[OK] [SKILL-MANIFEST] [code_audit] echo "Simulated execution of Code Audit" verified
+[OK] [SKILL-MANIFEST] [code_generation] echo 'Generating code...' verified
+[OK] [SKILL-MANIFEST] [code_review] echo "Simulated execution of Code Review" verified
+[OK] [SKILL-MANIFEST] [cold_call] echo "Simulated execution of Cold Call" verified
+[OK] [SKILL-MANIFEST] [conflict_resolution] echo "Simulated execution of Conflict Resolution" verified
+[OK] [SKILL-MANIFEST] [content_generation] echo 'Generating content...' verified
+[OK] [SKILL-MANIFEST] [contract_review] echo "Simulated execution of Contract Review" verified
+[OK] [SKILL-MANIFEST] [copywriting] echo "Simulated execution of Copywriting" verified
+[OK] [SKILL-MANIFEST] [customer_chat] echo "Simulated execution of Customer Chat" verified
+[OK] [SKILL-MANIFEST] [database_query] echo "Simulated execution of Database Query" verified
+[OK] [SKILL-MANIFEST] [data_analysis] echo "Simulated execution of Data Analysis" verified
+[OK] [SKILL-MANIFEST] [debug] echo "Simulated execution of Debug" verified
+[OK] [SKILL-MANIFEST] [deep_research] echo "Simulated execution of Deep Research" verified
+[OK] [SKILL-MANIFEST] [delete_file] (Native Execution Mode) verified
+[OK] [SKILL-MANIFEST] [documentation] echo 'Generating documentation...' verified
+[OK] [SKILL-MANIFEST] [edit_content] echo "Simulated execution of Edit Content" verified
+[OK] [SKILL-MANIFEST] [employee_onboarding] echo "Simulated execution of Employee Onboarding" verified
+[OK] [SKILL-MANIFEST] [expense_tracking] echo "Simulated execution of Expense Tracking" verified
+[OK] [SKILL-MANIFEST] [fetch_url] (Native Execution Mode) verified
+[OK] [SKILL-MANIFEST] [figma_sync] echo "Simulated execution of Figma Sync" verified
+[OK] [SKILL-MANIFEST] [generate_image] echo "Simulated execution of Generate Image" verified
+[OK] [SKILL-MANIFEST] [git_push] echo "Simulated execution of Git Push" verified
+[OK] [SKILL-MANIFEST] [issue_alpha_directive] (Native Execution Mode) verified
+[OK] [SKILL-MANIFEST] [keyword_research] echo "Simulated execution of Keyword Research" verified
+[OK] [SKILL-MANIFEST] [knowledge_base_search] echo "Simulated execution of Knowledge Base Search" verified
+[OK] [SKILL-MANIFEST] [lead_qualification] echo "Simulated execution of Lead Qualification" verified
+[OK] [SKILL-MANIFEST] [list_files] (Native Execution Mode) verified
+[OK] [SKILL-MANIFEST] [market_research] echo "Simulated execution of Market Research" verified
+[OK] [SKILL-MANIFEST] [monitor_mentions] echo "Simulated execution of Monitor Mentions" verified
+[OK] [SKILL-MANIFEST] [notify_discord] (Native Execution Mode) verified
+[OK] [SKILL-MANIFEST] [performance_tracking] echo 'Generating performance report...' verified
+[OK] [SKILL-MANIFEST] [post_update] echo "Simulated execution of Post Update" verified
+[OK] [SKILL-MANIFEST] [query_financial_logs] (Native Execution Mode) verified
+[OK] [SKILL-MANIFEST] [read_file] (Native Execution Mode) verified
+[OK] [SKILL-MANIFEST] [refactoring] echo 'Refactoring code...' verified
+[OK] [SKILL-MANIFEST] [Resource Check] echo "Simulated execution of Resource Check" verified
+[OK] [SKILL-MANIFEST] [risk_analysis] echo "Simulated execution of Risk Analysis" verified
+[OK] [SKILL-MANIFEST] [scan_vulnerabilities] echo "Simulated execution of Scan Vulnerabilities" verified
+[OK] [SKILL-MANIFEST] [schedule_meeting] echo "Simulated execution of Schedule Meeting" verified
+[OK] [SKILL-MANIFEST] [seo_analysis] echo "Simulated execution of SEO Analysis" verified
+[OK] [SKILL-MANIFEST] [system_audit] echo "Simulated execution of System Audit" verified
+[OK] [SKILL-MANIFEST] [task_prioritization] echo 'Prioritizing tasks...' verified
+[OK] [SKILL-MANIFEST] [test_skill] echo 'Test skill executed successfully.' verified
+[OK] [SKILL-MANIFEST] [ticket_triage] echo "Simulated execution of Ticket Triage" verified
+[OK] [SKILL-MANIFEST] [ui_audit] echo "Simulated execution of UI Audit" verified
+[OK] [SKILL-MANIFEST] [unit_testing] echo "Simulated execution of Unit Testing" verified
+[OK] [SKILL-MANIFEST] [update_crm] echo "Simulated execution of Update CRM" verified
+[OK] [SKILL-MANIFEST] [user_interview] echo "Simulated execution of User Interview" verified
+[OK] [SKILL-MANIFEST] [view_logs] echo "Simulated execution of View Logs" verified
+[OK] [SKILL-MANIFEST] [write_file] (Native Execution Mode) verified
+[OK] [SKILL-MANIFEST] [write_spec] echo "Simulated execution of Write Spec" verified
+
+Checking API Documentation Parity...
+[OK] [DOCS-PARITY] API_REFERENCE.md is synchronized
+
+Audit Complete. Errors found: 1

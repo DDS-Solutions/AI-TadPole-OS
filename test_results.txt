@@ -1,0 +1,1113 @@
+
+> tadpole-os@1.1.4 test
+> vitest run --run
+
+
+[1m[46m RUN [49m[22m [36mv4.1.1 [39m[90mD:/TadpoleOS-Dev[39m
+
+stderr | src/services/socket.test.ts > TadpoleOSSocketClient > should handle connection failure gracefully
+[TadpoleOS] Connection failed: Error: Network fail
+    at new FailsWebSocket (D:/TadpoleOS-Dev/src/services/socket.test.ts:227:35)
+    at TadpoleOSSocketClient.connect (D:/TadpoleOS-Dev/src/services/socket.ts:208:24)
+    at D:/TadpoleOS-Dev/src/services/socket.test.ts:231:16
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:1893:26
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2316:20
+    at new Promise (<anonymous>)
+    at runWithCancel (file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2313:10)
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2295:20
+    at new Promise (<anonymous>)
+
+ [31mΓ¥»[39m src/services/socket.test.ts [2m([22m[2m9 tests[22m[2m | [22m[31m7 failed[39m[2m)[22m[32m 29[2mms[22m[39m
+[31m     [31m├ù[31m should initialize and connect, updating state correctly[39m[32m 14[2mms[22m[39m
+[31m     [31m├ù[31m should handle disconnects and trigger exponential backoff reconnects[39m[32m 2[2mms[22m[39m
+[31m     [31m├ù[31m should handle manual disconnect and not auto-reconnect[39m[32m 2[2mms[22m[39m
+[31m     [31m├ù[31m should reconnect when settings change[39m[32m 1[2mms[22m[39m
+[31m     [31m├ù[31m should deserialize messages correctly and emit events[39m[32m 1[2mms[22m[39m
+[31m     [31m├ù[31m should dispatch ArrayBuffer to audio stream listeners[39m[32m 1[2mms[22m[39m
+     [32mΓ£ô[39m should handle websocket error event[32m 1[2mms[22m[39m
+     [32mΓ£ô[39m should handle connection failure gracefully[32m 3[2mms[22m[39m
+[31m     [31m├ù[31m should hit MAX_RETRIES limit safely[39m[32m 1[2mms[22m[39m
+ [31mΓ¥»[39m src/services/agent_api_service.test.ts [2m([22m[2m15 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[32m 30[2mms[22m[39m
+       [32mΓ£ô[39m should return agents from a direct array response[32m 4[2mms[22m[39m
+       [32mΓ£ô[39m should return agents from a HATEOAS data envelope[32m 0[2mms[22m[39m
+       [32mΓ£ô[39m should return an empty array for undefined envelope data[32m 0[2mms[22m[39m
+       [32mΓ£ô[39m should return an empty array if response is null/invalid[32m 0[2mms[22m[39m
+       [32mΓ£ô[39m should send a PUT request with the correct body[32m 4[2mms[22m[39m
+       [32mΓ£ô[39m should send a POST request with the new agent mapping[32m 1[2mms[22m[39m
+       [32mΓ£ô[39m should send POST to pause[32m 1[2mms[22m[39m
+       [32mΓ£ô[39m should send POST to resume[32m 1[2mms[22m[39m
+       [32mΓ£ô[39m should send command with API key and model limits if provider has a key[32m 2[2mms[22m[39m
+[31m       [31m├ù[31m should emit a security info event if no key is present for a remote provider[39m[32m 5[2mms[22m[39m
+[31m       [31m├ù[31m should ignore missing key for local providers and not emit event[39m[32m 2[2mms[22m[39m
+       [32mΓ£ô[39m should include X-Request-Id header if requestId is provided[32m 1[2mms[22m[39m
+[31m       [31m├ù[31m get_agent_memory[39m[32m 5[2mms[22m[39m
+       [32mΓ£ô[39m delete_agent_memory[32m 1[2mms[22m[39m
+       [32mΓ£ô[39m save_agent_memory[32m 1[2mms[22m[39m
+stderr | src/stores/agent_store.test.ts > agent_store > update_agent > reverts state and emits event on persistence failure
+[AgentStore] Persistence failed, keeping optimistic state: Sync failed
+
+stderr | src/stores/agent_store.test.ts > agent_store > addAgent > reverts and emits event on persistence failure
+[AgentStore] Creation failure: Create failed
+
+ [31mΓ¥»[39m src/stores/agent_store.test.ts [2m([22m[2m9 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[32m 25[2mms[22m[39m
+       [32mΓ£ô[39m fetches agents successfully and updates state[32m 4[2mms[22m[39m
+[31m       [31m├ù[31m handles fetch errors correctly and emits event[39m[32m 6[2mms[22m[39m
+       [32mΓ£ô[39m performs an optimistic update and persists successfully[32m 3[2mms[22m[39m
+[31m       [31m├ù[31m reverts state and emits event on persistence failure[39m[32m 2[2mms[22m[39m
+       [32mΓ£ô[39m optimistically adds an agent and persists[32m 1[2mms[22m[39m
+[31m       [31m├ù[31m reverts and emits event on persistence failure[39m[32m 2[2mms[22m[39m
+       [32mΓ£ô[39m retrieves an agent by id[32m 0[2mms[22m[39m
+       [32mΓ£ô[39m subscribes to updates and applies them with workspace resolution[32m 4[2mms[22m[39m
+       [32mΓ£ô[39m resolves silo path if agent is not in any cluster[32m 1[2mms[22m[39m
+[90mstdout[2m | src/pages/Template_Store.test.tsx[2m > [22m[2mTemplate_Store Page[2m > [22m[2mopens preview modal, fetches config, and installs template
+[22m[39mhandlePreview invoked for: tmpl-1
+Fetching configUrl: https://raw.githubusercontent.com/DDS-Solutions/Tadpole-OS-Industry-Templates/main/finance/fintech-nodes/swarm.json
+
+[90mstdout[2m | src/pages/Template_Store.test.tsx[2m > [22m[2mTemplate_Store Page[2m > [22m[2mopens preview modal, fetches config, and installs template
+[22m[39mConfig loaded successfully
+
+stderr | src/pages/Scheduled_Jobs.test.tsx > Scheduled_Jobs Page > toggles job enabled state
+Failed to toggle job: TypeError: __vite_ssr_import_5__.event_bus.emit_log is not a function
+    at toggleEnable (D:/TadpoleOS-Dev/src/pages/Scheduled_Jobs.tsx:118:23)
+
+ [31mΓ¥»[39m src/pages/Template_Store.test.tsx [2m([22m[2m5 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 1428[2mms[22m[39m
+     [32mΓ£ô[39m renders the store and fetches the registry[32m 143[2mms[22m[39m
+     [32mΓ£ô[39m filters templates by search query[32m 128[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m filters templates by industry and size [33m 718[2mms[22m[39m
+[31m     [31m├ù[31m opens preview modal, fetches config, and installs template[39m[33m 331[2mms[22m[39m
+     [32mΓ£ô[39m displays error message if fetching registry fails[32m 104[2mms[22m[39m
+stderr | src/pages/Scheduled_Jobs.test.tsx > Scheduled_Jobs Page > deletes a job after confirmation
+Failed to delete job: TypeError: __vite_ssr_import_5__.event_bus.emit_log is not a function
+    at handleConfirmDelete (D:/TadpoleOS-Dev/src/pages/Scheduled_Jobs.tsx:154:23)
+
+ [31mΓ¥»[39m src/pages/Missions.test.tsx [2m([22m[2m13 tests[22m[2m | [22m[31m13 failed[39m[2m)[22m[33m 475[2mms[22m[39m
+[31m     [31m├ù[31m renders the mission management shell[39m[32m 98[2mms[22m[39m
+[31m     [31m├ù[31m shows error if no alpha node is assigned[39m[32m 60[2mms[22m[39m
+[31m     [31m├ù[31m shows error if no objective is set[39m[32m 64[2mms[22m[39m
+[31m     [31m├ù[31m handles command rejection from engine[39m[32m 38[2mms[22m[39m
+[31m     [31m├ù[31m handles send_command throw exception[39m[32m 38[2mms[22m[39m
+[31m     [31m├ù[31m launches a mission correctly[39m[32m 39[2mms[22m[39m
+[31m     [31m├ù[31m handles neural optimization proposal[39m[32m 26[2mms[22m[39m
+[31m     [31m├ù[31m handles incoming handoffs (approve and reject)[39m[32m 15[2mms[22m[39m
+[31m     [31m├ù[31m updates objective on textarea change[39m[32m 16[2mms[22m[39m
+[31m     [31m├ù[31m handles cluster management actions from sidebar[39m[32m 28[2mms[22m[39m
+[31m     [31m├ù[31m handles agent team management actions[39m[32m 13[2mms[22m[39m
+[31m     [31m├ù[31m toggles mission analysis[39m[32m 16[2mms[22m[39m
+[31m     [31m├ù[31m calls receiveHandoff when socket event arrives[39m[32m 20[2mms[22m[39m
+stderr | src/pages/Scheduled_Jobs.test.tsx > Scheduled_Jobs Page > can create a new agent-based scheduled job
+Failed to handle job: TypeError: __vite_ssr_import_5__.event_bus.emit_log is not a function
+    at handleCreate (D:/TadpoleOS-Dev/src/pages/Scheduled_Jobs.tsx:184:27)
+
+stderr | src/pages/Scheduled_Jobs.test.tsx > Scheduled_Jobs Page > can switch to creating a workflow-based scheduled job
+Failed to handle job: TypeError: __vite_ssr_import_5__.event_bus.emit_log is not a function
+    at handleCreate (D:/TadpoleOS-Dev/src/pages/Scheduled_Jobs.tsx:184:27)
+
+ [31mΓ¥»[39m src/pages/Scheduled_Jobs.test.tsx [2m([22m[2m6 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[33m 1739[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders the job list correctly [33m 339[2mms[22m[39m
+[31m     [31m├ù[31m toggles job enabled state[39m[33m 527[2mms[22m[39m
+[31m     [31m├ù[31m deletes a job after confirmation[39m[32m 247[2mms[22m[39m
+     [32mΓ£ô[39m expands a job and fetches its run history[32m 125[2mms[22m[39m
+[31m     [31m├ù[31m can create a new agent-based scheduled job[39m[32m 239[2mms[22m[39m
+     [32mΓ£ô[39m can switch to creating a workflow-based scheduled job[32m 259[2mms[22m[39m
+ [31mΓ¥»[39m src/pages/Benchmark_Analytics.test.tsx [2m([22m[2m5 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 2179[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders and fetches benchmarks on mount [33m 301[2mms[22m[39m
+[31m     [31m├ù[31m handles benchmark execution[39m[32m 174[2mms[22m[39m
+[31m     [31m├ù[31m handles benchmark execution failure[39m[33m 1129[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m toggles selection and shows comparison [33m 522[2mms[22m[39m
+     [32mΓ£ô[39m shows empty state when no benchmarks available[32m 48[2mms[22m[39m
+ [31mΓ¥»[39m src/pages/Standups.test.tsx [2m([22m[2m5 tests[22m[2m | [22m[31m5 failed[39m[2m)[22m[32m 13[2mms[22m[39m
+[31m     [31m├ù[31m renders the neural sync interface and live transcript base[39m[32m 6[2mms[22m[39m
+[31m     [31m├ù[31m populates agent and cluster targets[39m[32m 1[2mms[22m[39m
+[31m     [31m├ù[31m handles incoming event_bus messages and text-to-speech for agents[39m[32m 1[2mms[22m[39m
+[31m     [31m├ù[31m starts and stops recording, transcribes, and sends command to an agent target[39m[32m 1[2mms[22m[39m
+[31m     [31m├ù[31m handles neural handoff to an entire cluster (routing to Alpha node)[39m[32m 1[2mms[22m[39m
+ [32mΓ£ô[39m src/pages/Oversight_Dashboard.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 960[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders the dashboard basic components [33m 444[2mms[22m[39m
+ [32mΓ£ô[39m src/pages/Settings.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 1067[2mms[22m[39m
+ [32mΓ£ô[39m src/pages/Skills.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 1046[2mms[22m[39m
+ [32mΓ£ô[39m src/pages/Model_Manager.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 825[2mms[22m[39m
+ [32mΓ£ô[39m src/pages/Ops_Dashboard.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 797[2mms[22m[39m
+ [32mΓ£ô[39m src/pages/Workspaces.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 768[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m handles approving a branch [33m 308[2mms[22m[39m
+stderr | src/pages/Engine_Dashboard.test.tsx > Engine_Dashboard Page > renders telemetry metrics when online
+ReferenceError: ResizeObserver is not defined
+    at file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:1900:13
+    at Object.react_stack_bottom_frame (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:25989:20)
+    at runWithFiberInDEV (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:874:13)
+    at commitHookEffectListMount (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:13249:29)
+    at commitHookPassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:13336:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15484:13)
+    at recursivelyTraversePassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15439:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15476:11)
+    at recursivelyTraversePassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15439:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15476:11) {
+  [stack]: [Getter/Setter],
+  [message]: 'ResizeObserver is not defined'
+}
+
+The above error occurred in the <ZoomPane> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, Error_Boundary.
+
+[Neural Sector Fault] Swarm Execution Graph: ReferenceError: ResizeObserver is not defined
+    at file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:1900:13
+    at Object.react_stack_bottom_frame (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:25989:20)
+    at runWithFiberInDEV (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:874:13)
+    at commitHookEffectListMount (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:13249:29)
+    at commitHookPassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:13336:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15484:13)
+    at recursivelyTraversePassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15439:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15476:11)
+    at recursivelyTraversePassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15439:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15476:11) {
+  componentStack: '\n' +
+    '    at ZoomPane (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:1939:21)\n' +
+    '    at FlowRenderer (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:3098:25)\n' +
+    '    at GraphView (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:3751:22)\n' +
+    '    at ReactFlowProvider (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:4053:30)\n' +
+    '    at Wrapper (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:4062:20)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at ReactFlow (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:4096:33)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at Telemetry_Graph (D:/TadpoleOS-Dev/src/components/Telemetry_Graph.tsx:182:28)\n' +
+    '    at Error_Boundary (D:/TadpoleOS-Dev/src/components/Error_Boundary.tsx:15:1)\n' +
+    '    at SectorBoundary (D:/TadpoleOS-Dev/src/components/Error_Boundary.tsx:110:27)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at Engine_Dashboard (D:/TadpoleOS-Dev/src/pages/Engine_Dashboard.tsx:27:67)'
+}
+
+stderr | src/pages/Engine_Dashboard.test.tsx > Engine_Dashboard Page > renders indicators correctly when offline
+ReferenceError: ResizeObserver is not defined
+    at file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:1900:13
+    at Object.react_stack_bottom_frame (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:25989:20)
+    at runWithFiberInDEV (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:874:13)
+    at commitHookEffectListMount (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:13249:29)
+    at commitHookPassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:13336:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15484:13)
+    at recursivelyTraversePassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15439:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15476:11)
+    at recursivelyTraversePassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15439:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15476:11) {
+  [stack]: [Getter/Setter],
+  [message]: 'ResizeObserver is not defined'
+}
+
+The above error occurred in the <ZoomPane> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, Error_Boundary.
+
+[Neural Sector Fault] Swarm Execution Graph: ReferenceError: ResizeObserver is not defined
+    at file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:1900:13
+    at Object.react_stack_bottom_frame (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:25989:20)
+    at runWithFiberInDEV (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:874:13)
+    at commitHookEffectListMount (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:13249:29)
+    at commitHookPassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:13336:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15484:13)
+    at recursivelyTraversePassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15439:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15476:11)
+    at recursivelyTraversePassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15439:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15476:11) {
+  componentStack: '\n' +
+    '    at ZoomPane (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:1939:21)\n' +
+    '    at FlowRenderer (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:3098:25)\n' +
+    '    at GraphView (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:3751:22)\n' +
+    '    at ReactFlowProvider (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:4053:30)\n' +
+    '    at Wrapper (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:4062:20)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at ReactFlow (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:4096:33)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at Telemetry_Graph (D:/TadpoleOS-Dev/src/components/Telemetry_Graph.tsx:182:28)\n' +
+    '    at Error_Boundary (D:/TadpoleOS-Dev/src/components/Error_Boundary.tsx:15:1)\n' +
+    '    at SectorBoundary (D:/TadpoleOS-Dev/src/components/Error_Boundary.tsx:110:27)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at Engine_Dashboard (D:/TadpoleOS-Dev/src/pages/Engine_Dashboard.tsx:27:67)'
+}
+
+stderr | src/pages/Engine_Dashboard.test.tsx > Engine_Dashboard Page > renders the telemetry cards
+ReferenceError: ResizeObserver is not defined
+    at file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:1900:13
+    at Object.react_stack_bottom_frame (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:25989:20)
+    at runWithFiberInDEV (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:874:13)
+    at commitHookEffectListMount (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:13249:29)
+    at commitHookPassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:13336:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15484:13)
+    at recursivelyTraversePassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15439:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15476:11)
+    at recursivelyTraversePassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15439:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15476:11) {
+  [stack]: [Getter/Setter],
+  [message]: 'ResizeObserver is not defined'
+}
+
+The above error occurred in the <ZoomPane> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, Error_Boundary.
+
+[Neural Sector Fault] Swarm Execution Graph: ReferenceError: ResizeObserver is not defined
+    at file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:1900:13
+    at Object.react_stack_bottom_frame (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:25989:20)
+    at runWithFiberInDEV (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:874:13)
+    at commitHookEffectListMount (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:13249:29)
+    at commitHookPassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:13336:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15484:13)
+    at recursivelyTraversePassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15439:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15476:11)
+    at recursivelyTraversePassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15439:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15476:11) {
+  componentStack: '\n' +
+    '    at ZoomPane (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:1939:21)\n' +
+    '    at FlowRenderer (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:3098:25)\n' +
+    '    at GraphView (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:3751:22)\n' +
+    '    at ReactFlowProvider (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:4053:30)\n' +
+    '    at Wrapper (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:4062:20)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at ReactFlow (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:4096:33)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at Telemetry_Graph (D:/TadpoleOS-Dev/src/components/Telemetry_Graph.tsx:182:28)\n' +
+    '    at Error_Boundary (D:/TadpoleOS-Dev/src/components/Error_Boundary.tsx:15:1)\n' +
+    '    at SectorBoundary (D:/TadpoleOS-Dev/src/components/Error_Boundary.tsx:110:27)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at Engine_Dashboard (D:/TadpoleOS-Dev/src/pages/Engine_Dashboard.tsx:27:67)'
+}
+
+stderr | src/pages/Engine_Dashboard.test.tsx > Engine_Dashboard Page > updates progress bar widths based on metrics
+ReferenceError: ResizeObserver is not defined
+    at file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:1900:13
+    at Object.react_stack_bottom_frame (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:25989:20)
+    at runWithFiberInDEV (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:874:13)
+    at commitHookEffectListMount (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:13249:29)
+    at commitHookPassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:13336:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15484:13)
+    at recursivelyTraversePassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15439:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15476:11)
+    at recursivelyTraversePassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15439:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15476:11) {
+  [stack]: [Getter/Setter],
+  [message]: 'ResizeObserver is not defined'
+}
+
+The above error occurred in the <ZoomPane> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, Error_Boundary.
+
+[Neural Sector Fault] Swarm Execution Graph: ReferenceError: ResizeObserver is not defined
+    at file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:1900:13
+    at Object.react_stack_bottom_frame (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:25989:20)
+    at runWithFiberInDEV (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:874:13)
+    at commitHookEffectListMount (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:13249:29)
+    at commitHookPassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:13336:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15484:13)
+    at recursivelyTraversePassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15439:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15476:11)
+    at recursivelyTraversePassiveMountEffects (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15439:11)
+    at commitPassiveMountOnFiber (D:\TadpoleOS-Dev\node_modules\react-dom\cjs\react-dom-client.development.js:15476:11) {
+  componentStack: '\n' +
+    '    at ZoomPane (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:1939:21)\n' +
+    '    at FlowRenderer (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:3098:25)\n' +
+    '    at GraphView (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:3751:22)\n' +
+    '    at ReactFlowProvider (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:4053:30)\n' +
+    '    at Wrapper (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:4062:20)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at ReactFlow (file:///D:/TadpoleOS-Dev/node_modules/@reactflow/core/dist/esm/index.mjs:4096:33)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at Telemetry_Graph (D:/TadpoleOS-Dev/src/components/Telemetry_Graph.tsx:182:28)\n' +
+    '    at Error_Boundary (D:/TadpoleOS-Dev/src/components/Error_Boundary.tsx:15:1)\n' +
+    '    at SectorBoundary (D:/TadpoleOS-Dev/src/components/Error_Boundary.tsx:110:27)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at div (<anonymous>)\n' +
+    '    at Engine_Dashboard (D:/TadpoleOS-Dev/src/pages/Engine_Dashboard.tsx:27:67)'
+}
+
+ [32mΓ£ô[39m src/pages/Engine_Dashboard.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 633[2mms[22m[39m
+ [32mΓ£ô[39m src/pages/Security_Dashboard.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 729[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m displays audit trail entries correctly [33m 417[2mms[22m[39m
+ [32mΓ£ô[39m src/components/Agent_Config_Panel.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 557[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders agent details correctly [33m 382[2mms[22m[39m
+stderr | src/pages/Docs.test.tsx > Docs Page > toggles to Operations Manual tab and fetches manual content
+Each child in a list should have a unique "key" prop.
+
+Check the render method of `Docs`. See https://react.dev/link/warning-keys for more information.
+
+stderr | src/pages/Docs.test.tsx > Docs Page > handles fetch failures gracefully
+Failed to fetch content: Error: Network error 500
+    at D:/TadpoleOS-Dev/src/pages/Docs.test.tsx:181:73
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:1893:26
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2316:20
+    at new Promise (<anonymous>)
+    at runWithCancel (file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2313:10)
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2295:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2262:10)
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2945:64
+
+ [32mΓ£ô[39m src/pages/Docs.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 451[2mms[22m[39m
+ [32mΓ£ô[39m src/pages/Org_Chart.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 460[2mms[22m[39m
+ [32mΓ£ô[39m src/components/layout/Sidebar.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 252[2mms[22m[39m
+ [32mΓ£ô[39m src/pages/Agent_Manager.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 732[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m renders agent list and search bar [33m 302[2mms[22m[39m
+ [32mΓ£ô[39m src/components/Swarm_Status_Header.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 142[2mms[22m[39m
+ [32mΓ£ô[39m src/components/Import_Preview_Modal.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 163[2mms[22m[39m
+ [32mΓ£ô[39m src/components/Swarm_Oversight_Node.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 227[2mms[22m[39m
+ [32mΓ£ô[39m src/components/skills/Skill_Card.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 164[2mms[22m[39m
+ [32mΓ£ô[39m src/components/dashboard/__tests__/Agent_Status_Grid.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 211[2mms[22m[39m
+ [32mΓ£ô[39m src/components/ui/Portal_Window.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 121[2mms[22m[39m
+ [32mΓ£ô[39m src/components/Error_Boundary.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 180[2mms[22m[39m
+ [32mΓ£ô[39m src/components/hierarchy/Node_Header.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 247[2mms[22m[39m
+ [32mΓ£ô[39m src/components/layout/Org_Header.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 107[2mms[22m[39m
+ [32mΓ£ô[39m src/utils/crypto.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 49[2mms[22m[39m
+ [32mΓ£ô[39m src/stores/skill_store.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+stderr | src/stores/workspace_store.test.ts > use_workspace_store > Cluster CRUD > creates a cluster within limits
+Failed to sync new cluster quota to backend: Error: Neural Link Configuration Missing: TadpoleOSUrl is undefined.
+    at apiRequest (D:/TadpoleOS-Dev/src/services/base_api_service.ts:53:15)
+    at Object.update_mission_quota (D:/TadpoleOS-Dev/src/services/system_api_service.ts:425:16)
+    at Object.createCluster (D:/TadpoleOS-Dev/src/stores/workspace_store.ts:191:46)
+    at D:/TadpoleOS-Dev/src/stores/workspace_store.test.ts:60:19
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:1893:26
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2316:20
+    at new Promise (<anonymous>)
+    at runWithCancel (file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2313:10)
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2295:20
+
+stderr | src/stores/workspace_store.test.ts > use_workspace_store > Cluster Properties > updates budget
+Failed to sync mission quota to backend: Error: Neural Link Configuration Missing: TadpoleOSUrl is undefined.
+    at apiRequest (D:/TadpoleOS-Dev/src/services/base_api_service.ts:53:15)
+    at Object.update_mission_quota (D:/TadpoleOS-Dev/src/services/system_api_service.ts:425:16)
+    at Object.updateClusterBudget (D:/TadpoleOS-Dev/src/stores/workspace_store.ts:244:46)
+    at D:/TadpoleOS-Dev/src/stores/workspace_store.test.ts:150:19
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:1893:26
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2316:20
+    at new Promise (<anonymous>)
+    at runWithCancel (file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2313:10)
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2295:20
+
+ [32mΓ£ô[39m src/stores/workspace_store.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+ [32mΓ£ô[39m src/pages/Agent_Card_Memo.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32mΓ£ô[39m src/components/hierarchy/__tests__/Node_Task_Box.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 135[2mms[22m[39m
+ [32mΓ£ô[39m src/services/system_api_service.test.ts [2m([22m[2m38 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+stderr | src/stores/provider_store.test.ts > use_provider_store > Provider CRUD > deletes a provider
+[Model_Store] Model deletion sync failed: TypeError: __vite_ssr_import_5__.tadpole_os_service.delete_model is not a function
+    at Object.delete_model (D:/TadpoleOS-Dev/src/stores/model_store.ts:123:46)
+    at D:/TadpoleOS-Dev/src/stores/provider_store.ts:113:62
+    at Array.forEach (<anonymous>)
+    at Object.delete_provider (D:/TadpoleOS-Dev/src/stores/provider_store.ts:113:36)
+    at D:/TadpoleOS-Dev/src/stores/provider_store.test.ts:44:25
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:1893:26
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2316:20
+    at new Promise (<anonymous>)
+    at runWithCancel (file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2313:10)
+[Model_Store] Model deletion sync failed: TypeError: __vite_ssr_import_5__.tadpole_os_service.delete_model is not a function
+    at Object.delete_model (D:/TadpoleOS-Dev/src/stores/model_store.ts:123:46)
+    at D:/TadpoleOS-Dev/src/stores/provider_store.ts:113:62
+    at Array.forEach (<anonymous>)
+    at Object.delete_provider (D:/TadpoleOS-Dev/src/stores/provider_store.ts:113:36)
+    at D:/TadpoleOS-Dev/src/stores/provider_store.test.ts:44:25
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:1893:26
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2316:20
+    at new Promise (<anonymous>)
+    at runWithCancel (file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2313:10)
+[Model_Store] Model deletion sync failed: TypeError: __vite_ssr_import_5__.tadpole_os_service.delete_model is not a function
+    at Object.delete_model (D:/TadpoleOS-Dev/src/stores/model_store.ts:123:46)
+    at D:/TadpoleOS-Dev/src/stores/provider_store.ts:113:62
+    at Array.forEach (<anonymous>)
+    at Object.delete_provider (D:/TadpoleOS-Dev/src/stores/provider_store.ts:113:36)
+    at D:/TadpoleOS-Dev/src/stores/provider_store.test.ts:44:25
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:1893:26
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2316:20
+    at new Promise (<anonymous>)
+    at runWithCancel (file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2313:10)
+[Model_Store] Model deletion sync failed: TypeError: __vite_ssr_import_5__.tadpole_os_service.delete_model is not a function
+    at Object.delete_model (D:/TadpoleOS-Dev/src/stores/model_store.ts:123:46)
+    at D:/TadpoleOS-Dev/src/stores/provider_store.ts:113:62
+    at Array.forEach (<anonymous>)
+    at Object.delete_provider (D:/TadpoleOS-Dev/src/stores/provider_store.ts:113:36)
+    at D:/TadpoleOS-Dev/src/stores/provider_store.test.ts:44:25
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:1893:26
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2316:20
+    at new Promise (<anonymous>)
+    at runWithCancel (file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2313:10)
+
+[90mstdout[2m | src/stores/provider_store.test.ts[2m > [22m[2muse_provider_store[2m > [22m[2mCoordinated Synchronization[2m > [22m[2msyncWithBackend updates providers
+[22m[39m[ProviderStore] Initiating coordination sync...
+
+stderr | src/stores/provider_store.test.ts > use_provider_store > Coordinated Synchronization > syncWithBackend updates providers
+[Model_Store] Backend sync failed: TypeError: Cannot read properties of undefined (reading 'map')
+    at Object.syncModels (D:/TadpoleOS-Dev/src/stores/model_store.ts:144:98)
+    at processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at Object.syncWithBackend (D:/TadpoleOS-Dev/src/stores/provider_store.ts:222:21)
+    at D:/TadpoleOS-Dev/src/stores/provider_store.test.ts:59:13
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:1893:20
+
+ [32mΓ£ô[39m src/stores/provider_store.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+stderr | src/services/crypto_service.test.ts > crypto_service > Encryption/Decryption > throws FAILED_TO_ENCRYPT_DATA on encryption error
+[CryptoService] Encryption failure: Error: fail
+    at D:/TadpoleOS-Dev/src/services/crypto_service.test.ts:47:60
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:1893:26
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2316:20
+    at new Promise (<anonymous>)
+    at runWithCancel (file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2313:10)
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2295:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2262:10)
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2945:64
+
+stderr | src/services/crypto_service.test.ts > crypto_service > Encryption/Decryption > throws INVALID_MASTER_KEY on decryption error
+[CryptoService] Decryption failure: Error: fail
+    at D:/TadpoleOS-Dev/src/services/crypto_service.test.ts:54:60
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:1893:26
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2316:20
+    at new Promise (<anonymous>)
+    at runWithCancel (file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2313:10)
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2295:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2262:10)
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2945:64
+
+stderr | src/services/crypto_service.test.ts > crypto_service > verifyMasterKey > returns false on invalid key
+[CryptoService] Decryption failure: Error: fail
+    at D:/TadpoleOS-Dev/src/services/crypto_service.test.ts:69:60
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:1893:26
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2316:20
+    at new Promise (<anonymous>)
+    at runWithCancel (file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2313:10)
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2295:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2262:10)
+    at file:///D:/TadpoleOS-Dev/node_modules/@vitest/runner/dist/chunk-artifact.js:2945:64
+
+ [32mΓ£ô[39m src/services/crypto_service.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32mΓ£ô[39m src/workers/crypto.worker.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32mΓ£ô[39m src/stores/memory_store.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32mΓ£ô[39m src/stores/vault_store.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32mΓ£ô[39m src/utils/crypto-core.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32mΓ£ô[39m tests/eventBus.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32mΓ£ô[39m src/stores/node_store.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32mΓ£ô[39m tests/commandProcessor.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32mΓ£ô[39m src/stores/sovereign_store.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+stderr | src/services/voice_client.test.ts
+[VoiceClient] Web Speech API not supported in this browser.
+
+ [32mΓ£ô[39m src/services/voice_client.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32mΓ£ô[39m src/services/mission_api_service.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32mΓ£ô[39m src/services/agent_service.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+[90mstdout[2m | src/stores/settings_store.test.ts[2m > [22m[2muse_settings_store[2m > [22m[2mPersistence & Migration (localStorage Hook simulation)[2m > [22m[2mmigrates legacy openClaw config names on hydration
+[22m[39m[Settings] Migrating legacy URL: http://legacy-url:8000 -> TadpoleOSUrl
+[Settings] Migrating legacy API Key -> TadpoleOSApiKey
+
+ [32mΓ£ô[39m src/stores/settings_store.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32mΓ£ô[39m src/stores/model_store.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32mΓ£ô[39m tests/components/terminalBatching.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32mΓ£ô[39m src/utils/model_utils.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32mΓ£ô[39m src/stores/trace_store.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32mΓ£ô[39m tests/roleStore.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32mΓ£ô[39m src/services/proposal_service.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32mΓ£ô[39m src/services/tadpoleos_service.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32mΓ£ô[39m src/utils/agent_uiutils.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32mΓ£ô[39m tests/dropdownStore.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32mΓ£ô[39m src/stores/role_store.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m src/stores/dropdown_store.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32mΓ£ô[39m tests/handoff.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32mΓ£ô[39m src/services/local_swarm.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ» Failed Tests 37 ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+
+ FAIL  src/services/agent_api_service.test.ts > agent_api_service > send_command > should emit a security info event if no key is present for a remote provider
+TypeError: event_bus.emit_log is not a function
+ Γ¥» Object.send_command src/services/agent_api_service.ts:204:23
+    202|             // Alert user if inference is attempted without a valid crΓÇª
+    203|             const reason = isActuallyLocked ? 'Vault is Locked' : `No ΓÇª
+    204|             event_bus.emit_log({
+       |                       ^
+    205|                 source: 'System',
+    206|                 text: `≡ƒöÆ Neural Security: ${reason} for ${agent_id.toΓÇª
+ Γ¥» src/services/agent_api_service.test.ts:184:13
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[1/37]ΓÄ»
+
+ FAIL  src/services/agent_api_service.test.ts > agent_api_service > send_command > should ignore missing key for local providers and not emit event
+TypeError: undefined is not a spy or a call to a spy!
+ Γ¥» src/services/agent_api_service.test.ts:201:44
+    199|             await agent_api_service.send_command('agent-1', 'Hello', 'ΓÇª
+    200|
+    201|             expect(event_bus.emit_log).not.toHaveBeenCalled();
+       |                                            ^
+    202|             expect(apiRequest).toHaveBeenCalledWith('/v1/agents/agent-ΓÇª
+    203|                 method: 'POST'
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[2/37]ΓÄ»
+
+ FAIL  src/services/agent_api_service.test.ts > agent_api_service > Memory operations > get_agent_memory
+AssertionError: expected { entries: [] } to deeply equal { status: 'ok', entries: [] }
+
+- Expected
++ Received
+
+  {
+    "entries": [],
+-   "status": "ok",
+  }
+
+ Γ¥» src/services/agent_api_service.test.ts:224:25
+    222|             vi.mocked(apiRequest).mockResolvedValueOnce(mockRes);
+    223|             const res = await agent_api_service.get_agent_memory('agenΓÇª
+    224|             expect(res).toEqual(mockRes);
+       |                         ^
+    225|             expect(apiRequest).toHaveBeenCalledWith('/v1/agents/agent-ΓÇª
+    226|         });
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[3/37]ΓÄ»
+
+ FAIL  src/services/socket.test.ts > TadpoleOSSocketClient > should initialize and connect, updating state correctly
+TypeError: event_bus.emit_log is not a function
+ Γ¥» Object.ws.onopen src/services/socket.ts:217:27
+    215|                 this.setState('connected');
+    216|
+    217|                 event_bus.emit_log({
+       |                           ^
+    218|                     source: 'System',
+    219|                     text: 'Connected to TadpoleOS Log Stream.',
+ Γ¥» src/services/socket.test.ts:135:49
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[4/37]ΓÄ»
+
+ FAIL  src/services/socket.test.ts > TadpoleOSSocketClient > should handle disconnects and trigger exponential backoff reconnects
+TypeError: event_bus.emit_log is not a function
+ Γ¥» Object.ws.onopen src/services/socket.ts:217:27
+    215|                 this.setState('connected');
+    216|
+    217|                 event_bus.emit_log({
+       |                           ^
+    218|                     source: 'System',
+    219|                     text: 'Connected to TadpoleOS Log Stream.',
+ Γ¥» src/services/socket.test.ts:143:49
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[5/37]ΓÄ»
+
+ FAIL  src/services/socket.test.ts > TadpoleOSSocketClient > should handle manual disconnect and not auto-reconnect
+TypeError: event_bus.emit_log is not a function
+ Γ¥» Object.ws.onopen src/services/socket.ts:217:27
+    215|                 this.setState('connected');
+    216|
+    217|                 event_bus.emit_log({
+       |                           ^
+    218|                     source: 'System',
+    219|                     text: 'Connected to TadpoleOS Log Stream.',
+ Γ¥» src/services/socket.test.ts:156:49
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[6/37]ΓÄ»
+
+ FAIL  src/services/socket.test.ts > TadpoleOSSocketClient > should reconnect when settings change
+TypeError: event_bus.emit_log is not a function
+ Γ¥» Object.ws.onopen src/services/socket.ts:217:27
+    215|                 this.setState('connected');
+    216|
+    217|                 event_bus.emit_log({
+       |                           ^
+    218|                     source: 'System',
+    219|                     text: 'Connected to TadpoleOS Log Stream.',
+ Γ¥» src/services/socket.test.ts:168:49
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[7/37]ΓÄ»
+
+ FAIL  src/services/socket.test.ts > TadpoleOSSocketClient > should deserialize messages correctly and emit events
+TypeError: event_bus.emit_log is not a function
+ Γ¥» Object.ws.onopen src/services/socket.ts:217:27
+    215|                 this.setState('connected');
+    216|
+    217|                 event_bus.emit_log({
+       |                           ^
+    218|                     source: 'System',
+    219|                     text: 'Connected to TadpoleOS Log Stream.',
+ Γ¥» src/services/socket.test.ts:180:49
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[8/37]ΓÄ»
+
+ FAIL  src/services/socket.test.ts > TadpoleOSSocketClient > should dispatch ArrayBuffer to audio stream listeners
+TypeError: event_bus.emit_log is not a function
+ Γ¥» Object.ws.onopen src/services/socket.ts:217:27
+    215|                 this.setState('connected');
+    216|
+    217|                 event_bus.emit_log({
+       |                           ^
+    218|                     source: 'System',
+    219|                     text: 'Connected to TadpoleOS Log Stream.',
+ Γ¥» src/services/socket.test.ts:208:49
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[9/37]ΓÄ»
+
+ FAIL  src/services/socket.test.ts > TadpoleOSSocketClient > should hit MAX_RETRIES limit safely
+TypeError: event_bus.emit_log is not a function
+ Γ¥» Object.ws.onopen src/services/socket.ts:217:27
+    215|                 this.setState('connected');
+    216|
+    217|                 event_bus.emit_log({
+       |                           ^
+    218|                     source: 'System',
+    219|                     text: 'Connected to TadpoleOS Log Stream.',
+ Γ¥» src/services/socket.test.ts:238:49
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[10/37]ΓÄ»
+
+ FAIL  src/pages/Benchmark_Analytics.test.tsx > Benchmark_Analytics > handles benchmark execution
+TypeError: undefined is not a spy or a call to a spy!
+ Γ¥» src/pages/Benchmark_Analytics.test.tsx:100:36
+     98|
+     99|         expect(screen.getByText('Executing...')).toBeInTheDocument();
+    100|         expect(event_bus.emit_log).toHaveBeenCalledWith(expect.objectCΓÇª
+       |                                    ^
+    101|             text: expect.stringContaining('Triggering BM-RUN-01')
+    102|         }));
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[11/37]ΓÄ»
+
+ FAIL  src/pages/Benchmark_Analytics.test.tsx > Benchmark_Analytics > handles benchmark execution failure
+TypeError: undefined is not a spy or a call to a spy!
+
+Ignored nodes: comments, script, style
+<html>
+  <head />
+  <body>
+    <div>
+      <div
+        class="p-8 space-y-8 min-h-screen bg-zinc-950 text-zinc-100"
+      >
+        <header
+          class="flex justify-between items-end"
+        >
+          <div
+            data-testid="tooltip-wrapper"
+          >
+            <div>
+              <h1
+                class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-500 cursor-help"
+              >
+                Performance Analytics
+              </h1>
+              <div
+                class="mt-1"
+              />
+            </div>
+            <span
+              style="display: none;"
+            >
+              Deep system performance metrics and wall-clock latency analysis for sovereign neural nodes.
+            </span>
+          </div>
+          <div
+            class="flex gap-4"
+          >
+            <div
+              data-testid="tooltip-wrapper"
+            >
+              <button
+                class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg text-[10px] transition-all flex items-center gap-2 shadow-lg shadow-blue-500/20 disabled:opacity-50 uppercase tracking-widest"
+                disabled=""
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-zap"
+                  fill="none"
+                  height="12"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="12"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"
+                  />
+                </svg>
+                Run Runner Bench
+              </button>
+              <span
+                style="display: none;"
+              >
+                Benchmark the core agent execution pipeline.
+              </span>
+            </div>
+            <div
+              data-testid="tooltip-wrapper"
+            >
+              <button
+                class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-lg text-[10px] transition-all flex items-center gap-2 shadow-lg shadow-blue-500/20 disabled:opacity-50 uppercase tracking-widest"
+                disabled=""
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-loader-circle animate-spin"
+                  fill="none"
+                  height="12"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="12"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M21 12a9 9 0 1 1-6.219-8.56"
+                  />
+                </svg>
+                Executing...
+              </button>
+              <span
+                style="display: none;"
+              >
+                Benchmark persistence and database I/O latency.
+              </span>
+            </div>
+            <div
+              data-testid="tooltip-wrapper"
+            >
+              <button
+                class="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white font-bold rounded-lg text-[10px] transition-all flex items-center gap-2 shadow-lg shadow-cyan-500/20 disabled:opacity-50 uppercase tracking-widest"
+                disabled=""
+              >
+                <svg
+                  aria-hidden="true"
+                  class="lucide lucide-arrow-right-left"
+                  fill="none"
+                  height="12"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="12"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="m16 3 4 4-4 4"
+                  />
+                  <path
+                    d="M20 7H4"
+                  />
+                  <path
+                    d="m8 21-4-4 4-4"
+                  />
+                  <path
+                    d="M4 17h16"
+                  />
+                </svg>
+                Run RL Bench
+              </button>
+              <span
+                style="display: none;"
+              >
+                Benchmark rate-limiting and neural throttling performance.
+              </span>
+            </div>
+            <div
+              class="px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg flex items-center gap-2"
+            >
+              <svg
+                aria-hidden="true"
+                ...
+ Γ¥» src/pages/Benchmark_Analytics.test.tsx:121:40
+    119|
+    120|         await waitFor(() => {
+    121|             expect(event_bus.emit_log).toHaveBeenCalledWith(expect.objΓÇª
+       |                                        ^
+    122|                 severity: 'error',
+    123|                 text: expect.stringContaining('failed')
+ Γ¥» runWithExpensiveErrorDiagnosticsDisabled node_modules/@testing-library/dom/dist/config.js:47:12
+ Γ¥» checkCallback node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ Γ¥» Timeout.checkRealTimersCallback node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[12/37]ΓÄ»
+
+ FAIL  src/pages/Missions.test.tsx > Missions Page > renders the mission management shell
+ FAIL  src/pages/Missions.test.tsx > Missions Page > shows error if no alpha node is assigned
+ FAIL  src/pages/Missions.test.tsx > Missions Page > shows error if no objective is set
+ FAIL  src/pages/Missions.test.tsx > Missions Page > handles command rejection from engine
+ FAIL  src/pages/Missions.test.tsx > Missions Page > handles send_command throw exception
+ FAIL  src/pages/Missions.test.tsx > Missions Page > launches a mission correctly
+ FAIL  src/pages/Missions.test.tsx > Missions Page > handles neural optimization proposal
+ FAIL  src/pages/Missions.test.tsx > Missions Page > handles incoming handoffs (approve and reject)
+ FAIL  src/pages/Missions.test.tsx > Missions Page > updates objective on textarea change
+ FAIL  src/pages/Missions.test.tsx > Missions Page > handles cluster management actions from sidebar
+ FAIL  src/pages/Missions.test.tsx > Missions Page > handles agent team management actions
+ FAIL  src/pages/Missions.test.tsx > Missions Page > toggles mission analysis
+ FAIL  src/pages/Missions.test.tsx > Missions Page > calls receiveHandoff when socket event arrives
+TypeError: event_bus.subscribe_logs is not a function
+ Γ¥» src/components/transcript/Buffered_Transcript_View.tsx:36:39
+     34|     useEffect(() => {
+     35|         // subscribe to the global event bus
+     36|         const unsubscribe = event_bus.subscribe_logs((entry) => {
+       |                                       ^
+     37|             // Filter by agent or mission if provided
+     38|             if (agent_id && entry.agent_id !== agent_id) return;
+ Γ¥» Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:25989:20
+ Γ¥» runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ Γ¥» commitHookEffectListMount node_modules/react-dom/cjs/react-dom-client.development.js:13249:29
+ Γ¥» commitHookPassiveMountEffects node_modules/react-dom/cjs/react-dom-client.development.js:13336:11
+ Γ¥» commitPassiveMountOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15484:13
+ Γ¥» recursivelyTraversePassiveMountEffects node_modules/react-dom/cjs/react-dom-client.development.js:15439:11
+ Γ¥» commitPassiveMountOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15718:11
+ Γ¥» recursivelyTraversePassiveMountEffects node_modules/react-dom/cjs/react-dom-client.development.js:15439:11
+ Γ¥» commitPassiveMountOnFiber node_modules/react-dom/cjs/react-dom-client.development.js:15718:11
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[13/37]ΓÄ»
+
+ FAIL  src/pages/Scheduled_Jobs.test.tsx > Scheduled_Jobs Page > toggles job enabled state
+TypeError: undefined is not a spy or a call to a spy!
+ Γ¥» src/pages/Scheduled_Jobs.test.tsx:174:36
+    172|
+    173|         expect(tadpole_os_service.update_scheduled_job).toHaveBeenCallΓÇª
+    174|         expect(event_bus.emit_log).toHaveBeenCalledWith(expect.objectCΓÇª
+       |                                    ^
+    175|     });
+    176|
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[14/37]ΓÄ»
+
+ FAIL  src/pages/Scheduled_Jobs.test.tsx > Scheduled_Jobs Page > deletes a job after confirmation
+TypeError: undefined is not a spy or a call to a spy!
+ Γ¥» src/pages/Scheduled_Jobs.test.tsx:198:36
+    196|
+    197|         expect(tadpole_os_service.delete_scheduled_job).toHaveBeenCallΓÇª
+    198|         expect(event_bus.emit_log).toHaveBeenCalledWith(expect.objectCΓÇª
+       |                                    ^
+    199|     });
+    200|
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[15/37]ΓÄ»
+
+ FAIL  src/pages/Scheduled_Jobs.test.tsx > Scheduled_Jobs Page > can create a new agent-based scheduled job
+TypeError: undefined is not a spy or a call to a spy!
+ Γ¥» src/pages/Scheduled_Jobs.test.tsx:251:36
+    249|         }));
+    250|
+    251|         expect(event_bus.emit_log).toHaveBeenCalledWith(expect.objectCΓÇª
+       |                                    ^
+    252|             severity: 'success'
+    253|         }));
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[16/37]ΓÄ»
+
+ FAIL  src/pages/Standups.test.tsx > Standups Page > renders the neural sync interface and live transcript base
+ FAIL  src/pages/Standups.test.tsx > Standups Page > populates agent and cluster targets
+ FAIL  src/pages/Standups.test.tsx > Standups Page > handles incoming event_bus messages and text-to-speech for agents
+ FAIL  src/pages/Standups.test.tsx > Standups Page > starts and stops recording, transcribes, and sends command to an agent target
+ FAIL  src/pages/Standups.test.tsx > Standups Page > handles neural handoff to an entire cluster (routing to Alpha node)
+TypeError: Cannot read properties of undefined (reading 'mockImplementation')
+ Γ¥» src/pages/Standups.test.tsx:87:75
+     85|         (loadAgents as unknown as ReturnType<typeof vi.fn>).mockResolvΓÇª
+     86|
+     87|         (event_bus.subscribe_logs as unknown as ReturnType<typeof vi.fΓÇª
+       |                                                                           ^
+     88|             eventBusCallback = cb;
+     89|             return vi.fn(); // return unsubscribe function
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[17/37]ΓÄ»
+
+ FAIL  src/pages/Template_Store.test.tsx > Template_Store Page > opens preview modal, fetches config, and installs template
+AssertionError: expected "vi.fn()" to be called with arguments: [ ΓÇª(2) ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+-   "http://localhost:8080/engine/templates/install",
+-   ObjectContaining {
+-     "body": StringContaining "finance/fintech-nodes",
+-     "method": "POST",
+-   },
++   "https://raw.githubusercontent.com/DDS-Solutions/Tadpole-OS-Industry-Templates/main/registry.json",
+  ]
+
+  2nd vi.fn() call:
+
+  [
+-   "http://localhost:8080/engine/templates/install",
+-   ObjectContaining {
+-     "body": StringContaining "finance/fintech-nodes",
+-     "method": "POST",
+-   },
++   "https://raw.githubusercontent.com/DDS-Solutions/Tadpole-OS-Industry-Templates/main/finance/fintech-nodes/swarm.json",
+  ]
+
+
+Number of calls: 2
+
+ Γ¥» src/pages/Template_Store.test.tsx:179:30
+    177|
+    178|         // Verify POST request to install endpoint
+    179|         expect(global.fetch).toHaveBeenCalledWith(
+       |                              ^
+    180|             'http://localhost:8080/engine/templates/install',
+    181|             expect.objectContaining({
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[18/37]ΓÄ»
+
+ FAIL  src/stores/agent_store.test.ts > agent_store > fetchAgents > handles fetch errors correctly and emits event
+TypeError: event_bus.emit_log is not a function
+ Γ¥» Object.fetchAgents src/stores/agent_store.ts:75:23
+     73|             const message = err instanceof Error ? err.message : StrinΓÇª
+     74|             set({ error: message, isLoading: false });
+     75|             event_bus.emit_log({
+       |                       ^
+     76|                 source: 'System',
+     77|                 text: `Agent Registry Failure: ${message}`,
+ Γ¥» src/stores/agent_store.test.ts:114:13
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[19/37]ΓÄ»
+
+ FAIL  src/stores/agent_store.test.ts > agent_store > update_agent > reverts state and emits event on persistence failure
+TypeError: event_bus.emit_log is not a function
+ Γ¥» Object.update_agent src/stores/agent_store.ts:105:23
+    103|             const message = err instanceof Error ? err.message : StrinΓÇª
+    104|             console.warn('[AgentStore] Persistence failed, keeping optΓÇª
+    105|             event_bus.emit_log({
+       |                       ^
+    106|                 source: 'System',
+    107|                 text: `Agent Persistence Failed: ${message}`,
+ Γ¥» src/stores/agent_store.test.ts:147:13
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[20/37]ΓÄ»
+
+ FAIL  src/stores/agent_store.test.ts > agent_store > addAgent > reverts and emits event on persistence failure
+TypeError: event_bus.emit_log is not a function
+ Γ¥» Object.addAgent src/stores/agent_store.ts:131:23
+    129|             broadcastAgentSync({ type: 'agents:replace', payload: agenΓÇª
+    130|
+    131|             event_bus.emit_log({
+       |                       ^
+    132|                 source: 'System',
+    133|                 text: `Agent Registration Blocked: ${message}`,
+ Γ¥» src/stores/agent_store.test.ts:179:13
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[21/37]ΓÄ»
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ» Unhandled Errors ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+
+Vitest caught 5 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ» Unhandled Rejection ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+TypeError: event_bus.emit_log is not a function
+ Γ¥» handleRunBenchmark src/pages/Benchmark_Analytics.tsx:65:19
+     63|     const handleRunBenchmark = async (testId: string) => {
+     64|         setRunningId(testId);
+     65|         event_bus.emit_log({
+       |                   ^
+     66|             source: 'System',
+     67|             text: i18n.t('benchmark.event_triggering', { id: testId }),
+ Γ¥» onClick src/pages/Benchmark_Analytics.tsx:130:44
+ Γ¥» executeDispatch node_modules/react-dom/cjs/react-dom-client.development.js:19116:9
+ Γ¥» runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ Γ¥» processDispatchQueue node_modules/react-dom/cjs/react-dom-client.development.js:19166:19
+ Γ¥» node_modules/react-dom/cjs/react-dom-client.development.js:19767:9
+ Γ¥» batchedUpdates$1 node_modules/react-dom/cjs/react-dom-client.development.js:3255:40
+ Γ¥» dispatchEventForPluginEventSystem node_modules/react-dom/cjs/react-dom-client.development.js:19320:7
+ Γ¥» dispatchEvent node_modules/react-dom/cjs/react-dom-client.development.js:23585:11
+ Γ¥» dispatchDiscreteEvent node_modules/react-dom/cjs/react-dom-client.development.js:23553:11
+
+This error originated in "src/pages/Benchmark_Analytics.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "handles benchmark execution failure". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ» Unhandled Rejection ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+TypeError: event_bus.emit_log is not a function
+ Γ¥» handleRunBenchmark src/pages/Benchmark_Analytics.tsx:65:19
+     63|     const handleRunBenchmark = async (testId: string) => {
+     64|         setRunningId(testId);
+     65|         event_bus.emit_log({
+       |                   ^
+     66|             source: 'System',
+     67|             text: i18n.t('benchmark.event_triggering', { id: testId }),
+ Γ¥» onClick src/pages/Benchmark_Analytics.tsx:140:44
+ Γ¥» executeDispatch node_modules/react-dom/cjs/react-dom-client.development.js:19116:9
+ Γ¥» runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ Γ¥» processDispatchQueue node_modules/react-dom/cjs/react-dom-client.development.js:19166:19
+ Γ¥» node_modules/react-dom/cjs/react-dom-client.development.js:19767:9
+ Γ¥» batchedUpdates$1 node_modules/react-dom/cjs/react-dom-client.development.js:3255:40
+ Γ¥» dispatchEventForPluginEventSystem node_modules/react-dom/cjs/react-dom-client.development.js:19320:7
+ Γ¥» dispatchEvent node_modules/react-dom/cjs/react-dom-client.development.js:23585:11
+ Γ¥» dispatchDiscreteEvent node_modules/react-dom/cjs/react-dom-client.development.js:23553:11
+
+This error originated in "src/pages/Benchmark_Analytics.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "handles benchmark execution failure". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ» Unhandled Rejection ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+TypeError: event_bus.emit_log is not a function
+ Γ¥» handleConfirmDelete src/pages/Scheduled_Jobs.tsx:163:23
+    161|         } catch (error: unknown) {
+    162|             console.error('Failed to delete job:', error);
+    163|             event_bus.emit_log({
+       |                       ^
+    164|                 source: 'System',
+    165|                 text: i18n.t('scheduled_jobs.event_deletion_failed', {ΓÇª
+
+This error originated in "src/pages/Scheduled_Jobs.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "deletes a job after confirmation". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ» Unhandled Rejection ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+TypeError: event_bus.emit_log is not a function
+ Γ¥» handleCreate src/pages/Scheduled_Jobs.tsx:196:23
+    194|         } catch (error: unknown) {
+    195|             console.error('Failed to handle job:', error);
+    196|             event_bus.emit_log({
+       |                       ^
+    197|                 source: 'System',
+    198|                 text: i18n.t('scheduled_jobs.event_failed_action', { aΓÇª
+
+This error originated in "src/pages/Scheduled_Jobs.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "can create a new agent-based scheduled job". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+
+ΓÄ»ΓÄ»ΓÄ»ΓÄ» Unhandled Rejection ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+TypeError: event_bus.emit_log is not a function
+ Γ¥» handleCreate src/pages/Scheduled_Jobs.tsx:196:23
+    194|         } catch (error: unknown) {
+    195|             console.error('Failed to handle job:', error);
+    196|             event_bus.emit_log({
+       |                       ^
+    197|                 source: 'System',
+    198|                 text: i18n.t('scheduled_jobs.event_failed_action', { aΓÇª
+
+This error originated in "src/pages/Scheduled_Jobs.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "can switch to creating a workflow-based scheduled job". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+
+
+[2m Test Files [22m [1m[31m8 failed[39m[22m[2m | [22m[1m[32m55 passed[39m[22m[90m (63)[39m
+[2m      Tests [22m [1m[31m37 failed[39m[22m[2m | [22m[1m[32m391 passed[39m[22m[90m (428)[39m
+[2m     Errors [22m [1m[31m5 errors[39m[22m
+[2m   Start at [22m 18:40:38
+[2m   Duration [22m 51.06s[2m (transform 4.78s, setup 25.40s, import 31.81s, tests 17.42s, environment 247.06s)[22m
+

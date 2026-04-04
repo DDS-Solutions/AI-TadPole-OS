@@ -1,0 +1,7 @@
+src/constants/routes.tsx(20,39): error TS1261: Already included file name 'D:/TadpoleOS-Dev/src/pages/model_store.tsx' differs from file name 'D:/TadpoleOS-Dev/src/pages/Model_Store.tsx' only in casing.
+  The file is in the program because:
+    Imported via '../pages/model_store' from file 'D:/TadpoleOS-Dev/src/constants/routes.tsx'
+    Matched by include pattern 'src' in 'tsconfig.app.json'
+tests/commandProcessor.test.ts(70,17): error TS2339: Property 'agent_api_service' does not exist on type 'typeof import("D:/TadpoleOS-Dev/src/services/agent_api_service")'.
+tests/commandProcessor.test.ts(93,17): error TS2339: Property 'agent_api_service' does not exist on type 'typeof import("D:/TadpoleOS-Dev/src/services/agent_api_service")'.
+tests/commandProcessor.test.ts(107,17): error TS2339: Property 'agent_api_service' does not exist on type 'typeof import("D:/TadpoleOS-Dev/src/services/agent_api_service")'.

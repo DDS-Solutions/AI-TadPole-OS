@@ -1,0 +1,7 @@
+{
+  "swarm_id": "marketing-growth-starter",
+  "title": "Marketing & Growth Swarm",
+  "description": "A pre-configured swarm for SMEs to automate content strategy and SEO analysis.",
+  "initial_agent": "marketing-alpha",
+  "required_agents": ["marketing-alpha", "content-creator", "seo-analyst"]
+}

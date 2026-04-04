@@ -1,0 +1,36 @@
+src/components/Command_Palette.tsx(80,197): error TS2551: Property 'clear_history' does not exist on type 'SovereignState'. Did you mean 'clearHistory'?
+src/services/Agent_Api_Service.ts(9,27): error TS2307: Cannot find module './eventBus' or its corresponding type declarations.
+src/services/socket.ts(1,27): error TS2307: Cannot find module './eventBus' or its corresponding type declarations.
+src/services/socket.ts(93,28): error TS2339: Property 'subscribe_logs' does not exist on type 'UseBoundStore<WithPersist<StoreApi<SettingsState>, SettingsState>>'.
+src/services/socket.ts(93,44): error TS7006: Parameter 'state' implicitly has an 'any' type.
+src/services/voice_client.ts(1,34): error TS2307: Cannot find module './tadpoleosService' or its corresponding type declarations.
+src/stores/agent_store.ts(6,37): error TS2307: Cannot find module './workspaceStore' or its corresponding type declarations.
+src/stores/agent_store.ts(152,66): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/stores/agent_store.ts(156,42): error TS2345: Argument of type 'string | undefined' is not assignable to parameter of type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/stores/model_store.ts(232,21): error TS2339: Property 'subscribe_logs' does not exist on type 'UseBoundStore<WithPersist<StoreApi<ModelState>, { models: ModelEntry[]; }>>'.
+src/stores/model_store.ts(232,37): error TS7006: Parameter 'state' implicitly has an 'any' type.
+src/stores/provider_store.ts(5,33): error TS2307: Cannot find module './vaultStore' or its corresponding type declarations.
+src/stores/provider_store.ts(6,50): error TS2307: Cannot find module './modelStore' or its corresponding type declarations.
+src/stores/provider_store.ts(99,69): error TS7006: Parameter 'm' implicitly has an 'any' type.
+src/stores/provider_store.ts(99,97): error TS7006: Parameter 'm' implicitly has an 'any' type.
+src/stores/provider_store.ts(104,48): error TS7006: Parameter 'mid' implicitly has an 'any' type.
+src/stores/provider_store.ts(113,44): error TS7006: Parameter 'mid' implicitly has an 'any' type.
+src/stores/provider_store.ts(263,24): error TS2339: Property 'subscribe_logs' does not exist on type 'UseBoundStore<WithPersist<StoreApi<ProviderState>, { providers: ProviderConfig[]; baseUrls: Record<string, string>; }>>'.
+src/stores/provider_store.ts(263,40): error TS7006: Parameter 'state' implicitly has an 'any' type.
+src/stores/tab_store.ts(162,19): error TS2339: Property 'subscribe_logs' does not exist on type 'UseBoundStore<WithPersist<StoreApi<TabState>, TabState>>'.
+src/stores/tab_store.ts(162,35): error TS7006: Parameter 'state' implicitly has an 'any' type.
+src/stores/workspace_store.ts(12,29): error TS2307: Cannot find module './settingsStore' or its corresponding type declarations.
+tests/commandProcessor.test.ts(2,32): error TS2307: Cannot find module '../src/logic/commandProcessor' or its corresponding type declarations.
+tests/commandProcessor.test.ts(3,26): error TS2307: Cannot find module '../src/services/eventBus' or its corresponding type declarations.
+tests/commandProcessor.test.ts(70,50): error TS2307: Cannot find module '../src/services/AgentApiService' or its corresponding type declarations.
+tests/commandProcessor.test.ts(93,50): error TS2307: Cannot find module '../src/services/AgentApiService' or its corresponding type declarations.
+tests/commandProcessor.test.ts(107,50): error TS2307: Cannot find module '../src/services/AgentApiService' or its corresponding type declarations.
+tests/dropdownStore.test.ts(2,34): error TS2307: Cannot find module '../src/stores/dropdownStore' or its corresponding type declarations.
+tests/eventBus.test.ts(10,26): error TS2307: Cannot find module '../src/services/eventBus' or its corresponding type declarations.
+tests/eventBus.test.ts(20,29): error TS7006: Parameter 'event' implicitly has an 'any' type.
+tests/eventBus.test.ts(29,29): error TS7006: Parameter 'event' implicitly has an 'any' type.
+tests/eventBus.test.ts(43,29): error TS7006: Parameter 'event' implicitly has an 'any' type.
+tests/handoff.test.ts(2,35): error TS2307: Cannot find module '../src/stores/workspaceStore' or its corresponding type declarations.
+tests/handoff.test.ts(29,52): error TS7006: Parameter 'c' implicitly has an 'any' type.
+tests/roleStore.test.ts(2,47): error TS2307: Cannot find module '../src/stores/roleStore' or its corresponding type declarations.

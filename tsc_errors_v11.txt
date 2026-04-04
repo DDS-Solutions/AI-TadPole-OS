@@ -1,0 +1,83 @@
+src/services/Agent_Api_Service.ts(3,28): error TS1261: Already included file name 'D:/TadpoleOS-Dev/src/services/Base_Api_Service.ts' differs from file name 'D:/TadpoleOS-Dev/src/services/base_api_service.ts' only in casing.
+  The file is in the program because:
+    Imported via './Base_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/Agent_Api_Service.ts'
+    Imported via './Base_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/Mission_Api_Service.ts'
+    Imported via './Base_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/System_Api_Service.ts'
+    Imported via './Base_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/tadpoleos_service.ts'
+    Matched by include pattern 'src' in 'tsconfig.app.json'
+src/services/tadpoleos_service.ts(7,35): error TS1261: Already included file name 'D:/TadpoleOS-Dev/src/services/Agent_Api_Service.ts' differs from file name 'D:/TadpoleOS-Dev/src/services/agent_api_service.ts' only in casing.
+  The file is in the program because:
+    Imported via './Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/tadpoleos_service.ts'
+    Imported via './Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/agent_service.ts'
+    Imported via '../../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/components/hierarchy/Node_Health.tsx'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/pages/Skills.tsx'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/logic/command_processor.ts'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/components/Command_Palette.tsx'
+    Matched by include pattern 'src' in 'tsconfig.app.json'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/stores/memory_store.ts'
+    Imported via '../src/services/agent_api_service' from file 'D:/TadpoleOS-Dev/tests/commandProcessor.test.ts'
+    Imported via '../src/services/agent_api_service' from file 'D:/TadpoleOS-Dev/tests/commandProcessor.test.ts'
+    Imported via '../src/services/agent_api_service' from file 'D:/TadpoleOS-Dev/tests/commandProcessor.test.ts'
+src/services/tadpoleos_service.ts(9,36): error TS1261: Already included file name 'D:/TadpoleOS-Dev/src/services/System_Api_Service.ts' differs from file name 'D:/TadpoleOS-Dev/src/services/system_api_service.ts' only in casing.
+  The file is in the program because:
+    Imported via './System_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/tadpoleos_service.ts'
+    Imported via './System_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/tadpoleos_service.ts'
+    Imported via './System_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/agent_service.ts'
+    Imported via '../services/System_Api_Service' from file 'D:/TadpoleOS-Dev/src/pages/Settings.tsx'
+    Imported via '../services/System_Api_Service' from file 'D:/TadpoleOS-Dev/src/pages/Template_Store.tsx'
+    Imported via '../services/System_Api_Service' from file 'D:/TadpoleOS-Dev/src/logic/command_processor.ts'
+    Imported via '../../services/System_Api_Service' from file 'D:/TadpoleOS-Dev/src/components/layout/Org_Header.tsx'
+    Matched by include pattern 'src' in 'tsconfig.app.json'
+src/stores/skill_store.ts(2,36): error TS1261: Already included file name 'D:/TadpoleOS-Dev/src/services/Mission_Api_Service.ts' differs from file name 'D:/TadpoleOS-Dev/src/services/mission_api_service.ts' only in casing.
+  The file is in the program because:
+    Imported via '../services/Mission_Api_Service' from file 'D:/TadpoleOS-Dev/src/stores/skill_store.ts'
+    Imported via './Mission_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/tadpoleos_service.ts'
+    Imported via './Mission_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/tadpoleos_service.ts'
+    Imported via '../services/Mission_Api_Service' from file 'D:/TadpoleOS-Dev/src/components/Agent_Config_Panel.tsx'
+    Matched by include pattern 'src' in 'tsconfig.app.json'
+src/stores/workspace_store.ts(13,34): error TS1261: Already included file name 'D:/TadpoleOS-Dev/src/services/Proposal_Service.ts' differs from file name 'D:/TadpoleOS-Dev/src/services/proposal_service.ts' only in casing.
+  The file is in the program because:
+    Imported via '../services/Proposal_Service' from file 'D:/TadpoleOS-Dev/src/stores/workspace_store.ts'
+    Matched by include pattern 'src' in 'tsconfig.app.json'
+tests/commandProcessor.test.ts(70,17): error TS2339: Property 'agent_api_service' does not exist on type 'typeof import("D:/TadpoleOS-Dev/src/services/Agent_Api_Service")'.
+tests/commandProcessor.test.ts(70,52): error TS1149: File name 'D:/TadpoleOS-Dev/src/services/agent_api_service.ts' differs from already included file name 'D:/TadpoleOS-Dev/src/services/Agent_Api_Service.ts' only in casing.
+  The file is in the program because:
+    Imported via './Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/tadpoleos_service.ts'
+    Imported via './Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/agent_service.ts'
+    Imported via '../../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/components/hierarchy/Node_Health.tsx'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/pages/Skills.tsx'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/logic/command_processor.ts'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/components/Command_Palette.tsx'
+    Matched by include pattern 'src' in 'tsconfig.app.json'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/stores/memory_store.ts'
+    Imported via '../src/services/agent_api_service' from file 'D:/TadpoleOS-Dev/tests/commandProcessor.test.ts'
+    Imported via '../src/services/agent_api_service' from file 'D:/TadpoleOS-Dev/tests/commandProcessor.test.ts'
+    Imported via '../src/services/agent_api_service' from file 'D:/TadpoleOS-Dev/tests/commandProcessor.test.ts'
+tests/commandProcessor.test.ts(93,17): error TS2339: Property 'agent_api_service' does not exist on type 'typeof import("D:/TadpoleOS-Dev/src/services/Agent_Api_Service")'.
+tests/commandProcessor.test.ts(93,52): error TS1149: File name 'D:/TadpoleOS-Dev/src/services/agent_api_service.ts' differs from already included file name 'D:/TadpoleOS-Dev/src/services/Agent_Api_Service.ts' only in casing.
+  The file is in the program because:
+    Imported via './Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/tadpoleos_service.ts'
+    Imported via './Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/agent_service.ts'
+    Imported via '../../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/components/hierarchy/Node_Health.tsx'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/pages/Skills.tsx'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/logic/command_processor.ts'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/components/Command_Palette.tsx'
+    Matched by include pattern 'src' in 'tsconfig.app.json'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/stores/memory_store.ts'
+    Imported via '../src/services/agent_api_service' from file 'D:/TadpoleOS-Dev/tests/commandProcessor.test.ts'
+    Imported via '../src/services/agent_api_service' from file 'D:/TadpoleOS-Dev/tests/commandProcessor.test.ts'
+    Imported via '../src/services/agent_api_service' from file 'D:/TadpoleOS-Dev/tests/commandProcessor.test.ts'
+tests/commandProcessor.test.ts(107,17): error TS2339: Property 'agent_api_service' does not exist on type 'typeof import("D:/TadpoleOS-Dev/src/services/Agent_Api_Service")'.
+tests/commandProcessor.test.ts(107,52): error TS1149: File name 'D:/TadpoleOS-Dev/src/services/agent_api_service.ts' differs from already included file name 'D:/TadpoleOS-Dev/src/services/Agent_Api_Service.ts' only in casing.
+  The file is in the program because:
+    Imported via './Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/tadpoleos_service.ts'
+    Imported via './Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/agent_service.ts'
+    Imported via '../../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/components/hierarchy/Node_Health.tsx'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/pages/Skills.tsx'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/logic/command_processor.ts'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/components/Command_Palette.tsx'
+    Matched by include pattern 'src' in 'tsconfig.app.json'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/stores/memory_store.ts'
+    Imported via '../src/services/agent_api_service' from file 'D:/TadpoleOS-Dev/tests/commandProcessor.test.ts'
+    Imported via '../src/services/agent_api_service' from file 'D:/TadpoleOS-Dev/tests/commandProcessor.test.ts'
+    Imported via '../src/services/agent_api_service' from file 'D:/TadpoleOS-Dev/tests/commandProcessor.test.ts'

@@ -1,0 +1,4 @@
+src/constants/routes.tsx(20,39): error TS1261: Already included file name 'D:/TadpoleOS-Dev/src/pages/model_store.tsx' differs from file name 'D:/TadpoleOS-Dev/src/pages/Model_Store.tsx' only in casing.
+  The file is in the program because:
+    Imported via '../pages/model_store' from file 'D:/TadpoleOS-Dev/src/constants/routes.tsx'
+    Matched by include pattern 'src' in 'tsconfig.app.json'

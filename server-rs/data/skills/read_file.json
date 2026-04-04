@@ -1,0 +1,17 @@
+{
+  "name": "read_file",
+  "description": "Reads the content of a file within the current workspace.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "filename": {
+        "type": "string",
+        "description": "Path relative to workspace root."
+      }
+    },
+    "required": [
+      "filename"
+    ]
+  },
+  "execution_command": "(Native Execution Mode)"
+}

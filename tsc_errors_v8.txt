@@ -1,0 +1,52 @@
+src/services/event_bus.ts(150,14): error TS2551: Property 'clearHistory' does not exist on type 'event_bus_service'. Did you mean 'clear_history'?
+tests/commandProcessor.test.ts(3,10): error TS2724: '"../src/services/event_bus"' has no exported member named 'EventBus'. Did you mean 'event_bus'?
+tests/commandProcessor.test.ts(70,17): error TS2339: Property 'AgentApiService' does not exist on type 'typeof import("D:/TadpoleOS-Dev/src/services/Agent_Api_Service")'.
+tests/commandProcessor.test.ts(70,50): error TS1149: File name 'D:/TadpoleOS-Dev/src/services/agent_api_service.ts' differs from already included file name 'D:/TadpoleOS-Dev/src/services/Agent_Api_Service.ts' only in casing.
+  The file is in the program because:
+    Imported via './Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/tadpoleos_service.ts'
+    Imported via './Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/agent_service.ts'
+    Imported via '../../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/components/hierarchy/Node_Health.tsx'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/pages/Skills.tsx'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/logic/command_processor.ts'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/components/Command_Palette.tsx'
+    Matched by include pattern 'src' in 'tsconfig.app.json'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/stores/memory_store.ts'
+    Imported via '../src/services/agent_api_service' from file 'D:/TadpoleOS-Dev/tests/commandProcessor.test.ts'
+    Imported via '../src/services/agent_api_service' from file 'D:/TadpoleOS-Dev/tests/commandProcessor.test.ts'
+    Imported via '../src/services/agent_api_service' from file 'D:/TadpoleOS-Dev/tests/commandProcessor.test.ts'
+tests/commandProcessor.test.ts(93,17): error TS2339: Property 'AgentApiService' does not exist on type 'typeof import("D:/TadpoleOS-Dev/src/services/Agent_Api_Service")'.
+tests/commandProcessor.test.ts(93,50): error TS1149: File name 'D:/TadpoleOS-Dev/src/services/agent_api_service.ts' differs from already included file name 'D:/TadpoleOS-Dev/src/services/Agent_Api_Service.ts' only in casing.
+  The file is in the program because:
+    Imported via './Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/tadpoleos_service.ts'
+    Imported via './Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/agent_service.ts'
+    Imported via '../../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/components/hierarchy/Node_Health.tsx'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/pages/Skills.tsx'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/logic/command_processor.ts'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/components/Command_Palette.tsx'
+    Matched by include pattern 'src' in 'tsconfig.app.json'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/stores/memory_store.ts'
+    Imported via '../src/services/agent_api_service' from file 'D:/TadpoleOS-Dev/tests/commandProcessor.test.ts'
+    Imported via '../src/services/agent_api_service' from file 'D:/TadpoleOS-Dev/tests/commandProcessor.test.ts'
+    Imported via '../src/services/agent_api_service' from file 'D:/TadpoleOS-Dev/tests/commandProcessor.test.ts'
+tests/commandProcessor.test.ts(107,17): error TS2339: Property 'AgentApiService' does not exist on type 'typeof import("D:/TadpoleOS-Dev/src/services/Agent_Api_Service")'.
+tests/commandProcessor.test.ts(107,50): error TS1149: File name 'D:/TadpoleOS-Dev/src/services/agent_api_service.ts' differs from already included file name 'D:/TadpoleOS-Dev/src/services/Agent_Api_Service.ts' only in casing.
+  The file is in the program because:
+    Imported via './Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/tadpoleos_service.ts'
+    Imported via './Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/services/agent_service.ts'
+    Imported via '../../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/components/hierarchy/Node_Health.tsx'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/pages/Skills.tsx'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/logic/command_processor.ts'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/components/Command_Palette.tsx'
+    Matched by include pattern 'src' in 'tsconfig.app.json'
+    Imported via '../services/Agent_Api_Service' from file 'D:/TadpoleOS-Dev/src/stores/memory_store.ts'
+    Imported via '../src/services/agent_api_service' from file 'D:/TadpoleOS-Dev/tests/commandProcessor.test.ts'
+    Imported via '../src/services/agent_api_service' from file 'D:/TadpoleOS-Dev/tests/commandProcessor.test.ts'
+    Imported via '../src/services/agent_api_service' from file 'D:/TadpoleOS-Dev/tests/commandProcessor.test.ts'
+tests/dropdownStore.test.ts(2,10): error TS2724: '"../src/stores/dropdown_store"' has no exported member named 'useDropdownStore'. Did you mean 'use_dropdown_store'?
+tests/eventBus.test.ts(10,10): error TS2724: '"../src/services/event_bus"' has no exported member named 'EventBus'. Did you mean 'event_bus'?
+tests/eventBus.test.ts(20,29): error TS7006: Parameter 'event' implicitly has an 'any' type.
+tests/eventBus.test.ts(29,29): error TS7006: Parameter 'event' implicitly has an 'any' type.
+tests/eventBus.test.ts(43,29): error TS7006: Parameter 'event' implicitly has an 'any' type.
+tests/handoff.test.ts(2,10): error TS2724: '"../src/stores/workspace_store"' has no exported member named 'useWorkspaceStore'. Did you mean 'use_workspace_store'?
+tests/handoff.test.ts(29,52): error TS7006: Parameter 'c' implicitly has an 'any' type.
+tests/roleStore.test.ts(2,10): error TS2724: '"../src/stores/role_store"' has no exported member named 'useRoleStore'. Did you mean 'use_role_store'?
