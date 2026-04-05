@@ -1,0 +1,17 @@
+{
+  "name": "risk_analysis",
+  "description": "Auto-migrated skill: Risk Analysis",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Risk Analysis"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Risk Analysis\""
+}

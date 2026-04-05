@@ -1,0 +1,39 @@
+--- Codebase Map Parity Report ---
+Explicit Map Entries: 88
+Actual Source Files: 357
+----------------------------------
+
+[!] GHOST ENTRIES (In map, but missing from disk):
+- server-rs/src/agent/skills.rs
+- server-rs/src/telemetry.rs
+- execution/scout.py
+- scripts/deploy
+- pages
+- services
+- services
+- stores
+- components
+- components
+
+[!] ORPHANED FILES (On disk, but not in map):
+- server-rs/examples/debug_quotas.rs
+- server-rs/server-rs-macros/src/lib.rs
+- server-rs/src/adapter/mod.rs
+- server-rs/src/adapter/tests_filesystem.rs
+- server-rs/src/agent/benchmarks.rs
+- server-rs/src/agent/mcp_tests.rs
+- server-rs/src/agent/mod.rs
+- server-rs/src/agent/rag_tests.rs
+- server-rs/src/agent/runner/finalize.rs
+- server-rs/src/agent/runner/intelligence.rs
+- server-rs/src/agent/runner/workflow.rs
+- server-rs/src/agent/tests_governance.rs
+- server-rs/src/agent/tests_graph.rs
+- server-rs/src/agent/tests_rate_limiter.rs
+- server-rs/src/agent/tests_skills.rs
+- server-rs/src/agent/test_oversight.rs
+- server-rs/src/agent/test_sanitizer.rs
+- server-rs/src/db_tests.rs
+- server-rs/src/middleware/auth_rate_limit.rs
+- server-rs/src/middleware/cors.rs
+... and 246 more files.

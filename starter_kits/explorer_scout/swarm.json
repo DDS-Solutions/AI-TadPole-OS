@@ -1,0 +1,7 @@
+{
+  "swarm_id": "explorer-scout-starter",
+  "title": "Explorer Scout Swarm",
+  "description": "A pre-configured swarm for searching and analyzing GitHub repositories, specifically for finding AI-TadPole-OS.",
+  "initial_agent": "scout-alpha",
+  "required_agents": ["scout-alpha", "github-analyst"]
+}
