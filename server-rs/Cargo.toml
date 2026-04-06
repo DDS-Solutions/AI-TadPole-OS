@@ -75,7 +75,7 @@ ort = { version = "2.0.0-rc.9", optional = true }
 hound = { version = "3.5", optional = true }
 ndarray = { version = "0.15", optional = true }
 whisper-rs = { version = "0.11", optional = true }
-mdns-sd = "0.18.2"
+mdns-sd = "0.19.0"
 local-ip-address = "0.6"
 serde_yaml = "0.9.34"
 syn = { version = "2.0", features = ["full", "visit", "visit-mut"] }
