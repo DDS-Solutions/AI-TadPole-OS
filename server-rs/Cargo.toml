@@ -19,7 +19,7 @@ serde_json = "1.0"
 
 # Error Handling
 anyhow = "1.0"
-thiserror = "1.0"
+thiserror = "2.0"
 
 # Environment Variables
 dotenvy = "0.15"

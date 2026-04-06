@@ -5585,7 +5585,7 @@ dependencies = [
  "syn 2.0.117",
  "sysinfo",
  "tempfile",
- "thiserror 1.0.69",
+ "thiserror 2.0.18",
  "tiktoken-rs",
  "tokio",
  "tokio-tungstenite 0.21.0",
