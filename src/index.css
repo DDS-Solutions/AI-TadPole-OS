@@ -1,0 +1,270 @@
+/**
+ * @docs ARCHITECTURE:DesignSystem
+ * 
+ * ### AI Assist Note
+ * **Global Styles**: Core Tailwind v4 configuration and architectural theme tokens.
+ * All premium UI transitions and glassmorphism effects are defined here.
+ */
+
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --color-zinc-950: var(--color-theme-950);
+
+  --color-busy: var(--color-theme-cyan, #22d3ee);
+  --color-error: var(--color-theme-rose, #f43f5e);
+  --color-degraded: var(--color-theme-amber, #f59e0b);
+  --color-idle: var(--color-theme-500);
+
+  --color-background: var(--color-theme-950);
+  --color-surface: var(--color-theme-900);
+  --color-border: var(--color-theme-800);
+
+  --font-size-xs: 0.875rem;
+  --font-size-xs--line-height: 1.25rem;
+  --font-size-sm: 1rem;
+  --font-size-sm--line-height: 1.5rem;
+  --font-size-base: 1.125rem;
+  --font-size-base--line-height: 1.75rem;
+  --font-size-lg: 1.25rem;
+  --font-size-lg--line-height: 1.75rem;
+  --font-size-xl: 1.5rem;
+  --font-size-xl--line-height: 2rem;
+  --font-size-2xl: 1.875rem;
+  --font-size-2xl--line-height: 2.25rem;
+  --font-size-3xl: 2.25rem;
+  --font-size-3xl--line-height: 2.5rem;
+}
+
+@layer base {
+  body {
+    @apply bg-zinc-950 text-zinc-100 font-sans antialiased;
+  }
+
+  /* Global Improved Focus States for Accessibility */
+  :focus-visible {
+    @apply outline-none ring-2 ring-emerald-500 ring-offset-2 ring-offset-zinc-950;
+  }
+
+  /* Smooth Interactive Transitions */
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    @apply transition-all duration-200;
+  }
+}
+
+:root,
+[data-theme="zinc"] {
+  font-family: 'Inter', system-ui, sans-serif;
+  --color-theme-50: #fafafa;
+  --color-theme-100: #f4f4f5;
+  --color-theme-200: #e4e4e7;
+  --color-theme-300: #d4d4d8;
+  --color-theme-400: #a1a1aa;
+  --color-theme-500: #71717a;
+  --color-theme-600: #52525b;
+  --color-theme-700: #3f3f46;
+  --color-theme-800: #27272a;
+  --color-theme-900: #18181b;
+  --color-theme-950: #09090b;
+}
+
+[data-theme="slate"] {
+  --color-theme-50: #f8fafc;
+  --color-theme-100: #f1f5f9;
+  --color-theme-200: #e2e8f0;
+  --color-theme-300: #cbd5e1;
+  --color-theme-400: #94a3b8;
+  --color-theme-500: #64748b;
+  --color-theme-600: #475569;
+  --color-theme-700: #334155;
+  --color-theme-800: #1e293b;
+  --color-theme-900: #0f172a;
+  --color-theme-950: #020617;
+}
+
+[data-theme="neutral"] {
+  --color-theme-50: #fafafa;
+  --color-theme-100: #f5f5f5;
+  --color-theme-200: #e5e5e5;
+  --color-theme-300: #d4d4d4;
+  --color-theme-400: #a3a3a3;
+  --color-theme-500: #737373;
+  --color-theme-600: #525252;
+  --color-theme-700: #404040;
+  --color-theme-800: #262626;
+  --color-theme-900: #171717;
+  --color-theme-950: #0a0a0a;
+}
+
+html[data-density="compact"] {
+  font-size: 14px;
+}
+
+html[data-density="comfortable"] {
+  font-size: 16px;
+}
+
+/* Custom Scrollbar to match "Tadpole OS" sleek look */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #27272a;
+  /* zinc-800 */
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+  /* zinc-700 */
+}
+
+/* Hide scrollbar for cleaner horizontal scrolling but keep functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes neural-pulse {
+  0% {
+    stroke-width: 1;
+    opacity: 0.3;
+    filter: drop-shadow(0 1px 1px currentColor);
+  }
+
+  50% {
+    stroke-width: 2;
+    opacity: 0.8;
+    filter: drop-shadow(0 2px 4px currentColor);
+  }
+
+  100% {
+    stroke-width: 1;
+    opacity: 0.3;
+    filter: drop-shadow(0 1px 1px currentColor);
+  }
+}
+
+.neural-pulse {
+  animation: neural-pulse 2s infinite ease-in-out;
+}
+
+@keyframes vertical-pulse {
+  0% {
+    opacity: 0.2;
+    box-shadow: 0 1px 2px rgba(168, 85, 247, 0.2);
+  }
+
+  50% {
+    opacity: 0.6;
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+  }
+
+  100% {
+    opacity: 0.2;
+    box-shadow: 0 1px 2px rgba(168, 85, 247, 0.2);
+  }
+}
+
+.vertical-pulse {
+  animation: vertical-pulse 2s infinite ease-in-out;
+}
+
+.neural-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.02;
+  pointer-events: none;
+  background-image: radial-gradient(circle, #fff 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Premium card container layout for consistent dashboard sizing */
+.agent-grid-item {
+  @apply w-full max-w-[360px] mx-auto transition-all duration-300;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    0 12px 24px -4px rgba(0, 0, 0, 0.3);
+}
+
+.agent-grid-item:hover {
+  @apply translate-y-[-4px];
+  box-shadow:
+    0 0 0 1px rgba(16, 185, 129, 0.2),
+    0 4px 8px rgba(0, 0, 0, 0.4),
+    0 16px 32px rgba(0, 0, 0, 0.3),
+    0 32px 64px -8px rgba(0, 0, 0, 0.5);
+}
+
+/* ── Sovereign Panel Utilities ────────────────────────────────────── */
+
+.sovereign-panel {
+  background-color: color-mix(in srgb, var(--color-theme-950), transparent 50%);
+  @apply backdrop-blur-xl border border-zinc-900 rounded-3xl overflow-hidden shadow-2xl relative transition-all duration-300;
+}
+
+.sovereign-card {
+  background-color: color-mix(in srgb, var(--color-theme-900), transparent 60%);
+  border-color: color-mix(in srgb, var(--color-theme-800), transparent 50%);
+  @apply backdrop-blur-md rounded-2xl p-6 transition-all duration-300 shadow-lg relative overflow-hidden;
+}
+
+.sovereign-card:hover {
+  background-color: color-mix(in srgb, var(--color-theme-900), transparent 40%);
+  border-color: var(--color-theme-700);
+  @apply translate-y-[-2px] shadow-2xl;
+}
+
+.sovereign-border {
+  border-color: color-mix(in srgb, var(--color-theme-800), transparent 50%);
+  background-color: color-mix(in srgb, var(--color-theme-950), transparent 70%);
+  @apply border rounded-xl;
+}
+
+.sovereign-glow-blue {
+  @apply shadow-[0_0_20px_rgba(59,130,246,0.15)] hover:shadow-[0_0_30px_rgba(59,130,246,0.25)];
+}
+
+.sovereign-glow-emerald {
+  @apply shadow-[0_0_20px_rgba(16,185,129,0.15)] hover:shadow-[0_0_30px_rgba(16,185,129,0.25)];
+}
+
+.sovereign-glow-amber {
+  @apply shadow-[0_0_20px_rgba(245,158,11,0.15)] hover:shadow-[0_0_30px_rgba(245,158,11,0.25)];
+}
+
+.sovereign-header-text {
+  @apply text-[10px] font-bold text-zinc-500 uppercase tracking-[0.1em] font-mono;
+}
+
+/* ── Ticker / Marquee Animation ───────────────────────────────────── */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee var(--duration, 30s) linear infinite;
+}
+
+.pause-on-hover:hover .animate-marquee {
+  animation-play-state: paused;
+}

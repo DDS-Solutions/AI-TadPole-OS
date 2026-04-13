@@ -1,0 +1,42 @@
+name: Mirror Packages to Public Repository
+
+on:
+  release:
+    types: [published, edited, created]
+  workflow_dispatch: # Allow manual mirroring for testing
+
+jobs:
+  mirror:
+    name: Mirror Assets
+    runs-on: ubuntu-latest
+    if: github.event.release.tag_name == 'latest'
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download Assets from Current Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p dist/mirror
+          gh release download latest --repo ${{ github.repository }} --pattern "*" --dir dist/mirror
+          ls -R dist/mirror
+
+      - name: Push Assets to Public Repository
+        env:
+          GH_TOKEN: ${{ secrets.PUBLIC_REPO_TOKEN }}
+        run: |
+          # Identify the target repo
+          PUBLIC_REPO="DDS-Solutions/AI-Tadpole-OS"
+          
+          echo "Syncing assets to $PUBLIC_REPO..."
+          
+          # 1. Ensure the 'latest' release exists in the public repo
+          gh release view latest --repo "$PUBLIC_REPO" || \
+          gh release create latest --repo "$PUBLIC_REPO" --title "Tadpole OS — Latest" --notes "Mirrored from private repository." --prerelease
+          
+          # 2. Upload all assets (gh handles overwriting/ignoring duplicates with --clobber in some versions, but we'll be explicit)
+          # Note: We use --clobber to overwrite if it already exists
+          gh release upload latest dist/mirror/* --repo "$PUBLIC_REPO" --clobber
+          
+          echo "Mirror Complete."

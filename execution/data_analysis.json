@@ -1,0 +1,17 @@
+{
+  "name": "data_analysis",
+  "description": "Auto-migrated skill: Data Analysis",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Data Analysis"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Data Analysis\""
+}

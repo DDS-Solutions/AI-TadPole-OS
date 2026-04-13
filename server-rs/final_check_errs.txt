@@ -1,0 +1,11 @@
+    Checking server-rs v1.1.4 (D:\TadpoleOS-Dev\server-rs)
+warning: unused import: `tracing::warn`
+  --> src\routes\audio.rs:25:5
+   |
+25 | use tracing::warn;
+   |     ^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `server-rs` (bin "server-rs") generated 1 warning (run `cargo fix --bin "server-rs" -p server-rs` to apply 1 suggestion)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 9.82s
