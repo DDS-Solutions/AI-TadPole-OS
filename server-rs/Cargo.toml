@@ -62,7 +62,7 @@ tree-sitter-rust = "0.23"
 tree-sitter-typescript = "0.23"
 ignore = "0.4"
 streaming-iterator = "0.1"
-md5 = "0.7"
+md5 = "0.8"
 walkdir = "2.5"
 # Vector Database (Optional for Legacy CPUs)
 lancedb = { version = "0.27.1", optional = true }
