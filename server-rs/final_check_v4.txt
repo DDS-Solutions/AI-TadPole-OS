@@ -1,0 +1,17 @@
+    Checking server-rs v1.1.4 (D:\TadpoleOS-Dev\server-rs)
+warning: unused import: `super::*`
+   --> src\agent\groq.rs:434:9
+    |
+434 |     use super::*;
+    |         ^^^^^^^^
+    |
+    = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `serde_json::json`
+   --> src\agent\groq.rs:435:9
+    |
+435 |     use serde_json::json;
+    |         ^^^^^^^^^^^^^^^^
+
+warning: `server-rs` (bin "server-rs") generated 2 warnings (run `cargo fix --bin "server-rs" -p server-rs` to apply 2 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.16s

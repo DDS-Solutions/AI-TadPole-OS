@@ -1,0 +1,143 @@
+   Compiling server-rs v1.1.4 (D:\TadpoleOS-Dev\server-rs)
+error: cannot find macro `json` in this scope
+   --> src\agent\groq.rs:488:85
+    |
+488 |             let args: serde_json::Value = serde_json::from_str(&json_str).unwrap_or(json!({}));
+    |                                                                                     ^^^^
+    |
+    = note: macro `crate::routes::audio::tests::json` exists but is inaccessible
+help: consider importing this macro
+    |
+438 +     use serde_json::json;
+    |
+
+error: cannot find macro `json` in this scope
+   --> src\agent\groq.rs:459:85
+    |
+459 |             let args: serde_json::Value = serde_json::from_str(&json_str).unwrap_or(json!({}));
+    |                                                                                     ^^^^
+    |
+    = note: macro `crate::routes::audio::tests::json` exists but is inaccessible
+help: consider importing this macro
+    |
+438 +     use serde_json::json;
+    |
+
+error[E0425]: cannot find value `FUNCTION_REGEX` in this scope
+   --> src\agent\groq.rs:445:29
+    |
+445 |         if let Some(caps) = FUNCTION_REGEX.captures(failed_gen) {
+    |                             ^^^^^^^^^^^^^^ not found in this scope
+    |
+note: static `crate::agent::openai::FUNCTION_REGEX` exists but is inaccessible
+   --> src\agent\openai.rs:100:1
+    |
+100 | / static FUNCTION_REGEX: Lazy<Regex> =
+101 | |     Lazy::new(|| Regex::new(r"(?s)<function=([a-zA-Z0-9_-]+)[^\{]*(\{.*?\})[^>]*>?").unwrap());
+    | |_______________________________________________________________________________________________^ not accessible
+help: consider importing this static
+    |
+438 +     use crate::agent::groq::FUNCTION_REGEX;
+    |
+
+error[E0425]: cannot find value `FUNCTION_REGEX` in this scope
+   --> src\agent\groq.rs:474:29
+    |
+474 |         if let Some(caps) = FUNCTION_REGEX.captures(failed_gen) {
+    |                             ^^^^^^^^^^^^^^ not found in this scope
+    |
+note: static `crate::agent::openai::FUNCTION_REGEX` exists but is inaccessible
+   --> src\agent\openai.rs:100:1
+    |
+100 | / static FUNCTION_REGEX: Lazy<Regex> =
+101 | |     Lazy::new(|| Regex::new(r"(?s)<function=([a-zA-Z0-9_-]+)[^\{]*(\{.*?\})[^>]*>?").unwrap());
+    | |_______________________________________________________________________________________________^ not accessible
+help: consider importing this static
+    |
+438 +     use crate::agent::groq::FUNCTION_REGEX;
+    |
+
+error[E0425]: cannot find value `FUNCTION_REGEX` in this scope
+   --> src\agent\groq.rs:501:13
+    |
+501 |             FUNCTION_REGEX.is_match(text),
+    |             ^^^^^^^^^^^^^^ not found in this scope
+    |
+note: static `crate::agent::openai::FUNCTION_REGEX` exists but is inaccessible
+   --> src\agent\openai.rs:100:1
+    |
+100 | / static FUNCTION_REGEX: Lazy<Regex> =
+101 | |     Lazy::new(|| Regex::new(r"(?s)<function=([a-zA-Z0-9_-]+)[^\{]*(\{.*?\})[^>]*>?").unwrap());
+    | |_______________________________________________________________________________________________^ not accessible
+help: consider importing this static
+    |
+438 +     use crate::agent::groq::FUNCTION_REGEX;
+    |
+
+error[E0425]: cannot find value `FUNCTION_REGEX` in this scope
+   --> src\agent\groq.rs:507:29
+    |
+507 |         if let Some(caps) = FUNCTION_REGEX.captures(&output_text) {
+    |                             ^^^^^^^^^^^^^^ not found in this scope
+    |
+note: static `crate::agent::openai::FUNCTION_REGEX` exists but is inaccessible
+   --> src\agent\openai.rs:100:1
+    |
+100 | / static FUNCTION_REGEX: Lazy<Regex> =
+101 | |     Lazy::new(|| Regex::new(r"(?s)<function=([a-zA-Z0-9_-]+)[^\{]*(\{.*?\})[^>]*>?").unwrap());
+    | |_______________________________________________________________________________________________^ not accessible
+help: consider importing this static
+    |
+438 +     use crate::agent::groq::FUNCTION_REGEX;
+    |
+
+warning: unused import: `super::*`
+   --> src\agent\runner\lifecycle.rs:290:9
+    |
+290 |     use super::*;
+    |         ^^^^^^^^
+    |
+    = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+error[E0282]: type annotations needed
+   --> src\agent\groq.rs:447:34
+    |
+447 |             println!("Name: {}", caps.get(1).unwrap().as_str());
+    |                                  ^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> src\agent\groq.rs:476:34
+    |
+476 |             println!("Name: {}", caps.get(1).unwrap().as_str());
+    |                                  ^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> src\agent\groq.rs:508:32
+    |
+508 |             if let Some(mat) = caps.get(0) {
+    |                                ^^^^ cannot infer type
+
+error[E0282]: type annotations needed
+   --> src\agent\groq.rs:509:51
+    |
+509 |                 output_text = output_text.replace(mat.as_str(), "").trim().to_string();
+    |                                                   ^^^ cannot infer type
+
+warning: unused variable: `m1`
+   --> src\agent\mission.rs:399:13
+    |
+399 |         let m1 = create_mission(&pool, agent_id, "Mission Alpha", 10.0).await?;
+    |             ^^ help: if this is intentional, prefix it with an underscore: `_m1`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `m2`
+   --> src\agent\mission.rs:400:13
+    |
+400 |         let m2 = create_mission(&pool, agent_id, "Mission Beta", 10.0).await?;
+    |             ^^ help: if this is intentional, prefix it with an underscore: `_m2`
+
+Some errors have detailed explanations: E0282, E0425.
+For more information about an error, try `rustc --explain E0282`.
+warning: `server-rs` (bin "server-rs" test) generated 3 warnings
+error: could not compile `server-rs` (bin "server-rs" test) due to 10 previous errors; 3 warnings emitted

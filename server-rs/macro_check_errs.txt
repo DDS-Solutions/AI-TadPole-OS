@@ -1,0 +1,11 @@
+    Checking unicode-ident v1.0.24
+    Checking itoa v1.0.18
+    Checking memchr v2.8.0
+   Compiling quote v1.0.45
+   Compiling zmij v1.0.21
+   Compiling serde_json v1.0.149
+    Checking serde_core v1.0.228
+    Checking proc-macro2 v1.0.106
+    Checking syn v2.0.117
+    Checking server-rs-macros v0.1.0 (D:\TadpoleOS-Dev\server-rs\server-rs-macros)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.88s
