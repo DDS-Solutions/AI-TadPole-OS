@@ -5602,7 +5602,7 @@ dependencies = [
  "petgraph 0.6.5",
  "proc-macro2",
  "quote",
- "rand 0.8.5",
+ "rand 0.10.0",
  "regex",
  "reqwest",
  "rmp-serde",
