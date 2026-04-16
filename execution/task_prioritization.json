@@ -1,0 +1,19 @@
+{
+    "name": "task_prioritization",
+    "description": "Analyzes and ranks tasks based on urgency and importance.",
+    "execution_command": "echo 'Prioritizing tasks...'",
+    "schema": {
+        "type": "object",
+        "properties": {
+            "tasks": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            }
+        },
+        "required": [
+            "tasks"
+        ]
+    }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "generate_image",
+  "description": "Auto-migrated skill: Generate Image",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Generate Image"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Generate Image\""
+}

@@ -1,0 +1,42 @@
+{
+  "BAD_REQUEST": {
+    "type_uri": "https://tadpole.os/errors/bad-request",
+    "source": "server-rs/src/routes/error.rs",
+    "status": 400
+  },
+  "UNAUTHORIZED": {
+    "type_uri": "https://tadpole.os/errors/unauthorized",
+    "source": "server-rs/src/routes/error.rs",
+    "status": 401
+  },
+  "FORBIDDEN": {
+    "type_uri": "https://tadpole.os/errors/forbidden",
+    "source": "server-rs/src/routes/error.rs",
+    "status": 403
+  },
+  "NOT_FOUND": {
+    "type_uri": "https://tadpole.os/errors/not-found",
+    "source": "server-rs/src/routes/error.rs",
+    "status": 404
+  },
+  "VALIDATION_ERROR": {
+    "type_uri": "https://tadpole.os/errors/validation",
+    "source": "server-rs/src/routes/error.rs",
+    "status": 422
+  },
+  "DOMAIN_ERROR": {
+    "type_uri": "https://tadpole.os/errors/domain",
+    "source": "server-rs/src/routes/error.rs",
+    "status": 422
+  },
+  "INTERNAL_SERVER_ERROR": {
+    "type_uri": "https://tadpole.os/errors/internal",
+    "source": "server-rs/src/routes/error.rs",
+    "status": 500
+  },
+  "NOT_IMPLEMENTED": {
+    "type_uri": "https://tadpole.os/errors/not-implemented",
+    "source": "server-rs/src/routes/error.rs",
+    "status": 501
+  }
+}

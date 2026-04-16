@@ -1,0 +1,69 @@
+name: Mirror Packages to Public Repository
+
+on:
+  release:
+    types: [published, edited, created]
+  workflow_dispatch: # Allow manual mirroring for testing
+    inputs:
+      tag:
+        description: 'Release tag to mirror (e.g. v1.1.4). Defaults to latest release.'
+        required: false
+        default: ''
+
+jobs:
+  mirror:
+    name: Mirror Assets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Resolve Tag
+        id: resolve_tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # On workflow_dispatch with explicit tag, use that. On release event, use the release tag.
+          if [ -n "${{ github.event.inputs.tag }}" ]; then
+            TAG="${{ github.event.inputs.tag }}"
+          elif [ -n "${{ github.event.release.tag_name }}" ]; then
+            TAG="${{ github.event.release.tag_name }}"
+          else
+            # Fallback: fetch the latest release tag from the repo
+            TAG=$(gh release list --repo ${{ github.repository }} --limit 1 --json tagName --jq '.[0].tagName')
+          fi
+          echo "Resolved tag: $TAG"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Download Assets from Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ steps.resolve_tag.outputs.tag }}"
+          echo "Downloading assets for tag: $TAG"
+          mkdir -p dist/mirror
+          gh release download "$TAG" --repo ${{ github.repository }} --pattern "*" --dir dist/mirror
+          ls -R dist/mirror
+
+      - name: Push Assets to Public Repository
+        env:
+          GH_TOKEN: ${{ secrets.PUBLIC_REPO_TOKEN }}
+        run: |
+          PUBLIC_REPO="DDS-Solutions/AI-Tadpole-OS"
+          TAG="${{ steps.resolve_tag.outputs.tag }}"
+          TITLE="Tadpole OS $TAG"
+
+          echo "Syncing tag '$TAG' to $PUBLIC_REPO..."
+
+          # Ensure the release exists in the public repo (create if missing)
+          gh release view "$TAG" --repo "$PUBLIC_REPO" 2>/dev/null || \
+          gh release create "$TAG" \
+            --repo "$PUBLIC_REPO" \
+            --title "$TITLE" \
+            --notes "Mirrored from private repository. Tag: $TAG" \
+            --prerelease
+
+          # Upload all assets, overwriting any existing ones
+          gh release upload "$TAG" dist/mirror/* --repo "$PUBLIC_REPO" --clobber
+
+          echo "✅ Mirror complete for tag: $TAG"

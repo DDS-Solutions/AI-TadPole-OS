@@ -1,0 +1,17 @@
+{
+  "name": "api_test",
+  "description": "Auto-migrated skill: API Test",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for API Test"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of API Test\""
+}
