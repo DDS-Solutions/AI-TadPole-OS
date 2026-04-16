@@ -1,0 +1,878 @@
+{
+  "Agent_Config_Header": {
+    "module": "src/components/agent-config/Agent_Config_Header.tsx",
+    "emitter": "Agent_Config_Header",
+    "desc": "Auto-registered telemetry link for Agent_Config_Header.",
+    "telemetry_link": "[Agent_Config_Header]"
+  },
+  "Cognition_Section": {
+    "module": "src/components/agent-config/Cognition_Section.tsx",
+    "emitter": "Cognition_Section",
+    "desc": "Auto-registered telemetry link for Cognition_Section.",
+    "telemetry_link": "[Cognition_Section]"
+  },
+  "Direct_Message_Console": {
+    "module": "src/components/agent-config/Direct_Message_Console.tsx",
+    "emitter": "Direct_Message_Console",
+    "desc": "Auto-registered telemetry link for Direct_Message_Console.",
+    "telemetry_link": "[Direct_Message_Console]"
+  },
+  "Governance_Section": {
+    "module": "src/components/agent-config/Governance_Section.tsx",
+    "emitter": "Governance_Section",
+    "desc": "Auto-registered telemetry link for Governance_Section.",
+    "telemetry_link": "[Governance_Section]"
+  },
+  "Memory_Section": {
+    "module": "src/components/agent-config/Memory_Section.tsx",
+    "emitter": "Memory_Section",
+    "desc": "Auto-registered telemetry link for Memory_Section.",
+    "telemetry_link": "[Memory_Section]"
+  },
+  "Model_Slot_Config": {
+    "module": "src/components/agent-config/Model_Slot_Config.tsx",
+    "emitter": "Model_Slot_Config",
+    "desc": "Auto-registered telemetry link for Model_Slot_Config.",
+    "telemetry_link": "[Model_Slot_Config]"
+  },
+  "useAgentConfig": {
+    "module": "src/components/agent-config/useAgentConfig.ts",
+    "emitter": "useAgentConfig",
+    "desc": "Auto-registered telemetry link for useAgentConfig.",
+    "telemetry_link": "[useAgentConfig]"
+  },
+  "Voice_Section": {
+    "module": "src/components/agent-config/Voice_Section.tsx",
+    "emitter": "Voice_Section",
+    "desc": "Auto-registered telemetry link for Voice_Section.",
+    "telemetry_link": "[Voice_Section]"
+  },
+  "Agent_Config_Panel": {
+    "module": "src/components/Agent_Config_Panel.tsx",
+    "emitter": "Agent_Config_Panel",
+    "desc": "Auto-registered telemetry link for Agent_Config_Panel.",
+    "telemetry_link": "[AgentConfigPanel]"
+  },
+  "Asset_Nav": {
+    "module": "src/components/Asset_Nav.tsx",
+    "emitter": "Asset_Nav",
+    "desc": "Auto-registered telemetry link for Asset_Nav.",
+    "telemetry_link": "[Asset_Nav]"
+  },
+  "Chat_Input_Bar": {
+    "module": "src/components/chat/Chat_Input_Bar.tsx",
+    "emitter": "Chat_Input_Bar",
+    "desc": "Auto-registered telemetry link for Chat_Input_Bar.",
+    "telemetry_link": "[Chat_Input_Bar]"
+  },
+  "Chat_Message_List": {
+    "module": "src/components/chat/Chat_Message_List.tsx",
+    "emitter": "Chat_Message_List",
+    "desc": "Auto-registered telemetry link for Chat_Message_List.",
+    "telemetry_link": "[Chat_Message_List]"
+  },
+  "Command_Palette": {
+    "module": "src/components/Command_Palette.tsx",
+    "emitter": "Command_Palette",
+    "desc": "Auto-registered telemetry link for Command_Palette.",
+    "telemetry_link": "[Command_Palette]"
+  },
+  "Command_Table": {
+    "module": "src/components/Command_Table.tsx",
+    "emitter": "Command_Table",
+    "desc": "Auto-registered telemetry link for Command_Table.",
+    "telemetry_link": "[Command_Table]"
+  },
+  "Agent_Status_Grid": {
+    "module": "src/components/dashboard/Agent_Status_Grid.tsx",
+    "emitter": "Agent_Status_Grid",
+    "desc": "Auto-registered telemetry link for Agent_Status_Grid.",
+    "telemetry_link": "[Agent_Status_Grid]"
+  },
+  "Burn_Rate_Chart": {
+    "module": "src/components/dashboard/Burn_Rate_Chart.tsx",
+    "emitter": "Burn_Rate_Chart",
+    "desc": "Auto-registered telemetry link for Burn_Rate_Chart.",
+    "telemetry_link": "[Burn_Rate_Chart]"
+  },
+  "Dashboard_Header": {
+    "module": "src/components/dashboard/Dashboard_Header.tsx",
+    "emitter": "Dashboard_Header",
+    "desc": "Auto-registered telemetry link for Dashboard_Header.",
+    "telemetry_link": "[Dashboard_Header]"
+  },
+  "Operation_Tab_Header": {
+    "module": "src/components/dashboard/Operation_Tab_Header.tsx",
+    "emitter": "Operation_Tab_Header",
+    "desc": "Auto-registered telemetry link for Operation_Tab_Header.",
+    "telemetry_link": "[Operation_Tab_Header]"
+  },
+  "Stat_Metrics": {
+    "module": "src/components/dashboard/Stat_Metrics.tsx",
+    "emitter": "Stat_Metrics",
+    "desc": "Auto-registered telemetry link for Stat_Metrics.",
+    "telemetry_link": "[Stat_Metrics]"
+  },
+  "System_Log": {
+    "module": "src/components/dashboard/System_Log.tsx",
+    "emitter": "System_Log",
+    "desc": "Auto-registered telemetry link for System_Log.",
+    "telemetry_link": "[System_Log]"
+  },
+  "Error_Boundary": {
+    "module": "src/components/Error_Boundary.tsx",
+    "emitter": "Error_Boundary",
+    "desc": "Auto-registered telemetry link for Error_Boundary.",
+    "telemetry_link": "[Neural Sector Fault]"
+  },
+  "Node_Header": {
+    "module": "src/components/hierarchy/Node_Header.tsx",
+    "emitter": "Node_Header",
+    "desc": "Auto-registered telemetry link for Node_Header.",
+    "telemetry_link": "[Node_Header]"
+  },
+  "Node_Health": {
+    "module": "src/components/hierarchy/Node_Health.tsx",
+    "emitter": "Node_Health",
+    "desc": "Auto-registered telemetry link for Node_Health.",
+    "telemetry_link": "[Node_Health]"
+  },
+  "Node_Mission": {
+    "module": "src/components/hierarchy/Node_Mission.tsx",
+    "emitter": "Node_Mission",
+    "desc": "Auto-registered telemetry link for Node_Mission.",
+    "telemetry_link": "[Node_Mission]"
+  },
+  "Node_Model_Slots": {
+    "module": "src/components/hierarchy/Node_Model_Slots.tsx",
+    "emitter": "Node_Model_Slots",
+    "desc": "Auto-registered telemetry link for Node_Model_Slots.",
+    "telemetry_link": "[Node_Model_Slots]"
+  },
+  "Node_Stats": {
+    "module": "src/components/hierarchy/Node_Stats.tsx",
+    "emitter": "Node_Stats",
+    "desc": "Auto-registered telemetry link for Node_Stats.",
+    "telemetry_link": "[Node_Stats]"
+  },
+  "Node_Task_Box": {
+    "module": "src/components/hierarchy/Node_Task_Box.tsx",
+    "emitter": "Node_Task_Box",
+    "desc": "Auto-registered telemetry link for Node_Task_Box.",
+    "telemetry_link": "[Node_Task_Box]"
+  },
+  "Hierarchy_Node": {
+    "module": "src/components/Hierarchy_Node.tsx",
+    "emitter": "Hierarchy_Node",
+    "desc": "Auto-registered telemetry link for Hierarchy_Node.",
+    "telemetry_link": "[Hierarchy_Node]"
+  },
+  "Intelligence_Nav": {
+    "module": "src/components/Intelligence_Nav.tsx",
+    "emitter": "Intelligence_Nav",
+    "desc": "Auto-registered telemetry link for Intelligence_Nav.",
+    "telemetry_link": "[Intelligence_Nav]"
+  },
+  "Observability_Sidebar": {
+    "module": "src/components/layout/Observability_Sidebar.tsx",
+    "emitter": "Observability_Sidebar",
+    "desc": "Auto-registered telemetry link for Observability_Sidebar.",
+    "telemetry_link": "[Observability_Sidebar]"
+  },
+  "Page_Header": {
+    "module": "src/components/layout/Page_Header.tsx",
+    "emitter": "Page_Header",
+    "desc": "Auto-registered telemetry link for Page_Header.",
+    "telemetry_link": "[Page_Header]"
+  },
+  "Sidebar": {
+    "module": "src/components/layout/Sidebar.tsx",
+    "emitter": "Sidebar",
+    "desc": "Auto-registered telemetry link for Sidebar.",
+    "telemetry_link": "[Sidebar]"
+  },
+  "Tab_Bar": {
+    "module": "src/components/layout/Tab_Bar.tsx",
+    "emitter": "Tab_Bar",
+    "desc": "Auto-registered telemetry link for Tab_Bar.",
+    "telemetry_link": "[Tab_Bar]"
+  },
+  "Tab_Item": {
+    "module": "src/components/layout/Tab_Item.tsx",
+    "emitter": "Tab_Item",
+    "desc": "Auto-registered telemetry link for Tab_Item.",
+    "telemetry_link": "[Tab_Item]"
+  },
+  "Ticker_Header": {
+    "module": "src/components/layout/Ticker_Header.tsx",
+    "emitter": "Ticker_Header",
+    "desc": "Auto-registered telemetry link for Ticker_Header.",
+    "telemetry_link": "[Ticker_Header]"
+  },
+  "Lineage_Stream": {
+    "module": "src/components/Lineage_Stream.tsx",
+    "emitter": "Lineage_Stream",
+    "desc": "Auto-registered telemetry link for Lineage_Stream.",
+    "telemetry_link": "[Lineage_Stream]"
+  },
+  "Agent_Team_View": {
+    "module": "src/components/missions/Agent_Team_View.tsx",
+    "emitter": "Agent_Team_View",
+    "desc": "Auto-registered telemetry link for Agent_Team_View.",
+    "telemetry_link": "[Agent_Team_View]"
+  },
+  "Cluster_Sidebar": {
+    "module": "src/components/missions/Cluster_Sidebar.tsx",
+    "emitter": "Cluster_Sidebar",
+    "desc": "Auto-registered telemetry link for Cluster_Sidebar.",
+    "telemetry_link": "[Cluster_Sidebar]"
+  },
+  "Mission_Header": {
+    "module": "src/components/missions/Mission_Header.tsx",
+    "emitter": "Mission_Header",
+    "desc": "Auto-registered telemetry link for Mission_Header.",
+    "telemetry_link": "[Mission_Header]"
+  },
+  "Neural_Map": {
+    "module": "src/components/missions/Neural_Map.tsx",
+    "emitter": "Neural_Map",
+    "desc": "Auto-registered telemetry link for Neural_Map.",
+    "telemetry_link": "[Neural_Map]"
+  },
+  "Add_Node_Dialog": {
+    "module": "src/components/model/Add_Node_Dialog.tsx",
+    "emitter": "Add_Node_Dialog",
+    "desc": "Auto-registered telemetry link for Add_Node_Dialog.",
+    "telemetry_link": "[Add_Node_Dialog]"
+  },
+  "Add_Provider_Dialog": {
+    "module": "src/components/model/Add_Provider_Dialog.tsx",
+    "emitter": "Add_Provider_Dialog",
+    "desc": "Auto-registered telemetry link for Add_Provider_Dialog.",
+    "telemetry_link": "[Add_Provider_Dialog]"
+  },
+  "Model_Inventory_Table": {
+    "module": "src/components/model/Model_Inventory_Table.tsx",
+    "emitter": "Model_Inventory_Table",
+    "desc": "Auto-registered telemetry link for Model_Inventory_Table.",
+    "telemetry_link": "[Model_Inventory_Table]"
+  },
+  "Model_Row": {
+    "module": "src/components/model/Model_Row.tsx",
+    "emitter": "Model_Row",
+    "desc": "Auto-registered telemetry link for Model_Row.",
+    "telemetry_link": "[Model_Row]"
+  },
+  "Provider_Card": {
+    "module": "src/components/model/Provider_Card.tsx",
+    "emitter": "Provider_Card",
+    "desc": "Auto-registered telemetry link for Provider_Card.",
+    "telemetry_link": "[Provider_Card]"
+  },
+  "Provider_Grid": {
+    "module": "src/components/model/Provider_Grid.tsx",
+    "emitter": "Provider_Grid",
+    "desc": "Auto-registered telemetry link for Provider_Grid.",
+    "telemetry_link": "[Provider_Grid]"
+  },
+  "Vault_Lock_Screen": {
+    "module": "src/components/model/Vault_Lock_Screen.tsx",
+    "emitter": "Vault_Lock_Screen",
+    "desc": "Auto-registered telemetry link for Vault_Lock_Screen.",
+    "telemetry_link": "[Vault_Lock_Screen]"
+  },
+  "Model_Badge": {
+    "module": "src/components/Model_Badge.tsx",
+    "emitter": "Model_Badge",
+    "desc": "Auto-registered telemetry link for Model_Badge.",
+    "telemetry_link": "[Model_Badge]"
+  },
+  "Neural_Waterfall": {
+    "module": "src/components/Neural_Waterfall.tsx",
+    "emitter": "Neural_Waterfall",
+    "desc": "Auto-registered telemetry link for Neural_Waterfall.",
+    "telemetry_link": "[Neural_Waterfall]"
+  },
+  "Auth_Section": {
+    "module": "src/components/provider/Auth_Section.tsx",
+    "emitter": "Auth_Section",
+    "desc": "Auto-registered telemetry link for Auth_Section.",
+    "telemetry_link": "[Auth_Layer]"
+  },
+  "Forge_Item": {
+    "module": "src/components/provider/Forge_Item.tsx",
+    "emitter": "Forge_Item",
+    "desc": "Auto-registered telemetry link for Forge_Item.",
+    "telemetry_link": "[Forge_Item]"
+  },
+  "Identity_Header": {
+    "module": "src/components/provider/Identity_Header.tsx",
+    "emitter": "Identity_Header",
+    "desc": "Auto-registered telemetry link for Identity_Header.",
+    "telemetry_link": "[Identity_Header]"
+  },
+  "Local_Server_Module": {
+    "module": "src/components/provider/Local_Server_Module.tsx",
+    "emitter": "Local_Server_Module",
+    "desc": "Auto-registered telemetry link for Local_Server_Module.",
+    "telemetry_link": "Manual boot sequence"
+  },
+  "Model_Forge": {
+    "module": "src/components/provider/Model_Forge.tsx",
+    "emitter": "Model_Forge",
+    "desc": "Auto-registered telemetry link for Model_Forge.",
+    "telemetry_link": "add_model"
+  },
+  "Protocol_Section": {
+    "module": "src/components/provider/Protocol_Section.tsx",
+    "emitter": "Protocol_Section",
+    "desc": "Auto-registered telemetry link for Protocol_Section.",
+    "telemetry_link": "Handshake: Invalid JSON headers"
+  },
+  "Provider_Config_Panel_test": {
+    "module": "src/components/Provider_Config_Panel.test.tsx",
+    "emitter": "Provider_Config_Panel.test",
+    "desc": "Auto-registered telemetry link for Provider_Config_Panel.test.",
+    "telemetry_link": "test_provider"
+  },
+  "Provider_Config_Panel": {
+    "module": "src/components/Provider_Config_Panel.tsx",
+    "emitter": "Provider_Config_Panel",
+    "desc": "Auto-registered telemetry link for Provider_Config_Panel.",
+    "telemetry_link": "[Provider_Config_Panel]"
+  },
+  "Assignment_Modal": {
+    "module": "src/components/skills/Assignment_Modal.tsx",
+    "emitter": "Assignment_Modal",
+    "desc": "Auto-registered telemetry link for Assignment_Modal.",
+    "telemetry_link": "[Assignment_Modal]"
+  },
+  "Hook_Card": {
+    "module": "src/components/skills/Hook_Card.tsx",
+    "emitter": "Hook_Card",
+    "desc": "Auto-registered telemetry link for Hook_Card.",
+    "telemetry_link": "[Hook_Card]"
+  },
+  "Hook_List": {
+    "module": "src/components/skills/Hook_List.tsx",
+    "emitter": "Hook_List",
+    "desc": "Auto-registered telemetry link for Hook_List.",
+    "telemetry_link": "[Hook_List]"
+  },
+  "Hook_Modal": {
+    "module": "src/components/skills/Hook_Modal.tsx",
+    "emitter": "Hook_Modal",
+    "desc": "Auto-registered telemetry link for Hook_Modal.",
+    "telemetry_link": "[Hook_Modal]"
+  },
+  "Import_Preview_Modal": {
+    "module": "src/components/skills/Import_Preview_Modal.tsx",
+    "emitter": "Import_Preview_Modal",
+    "desc": "Auto-registered telemetry link for Import_Preview_Modal.",
+    "telemetry_link": "[Import_Preview_Modal]"
+  },
+  "Mcp_Lab_Modal": {
+    "module": "src/components/skills/Mcp_Lab_Modal.tsx",
+    "emitter": "Mcp_Lab_Modal",
+    "desc": "Auto-registered telemetry link for Mcp_Lab_Modal.",
+    "telemetry_link": "[Mcp_Lab_Modal]"
+  },
+  "Mcp_Tool_Card": {
+    "module": "src/components/skills/Mcp_Tool_Card.tsx",
+    "emitter": "Mcp_Tool_Card",
+    "desc": "Auto-registered telemetry link for Mcp_Tool_Card.",
+    "telemetry_link": "[Mcp_Tool_Card]"
+  },
+  "Mcp_Tool_List": {
+    "module": "src/components/skills/Mcp_Tool_List.tsx",
+    "emitter": "Mcp_Tool_List",
+    "desc": "Auto-registered telemetry link for Mcp_Tool_List.",
+    "telemetry_link": "[Mcp_Tool_List]"
+  },
+  "Skill_Card": {
+    "module": "src/components/skills/Skill_Card.tsx",
+    "emitter": "Skill_Card",
+    "desc": "Auto-registered telemetry link for Skill_Card.",
+    "telemetry_link": "[Skill_Card]"
+  },
+  "Skill_Edit_Modal": {
+    "module": "src/components/skills/Skill_Edit_Modal.tsx",
+    "emitter": "Skill_Edit_Modal",
+    "desc": "Auto-registered telemetry link for Skill_Edit_Modal.",
+    "telemetry_link": "[Skill_Edit_Modal]"
+  },
+  "Skill_Header": {
+    "module": "src/components/skills/Skill_Header.tsx",
+    "emitter": "Skill_Header",
+    "desc": "Auto-registered telemetry link for Skill_Header.",
+    "telemetry_link": "[Skill_Header]"
+  },
+  "Skill_List": {
+    "module": "src/components/skills/Skill_List.tsx",
+    "emitter": "Skill_List",
+    "desc": "Auto-registered telemetry link for Skill_List.",
+    "telemetry_link": "[Skill_List]"
+  },
+  "Skill_Tabs": {
+    "module": "src/components/skills/Skill_Tabs.tsx",
+    "emitter": "Skill_Tabs",
+    "desc": "Auto-registered telemetry link for Skill_Tabs.",
+    "telemetry_link": "[Skill_Tabs]"
+  },
+  "Workflow_Card": {
+    "module": "src/components/skills/Workflow_Card.tsx",
+    "emitter": "Workflow_Card",
+    "desc": "Auto-registered telemetry link for Workflow_Card.",
+    "telemetry_link": "[Workflow_Card]"
+  },
+  "Workflow_Edit_Modal": {
+    "module": "src/components/skills/Workflow_Edit_Modal.tsx",
+    "emitter": "Workflow_Edit_Modal",
+    "desc": "Auto-registered telemetry link for Workflow_Edit_Modal.",
+    "telemetry_link": "[Workflow_Edit_Modal]"
+  },
+  "Workflow_List": {
+    "module": "src/components/skills/Workflow_List.tsx",
+    "emitter": "Workflow_List",
+    "desc": "Auto-registered telemetry link for Workflow_List.",
+    "telemetry_link": "[Workflow_List]"
+  },
+  "Sovereign_Chat": {
+    "module": "src/components/Sovereign_Chat.tsx",
+    "emitter": "Sovereign_Chat",
+    "desc": "Auto-registered telemetry link for Sovereign_Chat.",
+    "telemetry_link": "[Sovereign_Chat]"
+  },
+  "Swarm_Oversight_Node": {
+    "module": "src/components/Swarm_Oversight_Node.tsx",
+    "emitter": "Swarm_Oversight_Node",
+    "desc": "Auto-registered telemetry link for Swarm_Oversight_Node.",
+    "telemetry_link": "[Swarm_Oversight_Node]"
+  },
+  "Swarm_Telemetry": {
+    "module": "src/components/Swarm_Telemetry.tsx",
+    "emitter": "Swarm_Telemetry",
+    "desc": "Auto-registered telemetry link for Swarm_Telemetry.",
+    "telemetry_link": "[Swarm_Telemetry]"
+  },
+  "Swarm_Visualizer": {
+    "module": "src/components/Swarm_Visualizer.tsx",
+    "emitter": "Swarm_Visualizer",
+    "desc": "Auto-registered telemetry link for Swarm_Visualizer.",
+    "telemetry_link": "[Swarm_Visualizer]"
+  },
+  "Telemetry_Graph": {
+    "module": "src/components/Telemetry_Graph.tsx",
+    "emitter": "Telemetry_Graph",
+    "desc": "Auto-registered telemetry link for Telemetry_Graph.",
+    "telemetry_link": "[Telemetry_Graph]"
+  },
+  "Terminal": {
+    "module": "src/components/Terminal.tsx",
+    "emitter": "Terminal",
+    "desc": "Auto-registered telemetry link for Terminal.",
+    "telemetry_link": "[Terminal]"
+  },
+  "Buffered_Transcript_View": {
+    "module": "src/components/transcript/Buffered_Transcript_View.tsx",
+    "emitter": "Buffered_Transcript_View",
+    "desc": "Auto-registered telemetry link for Buffered_Transcript_View.",
+    "telemetry_link": "[Buffered_Transcript_View]"
+  },
+  "Confirm_Dialog": {
+    "module": "src/components/ui/Confirm_Dialog.tsx",
+    "emitter": "Confirm_Dialog",
+    "desc": "Auto-registered telemetry link for Confirm_Dialog.",
+    "telemetry_link": "[Confirm_Dialog]"
+  },
+  "Connection_Banner": {
+    "module": "src/components/ui/Connection_Banner.tsx",
+    "emitter": "Connection_Banner",
+    "desc": "Auto-registered telemetry link for Connection_Banner.",
+    "telemetry_link": "[Connection_Banner]"
+  },
+  "Empty_State": {
+    "module": "src/components/ui/Empty_State.tsx",
+    "emitter": "Empty_State",
+    "desc": "Auto-registered telemetry link for Empty_State.",
+    "telemetry_link": "[Empty_State]"
+  },
+  "Header_Ticker": {
+    "module": "src/components/ui/Header_Ticker.tsx",
+    "emitter": "Header_Ticker",
+    "desc": "Auto-registered telemetry link for Header_Ticker.",
+    "telemetry_link": "[Header_Ticker]"
+  },
+  "Page_Header_1": {
+    "module": "src/components/ui/Page_Header.tsx",
+    "emitter": "Page_Header",
+    "desc": "Auto-registered telemetry link for Page_Header.",
+    "telemetry_link": "[Page_Header]"
+  },
+  "Portal_Window": {
+    "module": "src/components/ui/Portal_Window.tsx",
+    "emitter": "Portal_Window",
+    "desc": "Auto-registered telemetry link for Portal_Window.",
+    "telemetry_link": "[Portal_Window]"
+  },
+  "Section_Header": {
+    "module": "src/components/ui/Section_Header.tsx",
+    "emitter": "Section_Header",
+    "desc": "Auto-registered telemetry link for Section_Header.",
+    "telemetry_link": "[Section_Header]"
+  },
+  "Status_Badge": {
+    "module": "src/components/ui/Status_Badge.tsx",
+    "emitter": "Status_Badge",
+    "desc": "Auto-registered telemetry link for Status_Badge.",
+    "telemetry_link": "[Status_Badge]"
+  },
+  "Toast_Center": {
+    "module": "src/components/ui/Toast_Center.tsx",
+    "emitter": "Toast_Center",
+    "desc": "Auto-registered telemetry link for Toast_Center.",
+    "telemetry_link": "[Toast_Center]"
+  },
+  "Tooltip": {
+    "module": "src/components/ui/Tooltip.tsx",
+    "emitter": "Tooltip",
+    "desc": "Auto-registered telemetry link for Tooltip.",
+    "telemetry_link": "[Tooltip]"
+  },
+  "Tw_Empty_State": {
+    "module": "src/components/ui/Tw_Empty_State.tsx",
+    "emitter": "Tw_Empty_State",
+    "desc": "Auto-registered telemetry link for Tw_Empty_State.",
+    "telemetry_link": "[Tw_Empty_State]"
+  },
+  "Live_Voice_Hub": {
+    "module": "src/components/voice/Live_Voice_Hub.tsx",
+    "emitter": "Live_Voice_Hub",
+    "desc": "Auto-registered telemetry link for Live_Voice_Hub.",
+    "telemetry_link": "[Live_Voice_Hub]"
+  },
+  "routes": {
+    "module": "src/constants/routes.ts",
+    "emitter": "routes",
+    "desc": "Auto-registered telemetry link for routes.",
+    "telemetry_link": "Route_Config"
+  },
+  "theme": {
+    "module": "src/constants/theme.ts",
+    "emitter": "theme",
+    "desc": "Auto-registered telemetry link for theme.",
+    "telemetry_link": "THEME_COLORS"
+  },
+  "constants": {
+    "module": "src/constants.ts",
+    "emitter": "constants",
+    "desc": "Auto-registered telemetry link for constants.",
+    "telemetry_link": "[Constants]"
+  },
+  "mock_agents": {
+    "module": "src/data/mock_agents.ts",
+    "emitter": "mock_agents",
+    "desc": "Auto-registered telemetry link for mock_agents.",
+    "telemetry_link": "mock_agents"
+  },
+  "mock_oversight": {
+    "module": "src/data/mock_oversight.ts",
+    "emitter": "mock_oversight",
+    "desc": "Auto-registered telemetry link for mock_oversight.",
+    "telemetry_link": "MOCK_PENDING"
+  },
+  "models": {
+    "module": "src/data/models.ts",
+    "emitter": "models",
+    "desc": "Auto-registered telemetry link for models.",
+    "telemetry_link": "MODEL_OPTIONS"
+  },
+  "use_dashboard_data": {
+    "module": "src/hooks/use_dashboard_data.ts",
+    "emitter": "use_dashboard_data",
+    "desc": "Auto-registered telemetry link for use_dashboard_data.",
+    "telemetry_link": "[useDashboardData]"
+  },
+  "use_event_bus": {
+    "module": "src/hooks/use_event_bus.ts",
+    "emitter": "use_event_bus",
+    "desc": "Auto-registered telemetry link for use_event_bus.",
+    "telemetry_link": "[useEventBus]"
+  },
+  "use_interval": {
+    "module": "src/hooks/use_interval.ts",
+    "emitter": "use_interval",
+    "desc": "Auto-registered telemetry link for use_interval.",
+    "telemetry_link": "[useInterval]"
+  },
+  "use_logs": {
+    "module": "src/hooks/use_logs.ts",
+    "emitter": "use_logs",
+    "desc": "Auto-registered telemetry link for use_logs.",
+    "telemetry_link": "[use_logs]"
+  },
+  "use_provider_form_test": {
+    "module": "src/hooks/use_provider_form.test.ts",
+    "emitter": "use_provider_form.test",
+    "desc": "Auto-registered telemetry link for use_provider_form.test.",
+    "telemetry_link": "panel_reducer"
+  },
+  "use_safe_lifecycle": {
+    "module": "src/hooks/use_safe_lifecycle.ts",
+    "emitter": "use_safe_lifecycle",
+    "desc": "Auto-registered telemetry link for use_safe_lifecycle.",
+    "telemetry_link": "COMPONENT_UNMOUNTED"
+  },
+  "use_throttled_status": {
+    "module": "src/hooks/use_throttled_status.ts",
+    "emitter": "use_throttled_status",
+    "desc": "Auto-registered telemetry link for use_throttled_status.",
+    "telemetry_link": "[useThrottledStatus]"
+  },
+  "use_web_socket_event": {
+    "module": "src/hooks/use_web_socket_event.ts",
+    "emitter": "use_web_socket_event",
+    "desc": "Auto-registered telemetry link for use_web_socket_event.",
+    "telemetry_link": "[useWebSocketEvent]"
+  },
+  "i18n": {
+    "module": "src/i18n.ts",
+    "emitter": "i18n",
+    "desc": "Auto-registered telemetry link for i18n.",
+    "telemetry_link": "[I18n]"
+  },
+  "command_processor": {
+    "module": "src/logic/command_processor.ts",
+    "emitter": "command_processor",
+    "desc": "Auto-registered telemetry link for command_processor.",
+    "telemetry_link": "[CommandProcessor]"
+  },
+  "main": {
+    "module": "src/main.tsx",
+    "emitter": "main",
+    "desc": "Auto-registered telemetry link for main.",
+    "telemetry_link": "[TadpoleRoot]"
+  },
+  "Benchmark_Analytics": {
+    "module": "src/pages/Benchmark_Analytics.tsx",
+    "emitter": "Benchmark_Analytics",
+    "desc": "Auto-registered telemetry link for Benchmark_Analytics.",
+    "telemetry_link": "[Benchmark_Analytics]"
+  },
+  "Docs": {
+    "module": "src/pages/Docs.tsx",
+    "emitter": "Docs",
+    "desc": "Auto-registered telemetry link for Docs.",
+    "telemetry_link": "[Docs_View]"
+  },
+  "Model_Manager": {
+    "module": "src/pages/Model_Manager.tsx",
+    "emitter": "Model_Manager",
+    "desc": "Auto-registered telemetry link for Model_Manager.",
+    "telemetry_link": "[Model_Manager]"
+  },
+  "Model_Store": {
+    "module": "src/pages/Model_Store.tsx",
+    "emitter": "Model_Store",
+    "desc": "Auto-registered telemetry link for Model_Store.",
+    "telemetry_link": "[Model_Store]"
+  },
+  "Ops_Dashboard": {
+    "module": "src/pages/Ops_Dashboard.tsx",
+    "emitter": "Ops_Dashboard",
+    "desc": "Auto-registered telemetry link for Ops_Dashboard.",
+    "telemetry_link": "[OpsDashboard]"
+  },
+  "Org_Chart": {
+    "module": "src/pages/Org_Chart.tsx",
+    "emitter": "Org_Chart",
+    "desc": "Auto-registered telemetry link for Org_Chart.",
+    "telemetry_link": "[Org_Chart]"
+  },
+  "Oversight_Dashboard": {
+    "module": "src/pages/Oversight_Dashboard.tsx",
+    "emitter": "Oversight_Dashboard",
+    "desc": "Auto-registered telemetry link for Oversight_Dashboard.",
+    "telemetry_link": "[Oversight_Dashboard]"
+  },
+  "Scheduled_Jobs": {
+    "module": "src/pages/Scheduled_Jobs.tsx",
+    "emitter": "Scheduled_Jobs",
+    "desc": "Auto-registered telemetry link for Scheduled_Jobs.",
+    "telemetry_link": "[Scheduled_Jobs]"
+  },
+  "Security_Dashboard": {
+    "module": "src/pages/Security_Dashboard.tsx",
+    "emitter": "Security_Dashboard",
+    "desc": "Auto-registered telemetry link for Security_Dashboard.",
+    "telemetry_link": "[Security_Dashboard]"
+  },
+  "Settings": {
+    "module": "src/pages/Settings.tsx",
+    "emitter": "Settings",
+    "desc": "Auto-registered telemetry link for Settings.",
+    "telemetry_link": "[Settings_View]"
+  },
+  "Skills": {
+    "module": "src/pages/Skills.tsx",
+    "emitter": "Skills",
+    "desc": "Auto-registered telemetry link for Skills.",
+    "telemetry_link": "[Skills_View]"
+  },
+  "Standups": {
+    "module": "src/pages/Standups.tsx",
+    "emitter": "Standups",
+    "desc": "Auto-registered telemetry link for Standups.",
+    "telemetry_link": "[Standups_View]"
+  },
+  "Template_Store": {
+    "module": "src/pages/Template_Store.tsx",
+    "emitter": "Template_Store",
+    "desc": "Auto-registered telemetry link for Template_Store.",
+    "telemetry_link": "[Template_Store]"
+  },
+  "Workspaces": {
+    "module": "src/pages/Workspaces.tsx",
+    "emitter": "Workspaces",
+    "desc": "Auto-registered telemetry link for Workspaces.",
+    "telemetry_link": "[Workspaces_View]"
+  },
+  "agent_service": {
+    "module": "src/services/agent_service.ts",
+    "emitter": "agent_service",
+    "desc": "Auto-registered telemetry link for agent_service.",
+    "telemetry_link": "[AgentService]"
+  },
+  "crypto_service": {
+    "module": "src/services/crypto_service.ts",
+    "emitter": "crypto_service",
+    "desc": "Auto-registered telemetry link for crypto_service.",
+    "telemetry_link": "[CryptoService]"
+  },
+  "mission_api_service": {
+    "module": "src/services/mission_api_service.ts",
+    "emitter": "mission_api_service",
+    "desc": "Auto-registered telemetry link for mission_api_service.",
+    "telemetry_link": "[MissionAPI]"
+  },
+  "proposal_service": {
+    "module": "src/services/proposal_service.ts",
+    "emitter": "proposal_service",
+    "desc": "Auto-registered telemetry link for proposal_service.",
+    "telemetry_link": "[ProposalService]"
+  },
+  "socket": {
+    "module": "src/services/socket.ts",
+    "emitter": "socket",
+    "desc": "Auto-registered telemetry link for socket.",
+    "telemetry_link": "[Tadpole_OS_Socket]"
+  },
+  "tadpoleos_service": {
+    "module": "src/services/tadpoleos_service.ts",
+    "emitter": "tadpoleos_service",
+    "desc": "Auto-registered telemetry link for tadpoleos_service.",
+    "telemetry_link": "[TadpoleOSService]"
+  },
+  "voice_client": {
+    "module": "src/services/voice_client.ts",
+    "emitter": "voice_client",
+    "desc": "Auto-registered telemetry link for voice_client.",
+    "telemetry_link": "[VoiceClient]"
+  },
+  "model_store": {
+    "module": "src/stores/model_store.ts",
+    "emitter": "model_store",
+    "desc": "Auto-registered telemetry link for model_store.",
+    "telemetry_link": "[ModelStore]"
+  },
+  "node_store": {
+    "module": "src/stores/node_store.ts",
+    "emitter": "node_store",
+    "desc": "Auto-registered telemetry link for node_store.",
+    "telemetry_link": "[NodeStore]"
+  },
+  "notification_store": {
+    "module": "src/stores/notification_store.ts",
+    "emitter": "notification_store",
+    "desc": "Auto-registered telemetry link for notification_store.",
+    "telemetry_link": "[NotificationStore]"
+  },
+  "provider_store": {
+    "module": "src/stores/provider_store.ts",
+    "emitter": "provider_store",
+    "desc": "Auto-registered telemetry link for provider_store.",
+    "telemetry_link": "[ProviderStore]"
+  },
+  "skill_store": {
+    "module": "src/stores/skill_store.ts",
+    "emitter": "skill_store",
+    "desc": "Auto-registered telemetry link for skill_store.",
+    "telemetry_link": "[SkillStore]"
+  },
+  "sovereign_store": {
+    "module": "src/stores/sovereign_store.ts",
+    "emitter": "sovereign_store",
+    "desc": "Auto-registered telemetry link for sovereign_store.",
+    "telemetry_link": "[SovereignStore]"
+  },
+  "tab_store": {
+    "module": "src/stores/tab_store.ts",
+    "emitter": "tab_store",
+    "desc": "Auto-registered telemetry link for tab_store.",
+    "telemetry_link": "[TabStore]"
+  },
+  "trace_store": {
+    "module": "src/stores/trace_store.ts",
+    "emitter": "trace_store",
+    "desc": "Auto-registered telemetry link for trace_store.",
+    "telemetry_link": "[TraceStore]"
+  },
+  "vault_store": {
+    "module": "src/stores/vault_store.ts",
+    "emitter": "vault_store",
+    "desc": "Auto-registered telemetry link for vault_store.",
+    "telemetry_link": "[VaultStore]"
+  },
+  "workspace_store": {
+    "module": "src/stores/workspace_store.ts",
+    "emitter": "workspace_store",
+    "desc": "Auto-registered telemetry link for workspace_store.",
+    "telemetry_link": "[WorkspaceStore]"
+  },
+  "index": {
+    "module": "src/types/index.ts",
+    "emitter": "index",
+    "desc": "Auto-registered telemetry link for index.",
+    "telemetry_link": "interface Agent"
+  },
+  "tadpoleos": {
+    "module": "src/types/tadpoleos.ts",
+    "emitter": "tadpoleos",
+    "desc": "Auto-registered telemetry link for tadpoleos.",
+    "telemetry_link": "Tadpole_OS_Model_Config"
+  },
+  "aaak_decoder": {
+    "module": "src/utils/aaak_decoder.ts",
+    "emitter": "aaak_decoder",
+    "desc": "Auto-registered telemetry link for aaak_decoder.",
+    "telemetry_link": "decodeAAAK"
+  },
+  "skill_parser": {
+    "module": "src/utils/skill_parser.ts",
+    "emitter": "skill_parser",
+    "desc": "Auto-registered telemetry link for skill_parser.",
+    "telemetry_link": "SkillParser"
+  },
+  "telemetry": {
+    "module": "src/utils/telemetry.ts",
+    "emitter": "telemetry",
+    "desc": "Auto-registered telemetry link for telemetry.",
+    "telemetry_link": "📡"
+  },
+  "crypto_worker": {
+    "module": "src/workers/crypto.worker.ts",
+    "emitter": "crypto.worker",
+    "desc": "Auto-registered telemetry link for crypto.worker.",
+    "telemetry_link": "[CryptoWorker]"
+  }
+}

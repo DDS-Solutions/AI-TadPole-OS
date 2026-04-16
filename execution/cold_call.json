@@ -1,0 +1,17 @@
+{
+  "name": "cold_call",
+  "description": "Auto-migrated skill: Cold Call",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Cold Call"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Cold Call\""
+}
