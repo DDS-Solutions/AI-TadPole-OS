@@ -1,0 +1,73 @@
+
+> tadpole-os@1.1.4 engine
+> cargo run --manifest-path server-rs/Cargo.toml
+
+warning: unused import: `super::*`
+   --> src\agent\groq.rs:434:9
+    |
+434 |     use super::*;
+    |         ^^^^^^^^
+    |
+    = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `serde_json::json`
+   --> src\agent\groq.rs:435:9
+    |
+435 |     use serde_json::json;
+    |         ^^^^^^^^^^^^^^^^
+
+warning: function `add_mission_relationship` is never used
+   --> src\agent\mission.rs:319:14
+    |
+319 | pub async fn add_mission_relationship(
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: enum `RelationshipType` is never used
+   --> src\agent\types.rs:958:10
+    |
+958 | pub enum RelationshipType {
+    |          ^^^^^^^^^^^^^^^^
+
+warning: struct `MissionRelationship` is never constructed
+   --> src\agent\types.rs:973:12
+    |
+973 | pub struct MissionRelationship {
+    |            ^^^^^^^^^^^^^^^^^^^
+
+warning: struct `ScoringConfig` is never constructed
+  --> src\types\rag_scoring.rs:25:12
+   |
+25 | pub struct ScoringConfig {
+   |            ^^^^^^^^^^^^^
+
+warning: struct `RagScore` is never constructed
+  --> src\types\rag_scoring.rs:47:12
+   |
+47 | pub struct RagScore {
+   |            ^^^^^^^^
+
+warning: function `calculate_mfs` is never used
+  --> src\types\rag_scoring.rs:66:8
+   |
+66 | pub fn calculate_mfs(
+   |        ^^^^^^^^^^^^^
+
+warning: `server-rs` (bin "server-rs") generated 8 warnings (run `cargo fix --bin "server-rs" -p server-rs` to apply 2 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.29s
+     Running `server-rs\target\debug\server-rs.exe`
+≡ƒÜÇ [Sidecar] Initializing Tokio Runtime...
+
+[1;33mΓÜá∩╕Å  [SOVEREIGN WARNING][0m
+[1;33m--------------------------------------------------[0m
+The following AI providers are not configured:
+  - OpenAI
+  - Anthropic
+
+AI-Tadpole-OS will fall back to local models (Ollama) if available.
+To enable these providers, add your API keys to the [1m.env[0m file.
+See [1mdocs/GETTING_STARTED.md[0m for instructions.
+[1;33m--------------------------------------------------[0m
+
+error: process didn't exit successfully: `server-rs\target\debug\server-rs.exe` (exit code: 0xffffffff)

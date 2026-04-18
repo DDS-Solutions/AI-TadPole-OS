@@ -1,0 +1,17 @@
+{
+  "name": "conflict_resolution",
+  "description": "Auto-migrated skill: Conflict Resolution",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Conflict Resolution"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Conflict Resolution\""
+}

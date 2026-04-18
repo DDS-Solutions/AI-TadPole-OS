@@ -1,0 +1,22 @@
+{
+  "name": "archive_to_vault",
+  "description": "Archives important mission data to the local Markdown vault (e.g., Obsidian).",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "filename": {
+        "type": "string",
+        "description": "The file name to save to (e.g., 'Missions/Research_Report.md')."
+      },
+      "content": {
+        "type": "string",
+        "description": "The markdown content to append."
+      }
+    },
+    "required": [
+      "filename",
+      "content"
+    ]
+  },
+  "execution_command": "(Native Execution Mode)"
+}
