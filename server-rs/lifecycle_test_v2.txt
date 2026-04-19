@@ -1,0 +1,12 @@
+   Compiling server-rs v1.1.4 (D:\TadpoleOS-Dev\server-rs)
+warning: unused import: `super::*`
+   --> src\agent\runner\lifecycle.rs:290:9
+    |
+290 |     use super::*;
+    |         ^^^^^^^^
+    |
+    = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `server-rs` (bin "server-rs" test) generated 1 warning (run `cargo fix --bin "server-rs" -p server-rs --tests` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 29.37s
+     Running unittests src\main.rs (target\debug\deps\server_rs-6445e88de7aed71b.exe)

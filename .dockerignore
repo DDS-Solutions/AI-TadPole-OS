@@ -1,0 +1,54 @@
+# Build artifacts
+node_modules/
+target/
+server-rs/target/
+
+# Version control
+.git/
+
+# IDE & OS
+.vscode/
+.idea/
+*.swp
+*.swo
+Thumbs.db
+.DS_Store
+
+# Deployment artifacts
+tadpole-deploy.tar
+
+# Debug artifacts
+*.log
+check_errors.txt
+lint_detail.txt
+lint_full.txt
+lint_results.txt
+lint_results.json
+test_detail.txt
+test-output.txt
+fresh-test-results.json
+coverage_report.txt
+build_debug.log
+job_update.json
+job_atomic_update.json
+temp_agent_update.json
+temp_mission.json
+manual_mission.json
+tmp_*.py
+
+# Agent workspace and temp
+.agent/
+.cargo/
+.tmp/
+tmp/
+workspaces/
+tests/
+test-results/
+coverage/
+playwright-report/
+
+# Environment
+.env
+.env.*
+!.env.example
+!.env.schema

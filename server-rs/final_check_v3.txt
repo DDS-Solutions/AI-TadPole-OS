@@ -1,0 +1,2 @@
+    Checking server-rs v1.1.4 (D:\TadpoleOS-Dev\server-rs)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.16s
