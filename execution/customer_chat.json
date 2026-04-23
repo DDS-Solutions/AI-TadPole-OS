@@ -1,0 +1,17 @@
+{
+  "name": "customer_chat",
+  "description": "Auto-migrated skill: Customer Chat",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Customer Chat"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Customer Chat\""
+}

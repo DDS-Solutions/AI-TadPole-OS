@@ -1,0 +1,27 @@
+{
+    "schema_version": "1",
+    "name": "codebase",
+    "display_name": "Codebase Analysis",
+    "description": "Intelligent codebase interrogation, including symbol extraction and file reading for OS self-auditing.",
+    "version": "1.0.0",
+    "author": "tadpole-os",
+    "permissions": [
+        "fs:read",
+        "code:analyze"
+    ],
+    "toolset_group": "engineering",
+    "danger_level": "low",
+    "requires_oversight": false,
+    "parameters": {
+        "file_path": {
+            "type": "string"
+        },
+        "symbol_name": {
+            "type": "string"
+        }
+    },
+    "hooks": {
+        "before_execute": null,
+        "after_execute": null
+    }
+}

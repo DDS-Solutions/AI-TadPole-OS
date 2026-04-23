@@ -1,0 +1,121 @@
+/**
+ * @docs ARCHITECTURE:Interface
+ * 
+ * ### AI Assist Note
+ * **UI Component**: Global asynchronous notification dispatcher. 
+ * Orchestrates "Neural Alerts" with severity-driven aesthetics (Info, Success, Warning, Error), persistent dismissal gates, and exit animations (Framer Motion).
+ * 
+ * ### 🔍 Debugging & Observability
+ * - **Failure Path**: Toast starvation (rendering lag during high-frequency errors), persistent toast blockage, or exit animation interruption.
+ * - **Telemetry Link**: Search for `[Toast_Center]` or `add_notification` in UI logs.
+ */
+
+import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, AlertTriangle, CheckCircle, Info, ShieldAlert } from 'lucide-react';
+import { use_notification_store } from '../../stores/notification_store';
+import type { Notification } from '../../stores/notification_store';
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+import { Z_INDEX_MAP } from './theme_tokens';
+
+function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs));
+}
+
+/**
+ * Toast_Item
+ * Individual notification card with severity-based styling and framer-motion animations.
+ */
+const Toast_Item: React.FC<{ notification: Notification }> = ({ notification }) => {
+    const { remove_notification } = use_notification_store();
+
+    const icons = {
+        info: <Info className="w-5 h-5 text-green-400" />,
+        success: <CheckCircle className="w-5 h-5 text-emerald-400" />,
+        warning: <AlertTriangle className="w-5 h-5 text-amber-400" />,
+        error: <ShieldAlert className="w-5 h-5 text-rose-500" />,
+    };
+
+    return (
+        <motion.div
+            layout
+            role="status"
+            aria-live={notification.severity === 'error' ? 'assertive' : 'polite'}
+            initial={{ opacity: 0, x: 50, scale: 0.9 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
+            className={cn(
+                "relative group flex items-start gap-3 p-4 mb-3 min-w-[320px] max-w-md",
+                "bg-black/60 backdrop-blur-xl border rounded-xl shadow-2xl overflow-hidden",
+                notification.severity === 'error' ? "border-rose-500/50 shadow-rose-900/20" : "border-white/10 shadow-black/40"
+            )}
+        >
+            {/* Background Glow for Errors */}
+            {notification.severity === 'error' && (
+                <div className="absolute inset-0 bg-rose-500/5 pointer-events-none" />
+            )}
+
+            <div className="flex-shrink-0 mt-0.5">
+                {icons[notification.severity]}
+            </div>
+
+            <div className="flex-grow flex flex-col gap-1 pr-6">
+                <span className={cn(
+                    "text-sm font-bold tracking-tight uppercase",
+                    notification.severity === 'error' ? "text-rose-400" : "text-white/90"
+                )}>
+                    {notification.title}
+                </span>
+                <p className="text-sm text-white/60 leading-relaxed">
+                    {notification.message}
+                </p>
+                {notification.type_id && (
+                    <span className="text-[10px] font-mono text-white/30 uppercase mt-1">
+                        ID: {notification.type_id}
+                    </span>
+                )}
+            </div>
+
+            <button
+                onClick={() => remove_notification(notification.id)}
+                className="absolute top-3 right-3 p-1 rounded-md text-white/30 hover:text-white hover:bg-white/10 transition-colors"
+                title={notification.persistent ? "Manual Dismiss Required" : "Close"}
+            >
+                <X className="w-4 h-4" />
+            </button>
+
+            {/* Persistence Indicator */}
+            {notification.persistent && (
+                <div className="absolute bottom-0 left-0 h-[2px] w-full bg-rose-500/30" />
+            )}
+        </motion.div>
+    );
+};
+
+/**
+ * Toast_Center
+ * Global notification container for real-time system alerts and user feedback.
+ */
+export const Toast_Center: React.FC = () => {
+    const { notifications } = use_notification_store();
+    const visible_notifications = (notifications || []).slice(-5); // Prevent DOM lag during error loops
+
+    return (
+        <div 
+            className="fixed bottom-6 right-6 flex flex-col items-end pointer-events-none"
+            style={{ zIndex: Z_INDEX_MAP.toast }}
+        >
+            <div className="pointer-events-auto">
+                <AnimatePresence mode="popLayout">
+                    {visible_notifications.map((n) => (
+                        <Toast_Item key={n.id} notification={n} />
+                    ))}
+                </AnimatePresence>
+            </div>
+        </div>
+    );
+};
+
+
+// Metadata: [Toast_Center]
