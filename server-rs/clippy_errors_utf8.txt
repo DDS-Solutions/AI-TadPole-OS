@@ -1,0 +1,186 @@
+﻿cargo :     Checking server-rs v1.1.17 (D:\TadpoleOS-Dev\server-rs)
+At line:1 char:1
++ cargo clippy --all-targets -- -D warnings > clippy_errors.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (    Checking se...-Dev\server-rs):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+error: struct update has no effect, all the fields in the struct have already been specified
+   --> src\routes\audio.rs:275:11
+    |
+275 |         ..Default::default()
+    |           ^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit 
+https://rust-lang.github.io/rust-clippy/rust-1.93.0/index.html#needless_update
+    = note: `-D clippy::needless-update` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::needless_update)]`
+
+error: field assignment outside of initializer for an instance created with Default::default()
+   --> src\agent\merge.rs:248:9
+    |
+248 |         agent.status = "idle".to_string();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+note: consider initializing the variable with `agent::types::EngineAgent { status: "idle".to_string(), 
+..Default::default() }` and removing relevant reassignments
+   --> src\agent\merge.rs:247:9
+    |
+247 |         let mut agent = EngineAgent::default();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: for further information visit 
+https://rust-lang.github.io/rust-clippy/rust-1.93.0/index.html#field_reassign_with_default
+    = note: `-D clippy::field-reassign-with-default` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::field_reassign_with_default)]`
+
+error: field assignment outside of initializer for an instance created with Default::default()
+   --> src\agent\merge.rs:268:9
+    |
+268 |         agent.name = "Original".to_string();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+note: consider initializing the variable with `agent::types::EngineAgent { name: "Original".to_string(), 
+..Default::default() }` and removing relevant reassignments
+   --> src\agent\merge.rs:267:9
+    |
+267 |         let mut agent = EngineAgent::default();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: for further information visit 
+https://rust-lang.github.io/rust-clippy/rust-1.93.0/index.html#field_reassign_with_default
+
+error: field assignment outside of initializer for an instance created with Default::default()
+   --> src\agent\runner\intelligence.rs:457:9
+    |
+457 |         ctx.agent_id = agent_id.to_string();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+note: consider initializing the variable with `agent::runner::RunContext { agent_id: agent_id.to_string(), 
+reasoning_depth: 3, ..Default::default() }` and removing relevant reassignments
+   --> src\agent\runner\intelligence.rs:456:9
+    |
+456 |         let mut ctx = RunContext::default();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: for further information visit 
+https://rust-lang.github.io/rust-clippy/rust-1.93.0/index.html#field_reassign_with_default
+
+error: field assignment outside of initializer for an instance created with Default::default()
+   --> src\agent\runner\intelligence.rs:478:9
+    |
+478 |         ctx.reasoning_depth = 5;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+note: consider initializing the variable with `agent::runner::RunContext { reasoning_depth: 5, ..Default::default() }` 
+and removing relevant reassignments
+   --> src\agent\runner\intelligence.rs:477:9
+    |
+477 |         let mut ctx = RunContext::default();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: for further information visit 
+https://rust-lang.github.io/rust-clippy/rust-1.93.0/index.html#field_reassign_with_default
+
+error: field assignment outside of initializer for an instance created with Default::default()
+   --> src\agent\runner\intelligence.rs:499:9
+    |
+499 |         ctx1.agent_id = a1_id.to_string();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+note: consider initializing the variable with `agent::runner::RunContext { agent_id: a1_id.to_string(), 
+reasoning_depth: 2, ..Default::default() }` and removing relevant reassignments
+   --> src\agent\runner\intelligence.rs:498:9
+    |
+498 |         let mut ctx1 = RunContext::default();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: for further information visit 
+https://rust-lang.github.io/rust-clippy/rust-1.93.0/index.html#field_reassign_with_default
+
+error: field assignment outside of initializer for an instance created with Default::default()
+   --> src\agent\runner\intelligence.rs:503:9
+    |
+503 |         ctx2.agent_id = a2_id.to_string();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+note: consider initializing the variable with `agent::runner::RunContext { agent_id: a2_id.to_string(), 
+reasoning_depth: 10, ..Default::default() }` and removing relevant reassignments
+   --> src\agent\runner\intelligence.rs:502:9
+    |
+502 |         let mut ctx2 = RunContext::default();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: for further information visit 
+https://rust-lang.github.io/rust-clippy/rust-1.93.0/index.html#field_reassign_with_default
+
+error: field assignment outside of initializer for an instance created with Default::default()
+   --> src\agent\runner\intelligence.rs:532:9
+    |
+532 |         ctx.agent_id = agent_id.to_string();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+note: consider initializing the variable with `agent::runner::RunContext { agent_id: agent_id.to_string(), budget_usd: 
+1.0, current_cost_usd: 1.1, reasoning_depth: 5, ..Default::default() }` and removing relevant reassignments
+   --> src\agent\runner\intelligence.rs:531:9
+    |
+531 |         let mut ctx = RunContext::default();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: for further information visit 
+https://rust-lang.github.io/rust-clippy/rust-1.93.0/index.html#field_reassign_with_default
+
+error: field assignment outside of initializer for an instance created with Default::default()
+   --> src\agent\runner\intelligence.rs:565:9
+    |
+565 |         agent.id = "test-id".to_string();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+note: consider initializing the variable with `agent::types::EngineAgent { id: "test-id".to_string(), 
+current_reasoning_turn: 5, ..Default::default() }` and removing relevant reassignments
+   --> src\agent\runner\intelligence.rs:564:9
+    |
+564 |         let mut agent = EngineAgent::default();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: for further information visit 
+https://rust-lang.github.io/rust-clippy/rust-1.93.0/index.html#field_reassign_with_default
+
+error: could not compile `server-rs` (bin "server-rs") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: field assignment outside of initializer for an instance created with Default::default()
+   --> src\agent\types.rs:994:9
+    |
+994 |         agent.id = "agent-1".to_string();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+note: consider initializing the variable with `agent::types::EngineAgent { id: "agent-1".to_string(), name: "Test 
+Agent".to_string(), budget_usd: 100.0, ..Default::default() }` and removing relevant reassignments
+   --> src\agent\types.rs:993:9
+    |
+993 |         let mut agent = EngineAgent::default();
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: for further information visit 
+https://rust-lang.github.io/rust-clippy/rust-1.93.0/index.html#field_reassign_with_default
+
+error: struct update has no effect, all the fields in the struct have already been specified
+  --> src\agent\tests_governance.rs:60:11
+   |
+60 |         ..Default::default()
+   |           ^^^^^^^^^^^^^^^^^^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.93.0/index.html#needless_update
+   = note: `-D clippy::needless-update` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::needless_update)]`
+
+error: struct update has no effect, all the fields in the struct have already been specified
+   --> src\agent\tests_governance.rs:127:11
+    |
+127 |         ..Default::default()
+    |           ^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit 
+https://rust-lang.github.io/rust-clippy/rust-1.93.0/index.html#needless_update
+
+error: struct update has no effect, all the fields in the struct have already been specified
+   --> src\routes\audio.rs:275:11
+    |
+275 |         ..Default::default()
+    |           ^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit 
+https://rust-lang.github.io/rust-clippy/rust-1.93.0/index.html#needless_update
+
+error: could not compile `server-rs` (bin "server-rs" test) due to 12 previous errors

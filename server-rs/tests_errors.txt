@@ -1,0 +1,137 @@
+﻿cargo :     Checking server-rs v1.1.24 (D:\TadpoleOS-Dev\server-rs)
+At line:1 char:1
++ cargo check --tests -p server-rs 2>&1 | Out-File -FilePath tests_erro ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (    Checking se...-Dev\server-rs):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+error[E0560]: struct `agent::types::EngineAgent` has no field named `id`
+   --> src\routes\agent_tests.rs:199:13
+    |
+199 |             id: format!("test_agent_{}", i),
+    |             ^^ `agent::types::EngineAgent` does not have this field
+    |
+    = note: available fields are: `identity`, `models`, `economics`, `health`, `capabilities` ... and 4 others
+
+error[E0560]: struct `agent::types::EngineAgent` has no field named `name`
+   --> src\routes\agent_tests.rs:200:13
+    |
+200 |             name: format!("Agent {}", i),
+    |             ^^^^ `agent::types::EngineAgent` does not have this field
+    |
+    = note: available fields are: `identity`, `models`, `economics`, `health`, `capabilities` ... and 4 others
+
+error[E0560]: struct `agent::types::EngineAgent` has no field named `role`
+   --> src\routes\agent_tests.rs:201:13
+    |
+201 |             role: "Developer".to_string(),
+    |             ^^^^ `agent::types::EngineAgent` does not have this field
+    |
+    = note: available fields are: `identity`, `models`, `economics`, `health`, `capabilities` ... and 4 others
+
+error[E0560]: struct `agent::types::EngineAgent` has no field named `department`
+   --> src\routes\agent_tests.rs:202:13
+    |
+202 |             department: "Engineering".to_string(),
+    |             ^^^^^^^^^^ `agent::types::EngineAgent` does not have this field
+    |
+    = note: available fields are: `identity`, `models`, `economics`, `health`, `capabilities` ... and 4 others
+
+error[E0560]: struct `agent::types::EngineAgent` has no field named `description`
+   --> src\routes\agent_tests.rs:203:13
+    |
+203 |             description: "Test".to_string(),
+    |             ^^^^^^^^^^^ `agent::types::EngineAgent` does not have this field
+    |
+    = note: available fields are: `identity`, `models`, `economics`, `health`, `capabilities` ... and 4 others
+
+error[E0560]: struct `agent::types::EngineAgent` has no field named `status`
+   --> src\routes\agent_tests.rs:204:13
+    |
+204 |             status: "idle".to_string(),
+    |             ^^^^^^ unknown field
+    |
+help: a field with a similar name exists
+    |
+204 -             status: "idle".to_string(),
+204 +             state: "idle".to_string(),
+    |
+
+error[E0560]: struct `agent::types::EngineAgent` has no field named `budget_usd`
+   --> src\routes\agent_tests.rs:205:13
+    |
+205 |             budget_usd: 100.0,
+    |             ^^^^^^^^^^ `agent::types::EngineAgent` does not have this field
+    |
+    = note: available fields are: `identity`, `models`, `economics`, `health`, `capabilities` ... and 4 others
+
+error[E0560]: struct `agent::types::EngineAgent` has no field named `cost_usd`
+   --> src\routes\agent_tests.rs:206:13
+    |
+206 |             cost_usd: 0.0,
+    |             ^^^^^^^^ `agent::types::EngineAgent` does not have this field
+    |
+    = note: available fields are: `identity`, `models`, `economics`, `health`, `capabilities` ... and 4 others
+
+error[E0560]: struct `agent::types::EngineAgent` has no field named `tokens_used`
+   --> src\routes\agent_tests.rs:207:13
+    |
+207 |             tokens_used: 0,
+    |             ^^^^^^^^^^^ `agent::types::EngineAgent` does not have this field
+    |
+    = note: available fields are: `identity`, `models`, `economics`, `health`, `capabilities` ... and 4 others
+
+error[E0560]: struct `agent::types::EngineAgent` has no field named `token_usage`
+   --> src\routes\agent_tests.rs:208:13
+    |
+208 |             token_usage: TokenUsage::default(),
+    |             ^^^^^^^^^^^ `agent::types::EngineAgent` does not have this field
+    |
+    = note: available fields are: `identity`, `models`, `economics`, `health`, `capabilities` ... and 4 others
+
+error[E0560]: struct `agent::types::EngineAgent` has no field named `theme_color`
+   --> src\routes\agent_tests.rs:210:13
+    |
+210 |             theme_color: None,
+    |             ^^^^^^^^^^^ `agent::types::EngineAgent` does not have this field
+    |
+    = note: available fields are: `identity`, `models`, `economics`, `health`, `capabilities` ... and 4 others
+
+error[E0560]: struct `agent::types::EngineAgent` has no field named `skills`
+   --> src\routes\agent_tests.rs:211:13
+    |
+211 |             skills: vec![],
+    |             ^^^^^^ `agent::types::EngineAgent` does not have this field
+    |
+    = note: available fields are: `identity`, `models`, `economics`, `health`, `capabilities` ... and 4 others
+
+error[E0560]: struct `agent::types::EngineAgent` has no field named `workflows`
+   --> src\routes\agent_tests.rs:212:13
+    |
+212 |             workflows: vec![],
+    |             ^^^^^^^^^ `agent::types::EngineAgent` does not have this field
+    |
+    = note: available fields are: `identity`, `models`, `economics`, `health`, `capabilities` ... and 4 others
+
+error[E0560]: struct `agent::types::EngineAgent` has no field named `category`
+   --> src\routes\agent_tests.rs:215:13
+    |
+215 |             category: "user".to_string(),
+    |             ^^^^^^^^ `agent::types::EngineAgent` does not have this field
+    |
+    = note: available fields are: `identity`, `models`, `economics`, `health`, `capabilities` ... and 4 others
+
+error[E0609]: no field `id` on type `agent::types::EngineAgent`
+   --> src\routes\agent_tests.rs:218:44
+    |
+218 |         state.registry.agents.insert(agent.id.clone(), agent);
+    |                                            ^^ unknown field
+    |
+help: one of the expressions' fields has a field of the same name
+    |
+218 |         state.registry.agents.insert(agent.identity.id.clone(), agent);
+    |                                            +++++++++
+
+Some errors have detailed explanations: E0560, E0609.
+For more information about an error, try `rustc --explain E0560`.
+error: could not compile `server-rs` (bin "server-rs" test) due to 15 previous errors
