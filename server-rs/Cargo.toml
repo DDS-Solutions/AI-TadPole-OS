@@ -9,7 +9,7 @@ tokio = { version = "1.43", features = ["full"] }
 
 # Web Framework
 axum = { version = "0.8", features = ["ws", "macros", "multipart"] }
-tower-http = { version = "0.5", features = ["cors", "trace", "fs", "compression-full", "timeout"] }
+tower-http = { version = "0.6", features = ["cors", "trace", "fs", "compression-full", "timeout"] }
 tower = { version = "0.4", features = ["util", "make"] }
 futures = "0.3"
 
