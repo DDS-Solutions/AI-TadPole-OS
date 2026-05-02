@@ -1,0 +1,265 @@
+//! @docs ARCHITECTURE:Agent
+//!
+//! ### AI Assist Note
+//! **Security Gate**: Registry of available tool schemas and documentation.
+//! Enforces **Hard-Coded Safety Boundaries** by automatically forcing
+//! `requires_oversight = true` if `Permission::ShellExecute` or
+//! `Permission::BudgetSpend` are requested. Validates **Schema Parity**
+//! across disparate skill implementations.
+//!
+//! ### 🔍 Debugging & Observability
+//! - **Failure Path**: Unsupported `schema_version`, missing `skill.json` in
+//!   a discovered directory, or validation failure for critical permissions.
+//! - **Trace Scope**: `server-rs::agent::skill_manifest`
+//!
+
+use dashmap::DashMap;
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+use std::fs;
+use std::path::PathBuf;
+
+use crate::error::AppError;
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, specta::Type)]
+#[serde(rename_all = "snake_case")]
+pub enum DangerLevel {
+    Low,
+    Medium,
+    High,
+    Critical,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash, specta::Type)]
+#[serde(rename_all = "kebab-case")]
+pub enum Permission {
+    #[serde(rename = "network:outbound")]
+    NetworkOutbound,
+    #[serde(rename = "filesystem:read")]
+    FilesystemRead,
+    #[serde(rename = "filesystem:write")]
+    FilesystemWrite,
+    #[serde(rename = "shell:execute")]
+    ShellExecute,
+    #[serde(rename = "budget:spend")]
+    BudgetSpend,
+    #[serde(untagged)]
+    Unknown(String), // Fallback for forward compat
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, specta::Type)]
+pub struct SkillParameter {
+    pub r#type: String,
+    pub required: Option<bool>,
+    pub default: Option<serde_json::Value>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, specta::Type)]
+pub struct SkillHooks {
+    pub before_execute: Option<String>,
+    pub after_execute: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, specta::Type)]
+pub struct SkillManifest {
+    pub schema_version: String,
+    pub name: String,
+    pub display_name: Option<String>,
+    pub description: String,
+    pub version: String,
+    pub author: Option<String>,
+
+    #[serde(default)]
+    pub permissions: Vec<Permission>,
+
+    pub toolset_group: Option<String>,
+    pub danger_level: DangerLevel,
+
+    #[serde(default)]
+    pub requires_oversight: bool,
+
+    #[serde(default)]
+    pub parameters: HashMap<String, SkillParameter>,
+
+    pub hooks: Option<SkillHooks>,
+    #[serde(default = "default_category")]
+    pub category: String,
+}
+
+fn default_category() -> String {
+    "user".to_string()
+}
+
+impl Default for SkillManifest {
+    fn default() -> Self {
+        Self {
+            schema_version: "1".to_string(),
+            name: "unknown".to_string(),
+            display_name: None,
+            description: "".to_string(),
+            version: "1.1.57".to_string(),
+            author: None,
+            permissions: vec![],
+            toolset_group: None,
+            danger_level: DangerLevel::Low,
+            requires_oversight: false,
+            parameters: HashMap::new(),
+            hooks: None,
+            category: default_category(),
+        }
+    }
+}
+
+impl SkillManifest {
+    /// Validates the manifest and enforces hard-coded security gates.
+    /// 
+    /// ### 🛡️ Security Mapping
+    /// If a skill requests `ShellExecute` or `BudgetSpend` permissions, 
+    /// this function automatically sets `requires_oversight = true` regardless 
+    /// of what the manifest JSON specified. This is a non-bypassable guard.
+    pub fn validate(&mut self) -> Result<(), AppError> {
+        if self.schema_version != "1" {
+            return Err(AppError::BadRequest(format!("Unsupported schema_version: {}", self.schema_version)));
+        }
+
+        // Security Gate: auto-set requires_oversight if demanding dangerous permissions
+        for perm in &self.permissions {
+            match perm {
+                Permission::ShellExecute | Permission::BudgetSpend => {
+                    self.requires_oversight = true;
+                }
+                Permission::Unknown(p) => {
+                    tracing::warn!("Skill {} requested unknown permission: {}", self.name, p);
+                }
+                _ => {}
+            }
+        }
+
+        Ok(())
+    }
+}
+
+pub struct SkillRegistry {
+    pub manifests: DashMap<String, SkillManifest>,
+}
+
+impl SkillRegistry {
+    pub fn new() -> Self {
+        Self {
+            manifests: DashMap::new(),
+        }
+    }
+
+    pub fn get(&self, name: &str) -> Option<SkillManifest> {
+        self.manifests.get(name).map(|m| m.value().clone())
+    }
+
+    pub fn insert(&self, manifest: SkillManifest) {
+        self.manifests.insert(manifest.name.clone(), manifest);
+    }
+
+    /// Discovery Engine: Traverses the `data/skills` directory and 
+    /// hydro-loads all valid `skill.json` manifests into the registry.
+    pub fn load_all() -> Self {
+        let registry = Self::new();
+
+        let mut data_dir = PathBuf::from("data");
+        data_dir.push("skills");
+
+        if !data_dir.exists() {
+            tracing::warn!("Skills directory not found at {:?}", data_dir);
+            return registry;
+        }
+
+        let entries = match fs::read_dir(&data_dir) {
+            Ok(e) => e,
+            Err(err) => {
+                tracing::error!("Failed to read skills directory: {}", err);
+                return registry;
+            }
+        };
+
+        for entry in entries.filter_map(Result::ok) {
+            let path = entry.path();
+            if path.is_dir() {
+                let manifest_path = path.join("skill.json");
+                if manifest_path.exists() {
+                    match Self::load_manifest(&manifest_path) {
+                        Ok(mut manifest) => {
+                            if let Err(e) = manifest.validate() {
+                                tracing::error!(
+                                    "Failed to validate manifest {:?}: {}",
+                                    manifest_path,
+                                    e
+                                );
+                                continue;
+                            }
+                            registry.insert(manifest);
+                        }
+                        Err(e) => {
+                            tracing::error!("Failed to load manifest {:?}: {}", manifest_path, e)
+                        }
+                    }
+                }
+            }
+        }
+
+        registry
+    }
+
+    fn load_manifest(path: &PathBuf) -> Result<SkillManifest, AppError> {
+        let file_contents = fs::read_to_string(path).map_err(AppError::Io)?;
+        let manifest: SkillManifest = serde_json::from_str(&file_contents).map_err(|e| AppError::BadRequest(e.to_string()))?;
+        Ok(manifest)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_manifest_security_gate() {
+        let mut manifest = SkillManifest {
+            permissions: vec![Permission::ShellExecute],
+            requires_oversight: false,
+            ..Default::default()
+        };
+
+        manifest.validate().unwrap();
+
+        assert!(manifest.requires_oversight);
+    }
+
+    #[test]
+    fn test_manifest_budget_gate() {
+        let mut manifest = SkillManifest {
+            permissions: vec![Permission::BudgetSpend],
+            requires_oversight: false,
+            ..Default::default()
+        };
+
+        manifest.validate().unwrap();
+
+        assert!(manifest.requires_oversight);
+    }
+
+    #[test]
+    fn test_manifest_schema_validation() {
+        let mut manifest = SkillManifest {
+            schema_version: "2".to_string(), // Invalid schema
+            ..Default::default()
+        };
+
+        let result = manifest.validate();
+        assert!(result.is_err());
+        assert_eq!(
+            result.unwrap_err().to_string(),
+            "Bad Request: Unsupported schema_version: 2"
+        );
+    }
+}
+
+// Metadata: [skill_manifest]
+
+// Metadata: [skill_manifest]

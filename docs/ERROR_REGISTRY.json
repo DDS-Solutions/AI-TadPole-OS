@@ -1,0 +1,60 @@
+{
+  "BAD_REQUEST": {
+    "type_uri": "https://tadpole.os/errors/bad-request",
+    "source": "server-rs/src/routes/error.rs",
+    "status": 400
+  },
+  "UNAUTHORIZED": {
+    "type_uri": "https://tadpole.os/errors/unauthorized",
+    "source": "server-rs/src/routes/error.rs",
+    "status": 401
+  },
+  "FORBIDDEN": {
+    "type_uri": "https://tadpole.os/errors/forbidden",
+    "source": "server-rs/src/routes/error.rs",
+    "status": 403
+  },
+  "NOT_FOUND": {
+    "type_uri": "https://tadpole.os/errors/not-found",
+    "source": "server-rs/src/routes/error.rs",
+    "status": 404
+  },
+  "VALIDATION_ERROR": {
+    "type_uri": "https://tadpole.os/errors/validation",
+    "source": "server-rs/src/routes/error.rs",
+    "status": 422
+  },
+  "DOMAIN_ERROR": {
+    "type_uri": "https://tadpole.os/errors/domain",
+    "source": "server-rs/src/routes/error.rs",
+    "status": 422
+  },
+  "INTERNAL_SERVER_ERROR": {
+    "type_uri": "https://tadpole.os/errors/internal",
+    "source": "server-rs/src/routes/error.rs",
+    "status": 500
+  },
+  "NOT_IMPLEMENTED": {
+    "type_uri": "https://tadpole.os/errors/not-implemented",
+    "source": "server-rs/src/routes/error.rs",
+    "status": 501
+  },
+  "OOM_QUANTIZATION_FALLBACK": {
+    "type_uri": "https://tadpole.os/errors/resource-exhaustion",
+    "source": "server-rs/src/routes/error.rs",
+    "status": 507,
+    "remediation": "Switch to a lower quantization (e.g., q4_K_M) or increase system VRAM."
+  },
+  "RECRUITMENT_FAILED": {
+    "type_uri": "https://tadpole.os/errors/recruitment",
+    "source": "server-rs/src/routes/error.rs",
+    "status": 503,
+    "remediation": "Check if an agent with the required role is registered and in 'idle' status."
+  },
+  "INFRA_ERROR": {
+    "type_uri": "https://tadpole.os/errors/infrastructure",
+    "source": "server-rs/src/routes/error.rs",
+    "status": 502,
+    "remediation": "Verify API credentials and endpoint connectivity in Provider Settings."
+  }
+}

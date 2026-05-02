@@ -1,0 +1,22 @@
+{
+  "name": "write_file",
+  "description": "Writes or overwrites a file in the workspace.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "filename": {
+        "type": "string",
+        "description": "Path relative to workspace root."
+      },
+      "content": {
+        "type": "string",
+        "description": "File content."
+      }
+    },
+    "required": [
+      "filename",
+      "content"
+    ]
+  },
+  "execution_command": "(Native Execution Mode)"
+}
