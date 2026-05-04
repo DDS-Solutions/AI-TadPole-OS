@@ -72,7 +72,7 @@ md5 = "0.7"
 walkdir = "2.5"
 # Vector Database (Optional for Legacy CPUs)
 lancedb = { version = "0.27.2", optional = true }
-arrow-schema = { version = "58.1.0", optional = true }
+arrow-schema = { version = "58.2.0", optional = true }
 arrow-array = { version = "58.1.0", optional = true }
 
 # Neural Audio (Optional for Legacy CPUs)
