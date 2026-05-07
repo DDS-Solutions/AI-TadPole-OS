@@ -1,0 +1,47 @@
+
+--- Frontend AI Awakening Audit Report ---
+Total Files Checked: 200
+Compliant: 48
+Non-Compliant: 152
+
+Non-Compliant Files (First 20):
+- D:\TadpoleOS-Dev\src\components\agent-config\Agent_Config_Header.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\agent-config\Cognition_Section.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\agent-config\Direct_Message_Console.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\agent-config\Governance_Section.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\agent-config\index.ts
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\agent-config\Memory_Section.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\agent-config\Model_Slot_Config.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\agent-config\use_agent_config.ts
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\agent-config\Voice_Section.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\Agent_Config_Panel.test.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\Asset_Nav.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\Command_Palette.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\Command_Table.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\dashboard\__tests__\Agent_Status_Grid.test.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\Error_Boundary.test.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\Error_Boundary.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\hierarchy\Node_Header.test.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\hierarchy\Node_Header.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\hierarchy\Node_Health.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\hierarchy\Node_Mission.tsx
+  Missing: ### 🔍 Debugging & Observability

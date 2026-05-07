@@ -1,0 +1,17 @@
+{
+  "name": "deep_research",
+  "description": "Auto-migrated skill: Deep Research",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Deep Research"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Deep Research\""
+}

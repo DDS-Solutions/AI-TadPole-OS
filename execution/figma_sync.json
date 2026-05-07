@@ -1,0 +1,17 @@
+{
+  "name": "figma_sync",
+  "description": "Auto-migrated skill: Figma Sync",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Figma Sync"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Figma Sync\""
+}

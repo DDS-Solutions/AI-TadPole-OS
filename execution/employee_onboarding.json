@@ -1,0 +1,17 @@
+{
+  "name": "employee_onboarding",
+  "description": "Auto-migrated skill: Employee Onboarding",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Employee Onboarding"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Employee Onboarding\""
+}
