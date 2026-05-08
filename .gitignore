@@ -1,0 +1,128 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment and Secrets
+.env
+.env.*
+!.env.example
+!.env.schema
+*.local
+**/*_providers.json
+**/infra_providers.json
+
+# Database
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+*.db.bak
+
+# Dependencies
+node_modules/
+server-rs/target/
+
+# Build and IDE
+dist/
+dist-ssr/
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Test payloads and local data
+*payload.json
+agents_audit.json
+agents_final*.json
+agents_sync*.json
+debug_db.py
+debug_fks.py
+repro_fk.py
+engine_log.txt
+server_log.txt
+vite_log.txt
+lint_output.txt
+test_output.txt
+db_schema_output.txt
+test_results.json
+coverage/
+playwright-report/
+test-results/
+**/data/*.json
+
+# Lint and test reports
+lint_report*.txt
+lint_failures*.txt
+lint_results*.json
+test_report*.txt
+
+# Deployment artifacts
+*.tar
+
+# Build error logs
+build_errors.txt
+
+# Agent Workspaces and Local State
+workspaces/
+
+# Temporary files
+test-output.txt
+test_results.json
+coverage_report.txt
+.tmp/
+
+# Debug and build artifacts (Root)
+check_errors.txt
+lint_detail.txt
+lint_full.txt
+lint_results.txt
+test_detail.txt
+fresh-test-results.json
+build_debug.log
+
+# Temporary JSON payloads
+job_update.json
+job_atomic_update.json
+temp_agent_update.json
+temp_mission.json
+manual_mission.json
+
+# Security audit artifacts
+security_results.json
+
+# Scratch scripts
+tmp_*.py
+
+# Server-RS debug artifacts
+server-rs/check*.log
+server-rs/check*.txt
+server-rs/compile*.txt
+server-rs/test_*.txt
+server-rs/test.log
+server-rs/output.txt
+server-rs/benchmark_results.json
+server-rs/test_fs.rs
+server-rs/errors.json
+server-rs/full_error.txt
+server-rs/errors.txt
+server-rs/audit.txt
+server-rs/target_check/
+
+# Tauri Build Artifacts
+src-tauri/target/
+src-tauri/gen/
+
+**/target/**
+**/build/**
+**/__pycache__/
+reports/

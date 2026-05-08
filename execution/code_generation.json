@@ -1,0 +1,20 @@
+{
+    "name": "code_generation",
+    "description": "Generates source code based on a technical specification.",
+    "execution_command": "echo 'Generating code...'",
+    "schema": {
+        "type": "object",
+        "properties": {
+            "language": {
+                "type": "string"
+            },
+            "logic": {
+                "type": "string"
+            }
+        },
+        "required": [
+            "language",
+            "logic"
+        ]
+    }
+}

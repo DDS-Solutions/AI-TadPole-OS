@@ -1,0 +1,20 @@
+{
+    "name": "documentation",
+    "description": "Generates or updates technical documentation for a codebase.",
+    "execution_command": "echo 'Generating documentation...'",
+    "schema": {
+        "type": "object",
+        "properties": {
+            "target": {
+                "type": "string"
+            },
+            "format": {
+                "type": "string",
+                "default": "markdown"
+            }
+        },
+        "required": [
+            "target"
+        ]
+    }
+}
