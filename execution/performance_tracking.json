@@ -1,0 +1,22 @@
+{
+    "name": "performance_tracking",
+    "description": "Tracks and summarizes agent performance metrics.",
+    "execution_command": "echo 'Generating performance report...'",
+    "schema": {
+        "type": "object",
+        "properties": {
+            "agent_id": {
+                "type": "string"
+            },
+            "metrics": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            }
+        },
+        "required": [
+            "agent_id"
+        ]
+    }
+}
