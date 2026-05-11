@@ -178,7 +178,7 @@ dependencies = [
  "ahash",
  "arrow-buffer 58.2.0",
  "arrow-data 58.2.0",
- "arrow-schema 58.2.0",
+ "arrow-schema 58.3.0",
  "chrono",
  "half",
  "hashbrown 0.17.0",
@@ -268,7 +268,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "db3b5846209775b6dc8056d77ff9a032b27043383dd5488abd0b663e265b9373"
 dependencies = [
  "arrow-buffer 58.2.0",
- "arrow-schema 58.2.0",
+ "arrow-schema 58.3.0",
  "half",
  "num-integer",
  "num-traits",
@@ -353,9 +353,9 @@ dependencies = [
 
 [[package]]
 name = "arrow-schema"
-version = "58.2.0"
+version = "58.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "18aa020f6bc8e5201dcd2d4b7f98c68f8a410ef37128263243e6ff2a47a67d4f"
+checksum = "f633dbfdf39c039ada1bf9e34c694816eb71fbb7dc78f613993b7245e078a1ed"
 
 [[package]]
 name = "arrow-select"
@@ -5683,11 +5683,11 @@ dependencies = [
 
 [[package]]
 name = "server-rs"
-version = "1.1.66"
+version = "1.1.67"
 dependencies = [
  "anyhow",
  "arrow-array 58.2.0",
- "arrow-schema 58.2.0",
+ "arrow-schema 58.3.0",
  "async-trait",
  "axum",
  "backoff",
