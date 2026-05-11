@@ -1,0 +1,27 @@
+{
+    "name": "content_generation",
+    "description": "Generates marketing copy, blog posts, or creative text content.",
+    "execution_command": "echo 'Generating content...'",
+    "schema": {
+        "type": "object",
+        "properties": {
+            "topic": {
+                "type": "string"
+            },
+            "type": {
+                "type": "string"
+            },
+            "length": {
+                "type": "string",
+                "enum": [
+                    "short",
+                    "medium",
+                    "long"
+                ]
+            }
+        },
+        "required": [
+            "topic"
+        ]
+    }
+}

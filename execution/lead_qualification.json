@@ -1,0 +1,17 @@
+{
+  "name": "lead_qualification",
+  "description": "Auto-migrated skill: Lead Qualification",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Lead Qualification"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Lead Qualification\""
+}

@@ -1,0 +1,3 @@
+ALTER TABLE agents ADD COLUMN current_task TEXT;
+ALTER TABLE agents ADD COLUMN input_tokens INTEGER DEFAULT 0;
+ALTER TABLE agents ADD COLUMN output_tokens INTEGER DEFAULT 0;
