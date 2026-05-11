@@ -63,7 +63,7 @@
     "reactflow": "^11.11.4",
     "tailwind-merge": "^3.5.0",
     "ws": "^8.20.0",
-    "zustand": "^5.0.12"
+    "zustand": "^5.0.13"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
