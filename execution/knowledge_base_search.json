@@ -1,0 +1,17 @@
+{
+  "name": "knowledge_base_search",
+  "description": "Auto-migrated skill: Knowledge Base Search",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Knowledge Base Search"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Knowledge Base Search\""
+}

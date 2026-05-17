@@ -1,0 +1,19 @@
+{
+    "name": "refactoring",
+    "description": "Optimizes and cleans up existing code while preserving functionality.",
+    "execution_command": "echo 'Refactoring code...'",
+    "schema": {
+        "type": "object",
+        "properties": {
+            "file_path": {
+                "type": "string"
+            },
+            "changes": {
+                "type": "string"
+            }
+        },
+        "required": [
+            "file_path"
+        ]
+    }
+}

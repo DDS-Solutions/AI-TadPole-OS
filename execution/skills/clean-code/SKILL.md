@@ -1,0 +1,85 @@
+> [!IMPORTANT]
+> **AI Assist Note (Knowledge Heritage)**:
+> This document is part of the "Sovereign Reality" documentation.
+> - **@docs ARCHITECTURE:Infrastructure:Execution**
+> - **Failure Path**: Information drift, legacy terminology, or documentation mismatch.
+> - **Telemetry Link**: Cross-reference with `execution/parity_guard.py` results.
+>
+> ### AI Assist Note
+> Core technical resource for the Tadpole OS Sovereign infrastructure.
+>
+> ### 🔍 Debugging & Observability
+> Traceability via `parity_guard.py`.
+
+---
+name: clean-code
+description: Pragmatic coding standards - concise, direct, no over-engineering, no unnecessary comments
+allowed-tools: Read, Write, Edit
+version: 2.1
+priority: CRITICAL
+---
+
+# Clean Code - Pragmatic Standards
+
+**Rule: Be concise, direct, and solution-focused.**
+
+## Core Principles
+- **SRP**: Single Responsibility.
+- **DRY**: Don't Repeat Yourself.
+- **KISS**: Keep It Simple.
+- **Naming**: `userCount` (Intent) > `n`. `getUser()` (Action). `isActive` (Bool).
+- **Functions**: Small (5-10 lines), Pure (No side effects), Flattened (Guard clauses).
+
+## 🧠 Aletheia Reasoning Protocol (Refactoring)
+
+**Code is read 10x more than it is written.**
+
+### 1. Generator (Expression)
+*   **Draft**: Write the ugly version first. Get it working.
+*   **Alternatives**: "Can this be a map? A reduce? A class?".
+*   **Naming**: Generate 3 names for this function. Pick the best one.
+
+### 2. Verifier (Cognitive Load)
+*   **The "3 AM Test"**: "If I read this at 3 AM during an outage, will I understand it?".
+*   **Complexity**: "Is this one-liner clever, or just confusing?".
+*   **Dependencies**: "Do I really need Lodash for this?".
+
+### 3. Reviser (Polish)
+*   **Extract**: Move that 5-line block to a named function.
+*   **Guard**: Invert if-checks to reduce nesting.
+
+---
+
+## 🛡️ Security & Safety Protocol (Code)
+
+1.  **Input Validation**: "Clean" input is validated input.
+2.  **Output Encoding**: "Clean" output is escaped output (XSS prevention).
+3.  **No Eval**: Clean code never uses `eval()` or `new Function()`.
+4.  **Secrets**: Clean code retrieves secrets from env, never hardcoded.
+
+---
+
+## 🔴 Pre-Work Checklist (Mental)
+1.  **Imports**: Who imports this? Will I break them?
+2.  **Deps**: What does this import?
+3.  **Scope**: Edit file + dependencies in SAME task.
+
+## 🔴 Completion Checklist
+- [ ] **Goal Met?** Exactly what user asked.
+- [ ] **Code Works?** Tested/Verified.
+- [ ] **Lint/Types?** No red squiggles.
+- [ ] **Cleanup?** No console.logs or dead comments.
+
+## 🔴 Verification Scripts
+**Run the script matching your role:**
+- **Frontend**: `ux_audit.py`, `accessibility_checker.py`
+- **Backend**: `api_validator.py`, `schema_validator.py`
+- **Security**: `security_scan.py`
+- **Test**: `test_runner.py`
+- **General**: `lint_runner.py`
+
+**Process**: Run -> Read Output -> Summarize to User -> Ask -> Fix.
+
+[//]: # (Metadata: [SKILL])
+
+[//]: # (Metadata: [SKILL])

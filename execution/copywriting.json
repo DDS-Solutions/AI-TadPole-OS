@@ -1,0 +1,17 @@
+{
+  "name": "copywriting",
+  "description": "Auto-migrated skill: Copywriting",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Copywriting"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Copywriting\""
+}

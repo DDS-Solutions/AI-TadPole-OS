@@ -1,0 +1,11 @@
+{
+  "swarm_id": "finance-compliance-starter",
+  "title": "Finance & Compliance Swarm",
+  "description": "A pre-configured swarm for SMEs to automate expense auditing and regulatory compliance.",
+  "initial_agent": "finance-lead",
+  "required_agents": [
+    "finance-lead",
+    "expense-auditor",
+    "compliance-agent"
+  ]
+}

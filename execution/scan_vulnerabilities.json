@@ -1,0 +1,17 @@
+{
+  "name": "scan_vulnerabilities",
+  "description": "Auto-migrated skill: Scan Vulnerabilities",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Scan Vulnerabilities"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Scan Vulnerabilities\""
+}

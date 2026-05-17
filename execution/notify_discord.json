@@ -1,0 +1,17 @@
+{
+  "name": "notify_discord",
+  "description": "Sends a mission update or notification to the team via Discord webhook.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "message": {
+        "type": "string",
+        "description": "The notification text."
+      }
+    },
+    "required": [
+      "message"
+    ]
+  },
+  "execution_command": "(Native Execution Mode)"
+}

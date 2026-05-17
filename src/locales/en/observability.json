@@ -1,0 +1,51 @@
+{
+  "TRACE_TITLE": "Agent Reasoning Trace",
+  "TRACE_SUBTITLE": "High-Fidelity Behavioral Observability",
+  "TRACE_LABEL_STEP": "Step {{param:index}}",
+  "TRACE_TOOLTIP_NODE": "Inspect specific neural node metadata and input/output payload.",
+  "WAT_TITLE": "Neural Waterfall",
+  "WAT_SUBTITLE": "Cross-Agent Communication Stream",
+  "WAT_LABEL_FLOW": "Flow Velocity",
+  "WAT_TOOLTIP_SYNC": "Synchronize waterfall across all active sectors.",
+  "FLOW_TITLE": "Neural Flow Graph",
+  "FLOW_LABEL_NODES": "Active Nodes",
+  "FLOW_LABEL_EDGES": "Neural Links",
+  "FLOW_TOOLTIP_LAYOUT": "Recalculate graph layout using Dagre-Sovereign algorithm.",
+  "COST_TITLE": "Neural Cost Analysis",
+  "COST_LABEL_TOTAL": "Aggregated Session Cost",
+  "COST_LABEL_BREAKDOWN": "Modality Breakdown",
+  "COST_TOOLTIP_EXPORT": "Export cost dossier as JSON for external audit.",
+  "LOG_TITLE": "System Event Log",
+  "LOG_LABEL_SEVERITY": "Severity",
+  "LOG_LABEL_MESSAGE": "Message",
+  "LOG_TOOLTIP_CLEAR": "Purge local log buffer (Requires 'Oversight:Write').",
+  "TERM_TITLE": "Sovereign Terminal",
+  "TERM_SUBTITLE": "Direct Neural Engine Uplink",
+  "TERM_PLACEHOLDER": "Enter neural directive...",
+  "TERM_TOOLTIP_HISTORY": "Browse command history",
+  "TERM_ARIA_INPUT": "Terminal Input Field",
+  "trace": {
+    "running": "Running...",
+    "span": "SPAN",
+    "stream_title": "OTel Trace Stream",
+    "waiting": "Waiting for Trace Context",
+    "waiting_hint": "Initiate a mission to capture hierarchical swarm telemetry.",
+    "input_label": "Message input",
+    "tooltip": "Deep-trace analysis of OTel spans, agent tool calls, and swarm-wide telemetry."
+  },
+  "trace_stream": {
+    "title": "Neural Waterfall",
+    "tooltip": "Real-time visualization of neural inference cycles and model token flow.",
+    "detach_tooltip": "Detach Trace Stream",
+    "recall_tooltip": "Recall Trace Stream"
+  },
+  "terminal": {
+    "tooltip": "System Console: Monitor events and issue neural directives via slash-commands.",
+    "label": "Tadpole Terminal",
+    "input_aria": "System Command Interface",
+    "toggle_aria": "Toggle terminal expansion",
+    "slide_up": "Slide Up",
+    "slide_down": "Slide Down",
+    "placeholder_command": "Executing command (e.g. /help)..."
+  }
+}
