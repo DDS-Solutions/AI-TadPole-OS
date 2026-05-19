@@ -1,0 +1,17 @@
+{
+  "name": "contract_review",
+  "description": "Auto-migrated skill: Contract Review",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Contract Review"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Contract Review\""
+}

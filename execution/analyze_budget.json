@@ -1,0 +1,17 @@
+{
+  "name": "analyze_budget",
+  "description": "Auto-migrated skill: Analyze Budget",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Analyze Budget"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Analyze Budget\""
+}

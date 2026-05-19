@@ -1,0 +1,17 @@
+{
+  "name": "user_interview",
+  "description": "Auto-migrated skill: User Interview",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for User Interview"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of User Interview\""
+}

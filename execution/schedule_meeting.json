@@ -1,0 +1,17 @@
+{
+  "name": "schedule_meeting",
+  "description": "Auto-migrated skill: Schedule Meeting",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Schedule Meeting"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Schedule Meeting\""
+}

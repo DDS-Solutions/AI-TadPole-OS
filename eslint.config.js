@@ -1,0 +1,52 @@
+/**
+ * @docs ARCHITECTURE:Core
+ * 
+ * ### AI Assist Note
+ * **Core technical resource for the Tadpole OS Sovereign infrastructure.**
+ * Handles reactive state and high-fidelity user interactions.
+ * 
+ * ### 🔍 Debugging & Observability
+ * - **Failure Path**: UI regression, hook desync, or API timeout.
+ * - **Telemetry Link**: Search `[eslint_config]` in observability traces.
+ */
+
+import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import tseslint from 'typescript-eslint'
+import { defineConfig, globalIgnores } from 'eslint/config'
+
+export default defineConfig([
+  { ignores: ['dist', 'server/dist', 'node_modules', '.tmp', 'coverage', 'src-tauri'] },
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      js.configs.recommended,
+      tseslint.configs.recommended,
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.vite,
+    ],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+    },
+    rules: {
+      'no-console': ['warn', { allow: ['warn', 'error', 'debug'] }],
+      'no-restricted-globals': ['error', {
+        name: 'i18n',
+        message: 'Always import { i18n } from the project root singleton to ensure localization stability.',
+      }],
+    },
+  },
+  // Relax strict typing rules in test files — mocks legitimately use 'any'
+  {
+    files: ['**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}', '**/tests/**/*.{ts,tsx}'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    },
+  },
+])
+
+// Metadata: [eslint_config]

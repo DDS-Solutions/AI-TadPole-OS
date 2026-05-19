@@ -1,0 +1,43 @@
+{
+  "name": "tune_agent_cognition",
+  "description": "Allows the Alpha Agent to dynamically tune the cognitive and sampling parameters of other agents in the swarm based on mission needs.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "agent_id": {
+        "type": "string",
+        "description": "The unique identifier of the agent to tune (e.g., '1', 'specialist-node')."
+      },
+      "temperature": {
+        "type": "number",
+        "description": "Adjust creativity/predictability. Range: 0.0 to 2.0. Higher is more creative.",
+        "minimum": 0,
+        "maximum": 2
+      },
+      "top_p": {
+        "type": "number",
+        "description": "Nucleus sampling. Range: 0.0 to 1.0. Lower is more focused.",
+        "minimum": 0,
+        "maximum": 1
+      },
+      "top_k": {
+        "type": "integer",
+        "description": "Vocabulary filtering. Range: 1 to 100. Lower is more conservative.",
+        "minimum": 1,
+        "maximum": 100
+      },
+      "reasoning_depth": {
+        "type": "integer",
+        "description": "For reasoning-capable models, sets the maximum depth of thought chain.",
+        "minimum": 1,
+        "maximum": 64
+      },
+      "rationale": {
+        "type": "string",
+        "description": "The strategic reason for this adjustment (e.g., 'Increasing creativity for brainstorming phase')."
+      }
+    },
+    "required": ["agent_id", "rationale"]
+  },
+  "execution_command": "python execution/tune_agent_cognition.py"
+}

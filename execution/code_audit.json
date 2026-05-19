@@ -1,0 +1,17 @@
+{
+  "name": "code_audit",
+  "description": "Auto-migrated skill: Code Audit",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Code Audit"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Code Audit\""
+}

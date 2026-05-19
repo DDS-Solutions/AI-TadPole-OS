@@ -1,0 +1,17 @@
+{
+  "name": "debug",
+  "description": "Auto-migrated skill: Debug",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Debug"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Debug\""
+}

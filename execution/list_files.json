@@ -1,0 +1,14 @@
+{
+  "name": "list_files",
+  "description": "Lists files in a workspace directory.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "dir": {
+        "type": "string",
+        "description": "Directory path (default: '.')."
+      }
+    }
+  },
+  "execution_command": "(Native Execution Mode)"
+}
