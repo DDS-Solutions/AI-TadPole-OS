@@ -1,0 +1,17 @@
+{
+  "name": "write_spec",
+  "description": "Auto-migrated skill: Write Spec",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Write Spec"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Write Spec\""
+}

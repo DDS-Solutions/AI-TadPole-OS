@@ -1,0 +1,14 @@
+{
+  "name": "query_financial_logs",
+  "description": "Retrieves mission history with cost and budget data for financial auditing.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "limit": {
+        "type": "integer",
+        "description": "Maximum number of records to retrieve (default: 10)."
+      }
+    }
+  },
+  "execution_command": "(Native Execution Mode)"
+}

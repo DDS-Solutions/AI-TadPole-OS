@@ -1,0 +1,101 @@
+//! @docs ARCHITECTURE:Registry
+//! 
+//! ### AI Assist Note
+//! **Standardized Error System**: Implements high-fidelity error handling for the 
+//! Tadpole OS Tooling Layer. Features `RecoveryAction` metadata to guide 
+//! autonomous agent self-annealing.
+//! 
+//! ### 🔍 Debugging & Observability
+//! - **Failure Path**: Runtime logic error, state desynchronization, or resource exhaustion.
+//! - **Telemetry Link**: Search `[error]` in tracing logs.
+
+use crate::error::AppError;
+
+/// Defines the recovery path for an autonomous agent.
+#[derive(Debug, Clone, serde::Serialize)]
+pub enum RecoveryAction {
+    /// The agent should wait and retry the exact same call.
+    RetryWithBackoff { seconds: u64 },
+    /// The agent should refine the input parameters (e.g., path was wrong).
+    RefineInput,
+    /// The agent should attempt to recruit a specialist with higher authority.
+    Escalate,
+    /// The mission cannot proceed; fail immediately.
+    Abort,
+}
+
+#[derive(Debug, thiserror::Error)]
+pub enum ToolExecutionError {
+    #[allow(dead_code)]
+    #[error("Transient Failure: {message}")]
+    Transient {
+        message: String,
+        retry_after: Option<u64>,
+    },
+
+    #[error("Security Violation: {0}")]
+    SecurityBlocked(String),
+
+    #[error("Hierarchy Violation: {0}")]
+    HierarchyBlocked(String),
+
+    #[allow(dead_code)]
+    #[error("Parameter Validation Error: {0}")]
+    Validation(String),
+
+    #[error("Runtime Execution Failed: {0}")]
+    ExecutionFailed(String),
+
+    #[error("Tool '{name}' not found in registry")]
+    ToolNotFound { name: String },
+
+    #[allow(dead_code)]
+    #[error("Invalid parameters for tool '{name}': {reason}")]
+    InvalidParameters { name: String, reason: String },
+
+    #[allow(dead_code)]
+    #[error("Filesystem error on path '{path:?}': {details}")]
+    FilesystemError { path: std::path::PathBuf, details: String },
+
+    #[allow(dead_code)]
+    #[error("Command execution failed: {reason}")]
+    CommandFailed { reason: String },
+
+    #[error(transparent)]
+    AppError(#[from] AppError),
+}
+
+impl ToolExecutionError {
+    /// Determines if the error is recoverable and provides a strategy.
+    pub fn recovery_strategy(&self) -> RecoveryAction {
+        match self {
+            Self::Transient { retry_after, .. } => RecoveryAction::RetryWithBackoff {
+                seconds: retry_after.unwrap_or(1),
+            },
+            Self::Validation(_) | Self::ToolNotFound { .. } | Self::InvalidParameters { .. } => {
+                RecoveryAction::RefineInput
+            }
+            Self::SecurityBlocked(_) | Self::HierarchyBlocked(_) => RecoveryAction::Escalate,
+            Self::FilesystemError { .. } | Self::CommandFailed { .. } => RecoveryAction::Abort,
+            Self::AppError(e) => match e {
+                AppError::RateLimit(_) => RecoveryAction::RetryWithBackoff { seconds: 5 },
+                AppError::Io(io_e) if io_e.kind() == std::io::ErrorKind::TimedOut => {
+                    RecoveryAction::RetryWithBackoff { seconds: 2 }
+                }
+                _ => RecoveryAction::Abort,
+            },
+            _ => RecoveryAction::Abort,
+        }
+    }
+
+    pub fn is_transient(&self) -> bool {
+        matches!(
+            self.recovery_strategy(),
+            RecoveryAction::RetryWithBackoff { .. }
+        )
+    }
+}
+
+// Metadata: [error]
+
+// Metadata: [error]

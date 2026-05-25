@@ -1,0 +1,17 @@
+{
+  "name": "delete_file",
+  "description": "Deletes a file or directory in the workspace. REQUIRES OVERSIGHT.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "filename": {
+        "type": "string",
+        "description": "Path to delete."
+      }
+    },
+    "required": [
+      "filename"
+    ]
+  },
+  "execution_command": "(Native Execution Mode)"
+}

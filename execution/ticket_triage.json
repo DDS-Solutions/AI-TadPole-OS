@@ -1,0 +1,17 @@
+{
+  "name": "ticket_triage",
+  "description": "Auto-migrated skill: Ticket Triage",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Ticket Triage"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Ticket Triage\""
+}

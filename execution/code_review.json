@@ -1,0 +1,17 @@
+{
+  "name": "code_review",
+  "description": "Auto-migrated skill: Code Review",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Code Review"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Code Review\""
+}

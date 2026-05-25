@@ -1,0 +1,17 @@
+{
+  "name": "check_server_health",
+  "description": "Auto-migrated skill: Check Server Health",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Check Server Health"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Check Server Health\""
+}

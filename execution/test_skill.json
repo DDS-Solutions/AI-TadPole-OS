@@ -1,0 +1,13 @@
+{
+    "name": "test_skill",
+    "description": "A diagnostic skill for verifying the capability registry.",
+    "execution_command": "echo 'Test skill executed successfully.'",
+    "schema": {
+        "type": "object",
+        "properties": {
+            "input": {
+                "type": "string"
+            }
+        }
+    }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "post_update",
+  "description": "Auto-migrated skill: Post Update",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Post Update"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Post Update\""
+}

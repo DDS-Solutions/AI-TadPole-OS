@@ -1,0 +1,54 @@
+> [!IMPORTANT]
+> **AI Assist Note (Knowledge Heritage)**:
+> This document is part of the "Sovereign Reality" documentation.
+> - **@docs ARCHITECTURE:Core**
+> - **Failure Path**: Information drift, legacy terminology, or documentation mismatch.
+> - **Telemetry Link**: Search `[feature_roadmap]` in audit logs.
+>
+> ### AI Assist Note
+> 🗺️ Directive: Feature Roadmap (SOP-PRO-01)
+>
+> ### 🔍 Debugging & Observability
+> Traceability via `parity_guard.py`.
+
+# 🗺️ Directive: Feature Roadmap (SOP-PRO-01)
+
+## 🎯 Primary Objective
+Govern the long-term technological evolution of the Tadpole OS cluster. This directive ensures that the roadmap is a living document, balanced between "Sovereign Innovation" and "Operational Stability."
+
+---
+
+## 🏗️ Roadmap Pillars
+
+### 1. Zero-Friction Orchestration
+- **Focus**: Improving swarm recruitment velocity and multi-agent synergy.
+- **Goal**: Reduce "Inter-Agent Latency" by 50% through shared memory optimizations.
+
+### 2. High-Fidelity Observability
+- **Focus**: Real-time telemetry and "God View" visualization.
+- **Goal**: Implement 100% trace coverage for recursive sub-node missions.
+
+### 3. Local-First Sovereignty
+- **Focus**: Expanding local model support (Ollama/ONNX/LM Studio/vLLM) to reduce cloud dependency.
+- **Goal**: Achieving 100% functional parity between cloud and local providers for core utility skills.
+- **Active Spec**: `IMR-01` — Intelligent Model Registry & Capability Sync. Includes full local model capability matrix covering Llama 3, Phi-3/4, Mistral, Qwen, Gemma, DeepSeek, and embedding models. [→ Spec](features/intelligent-model-registry.md)
+
+---
+
+## 🛠️ Prioritization Methodology
+- **Sources**: `user_feedback_analysis.md`, `market_trend_analysis.md`, and `RETROSPECTIVE_[ID].md`.
+- **Logic**: Items are scored based on **Impact vs. Complexity**. P0 items (Security/Stability) always jump the queue.
+
+## 📁 Feature Specification Pattern
+Each roadmap item requiring significant architecture gets a dedicated Feature Spec in `directives/features/`. 
+Specs must include: Problem Statement, Architecture, Files Affected, Implementation Plan (sprints), and Acceptance Criteria.
+The `ROADMAP.md` Feature Specs table is the authoritative index of all active specs.
+
+---
+
+## 📊 Roadmap Management
+Update `docs/CODEBASE_MAP.md` to reflect upcoming architectural changes. All major roadmap items require a dedicated `system_architecture_review.md` before development begins.
+
+## 🚦 Approval
+Strategic roadmap pivots must be presented in the monthly `ops_review.md` and authorized by a human overseer.
+[//]: # (Metadata: [feature_roadmap])

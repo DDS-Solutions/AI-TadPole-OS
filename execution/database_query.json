@@ -1,0 +1,17 @@
+{
+  "name": "database_query",
+  "description": "Auto-migrated skill: Database Query",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Database Query"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Database Query\""
+}

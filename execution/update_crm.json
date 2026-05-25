@@ -1,0 +1,17 @@
+{
+  "name": "update_crm",
+  "description": "Auto-migrated skill: Update CRM",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Update CRM"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Update CRM\""
+}

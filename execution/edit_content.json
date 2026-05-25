@@ -1,0 +1,17 @@
+{
+  "name": "edit_content",
+  "description": "Auto-migrated skill: Edit Content",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Edit Content"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Edit Content\""
+}

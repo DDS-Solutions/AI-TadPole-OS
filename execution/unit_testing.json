@@ -1,0 +1,17 @@
+{
+  "name": "unit_testing",
+  "description": "Auto-migrated skill: Unit Testing",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Unit Testing"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Unit Testing\""
+}

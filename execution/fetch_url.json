@@ -1,0 +1,17 @@
+{
+  "name": "fetch_url",
+  "description": "Retrieves text content from a public URL. Use for external research and data collection.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "url": {
+        "type": "string",
+        "description": "The absolute URL to fetch."
+      }
+    },
+    "required": [
+      "url"
+    ]
+  },
+  "execution_command": "(Native Execution Mode)"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "seo_analysis",
+  "description": "Auto-migrated skill: SEO Analysis",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for SEO Analysis"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of SEO Analysis\""
+}

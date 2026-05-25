@@ -1,0 +1,17 @@
+{
+  "name": "ui_audit",
+  "description": "Auto-migrated skill: UI Audit",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for UI Audit"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of UI Audit\""
+}

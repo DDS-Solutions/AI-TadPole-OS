@@ -1,0 +1,17 @@
+{
+  "name": "keyword_research",
+  "description": "Auto-migrated skill: Keyword Research",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Keyword Research"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Keyword Research\""
+}

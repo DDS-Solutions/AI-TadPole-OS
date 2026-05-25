@@ -1,0 +1,17 @@
+{
+  "name": "expense_tracking",
+  "description": "Auto-migrated skill: Expense Tracking",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Expense Tracking"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Expense Tracking\""
+}

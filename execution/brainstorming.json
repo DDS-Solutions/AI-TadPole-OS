@@ -1,0 +1,20 @@
+{
+    "name": "brainstorming",
+    "description": "Generates creative ideas and divergent solutions for a given topic.",
+    "execution_command": "echo 'Initiating brainstorming session...'",
+    "schema": {
+        "type": "object",
+        "properties": {
+            "topic": {
+                "type": "string"
+            },
+            "count": {
+                "type": "integer",
+                "default": 5
+            }
+        },
+        "required": [
+            "topic"
+        ]
+    }
+}

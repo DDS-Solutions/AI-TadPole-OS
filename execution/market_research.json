@@ -1,0 +1,17 @@
+{
+  "name": "market_research",
+  "description": "Auto-migrated skill: Market Research",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "input": {
+        "type": "string",
+        "description": "Input for Market Research"
+      }
+    },
+    "required": [
+      "input"
+    ]
+  },
+  "execution_command": "echo \"Simulated execution of Market Research\""
+}

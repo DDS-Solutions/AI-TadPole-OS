@@ -1,0 +1,17 @@
+{
+  "name": "issue_alpha_directive",
+  "description": "Supreme Authority Tool: Issues a mandatory strategic directive to Tadpole Alpha (ID: 2).",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "directive": {
+        "type": "string",
+        "description": "The high-level mission objective for Tadpole Alpha."
+      }
+    },
+    "required": [
+      "directive"
+    ]
+  },
+  "execution_command": "(Native Execution Mode)"
+}

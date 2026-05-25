@@ -1,0 +1,10 @@
+{
+  "[Ops_Dashboard]": {
+    "description": "Ops Dashboard telemetry events",
+    "category": "dashboard"
+  },
+  "Ops_Dashboard": {
+    "description": "Ops Dashboard telemetry events (no brackets)",
+    "category": "dashboard"
+  }
+}
