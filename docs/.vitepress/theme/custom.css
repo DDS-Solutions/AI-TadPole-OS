@@ -1,0 +1,142 @@
+/*
+ * @docs ARCHITECTURE:Documentation
+ * ### AI Assist Note
+ * Standardized resource for the Tadpole OS engine.
+ * ### 🔍 Debugging & Observability
+ * Validated via Sovereign Audit.
+ */
+
+/**
+ * Tadpole-OS Documentation Theme
+ * Matches the premium, local-first aesthetic of the main application.
+ */
+
+:root {
+  /* Brand Colors */
+  --vp-c-brand-1: #10b981; /* Emerald-500 */
+  --vp-c-brand-2: #059669; /* Emerald-600 */
+  --vp-c-brand-3: #047857; /* Emerald-700 */
+  --vp-c-brand-soft: rgba(16, 185, 129, 0.1);
+
+  /* Font parity */
+  --vp-font-family-base: "Inter", system-ui, sans-serif;
+  --vp-font-family-mono: "JetBrains Mono", monospace;
+}
+
+/* Dark Theme Overrides (Zinc Palette) */
+/* VitePress is dark by default or uses .dark class */
+.dark, :root {
+  --vp-c-bg: #09090b;       /* Zinc-950 */
+  --vp-c-bg-alt: #18181b;   /* Zinc-900 */
+  --vp-c-bg-elv: #18181b;   /* Zinc-900 */
+  --vp-c-bg-soft: #18181b;  /* Zinc-900 */
+  
+  --vp-c-border: #27272a;   /* Zinc-800 */
+  --vp-c-divider: #27272a;  /* Zinc-800 */
+  
+  --vp-c-text-1: #fafafa;   /* Zinc-50 */
+  --vp-c-text-2: #a1a1aa;   /* Zinc-400 */
+  --vp-c-text-3: #71717a;   /* Zinc-500 */
+
+  /* Sidebar/Nav Glassmorphism */
+  --vp-nav-bg-color: rgba(9, 9, 11, 0.8);
+  --vp-sidebar-bg-color: rgba(9, 9, 11, 0.7);
+}
+
+/* --- Layout Enhancements --- */
+
+.VPNav, .VPSidebar {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* --- Custom Scrollbar --- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #27272a; /* Zinc-800 */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46; /* Zinc-700 */
+}
+
+/* --- Neural Grid (Global Immersion) --- */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.02;
+  background-image: radial-gradient(circle, #fff 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+}
+
+/* --- Hero Section Polishing --- */
+.VPHero .name {
+  background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 15px rgba(16, 185, 129, 0.3));
+}
+
+/* Breathing Hero Glow Animation */
+@keyframes hero-glow {
+  0% { filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.2)); }
+  50% { filter: drop-shadow(0 0 40px rgba(16, 185, 129, 0.4)); }
+  100% { filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.2)); }
+}
+
+.VPHero .image-src {
+  animation: hero-glow 4s infinite ease-in-out;
+  border-radius: 2rem;
+}
+
+/* --- Code Block Polishing --- */
+.vp-doc div[class*="language-"] {
+  border: 1px solid var(--vp-c-border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* --- Component Overrides --- */
+.VPButton.brand {
+  border-radius: 99px;
+  font-weight: 600;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.VPButton.brand:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+}
+
+.VPFeature {
+  background-color: var(--vp-c-bg-alt) !important;
+  border: 1px solid var(--vp-c-border) !important;
+  border-radius: 16px !important;
+  transition: all 0.3s ease !important;
+}
+
+.VPFeature:hover {
+  border-color: var(--vp-c-brand-1) !important;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+// Metadata: [custom]
+
+// Metadata: [custom]

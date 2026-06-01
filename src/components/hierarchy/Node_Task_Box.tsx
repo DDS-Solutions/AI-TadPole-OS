@@ -1,0 +1,97 @@
+/**
+ * @docs ARCHITECTURE:Interface
+ * 
+ * ### AI Assist Note
+ * **UI Component**: Dynamic agent task stream with status-based animations. 
+ * Uses `AnimatePresence` for smooth transition between "Idle", "Suspended", and "Active Task" states.
+ * 
+ * ### 🔍 Debugging & Observability
+ * - **Failure Path**: Task text overflow causing layout shift, `AnimatePresence` stutter during high-frequency task updates, or "Idle" flicker during transient network drops.
+ * - **Telemetry Link**: Search for `[Node_Task_Box]` or `Task Pulse` in browser logs.
+ */
+
+import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { i18n } from '../../i18n';
+import type { Agent } from '../../types';
+
+interface Node_Task_Box_Props {
+    agent: Agent;
+}
+
+export const Node_Task_Box = React.memo(({ agent }: Node_Task_Box_Props) => {
+    const is_active = agent.active_mission || 
+                     ['active', 'thinking', 'speaking', 'coding'].includes(agent.status);
+
+    return (
+        <motion.div
+            initial={false}
+            className={`
+                text-[11px] min-h-[42px] max-h-[80px] overflow-y-auto leading-tight p-2.5 rounded-md border z-10 transition-colors duration-300 custom-scrollbar relative
+                ${is_active ? 'border-[color:var(--color-info-border)] bg-[color:var(--color-info-bg)] shadow-[0_0_15px_var(--color-info-bg)]' : 'sovereign-border'}
+            `}
+        >
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={agent.current_task || agent.status || 'idle'}
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -5 }}
+                    transition={{ duration: 0.2 }}
+                    className="break-words"
+                >
+                    {agent.current_task ? (
+                        <div className="flex flex-col gap-1">
+                            <span className="text-zinc-300">{agent.current_task}</span>
+                            {agent.current_reasoning_turn !== undefined && agent.reasoning_depth && agent.current_reasoning_turn > 0 ? (
+                                <div className="space-y-1">
+                                    <div className="flex justify-between text-[8px] font-bold text-zinc-500 uppercase tracking-tighter">
+                                        <span>{i18n.t('node_task.label_neural_recurrence')}</span>
+                                        <span>{i18n.t('node_task.label_turn', { current: agent.current_reasoning_turn, total: agent.reasoning_depth })}</span>
+                                    </div>
+                                    <div className="h-1 w-full bg-[color:var(--color-surface)] rounded-full overflow-hidden border border-[color:var(--color-border)]">
+                                        <motion.div
+                                            initial={{ width: 0 }}
+                                            animate={{ width: `${(agent.current_reasoning_turn / agent.reasoning_depth) * 100}%` }}
+                                            className="h-full bg-[color:var(--color-success)] shadow-[0_0_8px_var(--color-success-bg)]"
+                                        />
+                                    </div>
+                                </div>
+                            ) : (
+                                <motion.div
+                                    animate={{ opacity: [0.3, 0.6, 0.3] }}
+                                    transition={{ repeat: Infinity, duration: 2 }}
+                                    className="h-0.5 w-full bg-[color:var(--color-success-bg)] rounded-full"
+                                />
+                            )}
+                        </div>
+                    ) : agent.status === 'suspended' ? (
+                        <div className="flex items-center justify-center gap-2 italic font-mono text-[9px] text-[color:var(--color-danger)] h-full min-h-[42px]">
+                            <div className="w-1.5 h-1.5 rounded-full bg-[color:var(--color-danger)] shadow-[0_0_8px_var(--color-danger-bg)]" />
+                            {i18n.t('agent_card.label_suspended_task')}
+                        </div>
+                    ) : ['active', 'thinking', 'speaking', 'coding'].includes(agent.status) ? (
+                        <div className="flex items-center justify-center gap-2 italic font-mono text-[9px] text-[color:var(--color-success)] h-full min-h-[42px]">
+                            <div className="w-1.5 h-1.5 rounded-full bg-[color:var(--color-success)] animate-pulse shadow-[0_0_8px_var(--color-success-bg)]" />
+                            {i18n.t(`status.${agent.status}`).toUpperCase()}...
+                        </div>
+                    ) : (
+                        <div className="flex items-center justify-center gap-2 italic font-mono text-[9px] text-zinc-200 h-full min-h-[42px]">
+                            <div className="w-1.5 h-1.5 rounded-full bg-zinc-500 animate-pulse" />
+                            {i18n.t('agent_card.label_idle_task')}
+                        </div>
+                    )}
+                </motion.div>
+            </AnimatePresence>
+        </motion.div>
+    );
+}, (prev, next) => (
+    prev.agent.status === next.agent.status && 
+    prev.agent.active_mission?.objective === next.agent.active_mission?.objective &&
+    prev.agent.current_task === next.agent.current_task &&
+    prev.agent.current_reasoning_turn === next.agent.current_reasoning_turn &&
+    prev.agent.reasoning_depth === next.agent.reasoning_depth
+));
+
+
+// Metadata: [Node_Task_Box]

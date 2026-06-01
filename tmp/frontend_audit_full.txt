@@ -1,0 +1,47 @@
+
+--- Frontend AI Awakening Audit Report ---
+Total Files Checked: 200
+Compliant: 29
+Non-Compliant: 171
+
+Non-Compliant Files (First 20):
+- D:\TadpoleOS-Dev\src\components\agent-config\Agent_Config_Header.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\agent-config\Cognition_Section.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\agent-config\Direct_Message_Console.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\agent-config\Governance_Section.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\agent-config\index.ts
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\agent-config\Memory_Section.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\agent-config\Model_Slot_Config.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\agent-config\use_agent_config.ts
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\agent-config\Voice_Section.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\Agent_Config_Panel.test.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\Asset_Nav.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\Command_Palette.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\Command_Table.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\dashboard\Agent_Status_Grid.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\dashboard\Burn_Rate_Chart.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\dashboard\Dashboard_Header.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\dashboard\Dashboard_Header_Actions.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\dashboard\Operation_Tab_Header.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\dashboard\Stat_Metrics.tsx
+  Missing: ### 🔍 Debugging & Observability
+- D:\TadpoleOS-Dev\src\components\dashboard\System_Log.tsx
+  Missing: ### 🔍 Debugging & Observability
