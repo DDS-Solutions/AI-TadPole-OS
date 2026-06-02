@@ -39,7 +39,7 @@ reqwest = { version = "0.12", features = ["json", "rustls-tls", "multipart"], de
 # Process / System
 rand = "0.10.1"
 chacha20 = "0.10.0"
-uuid = { version = "1.8", features = ["v4", "fast-rng", "macro-diagnostics"] }
+uuid = { version = "1.23", features = ["v4", "fast-rng", "macro-diagnostics"] }
 chrono = { version = "0.4", features = ["serde"] }
 ed25519-dalek = { version = "2.1", features = ["rand_core"] }
 dashmap = "6.2.1"
