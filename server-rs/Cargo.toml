@@ -44,7 +44,7 @@ chrono = { version = "0.4", features = ["serde"] }
 ed25519-dalek = { version = "2.1", features = ["rand_core"] }
 dashmap = "6.2.1"
 parking_lot = "0.12"
-sysinfo = "=0.39.1"
+sysinfo = "=0.39.3"
 # Database Persistence
 sqlx = { version = "0.8", default-features = false, features = [ "runtime-tokio", "tls-rustls", "sqlite", "chrono", "json", "migrate", "derive", "macros" ] }
 cron = "0.16.0"
