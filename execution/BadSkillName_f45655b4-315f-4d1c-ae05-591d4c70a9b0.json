@@ -1,0 +1,17 @@
+{
+  "id": null,
+  "name": "Bad Skill! *Name_f45655b4-315f-4d1c-ae05-591d4c70a9b0",
+  "description": "Test skill",
+  "execution_command": "echo test",
+  "schema": {
+    "properties": {},
+    "type": "object"
+  },
+  "oversight_required": true,
+  "doc_url": null,
+  "tags": null,
+  "full_instructions": null,
+  "negative_constraints": null,
+  "verification_script": null,
+  "category": "user"
+}
