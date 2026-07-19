@@ -1,0 +1,52 @@
+name: Sync Wiki to GitHub Wiki
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/wiki/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sync-wiki:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Clone Target Wiki Repository
+        env:
+          PUBLIC_REPO_TOKEN: ${{ secrets.PUBLIC_REPO_TOKEN }}
+        run: |
+          git clone https://x-access-token:${PUBLIC_REPO_TOKEN}@github.com/DDS-Solutions/AI-TadPole-OS.wiki.git wiki-repo
+
+      - name: Flatten and Copy Wiki Pages
+        run: |
+          # Clean existing markdown files in target wiki
+          find wiki-repo/ -name "*.md" -type f -delete
+          
+          # Copy files flatly
+          cp -f docs/wiki/*.md wiki-repo/ || true
+          cp -f docs/wiki/Operations/*.md wiki-repo/ || true
+          cp -f docs/wiki/Administration/*.md wiki-repo/ || true
+          cp -f docs/wiki/Security-Observability/*.md wiki-repo/ || true
+          
+          # Remove index files (which are directory indices in our tree and not needed in flat wiki)
+          rm -f wiki-repo/Index.md
+
+      - name: Push to Wiki Repository
+        run: |
+          cd wiki-repo
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git add -A
+          # Check if there are changes before committing
+          if git diff-index --quiet HEAD --; then
+            echo "No changes to sync."
+          else
+            git commit -m "docs: auto-sync wiki from main repository"
+            git push origin master
+          fi
