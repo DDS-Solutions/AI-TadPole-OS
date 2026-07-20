@@ -92,7 +92,7 @@ whisper-rs = { version = "0.16.0", optional = true }
 mdns-sd = "0.20.1"
 local-ip-address = "0.6.11"
 serde_yaml = "0.9.34"
-syn = { version = "2.0.118", features = ["full", "visit", "visit-mut"] }
+syn = { version = "3.0.2", features = ["full", "visit", "visit-mut"] }
 quote = "1.0.46"
 petgraph = "0.8.3"
 fs-err = "3.3.1"
