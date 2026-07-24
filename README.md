@@ -28,6 +28,7 @@
   [![Integrity](https://img.shields.io/badge/OBLITERATUS-Hardened-emerald?style=for-the-badge&logo=rust)](docs/Security_Model.md)
   [![Compliance](https://img.shields.io/badge/Audit-100%25%20Pass-emerald?style=for-the-badge)](docs/Security_Model.md#1-security-policy-the-rules)
   [![License](https://img.shields.io/badge/License-MIT-zinc?style=for-the-badge&logo=rust&logoColor=white)](LICENSE)
+  [![OKF BundleDex](https://bundledex.net/static-badge.svg)](https://bundledex.net)
 
   [🚀 Start a Mission](docs/TEST_MISSIONS.md) • [🏗️ Architecture Hub](docs/ARCHITECTURE.md) • [🛡️ Security Model](docs/Security_Model.md) • [🌐 Product Website](https://dds-solutions.github.io/AI-Tadpole-OS-Marketing/) • [💬 Join Discussions](https://github.com/DDS-Solutions/AI-Tadpole-OS/discussions)
 
