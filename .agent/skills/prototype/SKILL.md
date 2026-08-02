@@ -1,0 +1,40 @@
+---
+name: prototype
+description: Builds minimal, low-fidelity executable spikes or stub components to resolve "how should it look/behave" questions before production coding.
+when_to_use: "Use when evaluating UI layout ideas, testing interaction behavior, or proving a concept before full implementation."
+allowed-tools: Read, Glob, Grep, Write, Edit, Bash
+disable-model-invocation: true
+---
+
+> [!IMPORTANT]
+> **AI Assist Note (Knowledge Heritage)**:
+> This document is part of the "Sovereign Reality" documentation.
+> - **@docs ARCHITECTURE:Registry:Skills**
+> - **Failure Path**: Information drift, legacy terminology, or documentation mismatch.
+> - **Telemetry Link**: Search `[SKILL]` in audit logs.
+>
+> ### AI Assist Note
+> Core technical resource for building rapid executable spikes and UX prototypes.
+>
+> ### 🔍 Debugging & Observability
+> Traceability via `execution/parity_guard.py`.
+
+# Executable Spiking & UX Prototyping
+
+> Source: mattpocock/skills (prototype)
+
+Raise discussion fidelity by constructing cheap, minimal, concrete prototypes to react to—UI stubs, mock data flows, or standalone logic spikes.
+
+---
+
+## Operating Protocol
+
+1. **Identify the Core Uncertainty**:
+   Is the question "how should it look" (UI layout) or "how should it behave" (state transition)?
+2. **Build Minimal Executable Spike**:
+   - Save UI stubs or mock spikes under `.tmp/prototypes/<name>/`.
+   - Avoid production dependencies, complex database persistence, or heavy styling.
+3. **Verify with User**:
+   Demonstrate the prototype (via preview command or screenshot/recording) to lock in design choices.
+4. **Transition to Production**:
+   Once approved, feed lessons learned into `/plan` and `/to-tickets` for production implementation.

@@ -1,0 +1,175 @@
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+name: CI
+
+jobs:
+  build:
+    name: ${{matrix.conf.name}} (rust ${{matrix.rust}})
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/gtk-rs/gtk-rs-core/core:latest
+    strategy:
+      matrix:
+        rust:
+          - stable
+          - beta
+          - nightly
+          - "1.70.0"
+        conf:
+          - { name: "cairo", features: "png,pdf,svg,ps,use_glib,v1_18,freetype,script,xcb,xlib,win32-surface", nightly: "--features 'png,pdf,svg,ps,use_glib,v1_18,freetype,script,xcb,xlib,win32-surface'", test_sys: true }
+          - { name: "gdk-pixbuf", features: "v2_42", nightly: "--all-features", test_sys: true }
+          - { name: "gio", features: "v2_78", nightly: "--all-features", test_sys: true }
+          - { name: "glib", features: "v2_78", nightly: "--all-features", test_sys: true }
+          - { name: "graphene", features: "v1_12", nightly: "", test_sys: true }
+          - { name: "pango", features: "v1_50", nightly: "--all-features", test_sys: true }
+          - { name: "pangocairo", features: "", nightly: "--all-features", test_sys: true }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+          override: true
+      - uses: actions/checkout@v4
+        with:
+          repository: gtk-rs/checker
+          ref: master
+          path: checker
+        if: matrix.rust == 'nightly'
+      # nightly
+      # files checks
+      - run: cargo build --release
+        working-directory: checker
+        if: matrix.rust == 'nightly'
+      - run: cargo run --release -- --no-manual-traits ../${{matrix.conf.name}}
+        working-directory: checker
+        if: matrix.rust == 'nightly' && matrix.conf.name == 'cairo'
+      - run: cargo run --release -- ../${{matrix.conf.name}}
+        working-directory: checker
+        if: matrix.rust == 'nightly' && matrix.conf.name != 'cairo'
+      - run: cargo run --release -- --no-license ../${{matrix.conf.name}}/sys
+        working-directory: checker
+        if: matrix.rust == 'nightly' && matrix.conf.name != 'cairo'
+      - run: cargo run --release -- --no-manual-traits ../glib-macros
+        working-directory: checker
+        if: matrix.rust == 'nightly' && matrix.conf.name == 'glib'
+      - name: Check doc aliases
+        run: |
+          python3 doc_aliases.py ../${{matrix.conf.name}}
+          cd .. && git config --global --add safe.directory `pwd` && git diff --exit-code
+        working-directory: checker
+        if: matrix.rust == 'nightly'
+      # tests run
+      - name: build nightly
+        run: cargo build --manifest-path ${{ matrix.conf.name }}/Cargo.toml ${{ matrix.conf.nightly }}
+        if: matrix.rust == 'nightly'
+      # not nightly
+      # clippy
+      - run: rustup component add clippy
+        if: matrix.rust == 'stable'
+      - working-directory: ${{ matrix.conf.name }}
+        name: clippy ${{ matrix.conf.name }}
+        run: cargo clippy --all-targets -- -D warnings
+        if: matrix.rust == 'stable'
+      # tests
+      - name: build
+        run: cargo build --manifest-path ${{ matrix.conf.name }}/Cargo.toml --features "${{ matrix.conf.features }}"
+        if: matrix.rust != 'nightly'
+      - name: tests
+        run: cargo test --manifest-path ${{ matrix.conf.name }}/Cargo.toml --features "${{ matrix.conf.features }}"
+        if: matrix.rust != 'nightly'
+      - name: Test ${{ matrix.conf.name }}/sys
+        run: cargo test
+        working-directory: ${{ matrix.conf.name }}/sys
+        if: matrix.conf.test_sys
+      # GLib compile tests only on stable
+      - name: Compile tests
+        run: cargo test --manifest-path glib/Cargo.toml --features "compiletests,v2_78"
+        if: matrix.rust == 'stable'
+
+  build-others:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/gtk-rs/gtk-rs-core/core:latest
+    strategy:
+      matrix:
+        rust:
+          - stable
+          - beta
+          - nightly
+          - "1.70.0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: ${{ matrix.rust }}
+          override: true
+      # glib-macros
+      - name: "glib-macros: build"
+        run: cargo build --manifest-path glib-macros/Cargo.toml
+      - name: "glib-macros: test"
+        run: cargo test --manifest-path glib-macros/Cargo.toml
+      # glib-macros in 2 levels dependent
+      - name: Check two levels glib dependent
+        run: cargo check
+        working-directory: tests/two-levels-glib-dependent
+      - name: "glib-build-tools: build"
+        run: cargo build --manifest-path glib-build-tools/Cargo.toml
+      # examples
+      - name: "examples"
+        run: cargo build --manifest-path examples/Cargo.toml --bins --examples --all-features
+
+  fmt:
+    name: rust fmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+          components: rustfmt
+      - uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
+
+  generator:
+    name: regen check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          set-safe-directory: true
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - run: git submodule update --checkout
+      - run: python3 generator.py
+      - run: git diff --exit-code
+
+  docs:
+    name: docs embed check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          set-safe-directory: true
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - run: git submodule update --checkout
+      - run: cargo install rustdoc-stripper
+      - run: python3 generator.py --embed-docs
+      - run: python3 generator.py --strip-docs
+      - run: git diff --exit-code
