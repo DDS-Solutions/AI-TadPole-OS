@@ -69,7 +69,7 @@
     "react-dom": "^19.2.8",
     "react-force-graph-2d": "^1.29.1",
     "react-markdown": "^10.1.0",
-    "react-router-dom": "^7.18.0",
+    "react-router-dom": "^7.18.2",
     "reactflow": "^11.11.4",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^4.3.3",
