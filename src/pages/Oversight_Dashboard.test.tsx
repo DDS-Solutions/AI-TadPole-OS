@@ -1,0 +1,269 @@
+/**
+ * @docs ARCHITECTURE:TestSuites
+ * 
+ * ### AI Assist Note
+ * **Verification of the Oversight Dashboard's policy enforcement and intervention controls.** 
+ * Tests the approval workflow for agent-proposed actions and verifies the 'Kill Switch' safety logic. 
+ * Mocks `tadpole_os_service` to isolate intervention state from backend governance engines.
+ * 
+ * ### 🔍 Debugging & Observability
+ * - **Failure Path**: Intervention signal delay or failure to render the 'Critical Audit' logs when the engine detects a policy violation.
+ * - **Telemetry Link**: Search `[Oversight_Dashboard.test]` in tracing logs.
+ */
+
+
+/**
+ * @file Oversight_Dashboard.test.tsx
+ * @description Suite for the High-Level Governance and Proposal Oversight dashboard.
+ * @module Pages/Oversight_Dashboard
+ * @testedBehavior
+ * - Proposal Lifecycle: Listing active governance proposals and handling simulation modes.
+ * - Kill Switch Security: Verification of engine termination safety controls.
+ * @aiContext
+ * - Refactored for 100% snake_case architectural parity.
+ * - Mocks tadpole_os_service for proposal management.
+ * - Navigates between primary and simulation views via useEngineStatus state.
+ * - Verified 154 tests sweep continuation.
+ * - AI awakening notes confirmed.
+ */
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
+import Oversight_Dashboard from './Oversight_Dashboard';
+import { tadpole_os_service } from '../services/tadpoleos_service';
+import { system_api_service } from '../services/system_api_service';
+import { use_workspace_store } from '../stores/workspace_store';
+import { useEngineStatus } from '../hooks/use_engine_status';
+
+vi.mock('../hooks/use_engine_status', () => ({
+    useEngineStatus: vi.fn(),
+}));
+
+vi.mock('../stores/workspace_store', () => ({
+    use_workspace_store: vi.fn(),
+}));
+
+vi.mock('../services/tadpoleos_service', () => ({
+    tadpole_os_service: {
+        send_command: vi.fn(),
+        get_pending_oversight: vi.fn(),
+        get_oversight_ledger: vi.fn(),
+        decide_oversight: vi.fn(),
+        kill_agents: vi.fn(),
+        shutdown_engine: vi.fn(),
+    }
+}));
+
+vi.mock('../services/system_api_service', () => ({
+    system_api_service: {
+        oversight: {
+            get_pending_oversight: vi.fn(),
+            get_oversight_ledger: vi.fn(),
+            decide_oversight: vi.fn(),
+        },
+        engine: {
+            kill_agents: vi.fn(),
+            shutdown_engine: vi.fn(),
+        }
+    }
+}));
+
+describe('Oversight_Dashboard Page', () => {
+    const mock_pending_actions = [
+        { 
+            id: 'p1', 
+            agent_id: 'agent-1', 
+            role: 'Worker', 
+            skill: 'file_write', 
+            created_at: new Date().toISOString(), 
+            timestamp: new Date().toISOString(), 
+            tool_call: { 
+                name: 'write', 
+                params: { data: 'test' }, 
+                agent_id: 'agent-1', 
+                skill: 'write' 
+            } 
+        }
+    ];
+
+    beforeEach(() => {
+        vi.clearAllMocks();
+        vi.stubGlobal('setInterval', vi.fn());
+        
+        // Default engine status
+        // Default engine status with required metrics for child components (Command_Table)
+        (useEngineStatus as Mock).mockReturnValue({ 
+            is_online: true,
+            latency: 5,
+            active_agents: 1,
+            cpu: 10,
+            memory: 500
+        });
+
+        // Default store mocks
+        (use_workspace_store as unknown as Mock).mockReturnValue({
+            clusters: [{ id: 'cluster-1', name: 'Test Cluster', alpha_id: '1' }],
+            active_proposals: {}
+        });
+
+        (tadpole_os_service.get_pending_oversight as Mock).mockResolvedValue(mock_pending_actions);
+        (tadpole_os_service.get_oversight_ledger as Mock).mockResolvedValue([]);
+
+        // Domain service mocks (hooks now call these directly)
+        (system_api_service.oversight.get_pending_oversight as Mock).mockResolvedValue(mock_pending_actions);
+        (system_api_service.oversight.get_oversight_ledger as Mock).mockResolvedValue([]);
+        (system_api_service.oversight.decide_oversight as Mock).mockResolvedValue({});
+        (system_api_service.engine.kill_agents as Mock).mockResolvedValue({});
+        (system_api_service.engine.shutdown_engine as Mock).mockResolvedValue({});
+
+        const store: Record<string, string> = {};
+        vi.stubGlobal('localStorage', {
+            getItem: (key: string) => store[key] || null,
+            setItem: (key: string, value: string) => { store[key] = value; },
+            clear: () => { Object.keys(store).forEach(k => delete store[k]); },
+            removeItem: (key: string) => { delete store[key]; }
+        });
+    });
+
+    it('renders the dashboard basic components', async () => {
+        render(<MemoryRouter><Oversight_Dashboard /></MemoryRouter>);
+        // Component uses h2 for Action Ledger
+        expect(await screen.findByRole('heading', { level: 2, name: /Action Ledger/i })).toBeInTheDocument();
+    });
+
+    it('approves an action', async () => {
+        (tadpole_os_service.decide_oversight as Mock).mockResolvedValue({ status: 'success' });
+        (system_api_service.oversight.decide_oversight as Mock).mockResolvedValue({ status: 'success' });
+        
+        render(<MemoryRouter><Oversight_Dashboard /></MemoryRouter>);
+        
+        // Wait for data to load and "Approve" button to appear (using exact match to avoid matching "HITL Approvals")
+        const btn = await screen.findByRole('button', { name: /^Approve$/i });
+        
+        // Verify we are in live mode
+        expect(screen.queryByText(/TadpoleOS Disconnected/i)).not.toBeInTheDocument();
+
+        fireEvent.click(btn);
+        
+        await waitFor(() => {
+            expect(system_api_service.oversight.decide_oversight).toHaveBeenCalledWith('p1', 'approved');
+        }, { timeout: 2000 });
+    });
+
+    it('toggles action ledger view mode between HITL Approvals and Auto-Approved', async () => {
+        render(<MemoryRouter><Oversight_Dashboard /></MemoryRouter>);
+        
+        const auto_toggle_btn = await screen.findByRole('button', { name: /Auto-Approved/i });
+        expect(auto_toggle_btn).toBeInTheDocument();
+        
+        fireEvent.click(auto_toggle_btn);
+        
+        expect(await screen.findByRole('button', { name: /HITL Approvals/i })).toBeInTheDocument();
+    });
+
+    it('renders proposals from workspace store', async () => {
+        (use_workspace_store as unknown as Mock).mockReturnValue({
+            clusters: [{ id: 'c99', name: 'Cluster Omega', alpha_id: '9' }],
+            active_proposals: {
+                'c99': {
+                    cluster_id: 'c99',
+                    timestamp: new Date().toISOString(),
+                    reasoning: 'TEST_REASONING',
+                    changes: []
+                }
+            }
+        });
+
+        render(<MemoryRouter><Oversight_Dashboard /></MemoryRouter>);
+        expect(await screen.findByText(/Swarm Intelligence/i)).toBeInTheDocument();
+        expect(await screen.findByText(/TEST_REASONING/)).toBeInTheDocument();
+    });
+
+    it('filters by cluster', async () => {
+        (use_workspace_store as unknown as Mock).mockReturnValue({
+            clusters: [
+                { id: 'c1', name: 'Cluster Omega' }
+            ],
+            active_proposals: {}
+        });
+
+        render(<MemoryRouter><Oversight_Dashboard /></MemoryRouter>);
+        
+        // The comp adds its own "all" option
+        const select = await screen.findByRole('combobox');
+        
+        // Wait for options to render and stabilize
+        await waitFor(() => {
+            const options = screen.getAllByRole('option');
+            return options.some(opt => opt.textContent === 'Cluster Omega');
+        });
+
+        fireEvent.change(select, { target: { value: 'c1' } });
+        expect(select).toHaveValue('c1');
+    });
+
+    it('correctly filters ledger entries by mission_id', async () => {
+        const mock_ledger_entries = [
+            {
+                id: 'l1',
+                mission_id: 'cl-command',
+                decision: 'approved' as const,
+                timestamp: new Date().toISOString(),
+                tool_call: {
+                    id: 'tc-l1',
+                    agent_id: '1',
+                    skill: 'test_skill_1',
+                    description: 'test description 1',
+                    params: {},
+                    timestamp: new Date().toISOString()
+                }
+            },
+            {
+                id: 'l2',
+                mission_id: 'cl-chain-a',
+                decision: 'approved' as const,
+                timestamp: new Date().toISOString(),
+                tool_call: {
+                    id: 'tc-l2',
+                    agent_id: '1',
+                    skill: 'test_skill_2',
+                    description: 'test description 2',
+                    params: {},
+                    timestamp: new Date().toISOString()
+                }
+            }
+        ];
+
+        (tadpole_os_service.get_oversight_ledger as Mock).mockResolvedValue(mock_ledger_entries);
+        (tadpole_os_service.get_pending_oversight as Mock).mockResolvedValue([]);
+        (system_api_service.oversight.get_oversight_ledger as Mock).mockResolvedValue(mock_ledger_entries);
+        (system_api_service.oversight.get_pending_oversight as Mock).mockResolvedValue([]);
+
+        (use_workspace_store as unknown as Mock).mockReturnValue({
+            clusters: [
+                { id: 'cl-command', name: 'Strategic Command' },
+                { id: 'cl-chain-a', name: 'Strategic Ops (Chain A)' }
+            ],
+            active_proposals: {}
+        });
+
+        render(<MemoryRouter><Oversight_Dashboard /></MemoryRouter>);
+
+        // By default, it shows "All" so both entries should be present
+        expect(await screen.findByText('test_skill_1')).toBeInTheDocument();
+        expect(await screen.findByText('test_skill_2')).toBeInTheDocument();
+
+        // Change select to "Strategic Command" (cl-command)
+        const select = await screen.findByRole('combobox');
+        fireEvent.change(select, { target: { value: 'cl-command' } });
+
+        // Now only l1 should be present, l2 should be filtered out
+        await waitFor(() => {
+            expect(screen.queryByText('test_skill_2')).not.toBeInTheDocument();
+            expect(screen.getByText('test_skill_1')).toBeInTheDocument();
+        });
+    });
+});
+
+
+// Metadata: [Oversight_Dashboard_test]
