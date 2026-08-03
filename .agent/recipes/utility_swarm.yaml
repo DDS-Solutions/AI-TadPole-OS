@@ -1,0 +1,29 @@
+name: "Consolidated Utility Swarm"
+description: "Optimized swarm with multi-role utility nodes consolidating 38 idle agents."
+agents:
+  - id: "utility_writer"
+    name: "Lovelace-Utility"
+    role: "Technical Writer & Documentation Specialist"
+    department: "Documentation"
+    description: "Consolidates copywriter, technical writer, and documentation specialist roles to handle all manual and documentation updates."
+    model_id: "gemini-1.5-flash"
+    skills: ["read_file", "write_to_file"]
+    workflows: []
+
+  - id: "utility_security_auditor"
+    name: "Aegis-Utility"
+    role: "Swarm Security & Quality Auditor"
+    department: "Security"
+    description: "Consolidates security specialist, auditor, and quality check roles to audit code and verify compliance gates."
+    model_id: "gemini-1.5-flash"
+    skills: ["read_file", "write_to_file"]
+    workflows: []
+
+  - id: "utility_network_scout"
+    name: "Seeker-Utility"
+    role: "Web & Github Research Specialist"
+    department: "Intelligence"
+    description: "Consolidates web researcher, scrapers, and github analyst roles to discover external intelligence."
+    model_id: "gemini-1.5-flash"
+    skills: ["search_web"]
+    workflows: []
