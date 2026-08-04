@@ -1,0 +1,416 @@
+//! @docs ARCHITECTURE:Runner
+//!
+//! ### AI Assist Note
+//! **Filesystem Tools**: Secure workspace operations for reading, writing, and
+//! deleting files. Implements **Breadcrumb Resolution** (resolving ambiguous
+//! paths via recent access history) and **Path Canonicalization** (SEC-03)
+//! to prevent sandbox escapes. Requires **Sapphire Gate Oversight** for
+//! deletions and vault archiving.
+//!
+//! ### 🔍 Debugging & Observability
+//! - **Failure Path**: File not found (try `list_files` first), permission
+//!   denied, oversight rejection, or invalid relative path navigation.
+//! - **Trace Scope**: `server-rs::agent::runner::fs_tools`
+//use super::{AgentRunner, RunContext};
+use super::{AgentRunner, RunContext};
+use crate::agent::runner::tools::error::ToolExecutionError;
+
+impl AgentRunner {
+    /// Helper to extract filename/path argument from tool call aliases.
+    fn extract_path_arg(fc: &crate::agent::types::ToolCall) -> &str {
+        ["filename", "file_name", "file", "path"]
+            .iter()
+            .find_map(|k| fc.args.get(*k).and_then(|v| v.as_str()))
+            .unwrap_or("")
+    }
+
+    /// Helper to record accessed path in mission breadcrumb context.
+    fn record_fs_breadcrumb(ctx: &RunContext, path: &str) {
+        let mut breadcrumbs = ctx.last_accessed_files.lock();
+        if !breadcrumbs.iter().any(|p| p == path) {
+            breadcrumbs.push(path.to_string());
+            if breadcrumbs.len() > 10 {
+                breadcrumbs.remove(0);
+            }
+        }
+    }
+
+    /// Handles `read_file`: reads content from the mission workspace.
+    ///
+    /// ### 🧩 Breadcrumb Resolution
+    /// If an agent provides a filename that doesn't exist, this tool
+    /// scans the mission's recent access history (breadcrumbs) to find a full
+    /// path match. This compensates for model path hallucinations.
+    pub(crate) async fn handle_read_file(
+        &self,
+        ctx: &RunContext,
+        fc: &crate::agent::types::ToolCall,
+        _usage: &mut Option<crate::agent::types::TokenUsage>,
+    ) -> Result<String, ToolExecutionError> {
+        let filename = Self::extract_path_arg(fc);
+
+        if filename.is_empty() {
+            return Ok("(READ FAILED: The 'filename' parameter was missing or empty. You MUST specify a valid filename.)".to_string());
+        }
+        tracing::info!(
+            "📖 [Workspace] Agent {} reading file: {}",
+            ctx.agent_id,
+            filename
+        );
+
+        let adapter = &ctx.fs_adapter;
+
+        // 🧩 Direct Read with Breadcrumb Fallback (Single Read Optimization)
+        let (final_filename, content) = match adapter.read_file(filename).await {
+            Ok(content) => (filename.to_string(), content),
+            Err(initial_err) => {
+                let resolved = {
+                    let breadcrumbs = ctx.last_accessed_files.lock();
+                    breadcrumbs.iter().find(|p| {
+                        p == &filename
+                            || p.ends_with(&format!("/{}", filename))
+                            || p.ends_with(&format!("\\{}", filename))
+                    }).cloned()
+                };
+
+                if let Some(resolved_path) = resolved {
+                    tracing::info!(
+                        "🧩 [Context] Resolved ambiguous path '{}' to '{}' via breadcrumbs",
+                        filename,
+                        resolved_path
+                    );
+                    match adapter.read_file(&resolved_path).await {
+                        Ok(content) => (resolved_path, content),
+                        Err(e) => return Ok(format!("(READ FAILED: {})", e)),
+                    }
+                } else {
+                    return Ok(format!("(READ FAILED: {})", initial_err));
+                }
+            }
+        };
+
+        Self::record_fs_breadcrumb(ctx, &final_filename);
+
+        let start_line = fc
+            .args
+            .get("start_line")
+            .or_else(|| fc.args.get("startLine"))
+            .and_then(|v| v.as_i64())
+            .unwrap_or(1) as usize;
+
+        let end_line = fc
+            .args
+            .get("end_line")
+            .or_else(|| fc.args.get("endLine"))
+            .and_then(|v| v.as_i64())
+            .unwrap_or(-1) as isize;
+
+        // Slicing logic
+        let lines: Vec<&str> = content.lines().collect();
+        let total_lines = lines.len();
+        let start_idx = (start_line.max(1) - 1).min(total_lines);
+        let end_idx = if end_line < 0 {
+            total_lines
+        } else {
+            (end_line as usize).min(total_lines)
+        };
+
+        let (sliced_content, header) = if start_idx < end_idx {
+            (
+                lines[start_idx..end_idx].join("\n"),
+                format!("(FILE CONTENT OF {} - Lines {} to {} of {}):\n\n", final_filename, start_idx + 1, end_idx, total_lines)
+            )
+        } else {
+            (
+                "".to_string(),
+                format!("(FILE CONTENT OF {} - Empty range):\n\n", final_filename)
+            )
+        };
+
+        let truncated = self.safe_truncate(&sliced_content, 8000);
+        Ok(format!("{}{}", header, truncated))
+    }
+
+    /// Handles `write_file`: writes content to the mission workspace.
+    ///
+    /// ### ✍️ Audit Pulse
+    /// Every write operation is broadcasted to the system telemetry and
+    /// recorded in the `RunContext` breadcrumb history.
+    pub(crate) async fn handle_write_file(
+        &self,
+        ctx: &RunContext,
+        fc: &crate::agent::types::ToolCall,
+    ) -> Result<String, ToolExecutionError> {
+        let filename = Self::extract_path_arg(fc);
+
+        if filename.is_empty() {
+            return Ok("(WRITE FAILED: The 'filename' parameter was missing or empty. You MUST specify a valid filename.)".to_string());
+        }
+        let content = fc
+            .args
+            .get("content")
+            .and_then(|v| v.as_str())
+            .unwrap_or("");
+
+        tracing::info!(
+            "✍️ [Workspace] Agent {} writing to file: {}",
+            ctx.agent_id,
+            filename
+        );
+
+        let adapter = &ctx.fs_adapter;
+        match adapter.write_file(filename, content).await {
+            Ok(_) => {
+                Self::record_fs_breadcrumb(ctx, filename);
+
+                self.broadcast_sys(
+                    &format!("✍️ Workspace: {} wrote to {}", ctx.name, filename),
+                    "success",
+                    Some(ctx.mission_id.clone()),
+                );
+                Ok(format!("(Successfully wrote to {})", filename))
+            }
+            Err(e) => Ok(format!("(WRITE FAILED: {})", e)),
+        }
+    }
+
+    /// Handles `list_files`: lists directory contents in the workspace.
+    pub(crate) async fn handle_list_files(
+        &self,
+        ctx: &RunContext,
+        fc: &crate::agent::types::ToolCall,
+        _usage: &mut Option<crate::agent::types::TokenUsage>,
+    ) -> Result<String, ToolExecutionError> {
+        let dir = fc.args.get("dir").and_then(|v| v.as_str()).unwrap_or(".");
+        tracing::info!(
+            "📂 [Workspace] Agent {} listing directory: {}",
+            ctx.agent_id,
+            dir
+        );
+
+        let adapter = &ctx.fs_adapter;
+        match adapter.list_files(dir).await {
+            Ok(files) => {
+                let list = if files.is_empty() {
+                    "Empty directory.".to_string()
+                } else {
+                    files.join(", ")
+                };
+                Ok(format!("(FILES IN {}): {}", dir, list))
+            }
+            Err(e) => Ok(format!("(LIST FAILED: {})", e)),
+        }
+    }
+
+    /// Handles `delete_file`: removes a file or directory after oversight.
+    ///
+    /// ### 🛡️ Sapphire Gate
+    /// Deletions are considered high-risk. This tool requires explicit
+    /// manual approval via the oversight system before the `FilesystemAdapter`
+    /// is allowed to unlink the path.
+    pub(crate) async fn handle_delete_file(
+        &self,
+        ctx: &RunContext,
+        fc: &crate::agent::types::ToolCall,
+    ) -> Result<String, ToolExecutionError> {
+        let filename = Self::extract_path_arg(fc);
+
+        tracing::info!(
+            "🗑️ [Workspace] Agent {} requesting deletion of: {}",
+            ctx.agent_id,
+            filename
+        );
+        self.broadcast_sys(
+            &format!(
+                "🗑️ Oversight: {} wants to DELETE {}. Extreme caution required.",
+                ctx.name, filename
+            ),
+            "warning",
+            Some(ctx.mission_id.clone()),
+        );
+
+        let approved = self
+            .submit_oversight(
+                crate::agent::types::ToolCallAudit {
+                    id: uuid::Uuid::new_v4().to_string(),
+                    agent_id: ctx.agent_id.clone(),
+                    mission_id: Some(ctx.mission_id.clone()),
+                    skill: "delete_file".to_string(),
+                    params: fc.args.clone(),
+                    department: ctx.department.clone(),
+                    description: format!("Deleting {} from the workspace.", filename),
+                    timestamp: chrono::Utc::now().to_rfc3339(),
+                },
+                Some(ctx.mission_id.clone()),
+            )
+            .await
+            .map_err(ToolExecutionError::AppError)?;
+
+        if approved {
+            let adapter = &ctx.fs_adapter;
+            match adapter.delete_file(filename).await {
+                Ok(_) => {
+                    self.broadcast_sys(
+                        &format!("🗑️ Workspace: {} deleted {}", ctx.name, filename),
+                        "success",
+                        Some(ctx.mission_id.clone()),
+                    );
+                    Ok(format!("(Successfully deleted {})", filename))
+                }
+                Err(e) => Ok(format!("(DELETE FAILED: {})", e)),
+            }
+        } else {
+            Ok("(Delete REJECTED by Oversight)".to_string())
+        }
+    }
+
+    /// Handles `archive_to_vault`: writes data to the local Markdown vault.
+    ///
+    /// ### 🗃️ Knowledge Persistence
+    /// Unlike workspace files (which are ephemeral per mission), the Vault is
+    /// a persistent Markdown-based knowledge base. Archiving here makes
+    /// research findings available to future agents in different clusters.
+    pub(crate) async fn handle_archive_to_vault(
+        &self,
+        ctx: &RunContext,
+        fc: &crate::agent::types::ToolCall,
+    ) -> Result<String, ToolExecutionError> {
+        let filename = fc
+            .args
+            .get("filename")
+            .and_then(|v| v.as_str())
+            .unwrap_or("unnamed.md");
+        let content = fc
+            .args
+            .get("content")
+            .and_then(|v| v.as_str())
+            .unwrap_or("");
+
+        tracing::info!(
+            "📁 [Surface] Agent {} archiving to vault (Waiting for Oversight)...",
+            ctx.agent_id
+        );
+        self.broadcast_sys(
+            &format!(
+                "📁 Oversight: {} wants to archive to vault. Review required.",
+                ctx.name
+            ),
+            "warning",
+            Some(ctx.mission_id.clone()),
+        );
+
+        let approved = self
+            .submit_oversight(
+                crate::agent::types::ToolCallAudit {
+                    id: uuid::Uuid::new_v4().to_string(),
+                    agent_id: ctx.agent_id.clone(),
+                    mission_id: Some(ctx.mission_id.clone()),
+                    skill: "archive_to_vault".to_string(),
+                    params: fc.args.clone(),
+                    department: ctx.department.clone(),
+                    description: "Archiving data to the central vault for persistence.".to_string(),
+                    timestamp: chrono::Utc::now().to_rfc3339(),
+                },
+                Some(ctx.mission_id.clone()),
+            )
+            .await
+            .map_err(ToolExecutionError::AppError)?;
+
+        if approved {
+            let vault_dir = ctx.workspace_root.join("vault");
+            let adapter = crate::adapter::vault::VaultAdapter::new(vault_dir);
+            adapter
+                .append_to_file(filename, content)
+                .await
+                .map_err(|e| ToolExecutionError::AppError(crate::error::AppError::Anyhow(e)))?;
+
+            Ok(format!(
+                "**Archived to Vault ({}):**\n\n{}\n\n",
+                filename, content
+            ))
+        } else {
+            Ok("(Archive REJECTED by Oversight)".to_string())
+        }
+    }
+    /// Handles `grep_search`: searches for a pattern in the mission workspace.
+    pub(crate) async fn handle_grep_search(
+        &self,
+        ctx: &RunContext,
+        fc: &crate::agent::types::ToolCall,
+        _usage: &mut Option<crate::agent::types::TokenUsage>,
+    ) -> Result<String, ToolExecutionError> {
+        let pattern = fc
+            .args
+            .get("pattern")
+            .and_then(|v| v.as_str())
+            .unwrap_or("");
+        let dir = fc.args.get("dir").and_then(|v| v.as_str()).unwrap_or(".");
+
+        if pattern.is_empty() {
+            return Ok("(GREP FAILED: 'pattern' argument is missing)".to_string());
+        }
+
+        tracing::info!(
+            "🔍 [Workspace] Agent {} grepping for '{}' in {}",
+            ctx.agent_id,
+            pattern,
+            dir
+        );
+
+        let adapter = &ctx.fs_adapter;
+        match adapter.list_files(dir).await {
+            Ok(files) => {
+                let mut results = Vec::new();
+                for file in files {
+                    let path = if dir == "." {
+                        file.clone()
+                    } else {
+                        format!("{}/{}", dir, file)
+                    };
+                    // Only search text/source code files
+                    let ext = path.rsplit('.').next().unwrap_or("").to_lowercase();
+                    let is_text_file = !path.contains('.')
+                        || matches!(
+                            ext.as_str(),
+                            "rs" | "ts" | "js" | "tsx" | "jsx" | "py" | "md" | "txt" | "json" | "toml" | "yaml" | "yml" | "sh" | "ps1" | "sql" | "h" | "hpp" | "c" | "cpp" | "go" | "css" | "html" | "xml" | "csv"
+                        );
+
+                    if is_text_file {
+                        // OOM Protection: Skip reading files larger than 5MB
+                        let is_safe_size = adapter.get_file_size(&path).await.map(|sz| sz <= 5 * 1024 * 1024).unwrap_or(true);
+                        if is_safe_size {
+                            if let Ok(content) = adapter.read_file(&path).await {
+                                if content.contains(pattern) {
+                                    let lines: Vec<String> = content
+                                        .lines()
+                                        .enumerate()
+                                        .filter(|(_, line)| line.contains(pattern))
+                                        .map(|(i, line)| format!("{}: {}", i + 1, line.trim()))
+                                        .collect();
+                                    results.push(format!("--- {} ---\n{}", path, lines.join("\n")));
+                                }
+                            }
+                        }
+                    }
+                    if results.len() >= 10 {
+                        break;
+                    } // Limit results
+                }
+
+                if results.is_empty() {
+                    Ok(format!("(No matches found for '{}' in {})", pattern, dir))
+                } else {
+                    Ok(format!(
+                        "(GREP RESULTS FOR '{}' IN {}):\n\n{}",
+                        pattern,
+                        dir,
+                        results.join("\n\n")
+                    ))
+                }
+            }
+            Err(e) => Ok(format!("(GREP FAILED: {})", e)),
+        }
+    }
+}
+
+// Metadata: [fs_tools]

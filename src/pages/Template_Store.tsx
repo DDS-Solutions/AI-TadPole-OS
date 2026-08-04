@@ -1,0 +1,81 @@
+/**
+ * @docs ARCHITECTURE:Interface
+ * 
+ * ### AI Assist Note
+ * **Root View**: Blueprint registry for agent personas and swarm structures. 
+ * Orchestrates discovery and deployment of predefined configuration templates.
+ * 
+ * ### 🔍 Debugging & Observability
+ * - **Failure Path**: Template parsing failure (schema mismatch), or missing mandatory field in deployment payload.
+ * - **Telemetry Link**: Search for `[Template_Store]` or BLUEPRINT_FETCH in service logs.
+ */
+
+import { useCallback } from 'react';
+import {
+    useTemplateRegistry,
+    useTemplateFilters,
+    useTemplatePreview,
+    useTemplateInstall,
+    Template_Store_Header,
+    Structured_Data,
+    Market_Selector,
+    Repository_Actions,
+    Template_Filters,
+    Template_Grid,
+    Template_Preview_Modal
+} from '../components/template_store';
+
+function Template_Store() {
+    const { templates, setTemplates, isLoading, error, refresh } = useTemplateRegistry();
+    const filters = useTemplateFilters(templates);
+    const preview = useTemplatePreview();
+
+    const handleInstallSuccess = useCallback((templateId: string) => {
+        setTemplates((prev) =>
+            prev.map((t) => (t.id === templateId ? { ...t, installed: true } : t))
+        );
+        preview.closePreview();
+    }, [setTemplates, preview]);
+
+    const { isInstalling, install } = useTemplateInstall(handleInstallSuccess);
+
+    return (
+        <div className="p-6 space-y-6 max-w-7xl mx-auto w-full">
+            <Template_Store_Header />
+            <Structured_Data />
+
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                <Market_Selector />
+                <Repository_Actions isLoading={isLoading} onRefresh={refresh} />
+            </div>
+
+            <Template_Filters {...filters} />
+
+            <Template_Grid
+                templates={filters.filteredTemplates}
+                isLoading={isLoading}
+                error={error}
+                isInstalling={isInstalling}
+                onPreview={preview.openPreview}
+            />
+
+            {preview.previewTemplate && (
+                <Template_Preview_Modal
+                    template={preview.previewTemplate}
+                    config={preview.previewConfig}
+                    knowledge={preview.previewKnowledge}
+                    isLoading={preview.isPreviewLoading}
+                    error={preview.previewError}
+                    isInstalling={isInstalling === preview.previewTemplate.id}
+                    onClose={preview.closePreview}
+                    onInstall={() => install(preview.previewTemplate!)}
+                />
+            )}
+        </div>
+    );
+}
+
+export default Template_Store;
+
+
+// Metadata: [Template_Store]
