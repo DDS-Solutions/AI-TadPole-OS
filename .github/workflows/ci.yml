@@ -1,0 +1,59 @@
+name: "Continuous Integration & Quality Pipeline"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  rust-check:
+    name: Rust Engine Check & Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust Stable Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "server-rs -> target"
+
+      - name: Cargo Check
+        run: cargo check --manifest-path server-rs/Cargo.toml
+
+      - name: Cargo Clippy
+        run: cargo clippy --manifest-path server-rs/Cargo.toml -- -D warnings
+
+  frontend-check:
+    name: Frontend Typecheck & Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: TypeScript Type Check
+        run: npx tsc -b --noEmit
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Vitest Suite
+        run: npm run test:ci

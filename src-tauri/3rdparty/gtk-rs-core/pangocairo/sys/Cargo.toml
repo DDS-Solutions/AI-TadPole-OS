@@ -1,0 +1,52 @@
+[build-dependencies]
+system-deps = "6"
+
+[dependencies]
+libc = "0.2"
+
+[dependencies.cairo]
+package = "cairo-sys-rs"
+path = "../../cairo/sys"
+version = "0.18"
+
+[dependencies.glib]
+package = "glib-sys"
+path = "../../glib/sys"
+version = "0.18"
+
+[dependencies.pango]
+package = "pango-sys"
+path = "../../pango/sys"
+version = "0.18"
+
+[dev-dependencies]
+shell-words = "1.0.0"
+tempfile = "3"
+
+[lib]
+name = "pango_cairo_sys"
+
+[package]
+authors = ["The gtk-rs Project Developers"]
+build = "build.rs"
+description = "FFI bindings to PangoCairo"
+homepage = "https://gtk-rs.org/"
+keywords = ["gtk", "ffi", "gtk-rs", "gnome"]
+license = "MIT"
+name = "pangocairo-sys"
+repository = "https://github.com/gtk-rs/gtk-rs-core"
+version = "0.18.5"
+edition = "2021"
+rust-version = "1.70"
+
+[package.metadata.docs.rs]
+all-features = true
+rustc-args = ["--cfg", "docsrs"]
+rustdoc-args = ["--cfg", "docsrs"]
+features = []
+
+[package.metadata.system-deps.pangocairo]
+name = "pangocairo"
+version = "1.40"
+
+[features]
