@@ -62,7 +62,7 @@
     "@types/dagre": "^0.7.54",
     "clsx": "^2.1.1",
     "dagre": "^0.8.5",
-    "framer-motion": "^12.43.0",
+    "framer-motion": "^13.0.0",
     "lucide-react": "^1.28.0",
     "qrcode.react": "^4.2.0",
     "react": "^19.2.8",
