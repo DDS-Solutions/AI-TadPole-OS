@@ -1,0 +1,149 @@
+/**
+ * @docs ARCHITECTURE:UI
+ * @docs OPERATIONS_MANUAL:OutwardGateway
+ *
+ * ### AI Assist Note
+ * Utility functions for compiling business knowledge cards into A2aSkill definitions,
+ * generating sanitized Markdown context for gemma4 local LLM execution, and scanning for PII
+ * with Luhn algorithm validation and context boundary tags.
+ *
+ * ### 🔍 Debugging & Observability
+ * Traceability via `execution/parity_guard.py`.
+ */
+
+import type { A2aSkill } from '../components/outward/A2A_Card_Preview';
+
+export type InfoCardCategory = 'faq' | 'operating_info' | 'policies' | 'custom';
+
+export interface InfoCard {
+  id: string;
+  title: string;
+  content: string;
+  category: InfoCardCategory;
+  tags: string[];
+  updatedAt?: string;
+}
+
+/**
+ * Default initial knowledge cards for SMB Customer Service Agent (Readonly)
+ */
+export const DEFAULT_INFO_CARDS: readonly InfoCard[] = [
+  {
+    id: 'info-hours-loc',
+    title: 'Store Hours & Location',
+    content: 'Main Store: 100 Main St, Suite 400. Hours: Monday - Friday 8:00 AM - 6:00 PM EST, Saturday 9:00 AM - 4:00 PM EST.',
+    category: 'operating_info',
+    tags: ['hours', 'location', 'contact'],
+  },
+  {
+    id: 'info-faq-returns',
+    title: 'Return & Exchange Policy',
+    content: 'Full refunds issued within 30 days of purchase with original receipt. Items must be in original packaging and unused.',
+    category: 'policies',
+    tags: ['returns', 'refunds', 'guarantee'],
+  },
+  {
+    id: 'info-faq-support',
+    title: 'Customer Support FAQ',
+    content: 'For immediate order tracking or service inquiries, email support@tadpolesmb.com or call our service desk.',
+    category: 'faq',
+    tags: ['faq', 'support', 'help'],
+  },
+];
+
+/**
+ * Compiles a list of InfoCard items into standard A2A Protocol skills
+ */
+export function compileInfoCardsToSkills(cards: readonly InfoCard[]): A2aSkill[] {
+  const baseSkills: A2aSkill[] = [
+    {
+      id: 'catalog_search',
+      name: 'Customer Catalog Search',
+      description: 'Search product and service catalog for business inquiries.',
+      tags: ['catalog', 'products', 'smb'],
+    },
+  ];
+
+  const cardSkills: A2aSkill[] = cards.map((card) => ({
+    id: card.id.startsWith('card_') ? card.id : `card_${card.id}`,
+    name: card.title,
+    description: card.content.length > 120 ? `${card.content.slice(0, 117)}...` : card.content,
+    tags: card.tags.length > 0 ? card.tags : [card.category],
+  }));
+
+  return [...baseSkills, ...cardSkills];
+}
+
+/**
+ * Compiles InfoCard items into clean Markdown bounded by context markers for gemma4 local model inference
+ */
+export function compileInfoCardsToMarkdown(cards: InfoCard[]): string {
+  if (cards.length === 0) {
+    return '<<< BUSINESS_KNOWLEDGE_START >>>\n### Business FAQ & Operating Info\nNo business cards registered.\n<<< BUSINESS_KNOWLEDGE_END >>>';
+  }
+
+  const lines = ['<<< BUSINESS_KNOWLEDGE_START >>>', '### Business FAQ & Operating Info\n'];
+
+  cards.forEach((card) => {
+    lines.push(`#### [${card.category.toUpperCase()}] ${card.title}`);
+    lines.push(`${card.content}`);
+    if (card.tags.length > 0) {
+      lines.push(`*Tags*: ${card.tags.join(', ')}`);
+    }
+    lines.push('');
+  });
+
+  lines.push('<<< BUSINESS_KNOWLEDGE_END >>>');
+
+  return lines.join('\n');
+}
+
+/**
+ * Validates a numerical string against Luhn's Algorithm (Mod 10 Modulus check)
+ */
+export function isLuhnValid(val: string): boolean {
+  const digits = val.replace(/\D/g, '');
+  if (digits.length < 13 || digits.length > 19) return false;
+
+  let sum = 0;
+  let shouldDouble = false;
+
+  for (let i = digits.length - 1; i >= 0; i--) {
+    let digit = parseInt(digits.charAt(i), 10);
+    if (shouldDouble) {
+      digit *= 2;
+      if (digit > 9) digit -= 9;
+    }
+    sum += digit;
+    shouldDouble = !shouldDouble;
+  }
+
+  return sum % 10 === 0;
+}
+
+/**
+ * Scans input text for sensitive PII (credit cards verified via Luhn check, SSNs, private keys)
+ */
+export function scanForPii(text: string): string[] {
+  const warnings: string[] = [];
+
+  // Credit Card Regex Match + Luhn Verification
+  const ccPattern = /(?:4[0-9]{3}[ -]?[0-9]{4}[ -]?[0-9]{4}[ -]?[0-9]{4}|5[1-5][0-9]{2}[ -]?[0-9]{4}[ -]?[0-9]{4}[ -]?[0-9]{4}|3[47][0-9]{2}[ -]?[0-9]{6}[ -]?[0-9]{5}|6(?:011|5[0-9]{2})[ -]?[0-9]{4}[ -]?[0-9]{4}[ -]?[0-9]{4})/;
+  const match = text.match(ccPattern);
+  if (match && isLuhnValid(match[0])) {
+    warnings.push('Potential Credit Card number detected in text.');
+  }
+
+  // Social Security Number Pattern
+  const ssnPattern = /\b\d{3}-\d{2}-\d{4}\b/;
+  if (ssnPattern.test(text)) {
+    warnings.push('Potential Social Security Number (SSN) pattern detected.');
+  }
+
+  // Private Key Pattern
+  if (text.includes('BEGIN PRIVATE KEY') || text.includes('BEGIN RSA PRIVATE KEY')) {
+    warnings.push('Private cryptographic key detected!');
+  }
+
+  return warnings;
+}

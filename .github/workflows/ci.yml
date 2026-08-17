@@ -1,0 +1,113 @@
+name: "Continuous Integration & DevSecOps Pipeline"
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  rust-check:
+    name: Rust Engine Build, Test & Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust Stable Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "server-rs -> target"
+
+      - name: Cargo Format Check
+        run: cargo fmt --manifest-path server-rs/Cargo.toml -- --check
+
+      - name: Cargo Check
+        run: cargo check --manifest-path server-rs/Cargo.toml
+
+      - name: Cargo Clippy
+        run: cargo clippy --manifest-path server-rs/Cargo.toml -- -D warnings
+
+      - name: Cargo Test Suite
+        run: cargo test --manifest-path server-rs/Cargo.toml
+
+  frontend-check:
+    name: Frontend Typecheck, Lint & Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: TypeScript Type Check
+        run: npx tsc -b --noEmit
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Observability Registry Alignment
+        run: npm run audit:observability
+
+      - name: AI Context Alignment
+        run: python execution/verify_ai_context.py .
+
+      - name: Documentation Parity
+        run: python execution/parity_guard.py
+
+      - name: Documentation Build
+        run: npm run docs:build
+
+      - name: Vitest Suite
+        run: npm run test:ci --if-present
+
+  security-audit:
+    name: DevSecOps Vulnerability & Dependency Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust Stable Toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cargo Audit (Rust Vulnerability Scanning)
+        uses: rustsec/audit-check@v2.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: server-rs
+
+      - name: Cargo Deny (License & Advisory Checks)
+        uses: EmbarkStudios/cargo-deny-action@v2
+        with:
+          manifest-path: server-rs/Cargo.toml
+          arguments: check
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: NPM Security Audit
+        run: npm audit --audit-level=high --omit=dev
+
+      - name: Gitleaks Secret Scanning
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
