@@ -1,0 +1,148 @@
+name: "Continuous Integration & DevSecOps Pipeline"
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  version-guard:
+    name: Version & Changelog Guard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify Version Alignment
+        run: npm run version:check
+
+      - name: Test Version and Changelog Guards
+        run: npm run version:test
+
+      - name: Verify Changelog Structure
+        run: npm run changelog:check
+
+      - name: Verify Published Changelog Sections
+        if: github.event_name == 'pull_request' || (github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/'))
+        env:
+          BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+        run: node scripts/check_changelog.cjs --base "$BASE_SHA" --head "$HEAD_SHA"
+
+      - name: Verify Release Tag Matches Product Version
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: bash
+        run: |
+          VERSION=$(node -p "require('./version.json').version")
+          test "${GITHUB_REF_NAME}" = "v${VERSION}"
+          node scripts/check_changelog.cjs --check --release "$VERSION"
+
+  rust-check:
+    name: Rust Engine Build, Test & Clippy
+    needs: version-guard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust Stable Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "server-rs -> target"
+
+      - name: Cargo Format Check
+        run: cargo fmt --manifest-path server-rs/Cargo.toml -- --check
+
+      - name: Cargo Check
+        run: cargo check --locked --manifest-path server-rs/Cargo.toml
+
+      - name: Cargo Clippy
+        run: cargo clippy --locked --manifest-path server-rs/Cargo.toml
+
+      - name: Cargo Test Suite
+        run: cargo test --locked --manifest-path server-rs/Cargo.toml
+
+  frontend-check:
+    name: Frontend Typecheck, Lint & Unit Tests
+    needs: version-guard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: TypeScript Type Check
+        run: npx tsc -b --noEmit
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Observability Registry Alignment
+        run: npm run audit:observability
+
+      - name: AI Context Alignment
+        run: python execution/verify_ai_context.py --baseline .baseline_ai_context.json .
+
+      - name: Documentation Parity
+        run: python execution/parity_guard.py
+
+      - name: Documentation Build
+        run: npm run docs:build
+
+      - name: Vitest Suite
+        run: npm run test:ci --if-present
+
+  security-audit:
+    name: DevSecOps Vulnerability & Dependency Audit
+    needs: version-guard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust Stable Toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cargo Deny (License & Advisory Checks)
+        uses: EmbarkStudios/cargo-deny-action@v2
+        with:
+          manifest-path: server-rs/Cargo.toml
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: NPM Security Audit
+        run: npm audit --audit-level=high --omit=dev
+
+      - name: Gitleaks Secret Scanning
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

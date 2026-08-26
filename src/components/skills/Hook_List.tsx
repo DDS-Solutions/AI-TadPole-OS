@@ -1,0 +1,84 @@
+/**
+ * @docs ARCHITECTURE:Interface
+ *
+ * ### AI Context Alignment
+ * - **Subsystem**: UI Components / Skills / Hook_List
+ * - **Primary Entrypoints**: `Hook_List`
+ *
+ * ### ⚠️ Invariants & Non-Negotiables
+ * - `[Structural]` Component state and props flow adhere strictly to unidirectional UI data bindings.
+ *
+ * ### 🔍 Debugging & Observability
+ * - **Local Errors**: none
+ * - **Telemetry Targets**: none declared
+ * - **Witness Tests**: none declared
+ */
+
+import React from 'react';
+import { Anchor, Plus } from 'lucide-react';
+import { type Hook_Definition } from '../../stores/skill_store';
+import { Hook_Card } from './Hook_Card';
+import { Tw_Empty_State, Tooltip } from '../ui';
+import { i18n } from '../../i18n';
+
+interface Hook_List_Props {
+    hooks: Hook_Definition[];
+    on_edit: (hook: Hook_Definition) => void;
+    on_delete: (name: string) => void;
+    on_create: () => void;
+    is_loading?: boolean;
+}
+
+export const Hook_List: React.FC<Hook_List_Props> = ({ hooks, on_edit, on_delete, on_create, is_loading }) => {
+    if (!hooks?.length) {
+        return (
+            <div className="py-20 animate-in fade-in zoom-in-95 duration-500">
+                <Tw_Empty_State
+                    icon={<Anchor size={32} className="text-zinc-700" />}
+                    title={i18n.t('skills.hooks_empty_title')}
+                    description={i18n.t('skills.hooks_empty_description')}
+                    action={
+                        <Tooltip content={i18n.t('skills.tooltip_register_hook_card')} position="bottom">
+                            <button
+                                onClick={on_create}
+                                className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-500 text-white rounded-lg text-sm font-bold transition-all shadow-lg shadow-green-500/20"
+                            >
+                                <Plus size={16} />
+                                {i18n.t('skills.add_hook_button')}
+                            </button>
+                        </Tooltip>
+                    }
+                />
+            </div>
+        );
+    }
+
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in slide-in-from-bottom-5">
+            {hooks?.map((hook) => (
+                <Hook_Card
+                    key={hook.name}
+                    hook={hook}
+                    on_edit={on_edit}
+                    on_delete={on_delete}
+                    is_loading={is_loading}
+                />
+            ))}
+
+            {/* Register New Hook Card */}
+            <Tooltip content={i18n.t('skills.tooltip_register_hook_card')} position="bottom">
+                <button
+                    onClick={on_create}
+                    className="sovereign-card border-dashed border-zinc-800 hover:border-emerald-500/50 flex flex-col items-center justify-center p-6 min-h-[180px] group transition-all cursor-pointer w-full text-center"
+                >
+                    <div className="p-3 bg-emerald-500/10 rounded-full group-hover:bg-emerald-500/20 transition-all">
+                        <Plus size={24} className="text-emerald-500" />
+                    </div>
+                    <span className="text-xs font-bold text-zinc-400 group-hover:text-emerald-400 mt-4 uppercase tracking-wider transition-colors">
+                        {i18n.t('skills.add_hook_button')}
+                    </span>
+                </button>
+            </Tooltip>
+        </div>
+    );
+};

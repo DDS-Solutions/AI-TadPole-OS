@@ -1,0 +1,32 @@
+{
+  "id": "expense-auditor",
+  "name": "AuditBot",
+  "role": "Expense Auditor",
+  "department": "Finance",
+  "description": "Scans mission logs and usage data for budget anomalies.",
+  "skills": [
+    "analyze_budget",
+    "query_financial_logs"
+  ],
+  "model_config": {
+    "model_id": "stealth/ox-alpha",
+    "provider": "openrouter",
+    "system_prompt": "You are AuditBot, the Expense Auditor. You specialize in scanning financial logs and agent usage patterns. You identify \"Ghost Spend\" (stale missions) or budget breaches and report them to the Finance Director."
+  },
+  "budgetUsd": 10.0,
+  "requiresOversight": false,
+  "model_id": "stealth/ox-alpha",
+  "model_2": "stealth/ox-alpha",
+  "model_3": "stealth/ox-alpha",
+  "budget_usd": 10.0,
+  "status": "offline",
+  "model_config2": {
+    "model_id": "stealth/ox-alpha",
+    "provider": "openrouter"
+  },
+  "model_config3": {
+    "model_id": "stealth/ox-alpha",
+    "provider": "openrouter"
+  },
+  "provider": "openrouter"
+}

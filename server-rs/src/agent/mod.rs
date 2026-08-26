@@ -1,0 +1,72 @@
+//! @docs ARCHITECTURE:Agent
+//!
+//! ### AI Context Alignment
+//! - **Subsystem**: Sovereign Engine / Agent Runner / mod
+//!
+//! ### ⚠️ Invariants & Non-Negotiables
+//! - `[Structural]` Type-safe state handling and bounded execution without unhandled panics.
+//!
+//! ### 🔍 Debugging & Observability
+//! - **Local Errors**: none
+//! - **Telemetry Targets**: none declared
+//! - **Witness Tests**: none declared
+
+pub mod anthropic;
+pub mod audio;
+pub mod audio_cache;
+pub mod backlog;
+pub mod benchmarks;
+pub mod capability_matrix;
+pub mod connectors;
+pub mod constants;
+pub mod context_manager;
+pub mod continuity;
+pub mod gemini;
+pub mod groq;
+pub mod hooks;
+pub mod knowledge_store;
+pub mod mcp;
+pub mod memory;
+pub mod merge;
+pub mod mission;
+pub mod model_routing;
+pub mod null_provider;
+pub mod openai;
+pub mod outward;
+pub mod parser;
+pub mod persistence;
+pub mod provider_trait;
+pub mod rate_limiter;
+pub mod rates;
+pub mod reaper;
+pub mod recipes;
+pub(crate) mod recovery;
+pub mod registry;
+pub mod runner;
+pub mod sanitizer;
+pub mod script_skills;
+pub mod skill_error;
+pub mod skill_manifest;
+pub mod socratic;
+pub mod tokenizer;
+#[cfg(feature = "vector-memory")]
+pub mod trustgraph;
+pub mod types;
+pub mod workflows;
+
+// Verification Suite (Swarm Safety)
+#[cfg(test)]
+mod mcp_tests;
+
+#[cfg(test)]
+mod test_oversight;
+#[cfg(test)]
+mod test_sanitizer;
+#[cfg(test)]
+mod tests_governance;
+#[cfg(test)]
+mod tests_rate_limiter;
+#[cfg(test)]
+mod tests_skills;
+
+// Duplicate SyncManifest removed. Canonical version is in crate::agent::types.
