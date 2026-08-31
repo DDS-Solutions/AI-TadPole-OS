@@ -1,0 +1,125 @@
+{
+  "$schema": "https://tadpole.os/schemas/security-registry.json",
+  "version": "1.0.0",
+  "updated_at": "2026-08-19",
+  "frameworks": {
+    "mitre_attack": "v19.2",
+    "mitre_atlas": "v2026.07",
+    "owasp_agentic": "2026"
+  },
+  "policies": {
+    "SEC-01": {
+      "title": "Ed25519 Request Proof-of-Possession",
+      "description": "All paired companion and remote HTTP requests must include Ed25519 cryptographic signatures over canonical method, path, timestamp, and nonce headers.",
+      "category": "Authentication & Authorization",
+      "owasp_agentic": "ASI07",
+      "mitre_attack": "T1556",
+      "mitre_atlas": "AML.T0029",
+      "enforcing_files": [
+        "server-rs/src/routes/remote.rs"
+      ],
+      "verification_command": "cargo test --package server-rs --bin server-rs routes::remote",
+      "failure_mode": "Unauthorized request replay, forged mobile companion actions, or impersonation."
+    },
+    "SEC-02": {
+      "title": "In-Memory Credential Isolation & No SessionStorage",
+      "description": "Master encryption keys and provider credentials must remain strictly in-memory or secure hardware vaults, never persisted to localStorage or sessionStorage.",
+      "category": "Credential Protection",
+      "owasp_agentic": "ASI03",
+      "mitre_attack": "T1552",
+      "mitre_atlas": "AML.T0033",
+      "enforcing_files": [
+        "src/stores/vault_store.ts",
+        "src/services/crypto_service.ts"
+      ],
+      "verification_command": "npx vitest run src/stores/vault_store.test.ts",
+      "failure_mode": "Cleartext credential harvesting by third-party browser scripts or cross-origin sniffing."
+    },
+    "SEC-03": {
+      "title": "Strict Production Origin Whitelist (Fail-Closed)",
+      "description": "WebSocket connections in production environments must enforce explicit ALLOWED_ORIGINS whitelist, failing closed on missing or unexpected Origin headers.",
+      "category": "Network Boundaries",
+      "owasp_agentic": "ASI07",
+      "mitre_attack": "T1189",
+      "mitre_atlas": "AML.T0025",
+      "enforcing_files": [
+        "server-rs/src/routes/ws.rs"
+      ],
+      "verification_command": "cargo test --package server-rs --bin server-rs routes::ws",
+      "failure_mode": "Cross-Site WebSocket Hijacking (CSWSH) and unauthorized browser session bridging."
+    },
+    "SEC-04": {
+      "title": "CAS Restoration Workspace Boundary Enforcement",
+      "description": "Content Addressable Storage (CAS) file restoration and history retrieval must validate all target paths against the authorized workspace root using validate_path.",
+      "category": "Filesystem Isolation",
+      "owasp_agentic": "ASI05",
+      "mitre_attack": "T1083",
+      "mitre_atlas": "AML.T0035",
+      "enforcing_files": [
+        "server-rs/src/services/cas.rs",
+        "server-rs/src/routes/cas.rs",
+        "server-rs/src/utils/security.rs"
+      ],
+      "verification_command": "cargo test --package server-rs --bin server-rs routes::cas",
+      "failure_mode": "Arbitrary file overwrite or system file corruption via path traversal."
+    },
+    "SEC-05": {
+      "title": "MCP Tool Binary Whitelist & Shell Injection Prevention",
+      "description": "MCP server definitions and shell commands from templates must be scanned against binary whitelists and passed as direct argument slices to prevent subshell spawning.",
+      "category": "Execution Safety",
+      "owasp_agentic": "ASI02",
+      "mitre_attack": "T1059",
+      "mitre_atlas": "AML.T0024",
+      "enforcing_files": [
+        "server-rs/src/routes/templates/mod.rs",
+        "server-rs/src/agent/mcp/client.rs",
+        "server-rs/src/utils/security.rs"
+      ],
+      "verification_command": "cargo test --package server-rs --bin server-rs agent::mcp",
+      "failure_mode": "Remote code execution or subshell injection via untrusted template installs."
+    },
+    "SEC-06": {
+      "title": "Mandatory Security Floor Clamps & HITL Oversight",
+      "description": "Autonomous agents cannot execute tools beyond their signed capability manifest. High-risk actions require non-bypassable Human-in-the-Loop approval gates.",
+      "category": "Governance & Privilege",
+      "owasp_agentic": "ASI03",
+      "mitre_attack": "T1068",
+      "mitre_atlas": "AML.T0016",
+      "enforcing_files": [
+        "server-rs/src/routes/oversight/mod.rs",
+        "server-rs/src/agent/runner/oversight.rs",
+        "server-rs/src/agent/runner/mod.rs"
+      ],
+      "verification_command": "cargo test --package server-rs --bin server-rs routes::oversight",
+      "failure_mode": "Privilege escalation, unauthorized system configuration changes, or rogue tool invocation."
+    },
+    "SEC-07": {
+      "title": "Authenticated Agent-to-Agent (A2A) Communication",
+      "description": "Inter-agent messages and mailbox dispatches must authenticate sender identities, bound task delegation depths, and sanitize shared RAG context to prevent swarm hijacking.",
+      "category": "Swarm Governance",
+      "owasp_agentic": "ASI07",
+      "mitre_attack": "T1071",
+      "mitre_atlas": "AML.T0040",
+      "enforcing_files": [
+        "server-rs/src/routes/a2a.rs",
+        "server-rs/src/agent/persistence/agent_db.rs"
+      ],
+      "verification_command": "cargo test --package server-rs --bin server-rs routes::a2a",
+      "failure_mode": "Swarm lateral movement, header spoofing, or memory poisoning."
+    },
+    "SEC-08": {
+      "title": "Budget Guard Financial & Resource Quota Metering",
+      "description": "All LLM inference, multimodal live voice streaming, and tool execution must enforce pre-flight balance checks and real-time quota debiting to prevent resource exhaustion.",
+      "category": "Resource & Financial Defense",
+      "owasp_agentic": "ASI10",
+      "mitre_attack": "T1499",
+      "mitre_atlas": "AML.T0034",
+      "enforcing_files": [
+        "server-rs/src/security/metering.rs",
+        "server-rs/src/routes/ws.rs"
+      ],
+      "verification_command": "cargo test --package server-rs --bin server-rs security::metering",
+      "failure_mode": "Financial denial-of-wallet, unbounded API token consumption, or server memory exhaustion."
+    }
+  }
+}

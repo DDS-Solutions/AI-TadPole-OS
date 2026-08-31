@@ -1,0 +1,155 @@
+[package]
+license = "MIT"
+name = "server-rs"
+version = "1.1.462"
+edition = "2021"
+default-run = "server-rs"
+
+[dependencies]
+# Async Runtime
+tokio = { version = "1.53.0", features = ["full"] }
+tokio-util = { version = "0.7", features = ["rt"] }
+
+# Web Framework
+axum = { version = "0.8", features = ["ws", "macros", "multipart"] }
+tower-http = { version = "0.7.0", features = ["cors", "trace", "fs", "compression-full", "timeout"] }
+tower = { version = "0.5.3", features = ["util", "make"] }
+futures = "0.3"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Error Handling
+anyhow = "1.0.104"
+thiserror = "2.0.19"
+
+# Environment Variables
+dotenvy = "0.15"
+
+# Logging / Tracing
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+opentelemetry = { version = "0.32.0", features = ["trace"] }
+opentelemetry_sdk = { version = "0.32.1", features = ["trace"] }
+tracing-opentelemetry = "0.33.0"
+opentelemetry-stdout = { version = "0.32.0", features = ["trace"] }
+opentelemetry-otlp = { version = "0.32.0", features = ["grpc-tonic", "trace"] }
+prometheus = { version = "0.14.0", features = ["process"] }
+
+# HTTP Client (for Gemini API)
+reqwest = { version = "0.12", features = ["json", "rustls-tls", "multipart"], default-features = false }
+
+# Process / System
+rand = "0.10.2"
+chacha20 = "0.10.2"
+uuid = { version = "1.26.0", features = ["v4", "fast-rng", "macro-diagnostics"] }
+chrono = { version = "0.4.45", features = ["serde"] }
+ed25519-dalek = { version = "3.0", features = ["rand_core", "zeroize"] }
+dashmap = "6.2.1"
+parking_lot = "0.12"
+sysinfo = "=0.39.6"
+# Database Persistence
+sqlx = { version = "0.9.0", default-features = false, features = [ "runtime-tokio", "tls-rustls", "sqlite", "chrono", "json", "migrate", "derive", "macros" ] }
+cron = "0.17.0"
+once_cell = "1.21.3"
+regex = "1.12.4"
+async-trait = "0.1.91"
+tiktoken-rs = "0.12.0"
+sha2 = "0.11.0"
+zeroize = { version = "1.9.0", features = ["derive"] }
+secrecy = "0.10.3"
+hex = "0.4.3"
+unicode-normalization = "0.1"
+base64 = "0.23"
+lru = "0.18.0"
+backoff = { version = "0.4", features = ["tokio"] }
+tokio-tungstenite = "0.30.0"
+subtle = "2.6"
+moka = { version = "0.12", features = ["future"] }
+tempfile = "3.14"
+csv = "1.3"
+
+
+# Hydra-RS: Code Intelligence Dependencies
+tree-sitter = { version = "0.26.10", default-features = false }
+tree-sitter-rust = "0.24.2"
+tree-sitter-typescript = "0.23"
+ignore = "0.4.30"
+streaming-iterator = "0.1"
+md5 = "0.8"
+walkdir = "2.5"
+rayon = "1.11.0"
+pulldown-cmark = "0.13"
+bm25 = { version = "2.3.2", features = ["parallelism"] }
+strsim = "0.11"
+# Vector Database (Optional for Legacy CPUs)
+lancedb = { version = "0.37.1", optional = true }
+arrow-schema = { version = "58.0.0", optional = true }
+arrow-array = { version = "58.0.0", optional = true }
+
+# Neural Audio (Optional for Legacy CPUs)
+ort = { version = "2.0.0-rc.13", optional = true }
+hound = { version = "3.5", optional = true }
+ndarray = { version = "0.15", optional = true }
+whisper-rs = { version = "0.16.0", optional = true }
+mdns-sd = "0.21.0"
+local-ip-address = "0.6.11"
+serde_yaml = "0.9.34"
+syn = { version = "3.0.4", features = ["full", "visit", "visit-mut"] }
+quote = "1.0.46"
+petgraph = "0.8.3"
+fs-err = "3.3.1"
+proc-macro2 = { version = "1.0", features = ["span-locations"] }
+clap = { version = "4.6.2", features = ["derive"] }
+server-rs-macros = { path = "./server-rs-macros" }
+rmp-serde = "1.3.1"
+specta-typescript = "0.0.8"
+specta = { version = "2.0.0-rc.21", features = ["derive", "chrono", "serde", "export", "serde_json"] }
+urlencoding = "2.1.3"
+url = "2.5"
+
+[features]
+# @docs ARCHITECTURE:Retrieval (See docs/Knowledge_Memory.md for complete GraphRAG / feature flag rationale)
+# Default build uses Graph Intelligence (petgraph) + BM25 Lexical search for zero-friction compilation
+# without C++/protoc/libclang prerequisites. Enable 'vector-memory' for LanceDB dense vector embeddings.
+default = []
+vector-memory = ["dep:lancedb", "dep:arrow-schema", "dep:arrow-array"]
+neural-audio = ["dep:ort", "dep:hound", "dep:ndarray", "dep:whisper-rs"]
+
+[profile.release]
+opt-level = 3 # Maximize execution performance
+lto = "fat"    # Full Link Time Optimization for maximum stripping
+codegen-units = 1 # Better optimizations
+panic = 'abort' # Smaller error handling
+strip = true    # Remove all symbols
+
+[profile.bench]
+opt-level = 3
+lto = "thin"
+codegen-units = 1
+
+[dev-dependencies]
+criterion = { version = "0.8.2", features = ["async_tokio"] }
+
+[lints.rust]
+dead_code = "allow"
+unused_imports = "allow"
+
+[lints.clippy]
+field_reassign_with_default = "allow"
+useless_format = "allow"
+items_after_test_module = "allow"
+len_zero = "allow"
+doc_lazy_continuation = "allow"
+manual_strip = "allow"
+wrong_self_convention = "allow"
+if_same_then_else = "allow"
+manual_clamp = "allow"
+match_like_matches_macro = "allow"
+redundant_guards = "allow"
+uninlined_format_args = "allow"
+
+[patch.crates-io]
+# GAP-SEC-03: Upstream patch reference for lru-rs
+lru = { git = "https://github.com/jeromefroe/lru-rs", branch = "master" }
