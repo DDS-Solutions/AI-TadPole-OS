@@ -1,0 +1,33 @@
+{
+  "schema_version": "1",
+  "name": "store_knowledge",
+  "display_name": "Store Knowledge",
+  "description": "Write a permanent fact to the Institutional Knowledge Store. Use for: business SOPs, client facts, agent learning, decision patterns.",
+  "version": "1.0.0",
+  "author": "Sovereign Engineering",
+  "permissions": [],
+  "danger_level": "medium",
+  "requires_oversight": true,
+  "parameters": {
+    "text": {
+      "type": "string",
+      "required": true
+    },
+    "topic": {
+      "type": "string",
+      "required": true
+    },
+    "cluster_id": {
+      "type": "string",
+      "required": false
+    },
+    "confidence": {
+      "type": "number",
+      "required": false
+    },
+    "ttl_days": {
+      "type": "integer",
+      "required": false
+    }
+  }
+}

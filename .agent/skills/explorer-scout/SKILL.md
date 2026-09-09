@@ -1,0 +1,26 @@
+---
+name: github-scout
+description: Scouting and analysis for GitHub repositories.
+allowed-tools: mcp_github_search_repositories, mcp_github_get_file_contents
+when_to_use: "When researching external GitHub repositories, analyzing their directory structures, or extracting architectural patterns."
+version: 1.0.0
+
+command: ""
+---
+
+> [!IMPORTANT]
+> **AI Context & Knowledge Heritage**
+> - **Subsystem**: Agent Skills Registry / explorer-scout
+> - **Architecture**: `@docs ARCHITECTURE:Documentation`
+> - **Failure Path**: Information drift, legacy terminology, or documentation mismatch.
+> - **Observability**: Traceability via `execution/parity_guard.py`
+
+# GitHub Scouting Workflow
+
+> 💡 **Isolated Execution**: Use `@[skills/research]` to run external repository exploration on a throwaway branch (`research/<repo>`) to keep working git state clean.
+
+1.  **Search Phase**: Use `github:search_repositories` to find the target repository.
+2.  **Structural Analysis**: List the repository contents to understand the file structure.
+3.  **Content Synthesis**: Read key files (README.md, main logic) to understand the project architecture.
+4.  **Final Report**: Synthesize findings into a research dossier.
+5.  **Archiving**: Commit findings to the local workspace.

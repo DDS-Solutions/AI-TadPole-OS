@@ -1,0 +1,247 @@
+/**
+ * @docs ARCHITECTURE:Interface
+ *
+ * ### AI Context Alignment
+ * - **Subsystem**: UI Components / Transcript / Buffered_Transcript_View
+ * - **Primary Entrypoints**: `Buffered_Transcript_View`
+ *
+ * ### ⚠️ Invariants & Non-Negotiables
+ * - `[Structural]` Component state and props flow adhere strictly to unidirectional UI data bindings.
+ *
+ * ### 🔍 Debugging & Observability
+ * - **Local Errors**: none
+ * - **Telemetry Targets**: none declared
+ * - **Witness Tests**: none declared
+ */
+
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { motion } from 'framer-motion';
+import { Terminal, Brain, Wrench, AlertCircle, CheckCircle2, Search } from 'lucide-react';
+import { event_bus, type log_entry } from '../../services/event_bus';
+import { i18n } from '../../i18n';
+import clsx from 'clsx';
+import { Tooltip } from '../ui';
+import { decodeAAAK, isAAAK } from '../../utils/aaak_decoder';
+
+interface Buffered_Transcript_View_Props {
+    agent_id?: string;
+    mission_id?: string;
+    class_name?: string;
+}
+
+const TranscriptEntry = React.memo(({ entry }: { entry: log_entry }) => {
+    const text_str = entry?.text && typeof entry.text === 'string' ? entry.text : '';
+    const is_thought = entry.metadata?.type === 'thought' || text_str.startsWith('Thinking:');
+    const is_tool = entry.metadata?.type === 'tool' || text_str.includes('Executing tool:');
+
+    let icon = <Terminal size={12} />;
+    let color = 'text-zinc-400';
+    let bg = 'bg-[color:var(--color-background)]/20';
+
+    if (is_thought) {
+        icon = <Brain size={12} className="text-cyan-400" />;
+        color = 'text-cyan-300';
+        bg = 'bg-cyan-500/5';
+    } else if (is_tool) {
+        icon = <Wrench size={12} className="text-green-400" />;
+        color = 'text-blue-300';
+        bg = 'bg-green-500/5';
+    } else if (entry.severity === 'error') {
+        icon = <AlertCircle size={12} className="text-red-400" />;
+        color = 'text-red-300';
+        bg = 'bg-red-500/5';
+    } else if (entry.severity === 'success') {
+        icon = <CheckCircle2 size={12} className="text-emerald-400" />;
+        color = 'text-emerald-300';
+        bg = 'bg-emerald-500/5';
+    }
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, x: -5 }}
+            animate={{ opacity: 1, x: 0 }}
+            className={clsx(
+                "flex flex-col gap-1 p-2 border-l-2 transition-colors group mb-1",
+                bg,
+                is_thought ? "border-cyan-500/50" :
+                    is_tool ? "border-green-500/50" :
+                        entry.severity === 'error' ? "border-red-500/50" :
+                            entry.severity === 'success' ? "border-emerald-500/50" : "border-[color:var(--color-border)]"
+            )}
+        >
+            <div className="flex items-center gap-2 opacity-50 group-hover:opacity-100 transition-opacity">
+                {icon}
+                <span className="text-[10px] font-mono uppercase tracking-widest">{entry.source}</span>
+                <span className="text-[9px] font-mono text-zinc-600 ml-auto">
+                    {(() => {
+                        const safe_date = entry.timestamp instanceof Date ? entry.timestamp : new Date(entry.timestamp);
+                        return !isNaN(safe_date.getTime())
+                            ? safe_date.toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })
+                            : '--:--:--';
+                    })()}
+                </span>
+            </div>
+            <div className={clsx("text-xs leading-relaxed break-words font-mono", color)}>
+                {isAAAK(entry.text) ? (
+                    <Tooltip content={decodeAAAK(entry.text)} position="top">
+                        <span className="cursor-help border-b border-zinc-700/50 hover:border-zinc-500 transition-colors">
+                            {entry.text}
+                        </span>
+                    </Tooltip>
+                ) : (
+                    entry.text
+                )}
+            </div>
+        </motion.div>
+    );
+});
+TranscriptEntry.displayName = 'TranscriptEntry';
+
+/**
+ * High-performance, de-duplicated transcript rendering engine.
+ * 
+ * Features:
+ * - ID-based de-duplication (guards against broadcast bridge overlaps)
+ * - Structured block categorization (thinking, tool, stdout, error)
+ * - RAF-batching for high-frequency streams
+ * - Partial-line buffering for streaming consistency
+ */
+export const Buffered_Transcript_View: React.FC<Buffered_Transcript_View_Props> = ({
+    agent_id,
+    mission_id,
+    class_name
+}) => {
+    const [entries, set_entries] = useState<log_entry[]>([]);
+    const [filter, set_filter] = useState('');
+    const [debounced_filter, set_debounced_filter] = useState('');
+    const scroll_ref = useRef<HTMLDivElement>(null);
+    const seen_ids = useRef<Set<string>>(new Set());
+    const buffer_ref = useRef<log_entry[]>([]);
+    const is_auto_scroll = useRef(true);
+    const local_id_counter_ref = useRef(0);
+
+    // Debounce the filter
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            set_debounced_filter(filter);
+        }, 300);
+        return () => clearTimeout(handler);
+    }, [filter]);
+
+    useEffect(() => {
+        let mounted = true;
+        // subscribe to the global event bus
+        const unsubscribe = event_bus.subscribe_logs((entry) => {
+            // Filter by agent or mission if provided
+            if (agent_id && entry.agent_id !== agent_id) return;
+            if (mission_id && entry.mission_id !== mission_id) return;
+
+            // De-duplicate using backend-provided IDs
+            if (entry.id && seen_ids.current.has(entry.id)) return;
+
+            // Assign robust local ID if missing
+            const time_ms = entry.timestamp instanceof Date 
+                ? entry.timestamp.getTime() 
+                : (typeof entry.timestamp === 'number' ? entry.timestamp : (new Date(entry.timestamp).getTime() || Date.now()));
+            const entry_to_buffer = entry.id ? entry : { ...entry, id: `local-${time_ms}-${local_id_counter_ref.current++}` };
+            seen_ids.current.add(entry_to_buffer.id!);
+
+            // Protect seen_ids set size with bounded sliding window (max 5,000 entries)
+            if (seen_ids.current.size > 5000) {
+                const arr = Array.from(seen_ids.current);
+                seen_ids.current = new Set(arr.slice(-2500));
+            }
+
+            buffer_ref.current.push(entry_to_buffer);
+        });
+
+        // High-frequency batching via RAF
+        let raf_id: number;
+        const flush = () => {
+            if (!mounted) return;
+            if (buffer_ref.current.length > 0) {
+                const batch = [...buffer_ref.current];
+                buffer_ref.current = [];
+                set_entries(prev => {
+                    const next = [...prev, ...batch];
+                    return next.slice(-1000); // hard cap for DOM performance
+                });
+            }
+            raf_id = requestAnimationFrame(flush);
+        };
+        raf_id = requestAnimationFrame(flush);
+
+        return () => {
+            mounted = false;
+            unsubscribe();
+            cancelAnimationFrame(raf_id);
+        };
+    }, [agent_id, mission_id]);
+
+    const handle_scroll = () => {
+        if (!scroll_ref.current) return;
+        const { scrollTop, scrollHeight, clientHeight } = scroll_ref.current;
+        const is_at_bottom = scrollHeight - scrollTop - clientHeight < 10;
+        is_auto_scroll.current = is_at_bottom;
+    };
+
+    // Instant auto-scroll without layout animation stutter
+    useEffect(() => {
+        if (scroll_ref.current && is_auto_scroll.current) {
+            scroll_ref.current.scrollTo({
+                top: scroll_ref.current.scrollHeight,
+                behavior: 'instant'
+            });
+        }
+    }, [entries]);
+
+    const filtered_entries = useMemo(() => {
+        if (!debounced_filter) return entries;
+        const lower = debounced_filter.toLowerCase();
+        return entries.filter(e => e.text.toLowerCase().includes(lower) || e.source.toLowerCase().includes(lower));
+    }, [entries, debounced_filter]);
+
+    return (
+        <div className={clsx("flex flex-col h-full bg-zinc-950/40 border border-[color:var(--color-border)] rounded-xl overflow-hidden backdrop-blur-md", class_name)}>
+            <div className="p-3 border-b border-[color:var(--color-surface)] bg-[color:var(--color-background)]/40 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-2">
+                    <Terminal size={14} className="text-zinc-500" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">{i18n.t('transcript.run_log')}</span>
+                </div>
+
+                <div className="relative flex-1 max-w-xs">
+                    <Search className="absolute left-2 top-1/2 -translate-y-1/2 text-zinc-600" size={12} />
+                    <input
+                        type="text"
+                        value={filter}
+                        onChange={(e) => set_filter(e.target.value)}
+                        placeholder={i18n.t('transcript.search_placeholder')}
+                        className="w-full bg-[color:var(--color-surface)]/50 border border-[color:var(--color-border)] rounded-md py-1 pl-7 pr-2 text-[10px] text-zinc-300 placeholder:text-zinc-700 focus:outline-none focus:border-zinc-700 transition-colors"
+                    />
+                </div>
+
+                <div className="text-[9px] font-mono text-zinc-600">
+                    {filtered_entries.length} {i18n.t('transcript.entries')}
+                </div>
+            </div>
+
+            <div
+                ref={scroll_ref}
+                onScroll={handle_scroll}
+                className="flex-1 overflow-y-auto p-2 custom-scrollbar space-y-0.5"
+                style={{ willChange: 'transform', contain: 'content' }}
+            >
+                {filtered_entries.map(entry => (
+                    <TranscriptEntry key={entry.id} entry={entry} />
+                ))}
+
+                {filtered_entries.length === 0 && (
+                    <div className="h-full flex flex-col items-center justify-center opacity-20 py-12">
+                        <Terminal size={32} className="text-zinc-600 mb-2" />
+                        <span className="text-[10px] font-bold uppercase tracking-[0.2em]">{i18n.t('transcript.empty_state')}</span>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};

@@ -1,0 +1,28 @@
+{
+  "id": "legal-eagle",
+  "name": "Legal Eagle",
+  "role": "General Counsel",
+  "department": "Legal",
+  "description": "Reviews contracts and legal documentation.",
+  "status": "ready",
+  "model": "gemini-pro-latest",
+  "modelConfig": {
+    "provider": "google",
+    "modelId": "gemini-pro-latest",
+    "systemPrompt": "You are a top-tier legal AI capable of executing template reviews."
+  },
+  "tokensUsed": 0,
+  "budgetUsd": 150.0,
+  "costUsd": 0.0,
+  "metadata": {
+    "role": "General Counsel",
+    "department": "Legal"
+  },
+  "skills": ["read_file"],
+  "workflows": [],
+  "tokenUsage": {
+    "inputTokens": 0,
+    "outputTokens": 0,
+    "totalTokens": 0
+  }
+}

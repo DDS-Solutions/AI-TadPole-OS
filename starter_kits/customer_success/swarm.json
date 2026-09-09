@@ -1,0 +1,11 @@
+{
+  "swarm_id": "customer-success-starter",
+  "title": "Customer Success & Triage Swarm",
+  "description": "A pre-configured swarm for SMEs to handle support ticket triage and sentiment analysis.",
+  "initial_agent": "success-lead",
+  "required_agents": [
+    "success-lead",
+    "triage-bot",
+    "feedback-synthesizer"
+  ]
+}

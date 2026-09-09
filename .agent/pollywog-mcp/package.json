@@ -1,0 +1,13 @@
+{
+  "name": "pollywog-mcp",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.6.0"
+  },
+  "overrides": {
+    "@hono/node-server": "^2.0.5",
+    "fast-uri": "^3.1.7",
+    "qs": "^6.16.0"
+  }
+}

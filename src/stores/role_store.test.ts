@@ -1,0 +1,85 @@
+/**
+ * @docs ARCHITECTURE:TestSuites
+ *
+ * ### AI Context Alignment
+ * - **Subsystem**: Frontend State Store / role_store.test
+ *
+ * ### ⚠️ Invariants & Non-Negotiables
+ * - `[Structural]` Store mutations maintain immutable state transitions and notify subscribers deterministically.
+ *
+ * ### 🔍 Debugging & Observability
+ * - **Local Errors**: none
+ * - **Telemetry Targets**: none declared
+ * - **Witness Tests**: none declared
+ */
+
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { use_role_store } from './role_store';
+import { tadpole_os_service } from '../services/tadpoleos_service';
+import type { Role } from '../contracts/role/domain';
+
+vi.mock('../services/tadpoleos_service', () => ({
+    tadpole_os_service: {
+        get_role_blueprints: vi.fn()
+    }
+}));
+
+describe('use_role_store', () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+    });
+
+    it('should allow adding a new role', () => {
+        const new_role: Role = { 
+            id: 'new-role', 
+            name: 'NewRole', 
+            skills: ['skill1'], 
+            workflows: ['flow1'],
+            department: 'Engineering',
+            description: 'Test',
+            mcp_tools: [],
+            requires_oversight: false,
+            created_at: new Date().toISOString()
+        };
+        use_role_store.getState().add_role(new_role);
+        
+        const state = use_role_store.getState();
+        expect(state.roles['new-role']).toEqual(new_role);
+    });
+
+    it('should allow updating an existing role', () => {
+        const updates = { skills: ['updated'] };
+        use_role_store.getState().update_role('new-role', updates);
+        
+        const state = use_role_store.getState();
+        expect(state.roles['new-role'].skills).toEqual(['updated']);
+    });
+
+    it('should allow deleting a role', () => {
+        use_role_store.getState().delete_role('new-role');
+        
+        const state = use_role_store.getState();
+        expect(state.roles['new-role']).toBeUndefined();
+    });
+
+    it('should fetch and merge role blueprints from backend', async () => {
+        vi.mocked(tadpole_os_service.get_role_blueprints).mockResolvedValueOnce([
+            {
+                id: 'backend-role-1',
+                name: 'Backend Role 1',
+                department: 'Engineering',
+                description: 'Backend blueprint',
+                skills: ['rust'],
+                workflows: ['deploy'],
+                mcp_tools: [],
+                requires_oversight: false
+            }
+        ]);
+
+        await use_role_store.getState().fetch_blueprints();
+
+        const state = use_role_store.getState();
+        expect(state.roles['backend-role-1']).toBeDefined();
+        expect(state.roles['backend-role-1'].name).toBe('Backend Role 1');
+    });
+});

@@ -1,0 +1,73 @@
+services:
+  tadpole:
+    # Build from GHCR (Pre-compiled Image)
+    image: ghcr.io/dds-solutions/ai-tadpole-os:latest
+    container_name: tadpole-os
+    # SECURE BINDING: 
+    # Tailscale entirely restricts access to this machine. We bind to 0.0.0.0 so that 
+    # the Windows PC can connect; SSH rebuilds were stripping the volatile TAILSCALE_IP env var.
+    ports:
+      - "0.0.0.0:8000:8000"
+    environment:
+      # Inject necessary environment variables into the container
+      # NEURAL_TOKEN is REQUIRED — container will fail to start if unset.
+      - NEURAL_TOKEN=${NEURAL_TOKEN:?NEURAL_TOKEN must be set in .env}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - INCEPTION_API_KEY=${INCEPTION_API_KEY}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-}
+      - BIND_ADDRESS=0.0.0.0
+      - DATABASE_URL=sqlite:/app/data/tadpole.db
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+    volumes:
+      # Mount the workspaces directory (sandboxed at data/workspaces)
+      - ./data/workspaces:/app/data/workspaces
+      # Persist the unified data directory (database, skills, workflows)
+      - ./data:/app/data
+      # Persist database backups
+      - ./backups:/app/backups
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-sf", "http://localhost:8000/v1/engine/health" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "127.0.0.1:9090:9090"
+    restart: unless-stopped
+    depends_on:
+      - tadpole
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_ADMIN_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./monitoring/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./monitoring/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./monitoring/grafana/dashboards:/etc/grafana/dashboards
+    ports:
+      - "127.0.0.1:3000:3000"
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    ports:
+      - "127.0.0.1:16686:16686"
+      - "127.0.0.1:4317:4317"
+      - "127.0.0.1:4318:4318"
+    restart: unless-stopped
