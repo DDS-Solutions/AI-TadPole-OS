@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dds-solutions.github.io/AI-Tadpole-OS/sitemap.xml

@@ -1,0 +1,144 @@
+/**
+ * @docs ARCHITECTURE:Domain
+ *
+ * ### AI Context Alignment
+ * - **Subsystem**: System Core / serializers
+ * - **Primary Entrypoints**: `normalize_provider_for_backend`, `serialize_agent_update`
+ *
+ * ### ⚠️ Invariants & Non-Negotiables
+ * - `[Structural]` Deterministic internal state integrity and strict interface contract compliance.
+ *
+ * ### 🔍 Debugging & Observability
+ * - **Local Errors**: none
+ * - **Telemetry Targets**: `[Serializer]`
+ * - **Witness Tests**: none declared
+ */
+
+console.debug("[Serializer] Domain logic loaded");
+
+import type { AgentPatch, AgentUpdateDto } from '../../contracts/agent';
+import { resolve_provider } from '../../utils/model_utils';
+
+const VALID_PROVIDERS = new Set([
+    'openai', 'anthropic', 'google', 'gemini', 'ollama', 'groq', 'mistral',
+    'perplexity', 'fireworks', 'together', 'deepseek', 'xai', 'inception',
+    'openrouter', 'cerebras', 'sambanova', 'ollama-cloud'
+]);
+
+/**
+ * normalize_provider_for_backend
+ * Maps legacy/invalid provider strings (like 'local', 'meta', 'alibaba') to valid backend enum options.
+ */
+export const normalize_provider_for_backend = (provider: string | undefined): string => {
+    if (!provider) return 'google';
+    const lower = provider.toLowerCase();
+    if (VALID_PROVIDERS.has(lower)) return lower;
+    
+    if (lower === 'local') return 'ollama';
+    if (lower === 'meta') return 'groq';
+    if (lower === 'alibaba') return 'groq';
+    
+    return 'google';
+};
+
+/**
+ * serialize_agent_update
+ * Maps frontend Domain updates back to the backend AgentUpdateDto shape.
+ * Implements the "One Merge Policy" for metadata vs first-class fields.
+ */
+export const serialize_agent_update = (patch: AgentPatch): AgentUpdateDto => {
+    const dto: AgentUpdateDto = {};
+
+    if (patch.role !== undefined) dto.role = patch.role;
+    if (patch.name !== undefined) dto.name = patch.name;
+    if (patch.department !== undefined) dto.department = patch.department;
+    if (patch.description !== undefined) dto.description = patch.description;
+    if (patch.status !== undefined) dto.status = patch.status;
+    
+    // Model resolution logic (Migrated from legacy mappers)
+    if (patch.model !== undefined) {
+        dto.modelId = patch.model;
+        if (patch.model_config?.provider) {
+            dto.provider = normalize_provider_for_backend(patch.model_config.provider);
+        } else {
+            const m = patch.model.toLowerCase();
+            if (m.includes('gpt')) dto.provider = 'openai';
+            else if (m.includes('claude')) dto.provider = 'anthropic';
+            else if (m.includes('gemini')) dto.provider = 'google';
+            else if (m.includes('llama') || m.includes('mixtral')) dto.provider = 'groq';
+            else dto.provider = normalize_provider_for_backend(resolve_provider(patch.model));
+        }
+    }
+
+    if (patch.model_config !== undefined) {
+        const resolved_model_id = patch.model_config.modelId || dto.modelId || patch.model;
+        if (resolved_model_id) dto.modelId = resolved_model_id;
+        dto.provider = normalize_provider_for_backend(patch.model_config.provider);
+        dto.modelConfig = {
+            ...patch.model_config,
+            modelId: resolved_model_id || '',
+            provider: normalize_provider_for_backend(patch.model_config.provider)
+        };
+    }
+
+    if (patch.theme_color !== undefined) dto.themeColor = patch.theme_color;
+    if (patch.active_model_slot !== undefined) dto.activeModelSlot = patch.active_model_slot;
+    
+    if (patch.model_2 !== undefined) dto.model2 = patch.model_2;
+    if (patch.model_3 !== undefined) dto.model3 = patch.model_3;
+    
+    if (patch.model_config2 !== undefined) {
+        dto.modelConfig2 = {
+            ...patch.model_config2,
+            provider: normalize_provider_for_backend(patch.model_config2.provider)
+        };
+    }
+    if (patch.model_config3 !== undefined) {
+        dto.modelConfig3 = {
+            ...patch.model_config3,
+            provider: normalize_provider_for_backend(patch.model_config3.provider)
+        };
+    }
+    if (patch.budget_usd !== undefined) dto.budgetUsd = patch.budget_usd;
+    if (patch.cost_usd !== undefined) dto.costUsd = patch.cost_usd;
+    
+    if (patch.skills !== undefined) dto.skills = patch.skills;
+    if (patch.workflows !== undefined) dto.workflows = patch.workflows;
+    if (patch.mcp_tools !== undefined) dto.mcpTools = patch.mcp_tools;
+    
+    if (patch.voice_id !== undefined) dto.voiceId = patch.voice_id;
+    if (patch.voice_engine !== undefined) dto.voiceEngine = patch.voice_engine;
+    if (patch.stt_engine !== undefined) dto.sttEngine = patch.stt_engine;
+    if (patch.category !== undefined) dto.category = patch.category;
+    if (patch.created_at !== undefined) dto.createdAt = patch.created_at;
+    if (patch.last_pulse !== undefined) dto.lastPulse = patch.last_pulse;
+    if (patch.last_failure_at !== undefined) dto.lastFailureAt = patch.last_failure_at;
+    
+    if (patch.input_tokens !== undefined) dto.tokenUsage = { ...dto.tokenUsage, inputTokens: Math.floor(patch.input_tokens) };
+    if (patch.output_tokens !== undefined) dto.tokenUsage = { ...dto.tokenUsage, outputTokens: Math.floor(patch.output_tokens) };
+    if (patch.tokens_used !== undefined) {
+        dto.tokensUsed = Math.floor(patch.tokens_used);
+        dto.tokenUsage = { ...dto.tokenUsage, totalTokens: Math.floor(patch.tokens_used) };
+    }
+    
+    if (patch.current_task !== undefined) dto.currentTask = patch.current_task;
+    if (patch.failure_count !== undefined) dto.failureCount = Math.floor(patch.failure_count);
+    if (patch.connector_configs !== undefined) dto.connectorConfigs = patch.connector_configs;
+    if (patch.metadata !== undefined) dto.metadata = patch.metadata;
+    if (patch.requires_oversight !== undefined) dto.requiresOversight = patch.requires_oversight;
+    if (patch.reasoning_depth !== undefined) dto.reasoningDepth = patch.reasoning_depth;
+    if (patch.current_reasoning_turn !== undefined) dto.currentReasoningTurn = patch.current_reasoning_turn;
+    if (patch.economic_zone !== undefined) dto.economicZone = patch.economic_zone;
+    if (patch.daily_spend_limit !== undefined) dto.dailySpendLimit = patch.daily_spend_limit;
+    if (patch.daily_spent_accumulated !== undefined) dto.dailySpentAccumulated = patch.daily_spent_accumulated;
+    if (patch.balance !== undefined) dto.balance = patch.balance;
+    if (patch.inventory !== undefined) {
+        dto.inventory = patch.inventory.map(item => ({
+            assetId: item.asset_id,
+            assetName: item.asset_name,
+            assetData: item.asset_data
+        }));
+    }
+
+    return dto;
+};

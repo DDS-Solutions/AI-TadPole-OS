@@ -1,0 +1,49 @@
+> [!IMPORTANT]
+> **AI Context & Knowledge Heritage**
+> - **Subsystem**: Agent Skills Registry / api-patterns
+> - **Architecture**: `@docs ARCHITECTURE:Documentation`
+> - **Failure Path**: Information drift, legacy terminology, or documentation mismatch.
+> - **Observability**: Traceability via `execution/parity_guard.py` (`[trpc]`)
+
+# tRPC Principles
+
+> End-to-end type safety for TypeScript monorepos.
+
+## When to Use
+
+```
+✅ Perfect fit:
+├── TypeScript on both ends
+├── Monorepo structure
+├── Internal tools
+├── Rapid development
+└── Type safety critical
+
+❌ Poor fit:
+├── Non-TypeScript clients
+├── Public API
+├── Need REST conventions
+└── Multiple language backends
+```
+
+## Key Benefits
+
+```
+Why tRPC:
+├── Zero schema maintenance
+├── End-to-end type inference
+├── IDE autocomplete across stack
+├── Instant API changes reflected
+├── Built-in schema validation (e.g., Zod integration for runtime type safety)
+└── No code generation step
+```
+
+## Integration Patterns
+
+```
+Common setups:
+├── Next.js + tRPC (most common)
+├── Monorepo with shared types
+├── Remix + tRPC
+└── Any TS frontend + backend
+```

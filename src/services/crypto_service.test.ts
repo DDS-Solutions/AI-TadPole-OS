@@ -1,0 +1,93 @@
+/**
+ * @docs ARCHITECTURE:TestSuites
+ *
+ * ### AI Context Alignment
+ * - **Subsystem**: Frontend Service Layer / crypto_service.test
+ *
+ * ### ⚠️ Invariants & Non-Negotiables
+ * - `[Structural]` Asynchronous service calls normalize response envelopes and propagate typed errors.
+ *
+ * ### 🔍 Debugging & Observability
+ * - **Local Errors**: none
+ * - **Telemetry Targets**: none declared
+ * - **Witness Tests**: none declared
+ */
+
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { Crypto_Service } from './crypto_service';
+import * as crypto_utils from '../utils/crypto';
+
+// Mock the underlying crypto utils because they use Web Workers
+vi.mock('../utils/crypto', () => ({
+    encrypt_text: vi.fn(),
+    decrypt_text: vi.fn()
+}));
+
+describe('crypto_service', () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+    });
+
+    describe('generate_id', () => {
+        it('generates a valid UUID-like format', () => {
+            const id = Crypto_Service.generate_id();
+            expect(id).toMatch(/^[0-9a-f-]{36}$/);
+        });
+
+        it('is reasonably unique', () => {
+            const id1 = Crypto_Service.generate_id();
+            const id2 = Crypto_Service.generate_id();
+            expect(id1).not.toBe(id2);
+        });
+    });
+
+    describe('Encryption/Decryption', () => {
+        const password = 'test-password';
+        const raw_text = 'sensitive-data';
+        const encrypted_text = '{"encrypted": "true"}';
+
+        it('calls encrypt_text util correctly', async () => {
+            (crypto_utils.encrypt_text as any).mockResolvedValue(encrypted_text);
+            
+            const result = await Crypto_Service.encrypt_data(raw_text, password);
+            expect(crypto_utils.encrypt_text).toHaveBeenCalledWith(raw_text, password);
+            expect(result).toBe(encrypted_text);
+        });
+
+        it('calls decrypt_text util correctly', async () => {
+            (crypto_utils.decrypt_text as any).mockResolvedValue(raw_text);
+            
+            const result = await Crypto_Service.decrypt_data(encrypted_text, password);
+            expect(crypto_utils.decrypt_text).toHaveBeenCalledWith(encrypted_text, password);
+            expect(result).toBe(raw_text);
+        });
+
+        it('throws FAILED_TO_ENCRYPT_DATA on encryption error', async () => {
+            (crypto_utils.encrypt_text as any).mockRejectedValue(new Error('fail'));
+            
+            await expect(Crypto_Service.encrypt_data(raw_text, password))
+                .rejects.toThrow('FAILED_TO_ENCRYPT_DATA');
+        });
+
+        it('throws INVALID_MASTER_KEY on decryption error', async () => {
+            (crypto_utils.decrypt_text as any).mockRejectedValue(new Error('fail'));
+            
+            await expect(Crypto_Service.decrypt_data(encrypted_text, password))
+                .rejects.toThrow('INVALID_MASTER_KEY');
+        });
+    });
+
+    describe('verify_master_key', () => {
+        it('returns true on valid key', async () => {
+            (crypto_utils.decrypt_text as any).mockResolvedValue('success');
+            const result = await Crypto_Service.verify_master_key('sample', 'pass');
+            expect(result).toBe(true);
+        });
+
+        it('returns false on invalid key', async () => {
+            (crypto_utils.decrypt_text as any).mockRejectedValue(new Error('fail'));
+            const result = await Crypto_Service.verify_master_key('sample', 'wrong');
+            expect(result).toBe(false);
+        });
+    });
+});
