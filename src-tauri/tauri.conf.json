@@ -1,0 +1,52 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "AI-Tadpole-OS",
+  "version": "1.1.462",
+  "identifier": "com.tadpole.os",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
+    "devUrl": "http://localhost:5173",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "AI-Tadpole-OS",
+        "width": 1280,
+        "height": 720,
+        "resizable": true,
+        "transparent": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' http://localhost:* ws://localhost:* http://127.0.0.1:* ws://127.0.0.1:* http://192.168.* ws://192.168.* http://10.* ws://10.* http://172.16.* ws://172.16.* http://172.17.* ws://172.17.* http://172.18.* ws://172.18.* http://172.19.* ws://172.19.* http://172.20.* ws://172.20.* http://172.21.* ws://172.21.* http://172.22.* ws://172.22.* http://172.23.* ws://172.23.* http://172.24.* ws://172.24.* http://172.25.* ws://172.25.* http://172.26.* ws://172.26.* http://172.27.* ws://172.27.* http://172.28.* ws://172.28.* http://172.29.* ws://172.29.* http://172.30.* ws://172.30.* http://172.31.* ws://172.31.*; img-src 'self' data: blob:;",
+      "capabilities": [
+        "default"
+      ]
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": [
+      "nsis"
+    ],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "externalBin": [
+      "bin/server-rs"
+    ],
+    "resources": [
+      "../docs/**/*",
+      "../directives/**/*",
+      "../src/data/knowledge/**/*",
+      "../.env.schema"
+    ]
+  }
+}

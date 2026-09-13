@@ -1,0 +1,102 @@
+//! @docs ARCHITECTURE:Registry
+//!
+//! ### AI Context Alignment
+//! - **Subsystem**: Sovereign Engine / Agent Runner / prompt_renderer
+//!
+//! ### ⚠️ Invariants & Non-Negotiables
+//! - `[Structural]` Type-safe state handling and bounded execution without unhandled panics.
+//!
+//! ### 🔍 Debugging & Observability
+//! - **Local Errors**: none
+//! - **Telemetry Targets**: none declared
+//! - **Witness Tests**: none declared
+
+use super::service_traits::PromptRendererTrait;
+use std::collections::HashMap;
+
+pub struct PromptRenderer;
+
+impl PromptRendererTrait for PromptRenderer {
+    fn render(&self, template: &str, variables: &HashMap<&str, String>) -> String {
+        let mut rendered = template.to_string();
+        for (key, value) in variables {
+            let placeholder = format!("{{{{{}}}}}", key);
+            rendered = rendered.replace(&placeholder, value);
+        }
+        rendered
+    }
+
+    fn default_system_template(&self) -> &'static str {
+        r#"{{safe_mode_prefix}}{{tool_mode_prefix}}You are {{name}} (ID: {{agent_id}}, Role: {{role}}) at the {{hierarchy_label}} level of the swarm hierarchy.
+Department: {{department}}
+Description: {{description}}
+
+ACTIVE DIRECTIVES FROM SWARM:
+{{directives}}
+
+PENDING PEER REVIEWS:
+{{reviews}}
+
+GLOBAL SWARM INTELLIGENCE:
+{{global_intelligence}}
+
+DIRECTIVE PRIORITY (MANDATORY):
+{{priority}}
+
+PERSONALITY & CONSTRAINTS:
+{{personality}}
+
+{{skill_fragments}}
+{{workflow_fragments}}
+SWARM MISSION CONTEXT (Shared Findings):
+{{swarm_context}}
+
+CONTEXT BREADCRUMBS (Inherited File Paths):
+{{breadcrumbs}}
+
+RECENT FINDINGS (Inherited from Parent):
+{{findings}}
+
+PRIMARY MISSION GOAL:
+{{primary_goal}}
+
+CLUSTER DIRECTORY (Available Specialists):
+{{cluster_directory}}
+
+RECRUITMENT LINEAGE (Mission Path):
+{{lineage}}
+
+SKILLS: {{skills}}
+WORKFLOWS: {{workflows}}
+
+ACTION BIAS (Troubleshooting & Discovery):
+{{filesystem_bias}}
+- NO REPEATS: If 'search_mission_knowledge' returns no results, do not try it again with slightly different wording. Immediately switch to technical discovery tools.
+
+SWARM PROTOCOL:
+{{swarm_protocols}}
+
+--- GLOBAL ARCHITECTURE MAP ---
+{{repo_map}}
+
+--- GLOBAL OS IDENTITY ---
+{{identity}}
+
+--- LONG-TERM SWARM MEMORY ---
+{{memory}}
+
+--- CURRENT WORKING CONTEXT (Persistent Scratchpad) ---
+{{working_memory}}
+
+--- MISSION SUMMARY (Historical Context) ---
+{{history}}
+
+--- REALITY ANCHOR & GROUNDING PROTOCOL ---
+1. ZERO ASSUMPTION: Content in LONG-TERM SWARM MEMORY and ACTIVE DIRECTIVES contains policies, standards, and past post-mortems — NEVER assume an audit or report already exists unless you have verified it on disk.
+2. EVIDENCE REQUIREMENT: Never declare a milestone or phase complete (e.g. 'Audit Complete', 'Discovery Phase Complete') or cite a report without verifying that the file physically exists on disk using 'read_file' or 'list_files'.
+3. CANONICAL CONTRACT: All server API routes are Axum /v1. Never fabricate /api/v2 or /api/v3 endpoints. All states must strictly adhere to canonical enums (SubsystemStatus, MissionStatus) in docs/wiki/Glossary.md.
+
+(cache_control: {"type": "ephemeral"})
+You may use 'update_working_memory' to refine your current scratchpad as your mission evolves."#
+    }
+}

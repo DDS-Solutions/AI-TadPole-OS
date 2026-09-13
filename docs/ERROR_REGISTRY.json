@@ -1,0 +1,157 @@
+{
+  "BAD_REQUEST": {
+    "type_uri": "https://tadpole.os/errors/bad-request",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 400
+  },
+  "UNAUTHORIZED": {
+    "type_uri": "https://tadpole.os/errors/unauthorized",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 401
+  },
+  "FORBIDDEN": {
+    "type_uri": "https://tadpole.os/errors/forbidden",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 403
+  },
+  "NOT_FOUND": {
+    "type_uri": "https://tadpole.os/errors/not-found",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 404
+  },
+  "VALIDATION_ERROR": {
+    "type_uri": "https://tadpole.os/errors/validation-error",
+    "source": "server-rs/src/agent/skill_error.rs",
+    "status": 400
+  },
+  "DOMAIN_ERROR": {
+    "code_pattern": "DOMAIN_ERROR:{DOMAIN_CODE}",
+    "type_uri_pattern": "https://tadpole.os/errors/domain%3A{domain-code}",
+    "source": "server-rs/src/error/metadata.rs",
+    "statuses": [400, 402, 403, 409, 500]
+  },
+  "INTERNAL_SERVER_ERROR": {
+    "type_uri": "https://tadpole.os/errors/internal",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 500
+  },
+  "NOT_IMPLEMENTED": {
+    "type_uri": "https://tadpole.os/errors/not-implemented",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 501
+  },
+  "OOM_QUANTIZATION_FALLBACK": {
+    "code_pattern": "OOM_QUANTIZATION_FALLBACK:{MODEL_ID}",
+    "type_uri": "https://tadpole.os/errors/resource-exhaustion",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 507,
+    "remediation": "Switch to a lower quantization (e.g., q4_K_M) or increase system VRAM."
+  },
+  "RECRUITMENT_FAILED": {
+    "code_pattern": "RECRUITMENT_FAILED:{RECIPE_ID}:{ROLE}",
+    "type_uri_pattern": "https://tadpole.os/errors/recruitment%3A{role}",
+    "source": "server-rs/src/agent/skill_error.rs",
+    "status": 503,
+    "remediation": "Check if an agent with the required role is registered and in 'idle' status."
+  },
+  "INFRA_ERROR": {
+    "code_pattern": "INFRA_ERROR:{PROVIDER_ID}",
+    "type_uri": "https://tadpole.os/errors/infrastructure",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 502,
+    "remediation": "Verify API credentials and endpoint connectivity in Provider Settings."
+  },
+  "RATE_LIMIT": {
+    "type_uri": "https://tadpole.os/errors/rate-limit",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 429
+  },
+  "CONFLICT": {
+    "type_uri": "https://tadpole.os/errors/conflict",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 409
+  },
+  "DEGRADED_STATE": {
+    "type_uri": "https://tadpole.os/errors/degraded-state",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 503
+  },
+  "MULTI_ERROR": {
+    "type_uri": "https://tadpole.os/errors/multi-error",
+    "source": "server-rs/src/error/metadata.rs",
+    "statuses": [400, 500],
+    "behavior": "Uses the first error status unless any member is a server error."
+  },
+  "SECURITY_BOUNDARY_VIOLATION": {
+    "type_uri": "https://tadpole.os/errors/security-boundary-violation",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 403
+  },
+  "OLLAMA_OFFLINE": {
+    "type_uri": "https://tadpole.os/errors/ollama-offline",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 503
+  },
+  "GRAPH_ERROR": {
+    "type_uri": "https://tadpole.os/errors/graph-error",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 500
+  },
+  "BUDGET_EXHAUSTED": {
+    "type_uri": "https://tadpole.os/errors/budget-exhausted",
+    "source": "server-rs/src/agent/runner/error.rs",
+    "status": 402
+  },
+  "RECURSION_BLOCKED": {
+    "type_uri": "https://tadpole.os/errors/recursion-blocked",
+    "source": "server-rs/src/agent/runner/error.rs",
+    "status": 508
+  },
+  "SENTINEL_GATE_FAILURE": {
+    "type_uri": "https://tadpole.os/errors/sentinel-gate-failure",
+    "source": "server-rs/src/agent/runner/error.rs",
+    "status": 403
+  },
+  "COMPRESSION_ERROR": {
+    "type_uri": "https://tadpole.os/errors/compression-error",
+    "source": "server-rs/src/agent/runner/error.rs",
+    "status": 500
+  },
+  "SANITIZATION_VIOLATION": {
+    "type_uri": "https://tadpole.os/errors/sanitization-violation",
+    "source": "server-rs/src/agent/skill_error.rs",
+    "status": 403
+  },
+  "BUDGET_BREACH": {
+    "type_uri": "https://tadpole.os/errors/budget-breach",
+    "source": "server-rs/src/security/metering.rs",
+    "status": 402,
+    "directive": "IDENTITY.md Directive #7",
+    "remediation": "System has entered STASIS mode. All Specialist Nodes are suspended. Snapshot written to Merkle Audit Trail. Entity 0 must issue an explicit RESUME or TERMINATE command. Do NOT restart the engine to self-resume.",
+    "stasis_behavior": "Suspend all nodes → snapshot to Merkle Trail → alert Entity 0 → await RESUME or TERMINATE"
+  },
+  "STASIS_ACTIVE": {
+    "type_uri": "https://tadpole.os/errors/stasis-active",
+    "source": "server-rs/src/security/metering.rs",
+    "status": 503,
+    "directive": "IDENTITY.md Directive #7",
+    "remediation": "System is in STASIS mode pending Entity 0 authorization. No new tool calls or API requests will be processed. Check the active task inventory in the BUDGET_BREACH alert and await Entity 0 RESUME or TERMINATE.",
+    "recovery": "Entity 0 must issue explicit RESUME or TERMINATE — system will NOT self-resume"
+  },
+  "LOGIC_BLOCKER": {
+    "type_uri": "https://tadpole.os/errors/logic-blocker",
+    "source": "server-rs/src/agent/runner/mod.rs",
+    "status": 422,
+    "directive": "IDENTITY.md Directive #3",
+    "remediation": "The Aletheia Protocol (Generator → Verifier → Reviser) failed to converge after 3 cycles. The Alpha Node has halted recursion. Entity 0 must resolve the contradiction before any further autonomous revision is permitted. Check the Verified Facts and Pending Blockers fields in the current task-slug handoff file.",
+    "escalation": "Alpha Node → Entity 0 via Logic-Blocker escalation. No autonomous re-assignment permitted."
+  },
+  "COMPLIANCE_DRIFT": {
+    "type_uri": "https://tadpole.os/errors/compliance-drift",
+    "source": "execution/parity_guard.py",
+    "status": 409,
+    "directive": "IDENTITY.md Directive #8",
+    "remediation": "The Compliance Heartbeat detected that the current execution path has drifted from the Sovereign Reality architecture. Active directives may not match IDENTITY.md v1.2.1, or the Merkle Audit Trail may be unreachable/non-writable. Run 'python execution/sovereign_audit.py' and 'python execution/verify_ai_context.py .' to identify the drift source. Escalate to Entity 0 if unresolvable.",
+    "triggers": "Mismatched IDENTITY.md version, unreachable Merkle Trail, or failed 10th-operation self-audit checksum"
+  }
+}

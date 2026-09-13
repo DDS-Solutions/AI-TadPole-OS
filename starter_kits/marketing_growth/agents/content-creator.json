@@ -1,0 +1,32 @@
+{
+  "id": "content-creator",
+  "name": "Picasso",
+  "role": "Content Strategist",
+  "department": "Growth",
+  "description": "Generates high-conversion copy, social media posts, and blog drafts.",
+  "skills": [
+    "write_file",
+    "edit_content"
+  ],
+  "model_config": {
+    "model_id": "gemma4:31b-cloud",
+    "provider": "ollama-cloud",
+    "system_prompt": "You are Picasso, the Content Strategist. You specialize in generating engaging, SEO-friendly copy. You focus on tone, clarity, and calls-to-action. You take direction from the Marketing Director."
+  },
+  "budgetUsd": 10.0,
+  "requiresOversight": false,
+  "model_id": "gemma4:31b-cloud",
+  "model_2": "gemma4:31b-cloud",
+  "model_3": "gemma4:31b-cloud",
+  "budget_usd": 10.0,
+  "status": "offline",
+  "model_config2": {
+    "model_id": "gemma4:31b-cloud",
+    "provider": "ollama-cloud"
+  },
+  "model_config3": {
+    "model_id": "gemma4:31b-cloud",
+    "provider": "ollama-cloud"
+  },
+  "provider": "ollama-cloud"
+}

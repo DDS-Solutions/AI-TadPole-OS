@@ -1,0 +1,727 @@
+{
+  "summary": {
+    "total": 1027,
+    "failed": 22,
+    "timestamp": "2026-08-25T01:55:45.836673+00:00"
+  },
+  "failures": [
+    {
+      "file": "server-rs/src/agent/continuity/scheduler.rs",
+      "passed": false,
+      "findings": [
+        "Telemetry Tag 'Continuity' defined in header but missing from executable log emitters in file body"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": true,
+        "telemetry_tags": [
+          "Continuity"
+        ],
+        "docs_link": "ARCHITECTURE:Continuity",
+        "symbols": [],
+        "invariants": [
+          {
+            "tag": "Structural",
+            "text": "- `[Structural]` Type-safe state handling and bounded execution without unhandled panics.",
+            "witness": null
+          }
+        ],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/agent/runner/swarm/mod.rs",
+      "passed": false,
+      "findings": [
+        "Telemetry Tag 'Sovereignty' defined in header but missing from executable log emitters in file body"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": true,
+        "telemetry_tags": [
+          "Swarm",
+          "Sovereignty"
+        ],
+        "docs_link": "ARCHITECTURE:Runner",
+        "symbols": [],
+        "invariants": [
+          {
+            "tag": "Structural",
+            "text": "- `[Structural]` Type-safe state handling and bounded execution without unhandled panics.",
+            "witness": null
+          }
+        ],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/intelligence/markdown_graph.rs",
+      "passed": false,
+      "findings": [
+        "Telemetry Tag 'MarkdownGraph' defined in header but missing from executable log emitters in file body"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": true,
+        "telemetry_tags": [
+          "MarkdownGraph"
+        ],
+        "docs_link": "ARCHITECTURE:Core:Intelligence",
+        "symbols": [],
+        "invariants": [
+          {
+            "tag": "Structural",
+            "text": "- `[Structural]` Type-safe state handling and bounded execution without unhandled panics.",
+            "witness": null
+          }
+        ],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/intelligence/mod.rs",
+      "passed": false,
+      "findings": [
+        "Telemetry Tag 'Graph' defined in header but missing from executable log emitters in file body",
+        "Telemetry Tag 'GraphStore' defined in header but missing from executable log emitters in file body",
+        "Telemetry Tag 'MarkdownGraph' defined in header but missing from executable log emitters in file body"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": true,
+        "telemetry_tags": [
+          "Graph",
+          "GraphStore",
+          "MarkdownGraph"
+        ],
+        "docs_link": "ARCHITECTURE:Core",
+        "symbols": [],
+        "invariants": [
+          {
+            "tag": "Structural",
+            "text": "- `[Structural]` Type-safe state handling, bounded graph traversal, and fault-tolerant parsing.",
+            "witness": null
+          }
+        ],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/intelligence/graph_store/db.rs",
+      "passed": false,
+      "findings": [
+        "Telemetry Tag 'GraphStore:DB' defined in header but missing from executable log emitters in file body"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": true,
+        "telemetry_tags": [
+          "GraphStore:DB"
+        ],
+        "docs_link": "ARCHITECTURE:Core:Intelligence",
+        "symbols": [],
+        "invariants": [
+          {
+            "tag": "Structural",
+            "text": "- `[Structural]` Type-safe state handling, batched transactional persistence, and zero blocking calls in async context.",
+            "witness": null
+          }
+        ],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/intelligence/graph_store/extract.rs",
+      "passed": false,
+      "findings": [
+        "Telemetry Tag 'GraphStore:Extract' defined in header but missing from executable log emitters in file body"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": true,
+        "telemetry_tags": [
+          "GraphStore:Extract"
+        ],
+        "docs_link": "ARCHITECTURE:Core:Intelligence",
+        "symbols": [],
+        "invariants": [
+          {
+            "tag": "Structural",
+            "text": "- `[Structural]` Robust AST-first and regex fallback parsing with bounded line limits.",
+            "witness": null
+          }
+        ],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/intelligence/graph_store/heuristics.rs",
+      "passed": false,
+      "findings": [
+        "Telemetry Tag 'GraphStore:Heuristics' defined in header but missing from executable log emitters in file body"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": true,
+        "telemetry_tags": [
+          "GraphStore:Heuristics"
+        ],
+        "docs_link": "ARCHITECTURE:Core:Intelligence",
+        "symbols": [],
+        "invariants": [
+          {
+            "tag": "Structural",
+            "text": "- `[Structural]` Deterministic heuristic classification, tokenized security relevance, and test boundary detection.",
+            "witness": null
+          }
+        ],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/intelligence/graph_store/metrics.rs",
+      "passed": false,
+      "findings": [
+        "Telemetry Tag 'GraphStore:Metrics' defined in header but missing from executable log emitters in file body"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": true,
+        "telemetry_tags": [
+          "GraphStore:Metrics"
+        ],
+        "docs_link": "ARCHITECTURE:Core:Intelligence",
+        "symbols": [],
+        "invariants": [
+          {
+            "tag": "Structural",
+            "text": "- `[Structural]` Deterministic risk metric scoring, community cohesion calculation, and priority-ranked flow tracing.",
+            "witness": null
+          }
+        ],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/intelligence/graph_store/mod.rs",
+      "passed": false,
+      "findings": [
+        "Telemetry Tag 'GraphStore' defined in header but missing from executable log emitters in file body"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": true,
+        "telemetry_tags": [
+          "GraphStore"
+        ],
+        "docs_link": "ARCHITECTURE:Core:Intelligence",
+        "symbols": [],
+        "invariants": [
+          {
+            "tag": "Structural",
+            "text": "- `[Structural]` Type-safe state handling and bounded execution without unhandled panics.",
+            "witness": null
+          }
+        ],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/intelligence/graph_store/model.rs",
+      "passed": false,
+      "findings": [
+        "Telemetry Tag 'GraphStore:Model' defined in header but missing from executable log emitters in file body"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": true,
+        "telemetry_tags": [
+          "GraphStore:Model"
+        ],
+        "docs_link": "ARCHITECTURE:Core:Intelligence",
+        "symbols": [],
+        "invariants": [
+          {
+            "tag": "Structural",
+            "text": "- `[Structural]` Strongly-typed graph rows, serialization envelopes, and atomic identifiers.",
+            "witness": null
+          }
+        ],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/intelligence/graph_store/pipeline.rs",
+      "passed": false,
+      "findings": [
+        "Telemetry Tag 'GraphStore:Pipeline' defined in header but missing from executable log emitters in file body"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": true,
+        "telemetry_tags": [
+          "GraphStore:Pipeline"
+        ],
+        "docs_link": "ARCHITECTURE:Core:Intelligence",
+        "symbols": [],
+        "invariants": [
+          {
+            "tag": "Structural",
+            "text": "- `[Structural]` Fault-tolerant parallel file ingestion, fail-closed security boundary verification, and atomic snapshot synthesis.",
+            "witness": null
+          }
+        ],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/middleware/auth.rs",
+      "passed": false,
+      "findings": [
+        "Uncategorized invariant: '- `[Security]` Role-based distinction (`AuthenticatedRole::A...' (must be marked [Structural], [Behavioral], or [Advisory: UNVERIFIED])",
+        "Uncategorized invariant: '- `[Security]` Unauthenticated WebSocket upgrade pass-throug...' (must be marked [Structural], [Behavioral], or [Advisory: UNVERIFIED])",
+        "Witness Test `test_auth_websocket_unauthorized_path` not found in repository test suite"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": true,
+        "telemetry_tags": [],
+        "docs_link": "ARCHITECTURE:Security",
+        "symbols": [],
+        "invariants": [
+          {
+            "tag": "Structural",
+            "text": "- `[Structural]` Type-safe state handling and bounded execution without unhandled panics.",
+            "witness": null
+          },
+          {
+            "tag": null,
+            "text": "- `[Security]` Role-based distinction (`AuthenticatedRole::Admin` vs `AuthenticatedRole::Deploy`)",
+            "witness": null
+          },
+          {
+            "tag": null,
+            "text": "- `[Security]` Unauthenticated WebSocket upgrade pass-through restricted to explicit post-connect allowlist.",
+            "witness": null
+          }
+        ],
+        "witness_tests": [
+          "test_auth_bearer_success",
+          "test_require_admin_role_separation",
+          "test_auth_websocket_unauthorized_path"
+        ],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/middleware/auth_rate_limit.rs",
+      "passed": false,
+      "findings": [
+        "Uncategorized invariant: '- `[Security]` Loopback bypass gated on *socket* address (`C...' (must be marked [Structural], [Behavioral], or [Advisory: UNVERIFIED])",
+        "Uncategorized invariant: '- `[Security]` Failure counter reset only on verified authen...' (must be marked [Structural], [Behavioral], or [Advisory: UNVERIFIED])",
+        "Uncategorized invariant: '- `[Correctness]` Failure windows reset after `BLOCK_DURATIO...' (must be marked [Structural], [Behavioral], or [Advisory: UNVERIFIED])",
+        "Witness Test `test_brute_force_blocking` not found in repository test suite",
+        "Witness Test `test_loopback_bypass` not found in repository test suite",
+        "Witness Test `test_public_200_does_not_reset` not found in repository test suite"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": true,
+        "telemetry_tags": [
+          "Security"
+        ],
+        "docs_link": "ARCHITECTURE:Security",
+        "symbols": [],
+        "invariants": [
+          {
+            "tag": "Structural",
+            "text": "- `[Structural]` Type-safe state handling and bounded execution without unhandled panics.",
+            "witness": null
+          },
+          {
+            "tag": null,
+            "text": "- `[Security]` Loopback bypass gated on *socket* address (`ConnectInfo`), never on derived client IP.",
+            "witness": null
+          },
+          {
+            "tag": null,
+            "text": "- `[Security]` Failure counter reset only on verified authentication (response extension), not header heuristics.",
+            "witness": null
+          },
+          {
+            "tag": null,
+            "text": "- `[Correctness]` Failure windows reset after `BLOCK_DURATION`, preventing permanent soft-lock behind NAT.",
+            "witness": null
+          }
+        ],
+        "witness_tests": [
+          "test_brute_force_blocking",
+          "test_loopback_bypass",
+          "test_public_200_does_not_reset"
+        ],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/middleware/cors.rs",
+      "passed": false,
+      "findings": [
+        "Uncategorized invariant: '- `[Security]` Prohibits wildcard origin (`*`) in production...' (must be marked [Structural], [Behavioral], or [Advisory: UNVERIFIED])",
+        "Uncategorized invariant: '- `[Performance]` Caches preflight OPTIONS responses for 1 h...' (must be marked [Structural], [Behavioral], or [Advisory: UNVERIFIED])",
+        "Witness Test `test_create_cors_layer_with_custom_origins` not found in repository test suite"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": true,
+        "telemetry_tags": [],
+        "docs_link": "ARCHITECTURE:Security",
+        "symbols": [],
+        "invariants": [
+          {
+            "tag": "Structural",
+            "text": "- `[Structural]` Type-safe state handling and bounded execution without unhandled panics.",
+            "witness": null
+          },
+          {
+            "tag": null,
+            "text": "- `[Security]` Prohibits wildcard origin (`*`) in production/release mode unless explicitly opted in.",
+            "witness": null
+          },
+          {
+            "tag": null,
+            "text": "- `[Performance]` Caches preflight OPTIONS responses for 1 hour (`max_age`).",
+            "witness": null
+          }
+        ],
+        "witness_tests": [
+          "test_create_cors_layer_default",
+          "test_create_cors_layer_with_custom_origins"
+        ],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/middleware/deprecation.rs",
+      "passed": false,
+      "findings": [
+        "Uncategorized invariant: '- `[Deterministic]` Segment-boundary route matching; longest...' (must be marked [Structural], [Behavioral], or [Advisory: UNVERIFIED])"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": true,
+        "telemetry_tags": [],
+        "docs_link": "ARCHITECTURE:Interface",
+        "symbols": [],
+        "invariants": [
+          {
+            "tag": "Structural",
+            "text": "- `[Structural]` Type-safe state handling and bounded execution without unhandled panics.",
+            "witness": null
+          },
+          {
+            "tag": null,
+            "text": "- `[Deterministic]` Segment-boundary route matching; longest matching registered route takes precedence.",
+            "witness": null
+          }
+        ],
+        "witness_tests": [
+          "test_deprecation_headers_exact",
+          "test_deprecation_sibling_unaffected",
+          "test_deprecation_longest_prefix_precedence"
+        ],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/middleware/mod.rs",
+      "passed": false,
+      "findings": [
+        "Uncategorized invariant: '- `[Security]` Zero-trust IP derivation: rightmost-untrusted...' (must be marked [Structural], [Behavioral], or [Advisory: UNVERIFIED])"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": true,
+        "telemetry_tags": [
+          "SEC-01"
+        ],
+        "docs_link": "ARCHITECTURE:MiddlewarePipeline",
+        "symbols": [],
+        "invariants": [
+          {
+            "tag": "Structural",
+            "text": "- `[Structural]` Type-safe state handling and bounded execution without unhandled panics.",
+            "witness": null
+          },
+          {
+            "tag": null,
+            "text": "- `[Security]` Zero-trust IP derivation: rightmost-untrusted XFF traversal, rejection of header-declared",
+            "witness": null
+          }
+        ],
+        "witness_tests": [
+          "test_extract_client_ip_direct",
+          "test_extract_client_ip_rightmost_untrusted",
+          "test_extract_client_ip_rejects_header_loopback"
+        ],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/middleware/rate_limit.rs",
+      "passed": false,
+      "findings": [
+        "Uncategorized invariant: '- `[Security]` Exhausted rate limits return 429 responses wi...' (must be marked [Structural], [Behavioral], or [Advisory: UNVERIFIED])",
+        "Uncategorized invariant: '- `[Security]` Loopback skip requires both socket and client...' (must be marked [Structural], [Behavioral], or [Advisory: UNVERIFIED])"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": true,
+        "telemetry_tags": [],
+        "docs_link": "ARCHITECTURE:Security",
+        "symbols": [],
+        "invariants": [
+          {
+            "tag": "Structural",
+            "text": "- `[Structural]` Type-safe state handling and bounded execution without unhandled panics.",
+            "witness": null
+          },
+          {
+            "tag": null,
+            "text": "- `[Security]` Exhausted rate limits return 429 responses with standard `Retry-After`",
+            "witness": null
+          },
+          {
+            "tag": null,
+            "text": "- `[Security]` Loopback skip requires both socket and client IP to be verified loopbacks.",
+            "witness": null
+          }
+        ],
+        "witness_tests": [
+          "test_rate_limiting_full_flow",
+          "test_rate_limiting_exhaustion_429"
+        ],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/middleware/request_id.rs",
+      "passed": false,
+      "findings": [
+        "Uncategorized invariant: '- `[Security]` Client-supplied request IDs are bounded to ma...' (must be marked [Structural], [Behavioral], or [Advisory: UNVERIFIED])",
+        "Uncategorized invariant: '- `[Standard]` Conforms strictly to W3C `traceparent` specif...' (must be marked [Structural], [Behavioral], or [Advisory: UNVERIFIED])"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": true,
+        "telemetry_tags": [],
+        "docs_link": "ARCHITECTURE:Observability",
+        "symbols": [],
+        "invariants": [
+          {
+            "tag": "Structural",
+            "text": "- `[Structural]` Type-safe state handling and bounded execution without unhandled panics.",
+            "witness": null
+          },
+          {
+            "tag": null,
+            "text": "- `[Security]` Client-supplied request IDs are bounded to max 128 characters to prevent log/span bloat.",
+            "witness": null
+          },
+          {
+            "tag": null,
+            "text": "- `[Standard]` Conforms strictly to W3C `traceparent` specifications (TRAC-01); malformed headers are regenerated.",
+            "witness": null
+          }
+        ],
+        "witness_tests": [
+          "test_inject_request_id_middleware",
+          "test_oversized_request_id_regenerated",
+          "test_malformed_traceparent_regenerated"
+        ],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/middleware/security_headers.rs",
+      "passed": false,
+      "findings": [
+        "Uncategorized invariant: '- `[Security]` HSTS is strictly conditional (injected only o...' (must be marked [Structural], [Behavioral], or [Advisory: UNVERIFIED])",
+        "Uncategorized invariant: '- `[Security]` Defense-in-depth CSP restricts object embeddi...' (must be marked [Structural], [Behavioral], or [Advisory: UNVERIFIED])"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": true,
+        "telemetry_tags": [],
+        "docs_link": "ARCHITECTURE:Networking",
+        "symbols": [],
+        "invariants": [
+          {
+            "tag": "Structural",
+            "text": "- `[Structural]` Type-safe state handling and bounded execution without unhandled panics.",
+            "witness": null
+          },
+          {
+            "tag": null,
+            "text": "- `[Security]` HSTS is strictly conditional (injected only on verified HTTPS/TLS connections).",
+            "witness": null
+          },
+          {
+            "tag": null,
+            "text": "- `[Security]` Defense-in-depth CSP restricts object embedding, base URI manipulation, and framing.",
+            "witness": null
+          }
+        ],
+        "witness_tests": [
+          "test_security_headers_injected",
+          "test_hsts_conditional_on_https"
+        ],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/networking/resolver.rs",
+      "passed": false,
+      "findings": [
+        "Uncategorized invariant: '- `[Correctness]` Fallback (failed) resolutions use a short ...' (must be marked [Structural], [Behavioral], or [Advisory: UNVERIFIED])",
+        "Uncategorized invariant: '- `[Priority]` Discovery probes in deterministic priority or...' (must be marked [Structural], [Behavioral], or [Advisory: UNVERIFIED])",
+        "Witness Test `test_fallback_ttl_expires` not found in repository test suite",
+        "Witness Test `test_parse_port_from_url` not found in repository test suite"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": true,
+        "telemetry_tags": [
+          "Resolver"
+        ],
+        "docs_link": "ARCHITECTURE:Networking",
+        "symbols": [],
+        "invariants": [
+          {
+            "tag": "Structural",
+            "text": "- `[Structural]` Type-safe state handling and bounded execution without unhandled panics.",
+            "witness": null
+          },
+          {
+            "tag": null,
+            "text": "- `[Correctness]` Fallback (failed) resolutions use a short TTL (30s) to allow recovery",
+            "witness": null
+          },
+          {
+            "tag": null,
+            "text": "- `[Priority]` Discovery probes in deterministic priority order: Local \u2192 DockerBridge \u2192 Gateway.",
+            "witness": null
+          }
+        ],
+        "witness_tests": [
+          "test_fallback_ttl_expires",
+          "test_parse_port_from_url",
+          "test_resolve_url_if_local"
+        ],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "src/contracts/generated.ts",
+      "passed": false,
+      "findings": [
+        "Missing '### AI Assist Note' or '### AI Context Alignment'",
+        "Missing '### \ud83d\udd0d Debugging & Observability'",
+        "Missing '@docs' documentation link"
+      ],
+      "meta": {
+        "has_note": false,
+        "has_debugging": false,
+        "has_docs": false,
+        "has_invariants": false,
+        "telemetry_tags": [],
+        "docs_link": null,
+        "symbols": [],
+        "invariants": [],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "src/services/telemetry_buffer.ts",
+      "passed": false,
+      "findings": [
+        "Telemetry Tag 'TelemetryBuffer' defined in header but missing from executable log emitters in file body"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": true,
+        "telemetry_tags": [
+          "TelemetryBuffer"
+        ],
+        "docs_link": "ARCHITECTURE:Telemetry",
+        "symbols": [
+          "telemetry_buffer",
+          "telemetryBuffer",
+          "BufferedTelemetryEvent"
+        ],
+        "invariants": [
+          {
+            "tag": "Structural",
+            "text": "- `[Structural]` Asynchronous service calls normalize response envelopes and propagate typed errors.",
+            "witness": null
+          }
+        ],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    }
+  ]
+}

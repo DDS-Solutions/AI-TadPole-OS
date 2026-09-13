@@ -1,0 +1,39 @@
+{
+  "$schema": "https://tadpoleos.dev/schemas/swarm-v1.json",
+  "name": "Legal Intelligence Swarm",
+  "version": "1.0.0",
+  "author": "SMB Legal Inc.",
+  "description": "A high-performance swarm tailored for contract analysis.",
+  "industry": "legal",
+  "tags": [
+    "law",
+    "contracts",
+    "auditing"
+  ],
+  "defaults": {
+    "model": "gemini-pro-latest",
+    "temperature": 0.2
+  },
+  "roster": [
+    {
+      "id": "specialized-legal-document-review",
+      "path": "agents/specialized-legal-document-review.json",
+      "supervisor": null,
+      "priority": "critical"
+    },
+    {
+      "id": "finance-finance-financial-analyst",
+      "path": "agents/finance-finance-financial-analyst.json",
+      "supervisor": null,
+      "priority": "normal"
+    },
+    {
+      "id": "security-security-blockchain-security-auditor",
+      "path": "agents/security-security-blockchain-security-auditor.json",
+      "supervisor": null,
+      "priority": "normal"
+    }
+  ],
+  "required_mcps": "mcps.json",
+  "global_workflows": []
+}
