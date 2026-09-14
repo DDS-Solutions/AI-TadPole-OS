@@ -108,7 +108,7 @@
     "globals": "^17.12.0",
     "jsdom": "^30.0.0",
     "postcss": "^8.5.26",
-    "tsx": "^4.23.12",
+    "tsx": "^4.23.13",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.69.0",
     "vite": "^8.2.1",
