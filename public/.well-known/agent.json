@@ -1,0 +1,34 @@
+{
+  "name": "DDS-Solutions",
+  "version": "1.0.0",
+  "description": "Sovereign SMB Customer Service & Catalog Agent powered by AI-Tadpole-OS.",
+  "agent_card_url": "/a2a/v1/company-agent-card.json",
+  "a2a_protocol_version": "1.0",
+  "skills": [
+    {
+      "id": "catalog_search",
+      "name": "Customer Catalog Search",
+      "description": "Search product and service catalog for business inquiries.",
+      "tags": ["catalog", "products", "smb"]
+    },
+    {
+      "id": "info-hours-loc",
+      "name": "Store Hours & Location",
+      "description": "Main Store: 100 Main St, Suite 400. Hours: Monday - Friday 8:00 AM - 6:00 PM EST, Saturday 9:00 AM - 4:00 PM EST.",
+      "tags": ["hours", "location", "contact"]
+    },
+    {
+      "id": "info-faq-returns",
+      "name": "Return & Exchange Policy",
+      "description": "Full refunds issued within 30 days of purchase with original receipt. Items must be in original packaging and unused.",
+      "tags": ["returns", "refunds", "guarantee"]
+    },
+    {
+      "id": "info-faq-support",
+      "name": "Customer Support FAQ",
+      "description": "For immediate order tracking or service inquiries, email support@tadpolesmb.com or call our service desk.",
+      "tags": ["faq", "support", "help"]
+    }
+  ],
+  "model_profile": "gemma4:e4b"
+}

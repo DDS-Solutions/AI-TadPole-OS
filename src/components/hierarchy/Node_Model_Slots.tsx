@@ -1,0 +1,162 @@
+/**
+ * @docs ARCHITECTURE:Interface
+ *
+ * ### AI Context Alignment
+ * - **Subsystem**: UI Components / Hierarchy / Node_Model_Slots
+ * - **Primary Entrypoints**: `Node_Model_Slots`
+ *
+ * ### ⚠️ Invariants & Non-Negotiables
+ * - `[Structural]` Component state and props flow adhere strictly to unidirectional UI data bindings.
+ *
+ * ### 🔍 Debugging & Observability
+ * - **Local Errors**: none
+ * - **Telemetry Targets**: none declared
+ * - **Witness Tests**: none declared
+ */
+
+import React, { useRef, useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import { i18n } from '../../i18n';
+import { Tooltip } from '../ui';
+import { Model_Badge } from '../Model_Badge';
+import { use_dropdown_store } from '../../stores/dropdown_store';
+import { use_model_store } from '../../stores/model_store';
+import type { Agent } from '../../types';
+import { parse_active_model_slot } from '../../utils/model_utils';
+
+interface Node_Model_Slots_Props {
+    agent: Agent;
+    on_model_change?: (agent_id: string, new_model: string) => void;
+    on_model_2_change?: (agent_id: string, new_model: string) => void;
+    on_model_3_change?: (agent_id: string, new_model: string) => void;
+    on_update?: (agent_id: string, updates: Partial<Agent>) => void;
+}
+
+export const Node_Model_Slots: React.FC<Node_Model_Slots_Props> = ({
+    agent,
+    on_model_change,
+    on_model_2_change,
+    on_model_3_change,
+    on_update
+}) => {
+    const toggle_dropdown = use_dropdown_store(s => s.toggle_dropdown);
+    const close_dropdown = use_dropdown_store(s => s.close_dropdown);
+    const is_model_1_open = use_dropdown_store(s => s.open_id === agent.id && s.open_type === 'model');
+    const is_model_2_open = use_dropdown_store(s => s.open_id === agent.id && s.open_type === 'model_2');
+    const is_model_3_open = use_dropdown_store(s => s.open_id === agent.id && s.open_type === 'model_3');
+
+    const available_models = use_model_store(s => s.models);
+
+    const dropdown_states: Record<number, boolean> = {
+        1: is_model_1_open,
+        2: is_model_2_open,
+        3: is_model_3_open
+    };
+
+    const handle_slot_change = (slot_idx: number, new_model: string) => {
+        const handlers = [on_model_change, on_model_2_change, on_model_3_change];
+        handlers[slot_idx - 1]?.(agent.id, new_model);
+    };
+
+    const ref1 = useRef<HTMLDivElement>(null);
+    const ref2 = useRef<HTMLDivElement>(null);
+    const ref3 = useRef<HTMLDivElement>(null);
+
+    const [dropdown_pos, set_dropdown_pos] = useState<Record<number, { top: number, left: number }>>({});
+
+    useEffect(() => {
+        const slot_refs: Record<number, React.RefObject<HTMLDivElement | null>> = { 1: ref1, 2: ref2, 3: ref3 };
+        const new_pos: Record<number, { top: number, left: number }> = {};
+        [1, 2, 3].forEach((slot) => {
+            const is_open = slot === 1 ? is_model_1_open : slot === 2 ? is_model_2_open : is_model_3_open;
+            if (is_open && slot_refs[slot].current) {
+                const rect = slot_refs[slot].current!.getBoundingClientRect();
+                new_pos[slot] = {
+                    top: rect.bottom,
+                    left: Math.max(0, rect.left)
+                };
+            }
+        });
+        set_dropdown_pos(new_pos);
+    }, [is_model_1_open, is_model_2_open, is_model_3_open]);
+
+    const render_slot = (slot_idx: 1 | 2 | 3, model: string | undefined, is_open: boolean) => {
+        const current_slot = parse_active_model_slot(agent.active_model_slot);
+        const is_selected_slot = current_slot === slot_idx;
+        const is_busy = agent.status !== 'idle' && agent.status !== 'offline';
+
+        const resolved_model_data = available_models.find(m => m.name === model);
+
+        const led_color = 'bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)] ring-2 ring-emerald-500/50';
+
+        return (
+            <div ref={slot_idx === 1 ? ref1 : slot_idx === 2 ? ref2 : ref3} className="relative flex items-center gap-1.5 min-w-0 max-w-full" key={`slot-${slot_idx}`} role="presentation" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+                <Tooltip content={i18n.t(`agent_card.tooltip_activate_${slot_idx === 1 ? 'primary' : slot_idx === 2 ? 'secondary' : 'tertiary'}`)} position="top">
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            if (current_slot !== slot_idx) {
+                                on_update?.(agent.id, { active_model_slot: slot_idx });
+                            }
+                        }}
+                        className="w-5 h-5 flex items-center justify-center cursor-pointer shrink-0 group/led rounded-full hover:bg-zinc-800/60 transition-all"
+                        aria-label={i18n.t(`agent_card.tooltip_activate_${slot_idx === 1 ? 'primary' : slot_idx === 2 ? 'secondary' : 'tertiary'}`)}
+                    >
+                        <div className={`
+                            w-2 h-2 rounded-full transition-all duration-300
+                            ${is_selected_slot
+                                ? `${led_color} ${is_busy ? 'scale-125 animate-pulse' : 'scale-110'}`
+                                : 'bg-zinc-700 border border-zinc-600/50 group-hover/led:bg-zinc-400'
+                            }
+                        `} />
+                    </button>
+                </Tooltip>
+                <Model_Badge
+                    model={model || (slot_idx === 1 ? i18n.t('agent_card.label_unknown_model') : i18n.t('agent_card.label_add_model'))}
+                    is_active={is_selected_slot && is_busy}
+                    capabilities={resolved_model_data?.capabilities}
+                    on_click={() => {
+                        if (!is_selected_slot) {
+                            on_update?.(agent.id, { active_model_slot: slot_idx });
+                        }
+                        toggle_dropdown(agent.id, slot_idx === 1 ? 'model' : slot_idx === 2 ? 'model_2' : 'model_3');
+                    }}
+                />
+                {is_open && createPortal(
+                    <div className="fixed mt-1 w-56 bg-[color:var(--color-background)] border border-[color:var(--color-border)] rounded-xl shadow-2xl z-50 py-1.5 max-h-60 overflow-y-auto custom-scrollbar"
+                         style={{ top: dropdown_pos[slot_idx]?.top || 0, left: dropdown_pos[slot_idx]?.left || 0 }}>
+                        {available_models.map((m) => (
+                            <button key={m.id} onClick={() => {
+                                handle_slot_change(slot_idx, m.name);
+                                close_dropdown();
+                            }}
+                                className={`w-full text-left px-3 py-2 text-[10px] hover:bg-[color:var(--color-surface)] transition-colors flex items-center justify-between gap-2 ${model === m.name ? 'text-green-400 font-bold bg-green-500/5' : 'text-zinc-400'}`}>
+                                <span className="truncate">{m.name}</span>
+                                <div className="flex items-center gap-1 opacity-40">
+                                    {m.capabilities?.supports_vision && <span title={i18n.t('agent_card.vision')}>👁️</span>}
+                                    {m.capabilities?.supports_tools && <span title={i18n.t('agent_card.tools')}>🛠️</span>}
+                                    {m.capabilities?.supports_reasoning && <span title={i18n.t('agent_card.reasoning')}>🧠</span>}
+                                </div>
+                            </button>
+                        ))}
+                    </div>,
+                    document.body
+                )}
+            </div>
+        );
+    };
+
+    return (
+        <div className={`flex flex-col gap-1.5 border-t border-[color:var(--color-border)] pt-2 relative ${is_model_1_open || is_model_2_open || is_model_3_open ? 'z-50' : 'z-20'}`}>
+            <div className="flex items-center justify-start w-full gap-1.5">
+                {render_slot(1, agent.model, dropdown_states[1])}
+            </div>
+            <div className="flex items-center justify-center w-full gap-1.5">
+                {render_slot(2, agent.model_2, dropdown_states[2])}
+            </div>
+            <div className="flex items-center justify-end w-full gap-1.5">
+                {render_slot(3, agent.model_3, dropdown_states[3])}
+            </div>
+        </div>
+    );
+};

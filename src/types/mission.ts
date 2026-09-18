@@ -1,0 +1,36 @@
+/**
+ * @docs ARCHITECTURE:Types
+ *
+ * ### AI Context Alignment
+ * - **Subsystem**: System Core / mission
+ * - **Primary Entrypoints**: `Mission`
+ *
+ * ### ⚠️ Invariants & Non-Negotiables
+ * - `[Structural]` Deterministic internal state integrity and strict interface contract compliance.
+ *
+ * ### 🔍 Debugging & Observability
+ * - **Local Errors**: none
+ * - **Telemetry Targets**: none declared
+ * - **Witness Tests**: none declared
+ */
+
+export interface Mission {
+    /** Unique identifier for the mission */
+    id: string;
+    /** High-level goal or task description */
+    objective: string;
+    /** Specific constraints or rules for the mission */
+    constraints: string[];
+    /** Priority level for mission execution */
+    priority: 'low' | 'medium' | 'high';
+    /** Optional expiration or deadline */
+    deadline?: string;
+    /** IDs of other missions that must be completed first */
+    dependencies?: string[];
+    /** Allocated budget for this mission (USD) */
+    budget_usd?: number;
+    /** Current cost accumulated by this mission (USD) */
+    cost_usd?: number;
+    /** If the mission was executed under degraded conditions (e.g. NullProvider) */
+    is_degraded?: boolean;
+}

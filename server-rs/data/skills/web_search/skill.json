@@ -1,0 +1,28 @@
+{
+    "schema_version": "1",
+    "name": "web_search",
+    "display_name": "Web Search",
+    "description": "Search the web and return structured results",
+    "version": "1.0.0",
+    "author": "tadpole-os",
+    "permissions": [
+        "network:outbound"
+    ],
+    "toolset_group": "research",
+    "danger_level": "low",
+    "requires_oversight": false,
+    "parameters": {
+        "query": {
+            "type": "string",
+            "required": true
+        },
+        "max_results": {
+            "type": "integer",
+            "default": 5
+        }
+    },
+    "hooks": {
+        "before_execute": null,
+        "after_execute": null
+    }
+}
