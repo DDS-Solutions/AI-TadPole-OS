@@ -1,0 +1,845 @@
+{
+  "$schema": "adg-manifest-v2",
+  "generated_at": "2026-09-23T02:54:36.709Z",
+  "verified_at": "68f9519a372493994603573b7c856ffba70adbe9",
+  "generator_version": "2.0.0",
+  "claims": {
+    "witness_map": {
+      "src/api/channels/error-bus.ts": [
+        "src/api/channels/error-bus.test.ts"
+      ],
+      "src/api/channels/interceptor-chain.ts": [
+        "src/api/channels/interceptor-chain.test.ts"
+      ],
+      "src/api/errors/index.ts": [
+        "src/api/errors/index.test.ts"
+      ],
+      "src/api/factory.ts": [
+        "src/api/factory.test.ts"
+      ],
+      "src/api/service/base-api-service.ts": [
+        "src/api/service/base-api-service.test.ts"
+      ],
+      "src/api/utils/url.ts": [
+        "src/api/utils/url.test.ts"
+      ],
+      "src/components/agent-config/AgentConfigHeader.tsx": [
+        "src/components/agent-config/AgentConfigHeader.test.tsx"
+      ],
+      "src/components/agent-config/CognitionSection.tsx": [
+        "src/components/agent-config/CognitionSection.test.tsx"
+      ],
+      "src/components/agent-config/MemorySection.tsx": [
+        "src/components/agent-config/MemorySection.test.tsx"
+      ],
+      "src/components/AgentConfigPanel.tsx": [
+        "src/components/AgentConfigPanel.test.tsx"
+      ],
+      "src/components/chat/Chat_Content.tsx": [
+        "src/components/chat/Chat_Content.test.tsx"
+      ],
+      "src/components/chat/Chat_Input_Bar.tsx": [
+        "src/components/chat/Chat_Input_Bar.test.tsx"
+      ],
+      "src/components/chat/Mission_Metrics_Badge.tsx": [
+        "src/components/chat/Mission_Metrics_Badge.test.tsx"
+      ],
+      "src/components/chat/OpenUI_Renderer.tsx": [
+        "src/components/chat/OpenUI_Renderer.test.tsx"
+      ],
+      "src/components/chat/Question_Choice_Pill.tsx": [
+        "src/components/chat/Question_Choice_Pill.test.tsx"
+      ],
+      "src/components/Command_Palette.tsx": [
+        "src/components/Command_Palette.test.tsx"
+      ],
+      "src/components/Command_Table.tsx": [
+        "src/components/Command_Table.test.tsx"
+      ],
+      "src/components/dashboard/Hardware_Load.tsx": [
+        "src/components/dashboard/Hardware_Load.test.tsx"
+      ],
+      "src/components/dashboard/Stat_Metrics.tsx": [
+        "src/components/dashboard/Stat_Metrics.test.tsx"
+      ],
+      "src/components/Error_Boundary.tsx": [
+        "src/components/Error_Boundary.test.tsx"
+      ],
+      "src/components/intelligence/KnowledgeGraph.tsx": [
+        "src/components/intelligence/KnowledgeGraph.test.tsx"
+      ],
+      "src/components/layout/Sidebar.tsx": [
+        "src/components/layout/Sidebar.test.tsx"
+      ],
+      "src/components/model/Provider_Card.tsx": [
+        "src/components/model/Provider_Card.test.tsx"
+      ],
+      "src/components/model/Vault_Lock_Screen.tsx": [
+        "src/components/model/Vault_Lock_Screen.test.tsx"
+      ],
+      "src/components/Neural_Waterfall.tsx": [
+        "src/components/Neural_Waterfall.test.tsx"
+      ],
+      "src/components/outward/A2A_Card_Preview.tsx": [
+        "src/components/outward/A2A_Card_Preview.test.tsx"
+      ],
+      "src/components/outward/Company_Info_Card_Manager.tsx": [
+        "src/components/outward/Company_Info_Card_Manager.test.tsx"
+      ],
+      "src/components/oversight/Action_Ledger.tsx": [
+        "src/components/oversight/Action_Ledger.test.tsx"
+      ],
+      "src/components/oversight/Oversight_Stats.tsx": [
+        "src/components/oversight/Oversight_Stats.test.tsx"
+      ],
+      "src/components/oversight/Pending_Queue.tsx": [
+        "src/components/oversight/Pending_Queue.test.tsx"
+      ],
+      "src/components/Provider_Config_Panel.tsx": [
+        "src/components/Provider_Config_Panel.test.tsx"
+      ],
+      "src/components/scheduler/Job_Form_Manager.tsx": [
+        "src/components/scheduler/Job_Form_Manager.test.tsx"
+      ],
+      "src/components/scheduler/Job_Table_Row.tsx": [
+        "src/components/scheduler/Job_Table_Row.test.tsx"
+      ],
+      "src/components/security/Defense_Matrix_Section.tsx": [
+        "src/components/security/Defense_Matrix_Section.test.tsx"
+      ],
+      "src/components/security/Security_Header.tsx": [
+        "src/components/security/Security_Header.test.tsx"
+      ],
+      "src/components/settings/Remote_Oversight_Settings.tsx": [
+        "src/components/settings/Remote_Oversight_Settings.test.tsx"
+      ],
+      "src/components/skills/Hook_Card.tsx": [
+        "src/components/skills/Hook_Card.test.tsx"
+      ],
+      "src/components/skills/Hook_List.tsx": [
+        "src/components/skills/Hook_List.test.tsx"
+      ],
+      "src/components/skills/Skill_Card.tsx": [
+        "src/components/skills/Skill_Card.test.tsx"
+      ],
+      "src/components/skills/Workflow_Card.tsx": [
+        "src/components/skills/Workflow_Card.test.tsx"
+      ],
+      "src/components/Swarm_Oversight_Node.tsx": [
+        "src/components/Swarm_Oversight_Node.test.tsx"
+      ],
+      "src/components/Swarm_Visualizer.tsx": [
+        "src/components/Swarm_Visualizer.test.tsx"
+      ],
+      "src/components/Telemetry_Graph.tsx": [
+        "src/components/Telemetry_Graph.test.tsx"
+      ],
+      "src/components/template_store/Installed_Swarms_List.tsx": [
+        "src/components/template_store/Installed_Swarms_List.test.tsx"
+      ],
+      "src/components/template_store/Mcp_Secrets_Wizard_Modal.tsx": [
+        "src/components/template_store/Mcp_Secrets_Wizard_Modal.test.tsx"
+      ],
+      "src/components/template_store/Model_Resolver_Select.tsx": [
+        "src/components/template_store/Model_Resolver_Select.test.tsx"
+      ],
+      "src/components/template_store/Uninstall_Swarm_Modal.tsx": [
+        "src/components/template_store/Uninstall_Swarm_Modal.test.tsx"
+      ],
+      "src/components/Terminal.tsx": [
+        "src/components/Terminal.test.tsx"
+      ],
+      "src/components/ui/Confirm_Dialog.tsx": [
+        "src/components/ui/Confirm_Dialog.test.tsx"
+      ],
+      "src/components/ui/Connection_Banner.tsx": [
+        "src/components/ui/Connection_Banner.test.tsx"
+      ],
+      "src/components/ui/Empty_State.tsx": [
+        "src/components/ui/Empty_State.test.tsx"
+      ],
+      "src/components/ui/Header_Ticker.tsx": [
+        "src/components/ui/Header_Ticker.test.tsx"
+      ],
+      "src/components/ui/Page_Header.tsx": [
+        "src/components/ui/Page_Header.test.tsx"
+      ],
+      "src/components/ui/Portal_Window.tsx": [
+        "src/components/ui/Portal_Window.test.tsx"
+      ],
+      "src/components/ui/Section_Header.tsx": [
+        "src/components/ui/Section_Header.test.tsx"
+      ],
+      "src/components/ui/Status_Badge.tsx": [
+        "src/components/ui/Status_Badge.test.tsx"
+      ],
+      "src/components/ui/Toast_Center.tsx": [
+        "src/components/ui/Toast_Center.test.tsx"
+      ],
+      "src/components/ui/Tooltip.tsx": [
+        "src/components/ui/Tooltip.test.tsx"
+      ],
+      "src/components/voice/Audio_Visualizer.tsx": [
+        "src/components/voice/Audio_Visualizer.test.tsx"
+      ],
+      "src/components/voice/Live_Voice_Hub.tsx": [
+        "src/components/voice/Live_Voice_Hub.test.tsx"
+      ],
+      "src/components/voice/Standup_Meeting_Area.tsx": [
+        "src/components/voice/Standup_Meeting_Area.test.tsx"
+      ],
+      "src/hooks/layout/useLayoutNavigation.ts": [
+        "src/hooks/layout/useLayoutNavigation.test.ts"
+      ],
+      "src/hooks/layout/useLayoutServices.ts": [
+        "src/hooks/layout/useLayoutServices.test.ts"
+      ],
+      "src/hooks/use_agent_metrics.ts": [
+        "src/hooks/use_agent_metrics.test.ts"
+      ],
+      "src/hooks/use_chat_dispatch.ts": [
+        "src/hooks/use_chat_dispatch.test.ts"
+      ],
+      "src/hooks/use_chat_voice.ts": [
+        "src/hooks/use_chat_voice.test.ts"
+      ],
+      "src/hooks/use_chat_window.ts": [
+        "src/hooks/use_chat_window.test.ts"
+      ],
+      "src/hooks/use_dashboard_data.ts": [
+        "src/hooks/use_dashboard_data.test.ts"
+      ],
+      "src/hooks/use_engine_status.ts": [
+        "src/hooks/use_engine_status.test.ts"
+      ],
+      "src/hooks/use_logs.ts": [
+        "src/hooks/use_logs.test.ts"
+      ],
+      "src/hooks/use_provider_form.ts": [
+        "src/hooks/use_provider_form.test.ts"
+      ],
+      "src/hooks/use_recruitment_velocity.ts": [
+        "src/hooks/use_recruitment_velocity.test.ts"
+      ],
+      "src/hooks/use_swarm_metrics.ts": [
+        "src/hooks/use_swarm_metrics.test.ts"
+      ],
+      "src/hooks/use_viewport_position.ts": [
+        "src/hooks/use_viewport_position.test.ts"
+      ],
+      "src/hooks/use_web_socket_event.ts": [
+        "src/hooks/use_web_socket_event.test.ts"
+      ],
+      "src/hooks/useAgentForm.ts": [
+        "src/hooks/useAgentForm.test.ts"
+      ],
+      "src/hooks/useAgentManager.ts": [
+        "src/hooks/useAgentManager.test.ts"
+      ],
+      "src/hooks/useDocs.ts": [
+        "src/hooks/useDocs.test.ts"
+      ],
+      "src/hooks/useLocalStorage.ts": [
+        "src/hooks/useLocalStorage.test.ts"
+      ],
+      "src/hooks/useMissionsManager.ts": [
+        "src/hooks/useMissionsManager.test.ts"
+      ],
+      "src/hooks/useOversightDashboard.ts": [
+        "src/hooks/useOversightDashboard.test.ts"
+      ],
+      "src/hooks/useScheduledJobs.ts": [
+        "src/hooks/useScheduledJobs.test.ts"
+      ],
+      "src/hooks/useSecurityDashboard.ts": [
+        "src/hooks/useSecurityDashboard.test.ts"
+      ],
+      "src/hooks/useSettingsManager.ts": [
+        "src/hooks/useSettingsManager.test.ts"
+      ],
+      "src/hooks/useSkillsManager.ts": [
+        "src/hooks/useSkillsManager.test.ts"
+      ],
+      "src/hooks/useStandups.ts": [
+        "src/hooks/useStandups.test.ts"
+      ],
+      "src/hooks/useWindowAutoScale.ts": [
+        "src/hooks/useWindowAutoScale.test.ts"
+      ],
+      "src/hooks/useWorkspacesManager.ts": [
+        "src/hooks/useWorkspacesManager.test.ts"
+      ],
+      "src/i18n.ts": [
+        "src/i18n.test.ts"
+      ],
+      "src/layouts/Dashboard_Layout.tsx": [
+        "src/layouts/Dashboard_Layout.test.tsx"
+      ],
+      "src/logic/command_processor.ts": [
+        "src/logic/command_processor.test.ts"
+      ],
+      "src/pages/Agent_Manager.tsx": [
+        "src/pages/Agent_Manager.test.tsx"
+      ],
+      "src/pages/Benchmark_Analytics.tsx": [
+        "src/pages/Benchmark_Analytics.test.tsx"
+      ],
+      "src/pages/Customer_Catalog_Manager.tsx": [
+        "src/pages/Customer_Catalog_Manager.test.tsx"
+      ],
+      "src/pages/detached_shell.tsx": [
+        "src/pages/detached_shell.test.tsx"
+      ],
+      "src/pages/Detached_Swarm_Pulse.tsx": [
+        "src/pages/Detached_Swarm_Pulse.test.tsx"
+      ],
+      "src/pages/Docs.tsx": [
+        "src/pages/Docs.test.tsx"
+      ],
+      "src/pages/Engine_Dashboard.tsx": [
+        "src/pages/Engine_Dashboard.test.tsx"
+      ],
+      "src/pages/MCP_Store.tsx": [
+        "src/pages/MCP_Store.test.tsx"
+      ],
+      "src/pages/Missions.tsx": [
+        "src/pages/Missions.test.tsx"
+      ],
+      "src/pages/Model_Manager.tsx": [
+        "src/pages/Model_Manager.test.tsx"
+      ],
+      "src/pages/Model_Store.tsx": [
+        "src/pages/Model_Store.test.tsx"
+      ],
+      "src/pages/Neural_Map.tsx": [
+        "src/pages/Neural_Map.test.tsx"
+      ],
+      "src/pages/Ops_Dashboard.tsx": [
+        "src/pages/Ops_Dashboard.test.tsx"
+      ],
+      "src/pages/Org_Chart.tsx": [
+        "src/pages/Org_Chart.test.tsx"
+      ],
+      "src/pages/Oversight_Dashboard.tsx": [
+        "src/pages/Oversight_Dashboard.test.tsx"
+      ],
+      "src/pages/Scheduled_Jobs.tsx": [
+        "src/pages/Scheduled_Jobs.test.tsx"
+      ],
+      "src/pages/Security_Dashboard.tsx": [
+        "src/pages/Security_Dashboard.test.tsx"
+      ],
+      "src/pages/Settings.tsx": [
+        "src/pages/Settings.test.tsx"
+      ],
+      "src/pages/Skills.tsx": [
+        "src/pages/Skills.test.tsx"
+      ],
+      "src/pages/Standups.tsx": [
+        "src/pages/Standups.test.tsx"
+      ],
+      "src/pages/Template_Store.tsx": [
+        "src/pages/Template_Store.test.tsx"
+      ],
+      "src/pages/Workspaces.tsx": [
+        "src/pages/Workspaces.test.tsx"
+      ],
+      "src/services/agent_service.ts": [
+        "src/services/agent_service.test.ts"
+      ],
+      "src/services/agent/capability_service.ts": [
+        "src/services/agent/capability_service.test.ts"
+      ],
+      "src/services/agent/dispatch_service.ts": [
+        "src/services/agent/dispatch_service.test.ts"
+      ],
+      "src/services/agent/governance_service.ts": [
+        "src/services/agent/governance_service.test.ts"
+      ],
+      "src/services/agent/memory_service.ts": [
+        "src/services/agent/memory_service.test.ts"
+      ],
+      "src/services/agent/registry_service.ts": [
+        "src/services/agent/registry_service.test.ts"
+      ],
+      "src/services/base_api_service.ts": [
+        "src/services/base_api_service.test.ts"
+      ],
+      "src/services/crypto_service.ts": [
+        "src/services/crypto_service.test.ts"
+      ],
+      "src/services/event_bus.ts": [
+        "src/services/event_bus.test.ts"
+      ],
+      "src/services/intelligence_api_service.ts": [
+        "src/services/intelligence_api_service.test.ts"
+      ],
+      "src/services/mission_api_service.ts": [
+        "src/services/mission_api_service.test.ts"
+      ],
+      "src/services/proposal_service.ts": [
+        "src/services/proposal_service.test.ts"
+      ],
+      "src/services/provider_service.ts": [
+        "src/services/provider_service.test.ts"
+      ],
+      "src/services/socket.ts": [
+        "src/services/socket.test.ts"
+      ],
+      "src/services/socket/channels/log_channel.ts": [
+        "src/services/socket/channels/log_channel.test.ts"
+      ],
+      "src/services/socket/channels/trace_channel.ts": [
+        "src/services/socket/channels/trace_channel.test.ts"
+      ],
+      "src/services/socket/codec/protocol_codec.ts": [
+        "src/services/socket/codec/protocol_codec.test.ts"
+      ],
+      "src/services/socket/codec/sanitizer.ts": [
+        "src/services/socket/codec/sanitizer.test.ts"
+      ],
+      "src/services/socket/security/origin_guard.ts": [
+        "src/services/socket/security/origin_guard.test.ts"
+      ],
+      "src/services/socket/socket_manager.ts": [
+        "src/services/socket/socket_manager.test.ts"
+      ],
+      "src/services/socket/transport/handshake.ts": [
+        "src/services/socket/transport/handshake.test.ts"
+      ],
+      "src/services/socket/transport/reconnection_policy.ts": [
+        "src/services/socket/transport/reconnection_policy.test.ts"
+      ],
+      "src/services/socket/transport/websocket_connection.ts": [
+        "src/services/socket/transport/websocket_connection.test.ts"
+      ],
+      "src/services/system_api_service.ts": [
+        "src/services/system_api_service.test.ts"
+      ],
+      "src/services/system_utils.ts": [
+        "src/services/system_utils.test.ts"
+      ],
+      "src/services/system/benchmarks_api.ts": [
+        "src/services/system/benchmarks_api.test.ts"
+      ],
+      "src/services/system/continuity_api.ts": [
+        "src/services/system/continuity_api.test.ts"
+      ],
+      "src/services/system/docs_api.ts": [
+        "src/services/system/docs_api.test.ts"
+      ],
+      "src/services/system/engine_api.ts": [
+        "src/services/system/engine_api.test.ts"
+      ],
+      "src/services/system/infra_api.ts": [
+        "src/services/system/infra_api.test.ts"
+      ],
+      "src/services/system/oversight_api.ts": [
+        "src/services/system/oversight_api.test.ts"
+      ],
+      "src/services/system/workspace_api.ts": [
+        "src/services/system/workspace_api.test.ts"
+      ],
+      "src/services/tadpoleos_service.ts": [
+        "src/services/tadpoleos_service.test.ts"
+      ],
+      "src/services/telemetry_buffer.ts": [
+        "src/services/telemetry_buffer.test.ts"
+      ],
+      "src/services/voice_client.ts": [
+        "src/services/voice_client.test.ts"
+      ],
+      "src/services/workspace_service.ts": [
+        "src/services/workspace_service.test.ts"
+      ],
+      "src/stores/agent_store.ts": [
+        "src/stores/agent_store.test.ts"
+      ],
+      "src/stores/department_store.ts": [
+        "src/stores/department_store.test.ts"
+      ],
+      "src/stores/dropdown_store.ts": [
+        "src/stores/dropdown_store.test.ts"
+      ],
+      "src/stores/memory_store.ts": [
+        "src/stores/memory_store.test.ts"
+      ],
+      "src/stores/model_store.ts": [
+        "src/stores/model_store.test.ts"
+      ],
+      "src/stores/node_store.ts": [
+        "src/stores/node_store.test.ts"
+      ],
+      "src/stores/notification_store.ts": [
+        "src/stores/notification_store.test.ts"
+      ],
+      "src/stores/provider_store.ts": [
+        "src/stores/provider_store.test.ts"
+      ],
+      "src/stores/role_store.ts": [
+        "src/stores/role_store.test.ts"
+      ],
+      "src/stores/security_store.ts": [
+        "src/stores/security_store.test.ts"
+      ],
+      "src/stores/settings_store.ts": [
+        "src/stores/settings_store.test.ts"
+      ],
+      "src/stores/skill_store.ts": [
+        "src/stores/skill_store.test.ts"
+      ],
+      "src/stores/sovereign_store.ts": [
+        "src/stores/sovereign_store.test.ts"
+      ],
+      "src/stores/tab_store.ts": [
+        "src/stores/tab_store.test.ts"
+      ],
+      "src/stores/trace_store.ts": [
+        "src/stores/trace_store.test.ts"
+      ],
+      "src/stores/vault_store.ts": [
+        "src/stores/vault_store.test.ts"
+      ],
+      "src/stores/workspace_store.ts": [
+        "src/stores/workspace_store.test.ts"
+      ],
+      "src/utils/aaak_decoder.ts": [
+        "src/utils/aaak_decoder.test.ts"
+      ],
+      "src/utils/agent_card_compiler.ts": [
+        "src/utils/agent_card_compiler.test.ts"
+      ],
+      "src/utils/agent_hierarchy.ts": [
+        "src/utils/agent_hierarchy.test.ts"
+      ],
+      "src/utils/agent_uiutils.ts": [
+        "src/utils/agent_uiutils.test.ts"
+      ],
+      "src/utils/crypto-core.ts": [
+        "src/utils/crypto-core.test.ts"
+      ],
+      "src/utils/crypto.ts": [
+        "src/utils/crypto.test.ts"
+      ],
+      "src/utils/model_utils.ts": [
+        "src/utils/model_utils.test.ts"
+      ],
+      "src/utils/security_utils.ts": [
+        "src/utils/security_utils.test.ts"
+      ],
+      "src/utils/skill_parser.ts": [
+        "src/utils/skill_parser.test.ts"
+      ],
+      "src/utils/telemetry.ts": [
+        "src/utils/telemetry.test.ts"
+      ],
+      "src/utils/validation_utils.ts": [
+        "src/utils/validation_utils.test.ts"
+      ],
+      "src/workers/crypto.worker.ts": [
+        "src/workers/crypto.worker.test.ts"
+      ]
+    },
+    "csp": {
+      "default-src": [
+        "'self'"
+      ],
+      "script-src": [
+        "'self'",
+        "'wasm-unsafe-eval'"
+      ],
+      "style-src": [
+        "'self'",
+        "'unsafe-inline'"
+      ],
+      "connect-src": [
+        "'self'",
+        "http://localhost:*",
+        "ws://localhost:*",
+        "http://127.0.0.1:*",
+        "ws://127.0.0.1:*",
+        "https://dds-solutions.github.io"
+      ],
+      "img-src": [
+        "'self'",
+        "data:",
+        "blob:"
+      ],
+      "media-src": [
+        "'self'",
+        "blob:"
+      ],
+      "base-uri": [
+        "'self'"
+      ],
+      "form-action": [
+        "'self'"
+      ],
+      "frame-ancestors": [
+        "'none'"
+      ],
+      "frame-src": [
+        "'none'"
+      ],
+      "object-src": [
+        "'none'"
+      ]
+    },
+    "csp_raw": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' http://localhost:* ws://localhost:* http://127.0.0.1:* ws://127.0.0.1:* https://dds-solutions.github.io; img-src 'self' data: blob:; media-src 'self' blob:; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; frame-src 'none'; object-src 'none';",
+    "csp_dev_raw": null,
+    "csp_violations": []
+  },
+  "unattested": [
+    "src/App.tsx",
+    "src/api/channels/index.ts",
+    "src/api/constants.ts",
+    "src/api/errors/api-error.ts",
+    "src/api/errors/auth-error.ts",
+    "src/api/errors/rate-limit-error.ts",
+    "src/api/errors/server-error.ts",
+    "src/api/errors/validation-error.ts",
+    "src/api/index.ts",
+    "src/api/legacy.ts",
+    "src/api/service/index.ts",
+    "src/api/trace/attributes.ts",
+    "src/api/trace/headers.ts",
+    "src/api/trace/index.ts",
+    "src/api/trace/response-headers.ts",
+    "src/api/types/index.ts",
+    "src/api/types/ports.ts",
+    "src/api/types/service-config.ts",
+    "src/api/types/span.ts",
+    "src/api/utils/index.ts",
+    "src/api/utils/payload.ts",
+    "src/api/utils/sanitize-error.ts",
+    "src/api/utils/scrub.ts",
+    "src/api/utils/signal.ts",
+    "src/components/Asset_Nav.tsx",
+    "src/components/Hierarchy_Node.tsx",
+    "src/components/Intelligence_Nav.tsx",
+    "src/components/Lineage_Stream.tsx",
+    "src/components/Model_Badge.tsx",
+    "src/components/SovereignChat.tsx",
+    "src/components/Swarm_Telemetry.tsx",
+    "src/components/agent-config/DepartmentManagerModal.tsx",
+    "src/components/agent-config/DirectMessageConsole.tsx",
+    "src/components/agent-config/GovernanceSection.tsx",
+    "src/components/agent-config/ModelSlotConfig.tsx",
+    "src/components/agent-config/RoleManagerModal.tsx",
+    "src/components/agent-config/VoiceSection.tsx",
+    "src/components/agent-config/index.ts",
+    "src/components/agent-config/useAgentConfig.ts",
+    "src/components/agent-config/useAgentMemory.ts",
+    "src/components/agents/Agent_Card.tsx",
+    "src/components/agents/Agent_Manager_Header.tsx",
+    "src/components/benchmark/BenchmarkHeaderCard.tsx",
+    "src/components/benchmark/RunHistoryTable.tsx",
+    "src/components/benchmark/TelemetryGraphCard.tsx",
+    "src/components/benchmark/types.ts",
+    "src/components/chat/Chat_Detached_Portal.tsx",
+    "src/components/chat/Chat_Header.tsx",
+    "src/components/chat/Chat_Lineage_Breadcrumb.tsx",
+    "src/components/chat/Chat_Message_List.tsx",
+    "src/components/chat/Chat_Scope_Selector.tsx",
+    "src/components/dashboard/Agent_Status_Grid.tsx",
+    "src/components/dashboard/Dual_Trace_Playback.tsx",
+    "src/components/dashboard/Operation_Tab_Header.tsx",
+    "src/components/dashboard/System_Log.tsx",
+    "src/components/hierarchy/ClusterNodeCard.tsx",
+    "src/components/hierarchy/HierarchyConnectionLines.tsx",
+    "src/components/hierarchy/Node_Header.tsx",
+    "src/components/hierarchy/Node_Health.tsx",
+    "src/components/hierarchy/Node_Mission.tsx",
+    "src/components/hierarchy/Node_Model_Slots.tsx",
+    "src/components/hierarchy/Node_Stats.tsx",
+    "src/components/hierarchy/Node_Task_Box.tsx",
+    "src/components/hierarchy/OrgChartHeader.tsx",
+    "src/components/hierarchy/theme.ts",
+    "src/components/intelligence/knowledge_graph/AnomalyPanel.tsx",
+    "src/components/intelligence/knowledge_graph/CognitionSidebar.tsx",
+    "src/components/intelligence/knowledge_graph/GraphContext.tsx",
+    "src/components/intelligence/knowledge_graph/GraphView.tsx",
+    "src/components/intelligence/knowledge_graph/PathFinderModal.tsx",
+    "src/components/intelligence/knowledge_graph/graph_context_defs.ts",
+    "src/components/intelligence/knowledge_graph/graph_context_hooks.ts",
+    "src/components/intelligence/knowledge_graph/graph_sanitizer.ts",
+    "src/components/intelligence/knowledge_graph/types.ts",
+    "src/components/intelligence/knowledge_graph/useGraphData.ts",
+    "src/components/intelligence/knowledge_graph/useMemoryWorkspace.ts",
+    "src/components/intelligence/knowledge_graph/useNodeSelection.ts",
+    "src/components/intelligence/knowledge_graph/utils/anomalyParser.ts",
+    "src/components/intelligence/knowledge_graph/utils/authUtils.ts",
+    "src/components/intelligence/knowledge_graph/utils/graph_render_config.ts",
+    "src/components/intelligence/waterfall/Neural_Waterfall.tsx",
+    "src/components/intelligence/waterfall/TraceDetailPanel.tsx",
+    "src/components/intelligence/waterfall/WaterfallRow.tsx",
+    "src/components/intelligence/waterfall/WaterfallTicker.tsx",
+    "src/components/layout/Observability_Sidebar.tsx",
+    "src/components/layout/Tab_Bar.tsx",
+    "src/components/layout/Tab_Item.tsx",
+    "src/components/layout/Ticker_Header.tsx",
+    "src/components/layout/tab_icons.ts",
+    "src/components/mcp_store/MCP_Card.tsx",
+    "src/components/mcp_store/mcp_store_api.ts",
+    "src/components/mcp_store/types.ts",
+    "src/components/missions/Agent_Team_View.tsx",
+    "src/components/missions/Cluster_Manager_Modal.tsx",
+    "src/components/missions/Cluster_Sidebar.tsx",
+    "src/components/missions/Mission_Header.tsx",
+    "src/components/missions/Mission_Proposals.tsx",
+    "src/components/missions/Neural_Map.tsx",
+    "src/components/missions/cluster_manager/Agent_Capability_Inspector.tsx",
+    "src/components/missions/cluster_manager/Preset_Form.tsx",
+    "src/components/missions/cluster_manager/types.ts",
+    "src/components/model/Add_Node_Dialog.tsx",
+    "src/components/model/Add_Provider_Dialog.tsx",
+    "src/components/model/Modality_Badge.tsx",
+    "src/components/model/Model_Inventory_Table.tsx",
+    "src/components/model/Model_Row.tsx",
+    "src/components/model/Provider_Grid.tsx",
+    "src/components/model/index.ts",
+    "src/components/model/use_model_manager.ts",
+    "src/components/outward/CatalogImportCard.tsx",
+    "src/components/outward/CatalogSearchTester.tsx",
+    "src/components/outward/useCatalogIngestion.ts",
+    "src/components/oversight/Simulation_Banner.tsx",
+    "src/components/oversight/Swarm_Intelligence_View.tsx",
+    "src/components/provider/Audio_Settings.tsx",
+    "src/components/provider/Auth_Section.tsx",
+    "src/components/provider/Forge_Item.tsx",
+    "src/components/provider/Identity_Header.tsx",
+    "src/components/provider/Local_Server_Module.tsx",
+    "src/components/provider/Model_Forge.tsx",
+    "src/components/provider/Protocol_Section.tsx",
+    "src/components/scheduler/Job_History_View.tsx",
+    "src/components/scheduler/Job_Table.tsx",
+    "src/components/scheduler/Workflow_Run_Details.tsx",
+    "src/components/security/Agent_Health_Section.tsx",
+    "src/components/security/Audit_Trail_Section.tsx",
+    "src/components/security/Resource_Quotas_Section.tsx",
+    "src/components/settings/Agent_Defaults_Settings.tsx",
+    "src/components/settings/Appearance_Settings.tsx",
+    "src/components/settings/Architecture_Settings.tsx",
+    "src/components/settings/Connection_Settings.tsx",
+    "src/components/settings/Governance_Settings.tsx",
+    "src/components/settings/Intelligence_Store_Banner.tsx",
+    "src/components/settings/Template_Store_Banner.tsx",
+    "src/components/settings/remote/CompanionAuditLog.tsx",
+    "src/components/settings/remote/DevicePairingModal.tsx",
+    "src/components/settings/remote/PairedDevicesList.tsx",
+    "src/components/skills/Assignment_Modal.tsx",
+    "src/components/skills/Hook_Modal.tsx",
+    "src/components/skills/Import_Preview_Modal.tsx",
+    "src/components/skills/Mcp_Lab_Modal.tsx",
+    "src/components/skills/Mcp_Tool_Card.tsx",
+    "src/components/skills/Mcp_Tool_List.tsx",
+    "src/components/skills/Security_Report_Modal.tsx",
+    "src/components/skills/Skill_Edit_Modal.tsx",
+    "src/components/skills/Skill_Header.tsx",
+    "src/components/skills/Workflow_Edit_Modal.tsx",
+    "src/components/skills/index.ts",
+    "src/components/template_store/Industry_Filters.tsx",
+    "src/components/template_store/Market_Selector.tsx",
+    "src/components/template_store/Playbook_Card.tsx",
+    "src/components/template_store/Playbook_List.tsx",
+    "src/components/template_store/Repository_Actions.tsx",
+    "src/components/template_store/Search_Bar.tsx",
+    "src/components/template_store/Size_Filters.tsx",
+    "src/components/template_store/Structured_Data.tsx",
+    "src/components/template_store/Template_Card.tsx",
+    "src/components/template_store/Template_Filters.tsx",
+    "src/components/template_store/Template_Grid.tsx",
+    "src/components/template_store/Template_Preview_Modal.tsx",
+    "src/components/template_store/Template_Store_Header.tsx",
+    "src/components/template_store/constants.ts",
+    "src/components/template_store/index.ts",
+    "src/components/template_store/mcp_placeholders.ts",
+    "src/components/template_store/states/Empty_State.tsx",
+    "src/components/template_store/states/Error_State.tsx",
+    "src/components/template_store/states/Loading_State.tsx",
+    "src/components/template_store/template_importer.ts",
+    "src/components/template_store/template_store_api.ts",
+    "src/components/template_store/types.ts",
+    "src/components/template_store/use_template_filters.ts",
+    "src/components/template_store/use_template_install.ts",
+    "src/components/template_store/use_template_preview.ts",
+    "src/components/template_store/use_template_registry.ts",
+    "src/components/transcript/Buffered_Transcript_View.tsx",
+    "src/components/ui/index.ts",
+    "src/components/ui/theme_tokens.ts",
+    "src/components/voice/Standup_Target_Selector.tsx",
+    "src/components/voice/Transcript_Viewer.tsx",
+    "src/components/workspaces/Workspace_Cluster.tsx",
+    "src/components/workspaces/Workspace_Metrics_Table.tsx",
+    "src/constants.ts",
+    "src/constants/index.ts",
+    "src/constants/providers.ts",
+    "src/constants/routes.ts",
+    "src/constants/swarm.ts",
+    "src/constants/theme.ts",
+    "src/contracts/agent/domain.ts",
+    "src/contracts/agent/form.ts",
+    "src/contracts/agent/index.ts",
+    "src/contracts/agent/shared.ts",
+    "src/contracts/agent/wire.ts",
+    "src/contracts/generated.ts",
+    "src/contracts/index.ts",
+    "src/contracts/role/domain.ts",
+    "src/contracts/role/index.ts",
+    "src/contracts/role/wire.ts",
+    "src/contracts/skills.ts",
+    "src/data/mock_agents.ts",
+    "src/data/mock_oversight.ts",
+    "src/data/models.ts",
+    "src/domain/agents/form_state.ts",
+    "src/domain/agents/index.ts",
+    "src/domain/agents/normalizers.ts",
+    "src/domain/agents/serializers.ts",
+    "src/domain/index.ts",
+    "src/domain/roles/index.ts",
+    "src/domain/roles/normalizer.ts",
+    "src/locales/en/index.ts",
+    "src/logic/commands/agent_handlers.ts",
+    "src/logic/commands/registry.ts",
+    "src/logic/commands/routing_handlers.ts",
+    "src/logic/commands/swarm_handlers.ts",
+    "src/logic/commands/system_handlers.ts",
+    "src/logic/commands/types.ts",
+    "src/logic/commands/utils.ts",
+    "src/main.tsx",
+    "src/services/agent/index.ts",
+    "src/services/resilience/circuit_breaker.ts",
+    "src/services/resilience/hex_utils.ts",
+    "src/services/socket/channels/agent_update_channel.ts",
+    "src/services/socket/channels/audio_stream_channel.ts",
+    "src/services/socket/channels/channel.ts",
+    "src/services/socket/channels/handoff_channel.ts",
+    "src/services/socket/channels/health_channel.ts",
+    "src/services/socket/channels/mcp_pulse_channel.ts",
+    "src/services/socket/channels/swarm_pulse_channel.ts",
+    "src/services/socket/codec/binary_headers.ts",
+    "src/services/socket/codec/frame_limits.ts",
+    "src/services/socket/index.ts",
+    "src/services/socket/observability/connection_metrics.ts",
+    "src/services/socket/types/connection_state.ts",
+    "src/services/socket/types/events.ts",
+    "src/services/system_api_types.ts",
+    "src/types/index.ts",
+    "src/types/mission.ts",
+    "src/types/oversight.ts",
+    "src/types/tadpoleos.ts",
+    "src/utils/command_table_utils.ts",
+    "src/utils/csv_parser.ts",
+    "src/vite-env.d.ts"
+  ],
+  "unattested_ratchet_ceiling": 241,
+  "v1_contamination": [],
+  "stats": {
+    "witnessed_files": 178,
+    "unattested_files": 241,
+    "total_source_files": 419,
+    "csp_directives": 11,
+    "csp_violations": 0,
+    "v1_violations": 0
+  }
+}

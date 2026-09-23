@@ -1,0 +1,35 @@
+[package]
+name = "graphene-rs"
+license = "MIT"
+homepage = "https://gtk-rs.org/"
+authors = ["The gtk-rs Project Developers"]
+keywords = ["graphene", "graphene-rs", "gtk-rs", "gnome", "GUI"]
+readme = "README.md"
+documentation = "https://gtk-rs.org/gtk-rs-core/stable/latest/docs/graphene/"
+version = "0.18.5"
+description = "Rust bindings for the Graphene library"
+repository = "https://github.com/gtk-rs/gtk-rs-core"
+exclude = [
+    "gir-files/*",
+]
+edition = "2021"
+rust-version = "1.70"
+
+[lib]
+name = "graphene"
+
+[features]
+v1_12 = ["ffi/v1_12"]
+
+[package.metadata.docs.rs]
+all-features = true
+rustc-args = ["--cfg", "docsrs"]
+rustdoc-args = ["--cfg", "docsrs", "--generate-link-to-definition"]
+
+[dependencies]
+libc = "0.2"
+glib = { path = "../glib", version = "0.18" }
+ffi = { package = "graphene-sys", version = "0.18", path = "sys" }
+
+[dev-dependencies]
+gir-format-check = "^0.1"

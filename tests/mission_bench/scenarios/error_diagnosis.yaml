@@ -1,0 +1,47 @@
+# Scenario: error_diagnosis
+# Tests: Debugging capability, root cause analysis, fix proposal
+id: error_diagnosis
+name: "Error Diagnosis & Fix Proposal"
+description: |
+  Agent receives a stack trace and must diagnose the root cause by reading
+  relevant source files, then propose a concrete fix. Tests analytical reasoning
+  and grounded code modification proposals.
+
+mission_prompt: |
+  The following error occurred during a mission execution:
+
+  ```
+  thread 'tokio-runtime-worker' panicked at 'called `Option::unwrap()` on a `None` value'
+  server-rs/src/agent/runner/tools/mod.rs:87
+  ```
+
+  Diagnose the root cause by reading the relevant source code.
+  Propose a concrete fix (show the before/after code diff).
+  Explain why this fix prevents the error from recurring.
+
+max_turns: 15
+timeout_seconds: 180
+
+expected_tools:
+  - read_file
+  - list_file_symbols
+
+criteria:
+  - id: reads_source
+    description: "Agent reads the actual file referenced in the stack trace"
+    weight: 2.0
+  - id: identifies_unwrap
+    description: "Agent correctly identifies the unwrap() call as the failure point"
+    weight: 2.0
+  - id: proposes_fix
+    description: "Agent proposes a concrete code change (not just advice)"
+    weight: 2.5
+  - id: fix_is_valid
+    description: "Proposed fix would actually prevent the panic (e.g., uses match/if-let/unwrap_or)"
+    weight: 3.0
+  - id: explains_root_cause
+    description: "Agent explains WHY the Option was None (context-dependent reasoning)"
+    weight: 1.5
+  - id: no_fabrication
+    description: "Agent does not invent code that doesn't exist in the file"
+    weight: 3.0

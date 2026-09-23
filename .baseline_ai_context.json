@@ -1,0 +1,261 @@
+{
+  "summary": {
+    "total": 1159,
+    "failed": 12,
+    "timestamp": "2026-09-20T19:52:06.419732+00:00"
+  },
+  "failures": [
+    {
+      "file": "execution/adversarial_red_team.py",
+      "passed": false,
+      "findings": [
+        "Telemetry Tag 'adversarial_red_team' defined in header but missing from executable log emitters in file body"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": false,
+        "telemetry_tags": [
+          "adversarial_red_team"
+        ],
+        "docs_link": "ARCHITECTURE:Core",
+        "symbols": [],
+        "invariants": [],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "execution/seed_safe_permission_policies.py",
+      "passed": false,
+      "findings": [
+        "Telemetry Tag 'seed_safe_permission_policies' defined in header but missing from executable log emitters in file body"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": false,
+        "telemetry_tags": [
+          "seed_safe_permission_policies"
+        ],
+        "docs_link": "ARCHITECTURE:Security:Permissions",
+        "symbols": [],
+        "invariants": [],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/agent/blackboard.rs",
+      "passed": false,
+      "findings": [
+        "Telemetry Tag 'blackboard' defined in header but missing from executable log emitters in file body"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": false,
+        "telemetry_tags": [
+          "blackboard"
+        ],
+        "docs_link": "ARCHITECTURE:Agent:Blackboard",
+        "symbols": [],
+        "invariants": [],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/agent/durable.rs",
+      "passed": false,
+      "findings": [
+        "Telemetry Tag 'durable' defined in header but missing from executable log emitters in file body"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": false,
+        "telemetry_tags": [
+          "durable"
+        ],
+        "docs_link": "ARCHITECTURE:Agent:DurableExecution",
+        "symbols": [],
+        "invariants": [],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "server-rs/src/services/rag_fusion.rs",
+      "passed": false,
+      "findings": [
+        "Telemetry Tag 'rag_fusion' defined in header but missing from executable log emitters in file body"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": false,
+        "telemetry_tags": [
+          "rag_fusion"
+        ],
+        "docs_link": "ARCHITECTURE:Services:RAG",
+        "symbols": [],
+        "invariants": [],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "src/api/errors/api-error.ts",
+      "passed": false,
+      "findings": [
+        "Missing '### AI Assist Note' or '### AI Context Alignment'",
+        "Missing '### \ud83d\udd0d Debugging & Observability'"
+      ],
+      "meta": {
+        "has_note": false,
+        "has_debugging": false,
+        "has_docs": true,
+        "has_invariants": false,
+        "telemetry_tags": [],
+        "docs_link": "ARCHITECTURE:Core",
+        "symbols": [],
+        "invariants": [],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "src/api/errors/auth-error.ts",
+      "passed": false,
+      "findings": [
+        "Missing '### AI Assist Note' or '### AI Context Alignment'",
+        "Missing '### \ud83d\udd0d Debugging & Observability'"
+      ],
+      "meta": {
+        "has_note": false,
+        "has_debugging": false,
+        "has_docs": true,
+        "has_invariants": false,
+        "telemetry_tags": [],
+        "docs_link": "ARCHITECTURE:Core",
+        "symbols": [],
+        "invariants": [],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "src/api/errors/rate-limit-error.ts",
+      "passed": false,
+      "findings": [
+        "Missing '### AI Assist Note' or '### AI Context Alignment'",
+        "Missing '### \ud83d\udd0d Debugging & Observability'"
+      ],
+      "meta": {
+        "has_note": false,
+        "has_debugging": false,
+        "has_docs": true,
+        "has_invariants": false,
+        "telemetry_tags": [],
+        "docs_link": "ARCHITECTURE:Core",
+        "symbols": [],
+        "invariants": [],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "src/api/errors/server-error.ts",
+      "passed": false,
+      "findings": [
+        "Missing '### AI Assist Note' or '### AI Context Alignment'",
+        "Missing '### \ud83d\udd0d Debugging & Observability'"
+      ],
+      "meta": {
+        "has_note": false,
+        "has_debugging": false,
+        "has_docs": true,
+        "has_invariants": false,
+        "telemetry_tags": [],
+        "docs_link": "ARCHITECTURE:Core",
+        "symbols": [],
+        "invariants": [],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "src/api/errors/validation-error.ts",
+      "passed": false,
+      "findings": [
+        "Missing '### AI Assist Note' or '### AI Context Alignment'",
+        "Missing '### \ud83d\udd0d Debugging & Observability'"
+      ],
+      "meta": {
+        "has_note": false,
+        "has_debugging": false,
+        "has_docs": true,
+        "has_invariants": false,
+        "telemetry_tags": [],
+        "docs_link": "ARCHITECTURE:Core",
+        "symbols": [],
+        "invariants": [],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "src/utils/security_utils.test.ts",
+      "passed": false,
+      "findings": [
+        "Missing '### \ud83d\udd0d Debugging & Observability'",
+        "Witness Test `security_utils` not found in repository test suite"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": false,
+        "has_docs": true,
+        "has_invariants": false,
+        "telemetry_tags": [],
+        "docs_link": "ARCHITECTURE:Security",
+        "symbols": [],
+        "invariants": [],
+        "witness_tests": [
+          "security_utils"
+        ],
+        "local_errors": []
+      }
+    },
+    {
+      "file": "src/utils/security_utils.ts",
+      "passed": false,
+      "findings": [
+        "Telemetry Tag 'security_utils' defined in header but missing from executable log emitters in file body"
+      ],
+      "meta": {
+        "has_note": true,
+        "has_debugging": true,
+        "has_docs": true,
+        "has_invariants": false,
+        "telemetry_tags": [
+          "security_utils"
+        ],
+        "docs_link": "ARCHITECTURE:Security",
+        "symbols": [
+          "sanitize_telemetry",
+          "sanitize_payload",
+          "scan_and_redact_secrets"
+        ],
+        "invariants": [],
+        "witness_tests": [],
+        "local_errors": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+# Scenario: file_search_and_summarize
+# Tests: Tool usage accuracy, context grounding, concise output
+id: file_search_and_summarize
+name: "File Search & Summarize"
+description: |
+  Agent is asked to find a specific configuration value across multiple files
+  and produce a structured summary. Tests basic tool chaining (list_files → read_file → summarize).
+
+mission_prompt: |
+  Find all files in the project that define or reference a database connection string.
+  List each file path and the exact line containing the connection string.
+  Summarize your findings in a markdown table with columns: File, Line Number, Connection String.
+
+max_turns: 10
+timeout_seconds: 120
+
+expected_tools:
+  - list_files
+  - read_file
+
+criteria:
+  - id: tool_usage
+    description: "Agent uses list_files and read_file tools (not hallucinated paths)"
+    weight: 2.0
+  - id: correct_files
+    description: "All reported file paths actually exist in the workspace"
+    weight: 2.0
+  - id: correct_lines
+    description: "Line numbers match actual file content"
+    weight: 1.5
+  - id: markdown_table
+    description: "Output contains a properly formatted markdown table"
+    weight: 1.0
+  - id: no_hallucination
+    description: "No fabricated connection strings or file contents"
+    weight: 3.0
+  - id: conciseness
+    description: "Response is under 500 words and directly answers the question"
+    weight: 0.5
