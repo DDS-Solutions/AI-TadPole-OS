@@ -1,0 +1,41 @@
+# Scenario: multi_file_refactor
+# Tests: Multi-step planning, coordinated edits, consistency
+id: multi_file_refactor
+name: "Multi-File Refactor"
+description: |
+  Agent must rename a function across multiple files, updating all call sites.
+  Tests coordinated multi-file editing and consistency verification.
+
+mission_prompt: |
+  Rename the function `list_active_specialists` in the RegistryHub to `get_recruitment_directory`.
+  Update all call sites across the codebase.
+  After making changes, verify no compilation errors remain.
+
+max_turns: 20
+timeout_seconds: 300
+
+expected_tools:
+  - read_file
+  - write_file
+  - list_file_symbols
+  - search_mission_knowledge
+
+criteria:
+  - id: finds_definition
+    description: "Agent locates the function definition in the correct file"
+    weight: 1.5
+  - id: finds_all_callsites
+    description: "Agent discovers ALL call sites (not just the first one)"
+    weight: 3.0
+  - id: renames_definition
+    description: "Agent renames the function at its definition site"
+    weight: 2.0
+  - id: updates_callsites
+    description: "Agent updates every discovered call site consistently"
+    weight: 3.0
+  - id: no_partial_edits
+    description: "No call sites are left with the old name (consistency check)"
+    weight: 2.5
+  - id: verification
+    description: "Agent attempts to verify the refactor compiled successfully"
+    weight: 1.0

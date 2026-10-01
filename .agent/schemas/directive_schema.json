@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SubagentDirectiveSchema",
+  "description": "Schema enforcing structured handoffs between subagent personas and execution scripts in Tadpole OS.",
+  "type": "object",
+  "required": ["agent_role", "task_goal", "input_artifacts", "expected_outputs", "verification_steps"],
+  "properties": {
+    "agent_role": {
+      "type": "string",
+      "enum": ["ARCHITECT", "NEXUS_ENGINEER", "SECURITY_AUDITOR", "QA_EXPERT", "INTEGRATION_AGENT"]
+    },
+    "task_goal": {
+      "type": "string",
+      "minLength": 5
+    },
+    "input_artifacts": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "expected_outputs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "verification_steps": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": ["LOW", "MODERATE", "HIGH"]
+    }
+  },
+  "additionalProperties": true
+}

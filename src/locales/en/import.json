@@ -1,0 +1,23 @@
+{
+  "title": "Import {{type}}",
+  "subtitle": "Inspect and calibrate capability before deployment",
+  "security_verified_title": "Security Verified Ingestion",
+  "security_verified_desc": "Capability validated against AST security scanner and local sandbox directives.",
+  "target_hub": "Target Capability Hub",
+  "user_registry": "User Registry",
+  "user_registry_desc": "Deploy capability to user-controlled registry",
+  "ai_services": "AI Services",
+  "ai_services_desc": "Deploy capability to shared swarm AI services",
+  "label_name": "Identifier / Name",
+  "placeholder_name": "Enter capability name...",
+  "label_exec_cmd": "Execution Command",
+  "label_hook_type": "Hook Type",
+  "placeholder_exec_cmd": "e.g. python scripts/exec.py",
+  "placeholder_hook_type": "e.g. pre_validation",
+  "label_description": "Description & Directives",
+  "placeholder_description": "Describe execution parameters...",
+  "label_preview": "Specification Preview",
+  "label_read_only": "Read-Only",
+  "btn_discard": "Discard",
+  "btn_confirm": "Confirm & Import"
+}

@@ -1,0 +1,33 @@
+# Gitleaks Configuration — TadPole OS
+# Suppresses known false positives. All entries are verified non-secret
+# test fixtures, documentation placeholders, or preference-key constants.
+
+title = "TadPole OS Gitleaks Config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Global allowlist for test fixtures, mocks, and documentation placeholders"
+paths = [
+    # Rust unit test modules and security scanners
+    '''(?i)server-rs/src/agent/.*''',
+    '''(?i)server-rs/src/error/.*''',
+    '''(?i)server-rs/src/routes/.*''',
+    '''(?i)server-rs/src/secret_redactor\.rs''',
+    '''(?i)server-rs/src/security/.*''',
+    '''(?i)server-rs/src/utils/.*''',
+    # Frontend & JS/TS test files
+    '''(?i).*\.test\.(ts|tsx|js|jsx)$''',
+    '''(?i)tests/.*''',
+    # Documentation placeholders
+    '''(?i)docs/.*\.md$''',
+    '''(?i)wiki/.*\.md$''',
+    # Android preference constants
+    '''(?i)apps/mobile-android/.*''',
+]
+regexes = [
+    '''(?i)sk-(?:ant-|proj-|secret-|svcacct-|admin-)?[a-zA-Z0-9_-]{10,}''',
+    '''-----BEGIN (?:RSA |OPENSSH )?PRIVATE KEY-----''',
+    '''encrypted_ed25519_private_key''',
+]

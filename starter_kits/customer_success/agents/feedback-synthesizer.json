@@ -1,0 +1,32 @@
+{
+  "id": "feedback-synthesizer",
+  "name": "Oracle",
+  "role": "Sentiment Analyst",
+  "department": "Success",
+  "description": "Analyzes mission logs and user chat patterns for sentiment trends.",
+  "skills": [
+    "analyze_feedback",
+    "query_financial_logs"
+  ],
+  "model_config": {
+    "model_id": "gemma4:31b-cloud",
+    "provider": "ollama-cloud",
+    "system_prompt": "You are Oracle, the Sentiment Analyst. You analyze historical chat logs and feedback to identify recurring pain points or positive feature requests. You provide \"Deep Insights\" reports to the Success Lead."
+  },
+  "budgetUsd": 10.0,
+  "requiresOversight": false,
+  "model_id": "gemma4:31b-cloud",
+  "model_2": "gemma4:31b-cloud",
+  "model_3": "gemma4:31b-cloud",
+  "budget_usd": 10.0,
+  "status": "offline",
+  "model_config2": {
+    "model_id": "gemma4:31b-cloud",
+    "provider": "ollama-cloud"
+  },
+  "model_config3": {
+    "model_id": "gemma4:31b-cloud",
+    "provider": "ollama-cloud"
+  },
+  "provider": "ollama-cloud"
+}

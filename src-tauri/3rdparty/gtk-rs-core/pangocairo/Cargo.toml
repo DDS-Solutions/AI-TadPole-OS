@@ -1,0 +1,31 @@
+[package]
+name = "pangocairo"
+documentation = "https://gtk-rs.org/gtk-rs-core/stable/latest/docs/pangocairo/"
+homepage = "https://gtk-rs.org/"
+authors = ["The gtk-rs Project Developers"]
+keywords = ["pango", "cairo", "gtk-rs", "gnome"]
+readme = "README.md"
+version = "0.18.5"
+description = "Rust bindings for the PangoCairo library"
+repository = "https://github.com/gtk-rs/gtk-rs-core"
+license = "MIT"
+exclude = [
+    "gir-files/*",
+]
+edition = "2021"
+rust-version = "1.70"
+
+[package.metadata.docs.rs]
+all-features = true
+rustc-args = ["--cfg", "docsrs"]
+rustdoc-args = ["--cfg", "docsrs", "--generate-link-to-definition"]
+
+[dependencies]
+libc = "0.2"
+ffi = { package = "pangocairo-sys", version = "0.18", path = "sys" }
+glib = { path = "../glib", version = "0.18" }
+pango = { path = "../pango", version = "0.18" }
+cairo-rs = { path = "../cairo", version = "0.18" }
+
+[dev-dependencies]
+gir-format-check = "^0.1"
