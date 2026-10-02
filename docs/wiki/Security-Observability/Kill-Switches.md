@@ -2,7 +2,7 @@
 title: "Kill Switches"
 tier: "3"
 status: "verified"
-version: "1.2.0"
+version: "1.2.1"
 last-verified: "2026-10-01"
 commit: "bbcf0d4"
 network-badge: "none"
@@ -28,8 +28,8 @@ Immediately halts all active agent thinking and execution loops and rejects pend
 
 | Property | Value |
 |----------|-------|
-| **Backend Handler** | `kill_agents` ([engine_control.rs:L34](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/routes/engine_control.rs#L34)) |
-| **Frontend Hook** | `handle_kill_switch` ([useOversightDashboard.ts:L153](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/src/hooks/useOversightDashboard.ts#L153)) |
+| **Backend Handler** | `kill_agents` ([engine_control.rs:L61](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/routes/engine_control.rs#L61)) |
+| **Frontend Hook** | `handle_kill_switch` ([useOversightDashboard.ts:L223](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/src/hooks/useOversightDashboard.ts#L223)) |
 | **API Endpoint** | `POST /v1/engine/kill` |
 | **Dashboard Button Path** | Oversight dashboard → header panel → **[Button] Halt Agents** |
 
@@ -56,15 +56,15 @@ Gracefully terminates the Axum service process, persisting all live agent states
 
 | Property | Value |
 |----------|-------|
-| **Backend Handler** | `shutdown_engine` ([engine_control.rs:L91](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/routes/engine_control.rs#L91)) |
-| **Frontend Hook** | `handle_kill_engine` ([useOversightDashboard.ts:L169](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/src/hooks/useOversightDashboard.ts#L169)) |
+| **Backend Handler** | `shutdown_engine` ([engine_control.rs:L127](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/routes/engine_control.rs#L127)) |
+| **Frontend Hook** | `handle_kill_engine` ([useOversightDashboard.ts:L239](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/src/hooks/useOversightDashboard.ts#L239)) |
 | **API Endpoint** | `POST /v1/engine/shutdown` |
 | **Dashboard Button Path** | Oversight dashboard → header panel → **[Button] Kill Engine** |
 
 **[Button] Kill Engine**
 - *Default state*: Enabled/Online.
 - *Visible location*: Oversight dashboard header panel.
-- *Observable side effect*: Prompts the user with `confirm_kill_engine` verification, **demands typing the uppercase word `"SHUTDOWN"` in the text input** ([useOversightDashboard.ts:L172-173](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/src/hooks/useOversightDashboard.ts#L172-L173)), and then terminates the Axum service process via the `shutdown_engine` handler.
+- *Observable side effect*: Prompts the user with `confirm_kill_engine` verification, **demands typing the uppercase word `"SHUTDOWN"` in the text input** ([useOversightDashboard.ts:L243](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/src/hooks/useOversightDashboard.ts#L243)), and then terminates the Axum service process via the `shutdown_engine` handler.
 - *Keyboard shortcut*: None.
 - *Missing in build*: Always present.
 
@@ -85,7 +85,7 @@ curl -X POST http://localhost:8000/v1/engine/shutdown -H "Authorization: Bearer 
 | Single agent misbehaving | **[Button] Reject** in Oversight Queue | Targeted, non-destructive |
 | Multiple agents out of control | **[Button] Halt Agents** (`handle_kill_switch`) | Stops all agents, preserves engine |
 | Engine unresponsive or security breach | **[Button] Kill Engine** (`handle_kill_engine`) | Full process termination |
-| Budget overspend detected | Budget Guard auto-halts | Automatic via `BudgetExhausted` error |
+| Budget overspend detected | Mission/runner budget path | `check_budget` → `Ok(false)`; optional `RunnerError::BudgetExhausted` — **not** a Kill-Switches auto-halt / STASIS mode |
 
 ---
 

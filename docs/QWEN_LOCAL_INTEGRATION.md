@@ -8,9 +8,10 @@
 # 🤖 Tadpole OS: Qwen3.5-9B Local Integration Guide
 
 > **Status**: Stable  
-> **Version**: 1.4.0  
-> **Last Updated**: 2026-07-13  
+> **Version**: 1.1.463  
+> **Last Updated**: 2026-10-01  
 > **Classification**: Sovereign  
+> **Verified against**: tip `bbcf0d4`  
 
 ---
 
@@ -25,17 +26,24 @@ While there are other tools (like LM Studio or vLLM), Ollama is often considered
 *   **Simplicity:** It handles model downloading, quantization (making models run on home PCs), and settings with a single command.
 *   **Tadpole OS Integration:** Tadpole OS has built-in support for the Ollama protocol, ensuring a "Neural Handshake" that is stable and fast.
 *   **Resource Efficiency:** It only uses your GPU/RAM when an agent is actually thinking, freeing up resources when idle.
-*   **Privacy:** Your data never leaves your machine—the "Neural Vault" stays truly local.
+*   **Privacy:** Your data never leaves your machine—the **Secure Credentials Vault** (formerly Neural Vault) stays local.
 
 ## Prerequisites
 *   **Ollama:** The easiest way to run LLMs locally. Download at [ollama.com](https://ollama.com).
-*   **Default Install Path:** `%LOCALAPPDATA%\Programs\Ollama` (approx. 200MB).
-*   **How to Custom Install (Command Line):**
+*   **Linux / macOS (recommended for this repo):** Install via the official script or package, then verify:
+    ```bash
+    curl -fsSL https://ollama.com/install.sh | sh   # or brew install ollama on macOS
+    ollama --version
+    ollama serve   # if not already running as a service
+    ollama pull qwen2.5:9b   # or the Qwen tag your Operators document (e.g. qwen3.5:9b when published)
+    ```
+    Default Linux paths are typically under `/usr/local/bin/ollama` with models in `~/.ollama`.
+*   **Windows (optional):** Default install path `%LOCALAPPDATA%\Programs\Ollama` (approx. 200MB).
     1.  Download `OllamaSetup.exe` from the website but do not run it by double-clicking.
     2.  Open your Downloads folder in File Explorer.
-    3.  Click the address bar at the top, type `cmd`, and press Enter. This opens the terminal in that folder.
-    4.  Paste the following command and press Enter: `OllamaSetup.exe /DIR="D:\Ollama"` (Replace `D:\Ollama` with your target path).
-*   **Hardware:** A PC with at least 8GB VRAM (NVIDIA/Apple Silicon) is recommended for optimal performance of the 9B model.
+    3.  Click the address bar at the top, type `cmd`, and press Enter.
+    4.  Paste: `OllamaSetup.exe /DIR="D:\Ollama"` (replace `D:\Ollama` with your target path).
+*   **Hardware:** At least 8GB VRAM (NVIDIA/Apple Silicon) is recommended for a ~9B model.
 *   **Tadpole OS:** Ensure your local engine is running.
 
 ## Step 0: Customizing Model Storage (Optional)
@@ -69,7 +77,7 @@ Open Tadpole OS and navigate to the **Settings** or **Provider Management** sect
 1.  Locate the **Ollama** provider card and click **Configure**.
 2.  **Hybrid Protocol:** Ensure this is set to **Ollama (Local)**.
 3.  **Network Endpoint:** Set this to the default Ollama API address: `http://localhost:11434/v1`
-4.  **Secure API Key:** For local Ollama, you can enter `ollama` as a placeholder (encryption is still handled by the Neural Vault).
+4.  **Secure API Key:** For local Ollama, you can enter `ollama` as a placeholder (encryption is still handled by the Secure Credentials Vault).
 5.  Click **Test Trace** (Activity icon ⚡).
 6.  If successful, you will see an "Active" status badge.
 

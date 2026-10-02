@@ -8,15 +8,15 @@
 # 🎨 Tadpole OS: Design Synergy Package
 
 > **Intelligence Level**: High-Fidelity (ECC-ARA)  
-> **Status**: Verified Production-Ready  
-> **Version**: 1.3.0  
+> **Status**: Aligned to tip v1.1.463 (docs Round-4)  
+> **Version**: 1.1.463  
 > **Classification**: Sovereign  
 
 ---
 
 ## 🛠️ Modern Tech Stack (2026 Core)
 Tadpole OS utilizes a high-performance, AI-aware frontend stack to implement the "Neural Glass" aesthetic:
-- **Core**: React 19 (Server Components / Actions awareness)
+- **Core**: React 19 (Vite SPA — not an RSC/Server Actions app; “Actions awareness” is forward-looking only)
 - **Styling**: Tailwind CSS v4 (Rust-based engine, CSS-first configuration)
 - **Animations**: Framer Motion (Optimized 60fps springs)
 - **State**: Zustand (Atomic reactive stores for real-time telemetry)

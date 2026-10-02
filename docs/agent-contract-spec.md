@@ -8,7 +8,7 @@
  * This document is the source of truth for normalization and serialization logic.
  * 
  * ### 🔍 Debugging & Observability
- * - **Failure Path**: Discrepancy between this spec and the actual implementation in `normalizers.ts` or `persistence.rs`.
+ * - **Failure Path**: Discrepancy between this spec and the actual implementation in `normalizers.ts` or `server-rs/src/agent/persistence/`.
  * - **Telemetry Link**: Not tracked (Architectural Document).
  */
 
@@ -39,7 +39,7 @@ This document serves as the authoritative mapping for all Agent-related fields a
 | **Model Config (2)** | `modelConfig2` | `model_config2` | `slots.secondary` | |
 | **Model (3)** | `model3` | `model_3` | `slots.tertiary.model` | |
 | **Model Config (3)** | `modelConfig3` | `model_config3` | `slots.tertiary` | |
-| **Active Slot** | `activeModelSlot` | `active__slot_id` | `active_tab` | Map 1->primary, 2->secondary, 3->tertiary. |
+| **Active Slot** | `activeModelSlot` | `active_model_slot` | `active_tab` | Domain: `1\|2\|3` (`domain.ts`). Wire may also carry string forms (`planning`/`execution`/`default`) per `agent/types/agent.rs`. Map 1→primary, 2→secondary, 3→tertiary. |
 | **Skills** | `skills` | `skills` | `slots.*.skills` | DTO can be JSON string or array. Norm to array. |
 | **Workflows** | `workflows` | `workflows` | `slots.*.workflows` | DTO can be JSON string or array. Norm to array. |
 | **MCP Tools** | `mcpTools` | `mcp_tools` | `mcp_tools` | DTO can be JSON string or array. Norm to array. |
@@ -90,11 +90,11 @@ Input schema for skill execution.
 
 | Area | Primary Owner | Secondary |
 | :--- | :--- | :--- |
-| **DTO Shape** | `server-rs/src/agent/types.rs` | `src/contracts/agent/wire.ts` |
+| **DTO Shape** | `server-rs/src/agent/types/` (e.g. `agent.rs`) | `src/contracts/agent/wire.ts` |
 | **Domain Logic** | `src/domain/agents/normalizers.ts`| `src/contracts/agent/domain.ts` |
 | **Form Logic** | `src/domain/agents/form_state.ts` | `src/contracts/agent/form.ts` |
 | **Merge Logic** | `server-rs/src/agent/merge.rs` | N/A |
-| **Persistence** | `server-rs/src/agent/persistence.rs`| N/A |
+| **Persistence** | `server-rs/src/agent/persistence/` | N/A |
 
 ---
 

@@ -143,5 +143,35 @@ The empty/all-closed statements below this addendum reflected the 2026-08-16 aud
 
 - Code: STASIS runtime, Live Voice Settings-token wiring, chat.rs/MCP hardening (explicitly excluded).
 - Full wiki line-anchor audit; TELEMETRY_MAP Rust scanner extension; ADG manifest `verified_at` regen; full Continuity operator manual; Benchmark_Spec / token_telemetry_mission deep refresh (optional follow-ups).
+  - *(Kill-Switches anchors + Benchmark_Spec header + Criterion honesty addressed in Round-4.)*
 
+
+## Round-4 Addendum — 2026-10-01 (stacked on Round-3 / #263)
+
+**Branch**: `docs/round4-arch-glossary-benchmark-2026-10`  
+**Base**: `docs/round3-wiki-security-stores-starter-tauri-2026-10` (PR #263). Tip audited: `bbcf0d4` / v1.1.463.  
+**Does not redo** Round-1–3 GETTING_STARTED/ops/WS/seed/privacy/wiki-repo-rename/Security_Model primary STASIS narrative (except Kill-Switches anchors + SEC-08 residual).
+
+### Closed in Round 4 (docs)
+
+| ID | Fix |
+| :--- | :--- |
+| **R4-H1** | `ARCHITECTURE.md` / `Architecture_Overview.md` → product **1.1.463**; tone down 100%/sub-ms/zero-stall / Verified Production-Ready |
+| **R4-H2** | `CODEBASE_MAP` + ARCH directory tree: `templates/`, `/v1/engine/ws`, add missing `adapter`/`middleware`/`networking`/`services`/`system`/`types`; drop Merkle-folder fiction |
+| **R4-H3** | Wiki Kill-Switches line anchors → L61/L127/L223/L239/L243; budget row no longer invents Kill-Switch auto-halt via `BudgetExhausted`/STASIS |
+| **R4-H4** | BLOG / org_singularity / DESIGN_SYNERGY / design.md — marketing disclaimers, version honesty, corrupt leading fence fixed |
+| **R4-M1** | `Benchmark_Spec.md` header → 1.1.463; document `/v1/benchmarks` CRUD; keep Criterion benches absent honesty |
+| **R4-M2** | `GLOSSARY` Micro-Dollar Merkle invention removed; `/v1/benchmarks` path; verified-against stamp |
+| **R4-M3** | `GOVERNANCE_ROLE_GUIDE` SoT → `agent/types/oversight.rs`; version **1.1.463** |
+| **R4-M4** | `QWEN_LOCAL_INTEGRATION` Linux/macOS path + Secure Credentials Vault rename; version bump |
+| **R4-M5** | `RELEASE_PROCESS` STASIS aspirational (not release gate); drop dead `publish-public.ps1`; WS `/v1/engine/ws` |
+| **R4-M6** | `agent-contract-spec` `active_model_slot`; `persistence/` module |
+| **R4-M7** | `SECURITY_REGISTRY` → 1.0.2; SEC-08 metering/`check_budget` honesty (no STASIS kill-switch) |
+| **R4-M8** | `SUPPORT.md` placeholder removed; `CHANGELOG_RECONSTRUCTION` public-unverifiable SHA note |
+
+### Still deferred / out of Round-4 docs PR
+
+- Code: STASIS runtime, Live Voice Settings-token wiring, chat.rs/MCP hardening (explicitly excluded).
+- Full wiki mass line-anchor audit beyond Kill-Switches; TELEMETRY_MAP Rust scanner; ADG `verified_at` regen.
+- Deep Criterion bench implementation (docs correctly leave checklists unchecked).
 

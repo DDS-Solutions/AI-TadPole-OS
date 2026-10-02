@@ -8,9 +8,9 @@
 # 🪐 Architecture Overview: Tadpole OS
 
 > **Intelligence Level**: High (Sovereign Context)  
-> **Status**: Verified Production-Ready  
-> **Version**: 1.3.3  
-> **Last Hardened**: 2026-09-08 (MCP Decomposition & 2026-07-28 Streamable HTTP Transport Alignment)  
+> **Status**: Aligned to tip v1.1.463 (docs Round-4)  
+> **Version**: 1.1.463  
+> **Last Hardened**: 2026-10-01 (product version stamp + absolute-guarantee tone-down)  
 > **Classification**: Sovereign  
 
 ---
@@ -21,7 +21,7 @@
 AI-Tadpole-OS is a high-performance, local-first runtime for sovereign multi-agent swarms. It enables the orchestration of complex, recursive AI workflows where high-level "strategic" nodes delegate tactical missions to specialists, all while maintaining strict privacy, cost controls, and human-in-the-loop oversight.
 
 **Why was it built this way?**  
-The architecture is rooted in the philosophy of **Sovereign Intelligence**. Unlike cloud-locked agent frameworks, AI-Tadpole-OS prioritizes resilience and observability. By utilizing a "Gateway-Runner-Registry" pattern in Rust, the system ensures memory safety, sub-millisecond telemetry, and verifiable auditability using cryptographic Merkle trails and Write-Ahead Logging (WAL).
+The architecture is rooted in the philosophy of **Sovereign Intelligence**. Unlike cloud-locked agent frameworks, AI-Tadpole-OS prioritizes resilience and observability. By utilizing a "Gateway-Runner-Registry" pattern in Rust, the system prioritizes memory safety, low-latency telemetry (provider-bound), and verifiable auditability using Write-Ahead Logging (WAL) and the audit trail in `security/audit.rs`.
 
 **What is new in the current iteration?**  
 - **Modular MCP Subsystem & 2026-07-28 Streamable HTTP**: Decomposed MCP host and transports into dedicated leaf modules (`authz`, `config`, `host`, `native`, `types`, `client/`); implemented official stable MCP `2026-07-28` Streamable HTTP client with SSE stream parsing and adaptive stdio backward compatibility.
@@ -51,7 +51,7 @@ graph TD
     subgraph "Sovereign Layer (Frontend)"
         Dashboard["Ops_Dashboard (React 19)"]
         Registry["Agent_Store (Zustand)"]
-        Vault["Neural_Vault (SubtleCrypto)"]
+        Vault["Secure_Credentials_Vault (SubtleCrypto)"]
         Visualizer["Swarm_Visualizer (Detachable)"]
     end
 
@@ -61,7 +61,7 @@ graph TD
         Runner["Agent_Runner (runner/mod.rs)"]
         Tools["Zero-Trust_Tools (tools/mod.rs)"]
         CBS["CBS_Guard (capability.rs)"]
-        Audit["Audit_Trail (WAL / Merkle)"]
+        Audit["Audit_Trail (WAL / audit.rs)"]
     end
 
     subgraph "Persistence & Nodes"

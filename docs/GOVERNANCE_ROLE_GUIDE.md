@@ -7,9 +7,9 @@
 
 # 👔 Swarm Governance: Role & Blueprint Guide
 **Intelligence Level**: High (ECC Optimized)
-**Source of Truth**: `server-rs/src/state/mod.rs` (GovernanceHub), `server-rs/src/agent/types.rs` (RoleBlueprint)
-**Last Hardened**: 2026-07-13
-**Version**: 1.4.0
+**Source of Truth**: `server-rs/src/state/mod.rs` (GovernanceHub), `server-rs/src/agent/types/oversight.rs` (`RoleBlueprint`)
+**Last Hardened**: 2026-10-01
+**Version**: 1.1.463
 **Standard Compliance**: ECC-GOV (Enhanced Contextual Clarity - Governance Standards)
 **IDENTITY.md Sync**: v1.2.1
 
@@ -22,7 +22,7 @@
 graph TD
     Agent["Agent Runner"]
     Gate["Governance Hub (Hierarchical RBAC Check)"]
-    Audit["Merkle Audit Trail"]
+    Audit["Audit Trail (security/audit.rs)"]
     User["Human Overlord (Client Dashboard)"]
 
     Agent -- "Request Tool Call" --> Gate
@@ -40,7 +40,7 @@ graph TD
     else Mode == Deny
         Gate -- "Block Tool Call" --> Agent
     end
-    Audit -- "Commit Signed Hash" --> Audit
+    Audit -- "Persist audit entry" --> Audit
     Audit -- "Allow Execution" --> Agent
 ```
 

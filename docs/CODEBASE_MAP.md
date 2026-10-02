@@ -8,9 +8,10 @@
 # 🗺️ Codebase Map
 
 > **Status**: Stable  
-> **Version**: 1.2.5  
-> **Last Updated**: 2026-07-11 (Symbol Graph & Doc Guard Hardening + graph_query Modularization)  
+> **Version**: 1.1.463  
+> **Last Updated**: 2026-10-01 (Round-4: templates/ module, `/v1/engine/ws`, product version)  
 > **Classification**: Sovereign  
+> **Verified against**: tip `bbcf0d4` / Public Release v1.1.463  
 
 ---
 
@@ -32,7 +33,7 @@ This map is the lightweight navigation layer for the current Tadpole OS reposito
 ## Key Entry Points
 
 - `server-rs/src/main.rs` boots the Rust engine.
-- `server-rs/src/router.rs` defines the HTTP and WebSocket surface, including `/v1/*` routes and `/engine/ws`.
+- `server-rs/src/router.rs` defines the HTTP and WebSocket surface, including `/v1/*` routes and the engine hub **`/v1/engine/ws`** (legacy `/engine/ws` may still appear in tests/middleware allowlists).
 - `server-rs/src/state/mod.rs` is the current AppState module and global state root.
 - `server-rs/src/agent/knowledge_store/mod.rs` governs SQLite-backed IKS and OKF metadata storage.
 - `server-rs/src/agent/context_manager.rs` houses the $O(N)$ linear dialogue compactor.
@@ -41,7 +42,7 @@ This map is the lightweight navigation layer for the current Tadpole OS reposito
 - `server-rs/src/agent/runner/tools/` houses the Zero-Trust tool pipeline, CBS, and trait-based registry.
 - `server-rs/src/db/contract_tests.rs` implements behavioral contract tests for DashMap and SQLite state stores.
 - `server-rs/src/telemetry/mod.rs` owns the tracing-to-frontend telemetry bridge.
-- `server-rs/src/routes/templates.rs` handles starter-kit and template installation.
+- `server-rs/src/routes/templates/` handles starter-kit and template installation (`catalog`, `source`, `naming`, `validate`, `mcp_store`, `installed`).
 - `server-rs/src/routes/knowledge.rs` handles the IKS and OKF metadata API endpoints.
 - `server-rs/src/bin/graph_query/` is the modular intelligence CLI (ADG-05): `main.rs`, `path_utils.rs`, `visualizer.rs`, `query_manager.rs`, `doc_guard.rs`.
 - `execution/lib/mcp_client.py` zero-dependency Python client for the IPC bridge.
@@ -55,6 +56,10 @@ This map is the lightweight navigation layer for the current Tadpole OS reposito
 - `starter_kits/` contains the built-in SMB starter swarms shipped with the repo.
 - `execution/` contains parity, audit, and operator verification tooling.
 - `tests/mission_bench/` contains the scenario-driven blind-judge benchmarking harness (`run.py`, `judge.py`).
+
+## Engine module index (`server-rs/src`)
+
+Live top-level modules include: `adapter`, `agent`, `db`, `error`, `intelligence`, `middleware`, `networking`, `routes`, `security`, `services`, `startup`, `state`, `system`, `telemetry`, `types`, `utils` (plus `bridge.rs`, `config.rs`, `router.rs`, `main.rs`). Prefer this list over older trees that omit middleware/services/types or label `security/` as “Merkle Audit” (`security/merkle.rs` does not exist; use `security/audit.rs`).
 
 ## Notes For Operators
 

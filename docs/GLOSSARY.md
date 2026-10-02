@@ -9,6 +9,8 @@
 **Intelligence Level**: High (ECC Optimized)
 **Source of Truth**: Rust Source Code (`server-rs/src/`)
 **Standard Compliance**: ECC-SPEC-01 (Strict Reference Protocol)
+**Product Version**: 1.1.463  
+**Verified against**: tip `bbcf0d4` (2026-10-01 Round-4)
 
 ---
 
@@ -780,7 +782,7 @@ Implementation Hook: `src/hooks/use_engine_status.ts`, `server-rs/src/routes/ove
 ### Micro-Dollar Currency Standard
 [Tier 3: Security & Economics]
 Type: Financial Persistence Standard
-Purpose: All budget, expenditure, and quota accounting values are represented as integer micro-dollars (`INTEGER`, where $1.00 USD = 1,000,000 micros). Eliminates floating-point rounding errors during Merkle tree hash verification and database auditing.
+Purpose: All budget, expenditure, and quota accounting values are represented as integer micro-dollars (`INTEGER`, where $1.00 USD = 1,000,000 micros). Eliminates floating-point rounding errors in quota math and database auditing (`security/metering.rs` — not used for Merkle hash verification).
 Implementation Hook: `server-rs/migrations/20260719000200_quotas_to_integer.sql`, `server-rs/src/security/metering.rs`
 
 ### /v1/ REST Routing Architecture
@@ -792,13 +794,13 @@ Implementation Hook: `server-rs/src/router.rs`
 ### Dual-Trace Swarm Analytics
 [Tier 3: Security & Observability]
 Type: Telemetry Visualizer & UI Component
-Purpose: Interactive side-by-side execution trace inspector (`/analytics`) providing step-by-step playback comparing unoptimized baseline agent directives against 100% certified World Model execution state machines.
+Purpose: Interactive side-by-side execution trace inspector (`/analytics`) providing step-by-step playback comparing unoptimized baseline agent directives against certified World Model execution state machines (where a certified baseline exists).
 Implementation Hook: `src/pages/Benchmark_Analytics.tsx`, `src/components/dashboard/Dual_Trace_Playback.tsx`
 
 ### Benchmark Runner & Latency Profiler
 [Tier 2: Admin & Performance]
 Type: Execution Engine & Telemetry Hub
-Purpose: Hardware latency profiling hub (`/benchmarks`) for measuring agent node throughput, P95/P99 distributions, and triggering on-demand performance test suites via `POST /v1/benchmarks/run/:test_id`.
+Purpose: Hardware latency profiling hub under `/v1/benchmarks` for measuring agent node throughput, P95/P99 distributions, and triggering on-demand performance test suites via `POST /v1/benchmarks/run/:test_id`.
 Implementation Hook: `src/pages/Benchmark_Analytics.tsx`, `docs/Benchmark_Spec.md`
 
 ---

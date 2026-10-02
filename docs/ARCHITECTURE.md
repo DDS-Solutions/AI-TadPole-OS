@@ -8,16 +8,16 @@
 # 🏗️ Tadpole OS Architecture: Technical Hub
 
 **Intelligence Level**: High (ECC Optimized)  
-**Version**: 1.3.4
-**Last Hardened**: 2026-09-10 (Ollama loopback resolution, schemeless OLLAMA_HOST normalization, and protocol-aware endpoint stripping)
+**Version**: 1.1.463 (product tip; framework milestone table below is historical)
+**Last Hardened**: 2026-10-01 (Round-4 docs parity vs tip `bbcf0d4`)
 **Standard Compliance**: ECC-ARA (Enhanced Contextual Clarity)  
-**Last Code/Docs Parity Check**: 2026-09-10 (Ollama handshake parity, ProtocolRouter unit tests, and parity guard synchronization)
+**Last Code/Docs Parity Check**: 2026-10-01 (version stamp, module map, absolute-guarantee tone-down)
 
 ---
 
 ## 🎯 Executive Summary
 
-Tadpole OS serves as the sovereign, local-first runtime layer within the broader **Sovereign Reality** ecosystem. It provides a deterministic, high-performance execution environment for autonomous multi-agent swarms. Utilizing a **Gateway-Runner-Registry** architecture implemented in Rust (`server-rs`), the system guarantees 100% data sovereignty, Capability-Based Security (CBS), and cryptographically verified human oversight. The runtime features a **Unified Tool Registry**, **Adaptive Span Lifecycle Watchdogs**, and a **Socratic Gate Context Auto-Injection** engine to enable low-latency, zero-stall swarm orchestration.
+Tadpole OS serves as the sovereign, local-first runtime layer within the broader **Sovereign Reality** ecosystem. It provides a deterministic, high-performance execution environment for autonomous multi-agent swarms. Utilizing a **Gateway-Runner-Registry** architecture implemented in Rust (`server-rs`), the system targets local-first data sovereignty, Capability-Based Security (CBS), and human-in-the-loop oversight (Ed25519 where paired). The runtime features a **Unified Tool Registry**, **Adaptive Span Lifecycle Watchdogs**, and a **Socratic Gate Context Auto-Injection** engine to enable low-latency swarm orchestration (stall behavior depends on provider latency and load).
 
 > [!TIP]
 > **New to the codebase?** Start with the [Architecture Overview](./Architecture_Overview.md) for an executive brief and core system topology.
@@ -106,7 +106,7 @@ The Rust engine implements high-fidelity subsystems to ensure sovereign stabilit
 - **Dynamic Handshake Validation**: Automated provider capability inference (Vision, Tools, Reasoning) with secret redaction.
 
 ### 4. Swarm Persistence & Governance
-- **@docs ARCHITECTURE:Persistence** (`persistence.rs`, `agent_db.rs`, `sync_manifests.rs`)
+- **@docs ARCHITECTURE:Persistence** (`agent/persistence/` — `agent_db.rs`, `blueprints.rs`, `sync_manifests.rs`)
 - **Concurrent Active Clusters**: Supports up to `MAX_CLUSTERS = 10` parallel swarm mission clusters running independently.
 - **Transactional Persistence Guard**: Atomic manifest synchronization with agent state via transactional SQLite commits.
 - **Strict JSON Error Propagation**: Fails fast on corrupted records during state loading to prevent silent capability wipes.
@@ -265,19 +265,27 @@ The Rust engine implements high-fidelity subsystems to ensure sovereign stabilit
 
 ```
 ├── server-rs/          # Layer 2: Rust Orchestration Engine
+│   ├── src/adapter/     # External adapters / protocol bridges
 │   ├── src/agent/       # Core Runner, Socratic Gate, RAG, and Persistence
 │   │   ├── mcp/         # Decomposed MCP Hub (host, authz, config, types, native, ipc_bridge, client/{stdio,http,jsonrpc,port3000_conformance})
+│   │   ├── persistence/ # Agent DB, blueprints, infra config, sync manifests
+│   │   ├── types/       # Agent/mission/oversight/swarm/tool type modules
 │   │   └── runner/tools/# Zero-Trust Pipeline & CBS
 │   ├── src/bin/graph_query/    # Modular intelligence CLI (ADG-05)
 │   ├── src/db/          # Persistence, Migrations, Contract Tests
 │   ├── src/error/       # Modular RFC 9457 Error Engine
 │   ├── src/intelligence/# CodeBase Graph & Blast Radius Analysis (graph/{models,path_utils,discovery,cache,parsing,synthesis,mod})
-│   ├── src/routes/      # Axum REST & WebSocket Gateways (templates, agent/{chat,crud,missions,models,recovery,tasks}, a2a, oversight)
+│   ├── src/middleware/  # Auth, CORS, request pipeline
+│   ├── src/networking/  # Networking helpers
+│   ├── src/routes/      # Axum REST & WebSocket Gateways (templates/, agent/, a2a, oversight, ws → /v1/engine/ws)
 │   │   └── templates/   # Decomposed Template Store (catalog, source, naming, validate, mcp_store, installed)
-│   ├── src/security/    # Merkle Audit, Metering, Scanner, Shield Layer, PathGuard, SSRFGuard, CommandGuard, RemoteProtocol
+│   ├── src/security/    # Audit trail, Metering, Scanner, Shield Layer, PathGuard, SSRFGuard, CommandGuard, RemoteProtocol
+│   ├── src/services/    # Shared services (e.g. RAG fusion)
 │   ├── src/startup/     # Modular Startup Pipeline (cli, runtime, supervisor, tracing, services)
 │   ├── src/state/       # Modular AppState Hubs & Initialization (init/{channels,databases,security,services}, persistence)
+│   ├── src/system/      # System-level helpers
 │   ├── src/telemetry/   # Adaptive Span Watchdog & OTel Sinks
+│   ├── src/types/       # Shared crate-level types
 │   └── src/utils/       # System Utilities & Transactional Filesystem Staging (fs_transaction, security facade)
 ├── directives/         # Layer 1: Sovereign SOPs & Behavioral Directives
 ├── execution/          # Layer 3: Deterministic Python Execution Tools
@@ -308,7 +316,7 @@ Companion reads and commands use signed `METHOD:PATH:TIMESTAMP:NONCE` headers. T
 3.  **Zero-Trust**: No tool has ambient authority; always check for `CapabilityToken` in execution flows.
 4.  **Sovereignty**: Enforce the **Oversight Gate** for all destructive file or network operations.
 5.  **Rate Limiting**: Never bypass `RateLimiter.acquire()`. It is the primary budget enforcement point.
-6.  **Identity Governance** *(IDENTITY.md Directive #6)*: All agents are bound by [`directives/IDENTITY.md`](../directives/IDENTITY.md). For error analysis, check [`docs/ERROR_REGISTRY.json`](./ERROR_REGISTRY.json) for error codes (`BUDGET_BREACH`, `STASIS_ACTIVE`, `LOGIC_BLOCKER`, `COMPLIANCE_DRIFT`).
+6.  **Identity Governance** *(IDENTITY.md Directive #6)*: All agents are bound by [`directives/IDENTITY.md`](../directives/IDENTITY.md). For live errors, check [`docs/ERROR_REGISTRY.json`](./ERROR_REGISTRY.json) (`BUDGET_EXHAUSTED`, `LOGIC_BLOCKER`, `COMPLIANCE_DRIFT`). `BUDGET_BREACH` / `STASIS_ACTIVE` remain policy placeholders (`emitted: false`) until a STASIS runtime ships.
 7.  **OpenUI DSL Safety**: The `OpenUI_Renderer` only accepts strongly-typed DSL payloads — never raw HTML/JS. All rendering is data-only via exhaustive `switch` dispatch.
 8.  **IPC Bridge**: Python scripts should use `execution/lib/mcp_client.py` for local tool access instead of HTTP API calls.
 
@@ -322,9 +330,11 @@ For complete domain terminology definitions (e.g., *Swarm*, *CBS*, *WAL*, *Overs
 
 ## 🔄 Recent Sovereign Milestones
 
+> **Product SemVer** is **v1.1.463** (`version.json` / tip `bbcf0d4`). Rows below retain historical milestone tags (1.3.x / 1.4.x) used during decomposition sprints — they are **not** published product versions.
+
 | Date | Version | Key Milestones |
 |:---|:---|:---|
-| 2026-09-20 | 1.4.1 | **Architectural Decomposition & Subsystem Modularization**: Decomposed monolithic files across frontend and backend for single-responsibility isolation and zero regression. Extracted frontend resilience utilities (`services/resilience/{hex_utils, circuit_breaker}.ts`) and decomposed Cluster Studio modal (`components/missions/cluster_manager/{types, Agent_Capability_Inspector, Preset_Form}.tsx`). Extracted dedicated security modules (`security/{path_guard, ssrf_guard, command_guard, remote_protocol}.rs`). Decomposed CodeBase semantic graph engine (`intelligence/graph/{models, path_utils, discovery, cache, parsing, synthesis, mod}.rs`). Decomposed server startup supervisor (`startup/{cli, runtime, supervisor, tracing, mod}.rs`). Decomposed agent HTTP gateway routes (`routes/agent/{models, tasks, crud, chat, missions, recovery, mod}.rs`). Decomposed application state initialization (`state/init/{channels, databases, security, services, mod}.rs`) and atomic snapshot serialization (`state/persistence.rs`). 100% tests, benchmarks, and active parity passing. |
+| 2026-09-20 | 1.4.1 | **Architectural Decomposition & Subsystem Modularization**: Decomposed monolithic files across frontend and backend for single-responsibility isolation and zero regression. Extracted frontend resilience utilities (`services/resilience/{hex_utils, circuit_breaker}.ts`) and decomposed Cluster Studio modal (`components/missions/cluster_manager/{types, Agent_Capability_Inspector, Preset_Form}.tsx`). Extracted dedicated security modules (`security/{path_guard, ssrf_guard, command_guard, remote_protocol}.rs`). Decomposed CodeBase semantic graph engine (`intelligence/graph/{models, path_utils, discovery, cache, parsing, synthesis, mod}.rs`). Decomposed server startup supervisor (`startup/{cli, runtime, supervisor, tracing, mod}.rs`). Decomposed agent HTTP gateway routes (`routes/agent/{models, tasks, crud, chat, missions, recovery, mod}.rs`). Decomposed application state initialization (`state/init/{channels, databases, security, services, mod}.rs`) and atomic snapshot serialization (`state/persistence.rs`). Decomposition landed under product tip **v1.1.463**; treat the 1.4.1 label as an internal milestone tag, not the public SemVer. |
 | 2026-09-17 | 1.4.0 | **AI-Tadpole-OS Architectural Synthesis (Phases 1–3)**: Token-budgeted tool overflow with lossless file offload, 8-section structured compaction with frozen continuation, open tool call closer, 4-rule sub-agent delegation contract, fail-fast tool config validator, XML section-tree prompt builder, per-mission execution metrics with real-time HUD, structured `ask_user_question` with interactive choice pills, deferred MCP discovery with 3 meta-tools, async `PermissionMode::Prompt`, named model tiers for swarm delegation, stream-then-poll WebSocket recovery, local IPC bridge (Named Pipe/UDS) with zero-dependency Python client, in-chat OpenUI generative DSL renderer (KPI cards, bar charts, sortable tables, recursive layouts), blind-judge mission benchmarking rig with 5 seed scenarios, and unified store contract behavioral test suite (DashMap + SQLite). 868 Rust tests, 28 frontend tests. |
 | 2026-09-09 | 1.3.5 | **MCP HTTP Submodule & Conformance Decomposition**: Decomposed monolithic `client/http.rs` into focused leaf modules (`limits`, `headers`, `classify`, `body`, `sse`, `client`, `mod`) and decomposed the 21-test witness suite into `client/port3000_conformance/` (`harness`, `gates_config`, `gates_schema`, `gates_http`, `gates_adaptive`). Hardened dual-stack `_meta` discovery assertions, unified request-scoped SSE line processor with trailing EOF buffer flush (Gate 20), memory-bounded operation binding cache (1,024 entries with non-retryable eviction priority), RFC 9110 bracketed IPv6 `Host` authority, and strict redirect disabling (`Policy::none()`). |
 | 2026-09-09 | 1.3.4 | **GEV Port 3000 Client Contract**: Added the exact secret-free `prefer_http` profile, typed fail-closed transport selection, strict JSON-RPC/content-type validation, bounded request-scoped SSE, schema-derived parameter headers, last-catalog enforcement, stable logical operation IDs, structured tool outcomes, configurable finite timeouts, and 20 deterministic tests across 19 conformance gates. |

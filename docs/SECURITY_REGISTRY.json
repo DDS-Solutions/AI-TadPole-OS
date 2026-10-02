@@ -1,6 +1,6 @@
 {
   "$schema": "https://tadpole.os/schemas/security-registry.json",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "updated_at": "2026-10-01",
   "frameworks": {
     "mitre_attack": "v19.2",
@@ -112,7 +112,7 @@
     },
     "SEC-08": {
       "title": "Budget Guard Financial & Resource Quota Metering",
-      "description": "All LLM inference, multimodal live voice streaming, and tool execution must enforce pre-flight balance checks and real-time quota debiting to prevent resource exhaustion.",
+      "description": "LLM inference, live-voice streaming, and tool paths should run pre-flight budget checks and record usage via `security/metering.rs` (`check_budget` returns `Ok(false)` when over quota). Mission runners may surface `RunnerError::BudgetExhausted`, but as of v1.1.463 there is no STASIS runtime and no automatic global kill-switch solely from metering deny \u2014 callers must enforce abort.",
       "category": "Resource & Financial Defense",
       "owasp_agentic": "ASI10",
       "mitre_attack": "T1499",
@@ -122,7 +122,7 @@
         "server-rs/src/routes/ws.rs"
       ],
       "verification_command": "cargo test --package server-rs --bin server-rs security::metering",
-      "failure_mode": "Financial denial-of-wallet, unbounded API token consumption, or server memory exhaustion."
+      "failure_mode": "Financial denial-of-wallet or unbounded token consumption if callers ignore `check_budget` false; do not document STASIS or a metering-driven auto-halt as implemented kill-switch controls."
     }
   }
 }

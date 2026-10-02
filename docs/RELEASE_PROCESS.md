@@ -8,7 +8,7 @@
 # 🚀 Tadpole OS release process
 
 > **Status**: Active
-> **Last Verified**: 2026-08-24
+> **Last Verified**: 2026-10-01
 > **Classification**: Sovereign
 
 `version.json` is the product release authority. Its `api_document_version` is independent because the OpenAPI document can change without a product release. Its `android_version_code` is a monotonically increasing package counter; it is not SemVer.
@@ -23,8 +23,8 @@
 
 The tag build creates the private GitHub Release and publishes it only after all platform artifacts are present. Publishing that private release triggers the public mirror. The mirror binds the public release tag to the current sanitized public `main` commit, verifies its product version, adds a provenance manifest, uploads assets without overwriting existing names, and only then publishes the release.
 
-> [!IMPORTANT]
-> **STASIS Check** *(IDENTITY.md Directive #7)*: Verify the system is not in `STASIS` before tagging. A release remains blocked until Entity 0 explicitly resumes the system.
+> [!NOTE]
+> **STASIS (IDENTITY.md Directive #7 — aspirational)**: IDENTITY describes a global STASIS halt until Entity 0 resumes. **As of v1.1.463 there is no runtime STASIS mode** (`STASIS` / `BUDGET_BREACH` are non-emitted policy placeholders). Do **not** treat STASIS as an operational release gate; rely on `version:check`, changelog, and CI instead.
 
 ## Required local verification
 
@@ -57,7 +57,7 @@ cargo build --locked --release --manifest-path server-rs/Cargo.toml
 
 - Run `./scripts/build-linux-light.ps1` for Docker-backed `.deb` and `.AppImage` bundles in `dist/linux-light/`.
 - Run `./scripts/deploy-linuxlite.ps1` for a direct SSH deployment after reviewing its target host and user.
-- Run `./scripts/publish-public.ps1` to inspect the sanitized `.tmp/public-release/` snapshot locally. The workflow, not this script, owns public release tags.
+- Public mirror / sanitized snapshot inspection is owned by GitHub Actions (there is **no** `scripts/publish-public.ps1` on tip). Do not document a local publish script that is not in-tree.
 
 ## Required GitHub settings
 
@@ -76,6 +76,6 @@ Never rewrite a published tag or asset. If a release is wrong, document the reas
 ## Post-release checks
 
 - Verify the dashboard can authenticate with a real `NEURAL_TOKEN`.
-- Confirm WebSocket connectivity on `/engine/ws`.
+- Confirm WebSocket connectivity on `/v1/engine/ws`.
 - Smoke-test task dispatch, an oversight flow, and one starter-kit or template install path when those surfaces changed.
 - Verify the public tag points to sanitized source with the released version and that every public asset appears in `release-provenance.json`.

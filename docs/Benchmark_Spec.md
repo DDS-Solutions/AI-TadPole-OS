@@ -8,11 +8,11 @@
 [//]: # (Metadata: [benchmark_spec])
 
 # 🧪 Tadpole Engine: Benchmark Test Specification
-**Version**: 1.3.2
-**Last Reviewed**: 2026-07-11
+**Version**: 1.1.463
+**Last Reviewed**: 2026-10-01
 **Classification**: Sovereign
 
-> **Status**: Stable — Updated to reflect v1.1.231 module structure
+> **Status**: Partial — API `/v1/benchmarks` (list/create/history/run) is live; Criterion `server-rs/benches/` remains **absent**. Header aligned to product tip **v1.1.463** / `bbcf0d4`.
 
 ## 📚 Table of Contents
 
@@ -82,6 +82,14 @@ graph TD
 
 > [!TIP]
 > **Interactive Triggering**: While all benchmarks can be run via CLI (`cargo bench`), the primary interface for triggering and visualizing performance metrics is the **Performance Analytics** dashboard in the Tadpole OS UI. From there, users can trigger specific tests (e.g., `BM-RUN-01`) with a single click — which hits the `/v1/benchmarks/run/:test_id` endpoint (Default Port: 8000) — and view immediate delta analysis against baseline runs.
+
+> **Benchmark HTTP surface** (`server-rs/src/routes/benchmarks.rs`, nested under `/v1/benchmarks`):
+> - `GET /` — paginated list
+> - `POST /` — create / record a result
+> - `GET /{test_id}` — history / comparison for a test id
+> - `POST /run/{test_id}` — trigger an on-demand run
+>
+> Criterion micro-benches under `server-rs/benches/` are **not** shipped yet; keep Appendix A checklists unchecked until those files exist.
 
 ### 1.1 Goals Table
 
@@ -691,7 +699,7 @@ const PERF_OBSERVER_ENTRY_TYPE = "measure";
 cargo run --release
 
 # Step 2: Connect websocat and count received messages
-websocat --text --protocol "bearer.YOUR_NEURAL_TOKEN" "ws://localhost:8000/engine/ws" \
+websocat --text --protocol "bearer.YOUR_NEURAL_TOKEN" "ws://localhost:8000/v1/engine/ws" \
   | pv -l -r > /dev/null &
 
 # Step 3: Inject events at increasing rates via internal test endpoint
@@ -716,7 +724,7 @@ cargo bench --bench ws_bench -- bench_multiplexed_channel_latency
 # Step 1: Start engine with 10 active agents running missions
 # Step 2: Open 10 WebSocket connections simultaneously
 for i in {1..10}; do
-websocat --text --protocol "bearer.YOUR_NEURAL_TOKEN" "ws://localhost:8000/engine/ws" \
+websocat --text --protocol "bearer.YOUR_NEURAL_TOKEN" "ws://localhost:8000/v1/engine/ws" \
     > /tmp/ws_client_$i.log 2>&1 &
 done
 
@@ -1267,7 +1275,7 @@ DB save regression (BM-DB-01) | 50-agent persistence sharply exceeds baseline (>
 ## 9. CI Integration & Automation
 
 > [!IMPORTANT]
-> **Current Status (v1.1.231)**: Benchmark CI integration is **planned but not yet implemented**. The `.github/workflows/` pipelines currently run: TypeScript build, Vitest unit tests, and Rust `cargo clippy`/`cargo test`. No `cargo bench` or k6 steps exist yet. The spec below describes the **target architecture** for when `server-rs/benches/` is populated.
+> **Current Status (v1.1.463)**: Benchmark CI integration is **planned but not yet implemented**. The `.github/workflows/` pipelines currently run: TypeScript build, Vitest unit tests, and Rust `cargo clippy`/`cargo test`. No `cargo bench` or k6 steps exist yet. The spec below describes the **target architecture** for when `server-rs/benches/` is populated.
 
 Target architecture once bench files are created:
 - **Execution Cadence**:
@@ -1296,7 +1304,7 @@ Review this specification alongside the following primary source implementations
 ## Appendix A: Benchmark File Inventory
 
 > [!CAUTION]
-> **As of v1.1.231, `server-rs/benches/` does not exist.** The Criterion dependency (`criterion = "0.8.2"`) and `[profile.bench]` block are already present in `server-rs/Cargo.toml`. Creating the bench files below is the only prerequisite to running `cargo bench`.
+> **As of v1.1.463, `server-rs/benches/` does not exist.** The Criterion dependency (`criterion = "0.8.2"`) and `[profile.bench]` block are already present in `server-rs/Cargo.toml`. Creating the bench files below is the only prerequisite to running `cargo bench`.
 
 Status of required bench files:
 - [ ] `server-rs/benches/runner_bench.rs` — covers BM-RUN-01 through BM-RUN-05

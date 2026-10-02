@@ -23,7 +23,7 @@ If you encounter a bug or have a suggestion for improvement:
 **Do not report security vulnerabilities in public issues.** Please follow the reporting instructions in our **[Security Policy](SECURITY.md)**.
 
 ## 📜 Professional Services
-For commercial implementation, custom industry templates, or private swarm consulting, please contact our team at [INSERT TEAM LINK].
+Commercial implementation, custom industry templates, or private swarm consulting: use **[GitHub Discussions](https://github.com/DDS-Solutions/AI-TadPole-OS/discussions)** until a dedicated commercial contact URL is published (no placeholder link).
 
 ---
 *AI-Tadpole-OS: Sovereign Intelligence, Locally Driven.*

@@ -9,7 +9,8 @@
 ### Alignment Analysis — OpenExO v25 (Salim Ismail, June 2026)
 
 > **Source**: [openexo.com/organizational-singularity](https://openexo.com/organizational-singularity#title-page)
-> **Codebase**: TadpoleOS v1.2.1 — local-first, sovereign multi-agent swarm runtime
+> **Codebase**: TadpoleOS **v1.1.463** (tip `bbcf0d4`) — local-first, sovereign multi-agent swarm runtime
+> **Docs note**: ✅ cells below mean “capability present / partially present,” not exhaustive production certification. Soften “leads the framework” / “exceeds spec” as opinionated alignment commentary.
 
 ---
 
@@ -67,7 +68,7 @@ Layer 1: GOVERN/ASSURE — compliance, audit, safety rails
 | **DECIDE** | CEO/COO/CTO agent hierarchy, `synthesis/context.rs` planning, Triple-slot routing, budget enforcement | ✅ Strong |
 | **ACT** | `mission_tools.rs` tool registry, shell execution (gated), API calls, Autonomous Skill Synthesis | ✅ Strong |
 | **LEARN** | Self-Annealing (Agent 99), `LONG_TERM_MEMORY.md`, `refactor_synthesized_skill`, IKS confidence decay, Evolution Telemetry | ✅ Strong |
-| **GOVERN/ASSURE** | Sapphire Shield HITL gate, OBLITERATUS hardening, RFC 9457 error codes, audit trail Merkle chaining, per-agent RBAC, secret redaction | ✅ **Exceptionally strong** — this is where TadpoleOS arguably leads the framework |
+| **GOVERN/ASSURE** | Sapphire Shield HITL gate, OBLITERATUS hardening, RFC 9457 error codes, audit trail (`security/audit.rs`), per-agent RBAC, secret redaction | ✅ Strong focus area (HITL + audit + RBAC); not a claim of framework leadership |
 
 > [!TIP]
 > **TadpoleOS's GOVERN/ASSURE is ahead of most organizations the book describes.** The framework calls GOVERN/ASSURE a "control plane" but leaves implementation open. TadpoleOS has `security/audit.rs` with tamper-detection, `security/conflict.rs` with lease management, and `security/metering.rs` with quota enforcement — all production-grade.
@@ -149,7 +150,7 @@ TadpoleOS is built from the ground up on an **Inverted Data-Plane**. Instead of 
 ### "The Log Is the Agent" (v25 Update)
 > *"Treat the agent's append-only execution log as the fundamental layer of state ownership, security isolation, and compliance."*
 
-TadpoleOS implements this exact architecture via [audit.rs](../server-rs/src/security/audit.rs). The agent's history and security state are not ephemeral observations; they are cryptographically linked SHA-256 Merkle chain logs. This ensures non-repudiable auditing and provides event-sourced recovery pathways.
+TadpoleOS implements audit persistence via [audit.rs](../server-rs/src/security/audit.rs). Agent history and security events are logged for oversight; treat full Merkle-chain non-repudiation / event-sourced recovery as **target properties** and confirm against the current `audit.rs` implementation before asserting them as absolute.
 
 ### Frontier-Ecosystem Validation (v25 Update)
 > *"Relying purely on a 'frontier model' is highly unstable. Robust governance requires treating model endpoints as commodities backed by local fallbacks, token optimization, and user gatekeeping."*
@@ -176,7 +177,7 @@ TadpoleOS's triple-slot routing model dynamically handles failures in primary mo
 | Area | How TadpoleOS Exceeds |
 |---|---|
 | **Data Sovereignty Architecture** | The book advocates for Edge Twins but doesn't prescribe air-gapped, local-first deployments. TadpoleOS's sovereign runtime goes further than the framework's deployment model. |
-| **Security Hardening Depth** | GOVERN/ASSURE in the book is a control plane concept. TadpoleOS has production-grade implementations: Merkle audit chains, OBLITERATUS hardening, RFC 9457 compliance, secret-aware redaction, RBAC isolation per agent. |
+| **Security Hardening Depth** | GOVERN/ASSURE in the book is a control plane concept. TadpoleOS implements audit logging, OBLITERATUS hardening paths, RFC 9457-shaped errors, secret-aware redaction, and RBAC isolation per agent — depth varies by surface; verify against tip before claiming “production-grade everywhere.” |
 | **Multi-Provider Resilience** | The book doesn't address provider failover. TadpoleOS has dynamic slot routing with triple-slot fallback — a real operational concern the framework ignores. |
 | **Codebase Intelligence Layer** | The Knowledge Graph HUD, BFS Dependency Pathfinder, and Tree-sitter AST graph have no equivalent in ExO 3.0. This is TadpoleOS-native capability that exceeds the framework. |
 | **P2P Mesh Foundation** | The book mentions ecosystem leverage but not P2P agent mesh networking. TadpoleOS's mDNS-SD `SwarmDiscoveryManager` is building toward a Bunker Mesh that the book's framework doesn't envision. |
@@ -194,7 +195,7 @@ MTP (Purpose)         directives/ + AGENTS.md           ✅ Live
 DRIVE Intelligence    Agent hierarchy + telemetry       ✅ Live
 SHAPE (Org Form)      Multi-cluster swarm topology      ✅ Live (P2P partial)
 Intelligence Stack    All 6 cognitive layers            ✅ Live
-GOVERN/ASSURE         Sapphire Shield + Audit system    ✅ Live (exceeds spec)
+GOVERN/ASSURE         Sapphire Shield + Audit system    ✅ Live (aligned; not “exceeds spec”)
 Edge Twin Runtime     TadpoleOS itself                  ✅ Live
 REWRITE Playbook      Roadmap Phases 1-4                ✅ Live
 REWRITE Steps I+T     Phase 6 MCP connectors            ⚠️  Planned

@@ -16,3 +16,5 @@ The legacy synchronization script rewrote every released heading in `CHANGELOG.m
 | 2026-04-16 | 1.1.6 | Commit `7adf8693` introduced both adjacent 1.1.6 entries; they were merged into one release section without changing their entries. |
 
 This reconstruction does not claim that every intermediate historical version had a formal release. From this point forward, published sections are immutable and a product-version transition must introduce exactly one matching release heading.
+
+> **Public unverifiability**: Evidence SHAs `1f88158d`, `44feae61`, and `7adf8693` come from **private** repository history. They **404** on public `DDS-Solutions/AI-TadPole-OS` — public readers cannot verify these commits until equivalent evidence is published on the public timeline.

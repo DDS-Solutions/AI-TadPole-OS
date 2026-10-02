@@ -9,6 +9,8 @@
 
 *July 21, 2026 — By the Tadpole OS Engineering Team*
 
+> **Docs note (2026-10-01)**: Historical announcement. Product tip is **v1.1.463**. Marketing claims below (e.g. “world’s first”, absolute Merkle halt-on-tamper, 100% suite pass at publish time) are **aspirational / snapshot** language — verify against live `security/audit.rs`, metering, and CI before treating as current guarantees.
+
 ---
 
 Today, we are thrilled to announce the official release of **Tadpole OS v1.1.273** — a ground-up reimagining of how autonomous AI agents are engineered, governed, and scaled. 
@@ -17,7 +19,7 @@ For the past three years, the AI ecosystem has built autonomous workflows on fra
 
 **Tadpole OS changes that.**
 
-Tadpole OS is the world’s first **Sovereign Agent Orchestration Platform** built on a high-performance **Rust micro-kernel**, cryptographically verifiable **Merkle audit ledgers**, and a real-time **Graph Intelligence Engine**. It bridges the gap between probabilistic AI reasoning and deterministic system execution.
+Tadpole OS is a **local-first Sovereign Agent Orchestration Platform** built on a high-performance **Rust engine**, an **audit trail** (WAL / `security/audit.rs`), and a real-time **Graph Intelligence Engine**. It aims to bridge probabilistic AI reasoning and deterministic system execution.
 
 ---
 
@@ -45,9 +47,9 @@ An **AI Digital Twin** is an autonomous, digital mirror of your business logic, 
 1. **Codify Institutional Wisdom**: Transform non-documented internal expertise, training manuals, and standard operating procedures (SOPs) into machine-readable **Directives** and Open Knowledge Format (**OKF**) entries.
 2. **Enterprise Throughput with Small-Team Agility**: A 10-person team operating a Tadpole OS Digital Twin can manage the operational bandwidth, customer responsiveness, and analytical depth of a 500-person enterprise.
 3. **Zero Risk of Knowledge Loss**: When key personnel retire or move on, your AI Digital Twin preserves company intelligence intact—continuously execution-ready and self-improving.
-4. **Sovereign Ownership & Absolute Data Privacy**: Unlike proprietary SaaS platforms that lock up your operational data, your Tadpole OS Digital Twin runs on local hardware or private clouds using open models (such as Gemma 4 or Llama 3) with **100% data sovereignty**.
+4. **Sovereign Ownership & Absolute Data Privacy**: Unlike proprietary SaaS platforms that lock up your operational data, your Tadpole OS Digital Twin runs on local hardware or private clouds using open models (such as Gemma 4 or Llama 3) with **local-first data sovereignty**.
 
-For SMBs, building an AI Digital Twin isn't just an upgrade—**it is the ultimate survival advantage for the decade ahead.**
+For SMBs, building an AI Digital Twin is a strategic option for preserving operational knowledge and automating repeatable workflows—not a guaranteed “survival” outcome.
 
 ---
 
@@ -127,7 +129,7 @@ In enterprise environments, "trusting" an AI agent is insufficient. Tadpole OS i
        └─────── H(B1 ⊕ H0) ─────┴─────── H(B2 ⊕ H1) ──────┴──────── H(B3 ⊕ H2) ────────┘
 ```
 
-Every state modification generates a cryptographic SHA-256 parent hash signature stored in SQLite. If a single byte of audit history is altered or tampered with, the system’s Merkle verification pipeline immediately flags the ledger as **compromised** and halts high-risk agent operations.
+Audit entries can be hashed and chained for tamper evidence (`security/audit.rs`). Treat automatic “halt all high-risk ops on any ledger byte change” as a **design goal**, not a verified global kill-switch on tip v1.1.463.
 
 ### 2. Zero-Trust Oversight & Replay-Proof Governance Gateway
 When an agent attempts high-privilege operations (such as production deployments or direct database migrations), Tadpole OS routes the request into the **Governance Oversight Queue**.
@@ -158,7 +160,7 @@ Tadpole OS v1.1 was engineered with systems-level performance as a first-class r
 | **API Route Dispatch Latency** | **< 850 µs** | 45 ms – 120 ms |
 | **Audit Ledger Verification** | **10,000 blocks / sec** | Non-existent |
 | **Memory Footprint (Idle)** | **18 MB** | 450 MB – 1.2 GB |
-| **Test Suite Coverage** | **446 / 446 Passed (100%)** | Unpredictable |
+| **Test Suite Coverage** | Growing Rust + Vitest suites (count changes per tip) | Unpredictable |
 | **Frontend Visualizer Frame Rate** | **60 FPS steady** | 12 – 24 FPS (Laggy) |
 
 ---
