@@ -14,7 +14,7 @@ AI-Tadpole-OS is evolving from a high-performance local engine into a fully auto
 - [x] **Local-First Memory**: LanceDB vector store with Gemini `text-embedding-004`.
 - [x] **Reactive Dashboard**: Real-time telemetry and Agent Management UI.
 - [x] **Modular Skills (MCP)**: Native Support for Model Context Protocol.
-- [x] **Voice Synthesis/Recognition**: Piper STT/TTS with Bunker caching.
+- [x] **Voice Synthesis/Recognition**: Piper **TTS** is feature-gated/legacy in-tree; **STT** uses Whisper local and/or Groq (see also Phase 2 Sovereign STT). Do not treat “Piper STT/TTS” as a single fully shipped stack.
 
 ## 🟡 Phase 2: Autonomous Continuity & Swarm Governance
 - [x] **Intelligent Model Registry & Capability Sync** `IMR-01`: Dynamic provider model discovery (Ollama, OpenAI, Groq, Google, etc.) with automatic capability enrichment (tool support, vision, context window, embedding detection). Enables UI-level enforcement and intelligent swarm routing. Full local/self-hosted model support. → [Spec](directives/features/intelligent-model-registry.md)
@@ -22,7 +22,7 @@ AI-Tadpole-OS is evolving from a high-performance local engine into a fully auto
 - [x] **Unified Oversight Gate**: WebSocket-backed HITL approval/authorization ledger with signed user confirmation for sensitive tools (Shell, Budget, filesystem). Includes Agent-Specific RBAC with per-agent security policy isolation.
 - [x] **GraphRAG Integration**: TrustGraph-inspired entity-relation retrieval bridging vector-only RAG limits for cross-mission structural reasoning.
 - [ ] **Flow-based Ingestion**: Asynchronous data processing pipelines for high-volume context.
-- [x] **Procedural Template Ecosystem**: "One-Click" deployment templates for specialized agent clusters (23 industries, 200+ agents).
+- [x] **Procedural Template Ecosystem**: In-repo **`starter_kits/`** ships **4** tracked kits. Broader industry/agent catalog counts (e.g. 200+ roles) refer to the separate [Industry Templates](https://github.com/DDS-Solutions/AI-TadPole-OS-Industry-Templates) project — not the four local kits.
 - [ ] **Sovereign STT Improvements**: Higher precision Whisper integration.
 - [ ] **Unified Communication Bridge**: Real-time notifications and HITL via Slack/Discord MCP.
 - [x] **Swarm Memory Deduplication**: Cross-mission pattern recognition to prune recursive context bloat and reduce token cost/latency.

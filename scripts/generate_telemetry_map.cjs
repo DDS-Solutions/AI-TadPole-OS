@@ -1,3 +1,7 @@
+/**
+ * TELEMETRY_MAP generator — scans frontend `src/` (.ts/.tsx) ONLY.
+ * Does not index server-rs Rust emitters. See AGENTS.md / CLAUDE.md scope note.
+ */
 const fs = require('fs');
 const path = require('path');
 

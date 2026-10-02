@@ -3,8 +3,8 @@ title: "Kill Switches"
 tier: "3"
 status: "verified"
 version: "1.2.0"
-last-verified: "2026-06-17"
-commit: "b1c347b1"
+last-verified: "2026-10-01"
+commit: "bbcf0d4"
 network-badge: "none"
 risk-tags:
   - "RISK: HIGH"
@@ -28,8 +28,8 @@ Immediately halts all active agent thinking and execution loops and rejects pend
 
 | Property | Value |
 |----------|-------|
-| **Backend Handler** | `kill_agents` ([engine_control.rs:L34](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/routes/engine_control.rs#L34)) |
-| **Frontend Hook** | `handle_kill_switch` ([useOversightDashboard.ts:L153](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/src/hooks/useOversightDashboard.ts#L153)) |
+| **Backend Handler** | `kill_agents` ([engine_control.rs:L34](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/routes/engine_control.rs#L34)) |
+| **Frontend Hook** | `handle_kill_switch` ([useOversightDashboard.ts:L153](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/src/hooks/useOversightDashboard.ts#L153)) |
 | **API Endpoint** | `POST /v1/engine/kill` |
 | **Dashboard Button Path** | Oversight dashboard → header panel → **[Button] Halt Agents** |
 
@@ -56,15 +56,15 @@ Gracefully terminates the Axum service process, persisting all live agent states
 
 | Property | Value |
 |----------|-------|
-| **Backend Handler** | `shutdown_engine` ([engine_control.rs:L91](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/routes/engine_control.rs#L91)) |
-| **Frontend Hook** | `handle_kill_engine` ([useOversightDashboard.ts:L169](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/src/hooks/useOversightDashboard.ts#L169)) |
+| **Backend Handler** | `shutdown_engine` ([engine_control.rs:L91](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/routes/engine_control.rs#L91)) |
+| **Frontend Hook** | `handle_kill_engine` ([useOversightDashboard.ts:L169](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/src/hooks/useOversightDashboard.ts#L169)) |
 | **API Endpoint** | `POST /v1/engine/shutdown` |
 | **Dashboard Button Path** | Oversight dashboard → header panel → **[Button] Kill Engine** |
 
 **[Button] Kill Engine**
 - *Default state*: Enabled/Online.
 - *Visible location*: Oversight dashboard header panel.
-- *Observable side effect*: Prompts the user with `confirm_kill_engine` verification, **demands typing the uppercase word `"SHUTDOWN"` in the text input** ([useOversightDashboard.ts:L172-173](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/src/hooks/useOversightDashboard.ts#L172-L173)), and then terminates the Axum service process via the `shutdown_engine` handler.
+- *Observable side effect*: Prompts the user with `confirm_kill_engine` verification, **demands typing the uppercase word `"SHUTDOWN"` in the text input** ([useOversightDashboard.ts:L172-173](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/src/hooks/useOversightDashboard.ts#L172-L173)), and then terminates the Axum service process via the `shutdown_engine` handler.
 - *Keyboard shortcut*: None.
 - *Missing in build*: Always present.
 
@@ -123,9 +123,9 @@ In addition to server-side kill switches, the frontend implements a **[[Glossary
 
 ---
 
-**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
+**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
 
-<!-- Last verified against commit b1c347b1 on 2026-06-11 -->
+<!-- Last verified against commit bbcf0d4 on 2026-10-01 -->
 [//]: # (wiki-page: Kill-Switches)
 
 

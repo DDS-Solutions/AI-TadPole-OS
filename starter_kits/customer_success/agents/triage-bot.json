@@ -5,8 +5,7 @@
   "department": "Success",
   "description": "Categorizes tickets and drafts initial responses based on internal docs.",
   "skills": [
-    "read_file",
-    "knowledge_base_search"
+    "read_file"
   ],
   "model_config": {
     "model_id": "gemma4:31b-cloud",

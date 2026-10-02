@@ -3,8 +3,8 @@ title: "Sovereign Intelligence Portal"
 tier: "1"
 status: "verified"
 version: "1.1.463"
-last-verified: "2026-07-29"
-commit: "f123d424"
+last-verified: "2026-10-01"
+commit: "bbcf0d4"
 network-badge: "none"
 risk-tags: []
 ---
@@ -69,7 +69,7 @@ Ensure the integrity of your local node, audit all tool executions, manage crede
 ## 📖 Controlled Vocabulary Ledger
 *   [[Glossary]]: The synchronized technical glossary containing authoritative definitions for all system terms.
 
-<!-- Last verified against commit b1c347b1 on 2026-06-11 -->
+<!-- Last verified against commit bbcf0d4 on 2026-10-01 -->
 [//]: # (wiki-page: Home)
 
 

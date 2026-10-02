@@ -3,8 +3,8 @@ title: "Agent-to-Agent (A2A) Economics Guide"
 tier: "2"
 status: "verified"
 version: "1.2.4"
-last-verified: "2026-06-23"
-commit: "b1c347b1"
+last-verified: "2026-10-01"
+commit: "bbcf0d4"
 network-badge: "none"
 risk-tags: ["RISK: MEDIUM"]
 ---

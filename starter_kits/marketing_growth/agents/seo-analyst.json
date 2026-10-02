@@ -5,8 +5,7 @@
   "department": "Growth",
   "description": "Analyzes keywords, competitor trends, and site performance metrics.",
   "skills": [
-    "fetch_url",
-    "keyword_research"
+    "fetch_url"
   ],
   "model_config": {
     "model_id": "gemma4:31b-cloud",

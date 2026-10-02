@@ -3,8 +3,8 @@ title: "Projects & Missions"
 tier: "1"
 status: "verified"
 version: "1.2.0"
-last-verified: "2026-06-17"
-commit: "b1c347b1"
+last-verified: "2026-10-01"
+commit: "bbcf0d4"
 network-badge: "none"
 risk-tags:
   - "RISK: MEDIUM"
@@ -68,7 +68,7 @@ Clear project scoping ensures virtual teams execute tasks quickly and stay withi
 
 ## 2. Project Lifecycle Status States
 
-Swarm missions transition through a strict state machine representing different phases of execution (defined in [[Glossary#missionstatus|MissionStatus]] and backend [`types.rs:L129-136`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/agent/types.rs#L129-L136)):
+Swarm missions transition through a strict state machine representing different phases of execution (defined in [[Glossary#missionstatus|MissionStatus]] and backend [`types.rs:L129-136`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/agent/types.rs#L129-L136)):
 
 | State | Description |
 |-------|-------------|
@@ -83,11 +83,11 @@ Swarm missions transition through a strict state machine representing different 
 
 ## 3. Workspace Cluster Limits
 
-To prevent system overload on local nodes, the maximum number of concurrent projects is capped by the `MAX_CLUSTERS` [RISK: MEDIUM] engine setting (default: `10` in code [`state/mod.rs:L552-556`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/state/mod.rs#L552-L556) and [`.env.example`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/.env.example)).
+To prevent system overload on local nodes, the maximum number of concurrent projects is capped by the `MAX_CLUSTERS` [RISK: MEDIUM] engine setting (default: `10` in code [`state/mod.rs:L552-556`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/state/mod.rs#L552-L556) and [`.env.example`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/.env.example)).
 
 If the active workspace count matches this limit:
 - Any attempts by the operator to initialize a new project workspace are **blocked**.
-- A warning log is emitted: `Cluster limit reached` (logged as level `'warning'` by [`workspace_service.ts:L65-68`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/src/services/workspace_service.ts#L65-L68)).
+- A warning log is emitted: `Cluster limit reached` (logged as level `'warning'` by [`workspace_service.ts:L65-68`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/src/services/workspace_service.ts#L65-L68)).
 
 > [!TIP]
 > For standard office hardware, keeping active projects under 5 is recommended to ensure smooth operation. The absolute maximum is 10.
@@ -214,9 +214,9 @@ To reduce database index sizes, configuration loading times, and state synchroni
 
 ---
 
-**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
+**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
 
-<!-- Last verified against commit b1c347b1 on 2026-06-11 -->
+<!-- Last verified against commit bbcf0d4 on 2026-10-01 -->
 [//]: # (wiki-page: Projects-&-Missions)
 
 

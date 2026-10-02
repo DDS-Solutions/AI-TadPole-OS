@@ -5,8 +5,7 @@
   "department": "Finance",
   "description": "Verifies agent operations against corporate policy and local law.",
   "skills": [
-    "read_file",
-    "scan_vulnerabilities"
+    "read_file"
   ],
   "model_config": {
     "model_id": "gemma4:31b-cloud",

@@ -3,8 +3,8 @@ title: "Developer Appendix"
 tier: "dev"
 status: "verified"
 version: "1.2.0"
-last-verified: "2026-06-17"
-commit: "b1c347b1"
+last-verified: "2026-10-01"
+commit: "bbcf0d4"
 network-badge: "none"
 risk-tags: ["RISK: MEDIUM"]
 ---
@@ -14,7 +14,7 @@ risk-tags: ["RISK: MEDIUM"]
 This appendix is for **core developers and contributors** working on the Tadpole OS codebase. It provides an overview of the architecture, extension points, and testing infrastructure.
 
 > [!NOTE]
-> This page is a summary reference. For the full architectural specification, see [`ARCHITECTURE.md`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/docs/ARCHITECTURE.md) in the main repository.
+> This page is a summary reference. For the full architectural specification, see [`ARCHITECTURE.md`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/docs/ARCHITECTURE.md) in the main repository.
 
 ---
 
@@ -188,9 +188,9 @@ This routes all LLM calls through a `NullProvider` that returns mock responses.
 
 ## 6. Contributing
 
-- See [`CONTRIBUTING.md`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/CONTRIBUTING.md) for contribution guidelines.
-- See [`DEVELOPMENT.md`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/DEVELOPMENT.md) for development setup details.
-- See [`CODE_OF_CONDUCT.md`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/CODE_OF_CONDUCT.md) for community standards.
+- See [`CONTRIBUTING.md`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/CONTRIBUTING.md) for contribution guidelines.
+- See [`DEVELOPMENT.md`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/DEVELOPMENT.md) for development setup details.
+- See [`CODE_OF_CONDUCT.md`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/CODE_OF_CONDUCT.md) for community standards.
 
 ---
 
@@ -225,13 +225,13 @@ cargo run --bin graph_query -- blast --name SymbolName --format mermaid
 cargo run --bin graph_query -- blast --name SymbolName --format html
 ```
 
-See [`CLI_TOOLS.md`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/docs/CLI_TOOLS.md#graph-intelligence-cli-graph_query) for the full subcommand reference.
+See [`CLI_TOOLS.md`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/docs/CLI_TOOLS.md#graph-intelligence-cli-graph_query) for the full subcommand reference.
 
 ---
 
-**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
+**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
 
-<!-- Last verified against commit d549a5a8 on 2026-07-11 -->
+<!-- Last verified against commit bbcf0d4 on 2026-10-01 -->
 [//]: # (wiki-page: Developer-Appendix)
 
 

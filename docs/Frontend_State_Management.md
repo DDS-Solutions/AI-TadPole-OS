@@ -21,9 +21,23 @@ Tadpole OS utilizes a decentralized **Zustand** store architecture to maintain a
 |:--- |:--- |
 | **`agent_store`** | Identity, telemetry, and capability status. |
 | **`workspace_store`** | Mission clustering and RAG context management. |
-| **`provider_store`** | Secure credential management (Vault) and model availability. |
+| **`provider_store`** | Provider/model availability and credential wiring. |
 | **`tab_store`** | Viewport orchestration and layout state. |
-| **`sovereign_store`** | Governance ledger, stasis mode, active mission metrics HUD, and user questions. |
+| **`sovereign_store`** | Governance ledger, mission metrics HUD, and user questions. |
+| **`settings_store`** | Engine URL, bearer token (memory-only), Tauri/`__TADPOLE_CONFIG__`/`VITE_NEURAL_TOKEN` seeding. |
+| **`vault_store`** | Neural Vault unlock + encrypted secret blobs (`tadpole-vault-secrets` in localStorage). |
+| **`security_store`** | Security posture / oversight-related UI state. |
+| **`memory_store`** | IKS / memory browser state. |
+| **`model_store`** | Model catalog and slot selection UI. |
+| **`skill_store`** | Skill registry UI state. |
+| **`department_store`** | Department/org chart UI. |
+| **`role_store`** | Role definitions UI. |
+| **`node_store`** | Node topology UI. |
+| **`notification_store`** | Toast / notification queue. |
+| **`dropdown_store`** | Shared dropdown/menu open state. |
+| **`trace_store`** | Distributed trace / request correlation UI. |
+
+All live under `src/stores/*.ts` (17 production stores as of v1.1.463).
 
 ### Architectural Service Decoupling & Defensive State Management
 - **Safe Store Injection & Defensive Access**: `workspace_service.ts` uses private initialization guards (`get_store()`) eliminating unhandled null dereferences (`workspace_store!`).
@@ -63,9 +77,10 @@ During high-concurrency agent swarms, the engine may broadcast hundreds of log e
 
 ## 🛠️ Connectivity: WebSocket Multiplexing
 
-The dashboard maintains a single persistent `/ws` connection with the engine.
+The dashboard hub WebSocket is **`/v1/engine/ws`** (not a root `/ws` path). A separate live-voice socket exists under `/v1/engine/live-voice` (see `docs/WEBSOCKET_EVENTS.md`).
 - **Binary Protocols**: High-speed telemetry (e.g., the Swarm Pulse) is broadcast via **MessagePack** binary headers for minimal bandwidth overhead.
 - **Auth Handshake**: Authentication is handled via `Sec-WebSocket-Protocol` headers, preventing token exposure in URL logs.
+- **Token seeding**: Desktop builds call Tauri IPC `get_neural_token` via `settings_store.resolve_tauri_token()`; web may seed from `__TADPOLE_CONFIG__` / `VITE_NEURAL_TOKEN` (local only) or Settings → Engine Connection. Some live-voice paths still read `localStorage.tadpole_token` — see Round-2 caveats.
 - **Reconnect limits**: Failed handshakes retain their retry count and increasing delay. Successful authentication resets the retry budget.
 
 ---

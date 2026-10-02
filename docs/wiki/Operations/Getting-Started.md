@@ -3,8 +3,8 @@ title: "Getting Started"
 tier: "1"
 status: "verified"
 version: "1.2.0"
-last-verified: "2026-06-17"
-commit: "b1c347b1"
+last-verified: "2026-10-01"
+commit: "bbcf0d4"
 network-badge: "required"
 risk-tags:
   - "RISK: HIGH"
@@ -139,7 +139,7 @@ Once the agent completes, review the generated draft on the **Workspaces** page 
 | `[Shortcut: 1-6]` | Quick-navigate to tabs (Dashboard, Org Chart, Standups, Workspaces, Docs, Settings) |
 
 > [!NOTE]
-> Keyboard shortcuts are active only when no input fields are focused. Cited in [useLayoutNavigation.ts:L51-83](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/src/hooks/layout/useLayoutNavigation.ts#L51-L83).
+> Keyboard shortcuts are active only when no input fields are focused. Cited in [useLayoutNavigation.ts:L51-83](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/src/hooks/layout/useLayoutNavigation.ts#L51-L83).
 
 ---
 
@@ -156,9 +156,9 @@ Once the agent completes, review the generated draft on the **Workspaces** page 
 
 ---
 
-**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
+**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
 
-<!-- Last verified against commit b1c347b1 on 2026-06-11 -->
+<!-- Last verified against commit bbcf0d4 on 2026-10-01 -->
 [//]: # (wiki-page: Getting-Started)
 
 

@@ -16,6 +16,7 @@ to inspect local context and blast radius.
 Useful commands:
 
 ```powershell
+npm run graph:blast:guard -- --path server-rs/src/routes/system.rs
 npm run graph:lookup -- --name SymbolName
 npm run graph:file -- --path src/pages/Neural_Map.tsx
 npm run graph:blast -- --path server-rs/src/routes/intelligence.rs --name get_blast_radius
@@ -28,8 +29,10 @@ Audit commands generate graph context at:
 reports/intelligence/audit_context.json
 ```
 
-Use that artifact to debug audit findings by checking related symbols, callers,
-callees, and likely blast radius before changing code.
+**Mandatory Pre-Refactor & Subagent Guard** (aligned with `AGENTS.md`):
+- Before non-trivial edits, run `npm run graph:blast:guard -- --path <file>` to inspect affected callers and callees.
+- Worker subagents automatically ingest the scoped symbol slice (~1k-3k tokens) to maintain structural context without latency overhead.
+- Use `reports/intelligence/audit_context.json` to debug audit findings (related symbols, callers, callees, blast radius).
 
 ## The Nexus Engineer Mode
 
@@ -68,3 +71,4 @@ All agent capabilities in this codebase must adhere to the **`agentskills.io` Op
 - **AI Observability Assets** (*IDENTITY.md Directive #6*):
   - Check `docs/ERROR_REGISTRY.json` for mapping error codes to failure paths.
   - Check `docs/TELEMETRY_MAP.json` for log emitter tag locations.
+    > **Scope note**: `scripts/generate_telemetry_map.cjs` scans **frontend `src/` only** (`.ts`/`.tsx`). It is not a full Rust/server emitter map — do not treat missing Rust tags as evidence that server telemetry is undocumented.

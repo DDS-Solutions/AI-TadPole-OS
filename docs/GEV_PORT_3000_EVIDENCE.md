@@ -8,7 +8,7 @@
 # GEV Port 3000 Client-Fix Evidence
 
 - **Evidence date:** 2026-09-09
-- **Repository:** `https://github.com/DDS-Solutions/TadPole-OS.git`
+- **Repository:** `https://github.com/DDS-Solutions/AI-TadPole-OS.git`
 - **Branch:** `codex/port-3000-contract`
 - **Audited base:** `f3b53231bd1928b737e65cdbd210907d534246b6`
 - **Client-fix commit:** `d9b29513f742f6f386ebddbe5174a26c7da8231c`
@@ -28,7 +28,7 @@ base that was inspectable when the developer authorized completion of the Port 3
 - The only modern HTTP protocol version is `2026-07-28`.
 - Authorization is injected as the complete `${GEV_MCP_AUTHORIZATION}` header value; no bearer
   credential is stored in the tracked configuration.
-- Stdio fallback is `pnpm --filter @gev/ops-mcp start` from `G:/AI-TadPole-Eye-View` and is allowed
+- Stdio fallback is `pnpm --filter @gev/ops-mcp start` from `(legacy Windows path omitted — use repo-relative paths)` and is allowed
   only during discovery for an exact connection-refused/host-unreachable failure or a verified
   no-version-intersection result.
 - HTTP 4xx/5xx, timeouts, resets, TLS failures, malformed responses, protocol inconsistencies, and
@@ -65,7 +65,7 @@ with non-retryable eviction priority) across the decomposed `agent::mcp::client:
 
 ## Reproducible verification
 
-All commands ran from `D:/TadpoleOS-Dev` against final verified implementation head
+All commands ran from `(legacy Windows path omitted — use repo-relative paths)` against final verified implementation head
 `329d32d6d3940ff4564d94c1797f540065dbc6a0`.
 
 | Verification | Result |

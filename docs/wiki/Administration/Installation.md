@@ -2,9 +2,9 @@
 title: "Installation"
 tier: "2"
 status: "verified"
-version: "1.2.0"
-last-verified: "2026-06-17"
-commit: "b1c347b1"
+version: "1.1.463"
+last-verified: "2026-10-01"
+commit: "bbcf0d4"
 network-badge: "required"
 risk-tags:
   - "RISK: MEDIUM"
@@ -134,7 +134,23 @@ Open `http://localhost:5173` in your browser. The **Engine Status** in the `Page
 
 ---
 
-## 5. Docker Installation (Alternative)
+## 5. Desktop (Tauri) auth token
+
+Desktop builds persist a per-install engine token at **`<install_dir>/.neural_token`** (created with restricted permissions if missing). The Tauri sidecar injects that value as `NEURAL_TOKEN` for the engine process.
+
+| Piece | Role |
+|-------|------|
+| `.neural_token` | On-disk token file under the install directory |
+| IPC `get_neural_token` | Tauri command exposing the token to the UI |
+| `settings_store.resolve_tauri_token()` | Frontend path that invokes the IPC on desktop |
+| Web fallback | `__TADPOLE_CONFIG__` / `VITE_NEURAL_TOKEN` / Settings → Engine Connection (do **not** bake `VITE_NEURAL_TOKEN` into production web builds) |
+
+> [!NOTE]
+> Browser/dev stacks still use `.env` `NEURAL_TOKEN` (and optional `VITE_NEURAL_TOKEN` for local UI seeding). Desktop operators normally do **not** paste a token — the IPC path supplies it.
+
+---
+
+## 6. Docker Installation (Alternative)
 
 Tadpole OS provides Docker support for containerized deployments:
 
@@ -148,7 +164,7 @@ docker compose up --build
 
 ---
 
-## 6. Local LLM Setup (Ollama)
+## 7. Local LLM Setup (Ollama)
 
 For fully offline operation, install Ollama and pull a model:
 
@@ -170,9 +186,9 @@ OLLAMA_HOST=http://localhost:11434
 
 ---
 
-**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
+**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
 
-<!-- Last verified against commit b1c347b1 on 2026-06-11 -->
+<!-- Last verified against commit bbcf0d4 on 2026-10-01 -->
 [//]: # (wiki-page: Installation)
 
 

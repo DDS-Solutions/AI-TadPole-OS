@@ -116,3 +116,32 @@ The empty/all-closed statements below this addendum reflected the 2026-08-16 aud
 - #261 Round-1 items remain on the stack until that PR merges.
 - Do **not** treat chat.rs timeout/MCP `env_clear` as Round-2 doc work.
 
+
+## Round-3 Addendum — 2026-10-01 (stacked on Round-2 / #262)
+
+**Branch**: `docs/round3-wiki-security-stores-starter-tauri-2026-10`  
+**Base**: `docs/round2-deploy-ws-seed-privacy-2026-10` (PR #262). Tip audited: `bbcf0d4` / v1.1.463.  
+**Does not redo** Round-1/2 GETTING_STARTED/ops/OpenAPI/WS/seed/privacy content.
+
+### Closed in Round 3 (docs + starter kit skill remaps)
+
+| ID | Fix |
+| :--- | :--- |
+| **R3-H1** | Wiki mass-rewrite `Tadpole-OS` → `AI-TadPole-OS` GitHub links; refresh last-verified/`bbcf0d4` where frontmatter present |
+| **R3-H2** | Wiki Configuration env: `AUTO_APPROVE` default **false**, ADMIN tokens, CAPABILITY 64-hex/panic, ALLOWED_ORIGINS built-ins, PRIVACY ≤15B/NullProvider |
+| **R3-H3** | `Security_Model.md` → product **1.1.463**; STASIS/`BUDGET_BREACH` marked aspirational; vault persistence aligned with SEC-02 |
+| **R3-H4** | Starter-kit phantom skills remapped to registry-real tools + `STARTER_KITS.md` caveat |
+| **R3-H5** | `Frontend_State_Management.md` full store list; WS **`/v1/engine/ws`**; Settings/Tauri token seeding |
+| **R3-H6** | Desktop `.neural_token` + `get_neural_token` IPC in GETTING_STARTED, DEPLOYMENT, wiki Installation |
+| **R3-M1** | Wiki Continuity stub + sidebar; points at `/v1/continuity/*` and `continuity/workflow/` |
+| **R3-M3** | Mythos `intelligence/` path + dual `act_threshold` (0.9 vs 0.95); GEV repo URL; ADG `file://` → relative |
+| **R3-M4** | ERROR_REGISTRY: `BUDGET_BREACH`/`STASIS_ACTIVE` `emitted:false`; add `WORKFLOW_STEP_FAILED`; TELEMETRY_MAP FE-only note in AGENTS/CLAUDE + generator; SECURITY_REGISTRY date bump |
+| **R3-M5** | `POLLYWOG-DEBT.md` stub; CLAUDE↔AGENTS `graph:blast:guard` alignment; ROADMAP Piper/template-count tone-down |
+| **R3-M6** | README pointer to `apps/mobile-android` |
+
+### Still deferred / out of Round-3 docs PR
+
+- Code: STASIS runtime, Live Voice Settings-token wiring, chat.rs/MCP hardening (explicitly excluded).
+- Full wiki line-anchor audit; TELEMETRY_MAP Rust scanner extension; ADG manifest `verified_at` regen; full Continuity operator manual; Benchmark_Spec / token_telemetry_mission deep refresh (optional follow-ups).
+
+

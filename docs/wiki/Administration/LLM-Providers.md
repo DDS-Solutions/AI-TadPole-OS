@@ -3,8 +3,8 @@ title: "LLM Providers"
 tier: "2"
 status: "verified"
 version: "1.2.0"
-last-verified: "2026-06-17"
-commit: "b1c347b1"
+last-verified: "2026-10-01"
+commit: "bbcf0d4"
 network-badge: "required"
 risk-tags:
   - "RISK: HIGH"
@@ -82,12 +82,12 @@ The credential manager for local and cloud AI providers. All API keys are encryp
 
 | Provider | Endpoint | Env Variable | Code Reference |
 |----------|----------|-------------|----------------|
-| OpenAI | `api.openai.com` | `OPENAI_API_KEY` [RISK: HIGH] | [provider.rs:L384](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/agent/runner/provider.rs#L384), [model_manager.rs:L172](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/routes/model_manager.rs#L172) |
-| Anthropic | `api.anthropic.com` | `ANTHROPIC_API_KEY` [RISK: HIGH] | [anthropic.rs:L116](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/agent/anthropic.rs#L116), [model_manager.rs:L126](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/routes/model_manager.rs#L126) |
-| Google Gemini | `generativelanguage.googleapis.com` | `GOOGLE_API_KEY` [RISK: HIGH] | [gemini.rs:L142](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/agent/gemini.rs#L142), [model_manager.rs:L135](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/routes/model_manager.rs#L135) |
-| Groq | `api.groq.com` | `GROQ_API_KEY` [RISK: HIGH] | [groq.rs:L136](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/agent/groq.rs#L136), [model_manager.rs:L171](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/routes/model_manager.rs#L171) |
-| Inception | `api.inceptionlabs.ai` | `INCEPTION_API_KEY` [RISK: HIGH] | [provider.rs:L393](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/agent/runner/provider.rs#L393) |
-| DeepSeek | `api.deepseek.com` | `DEEPSEEK_API_KEY` [RISK: HIGH] | [provider.rs:L396-414](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/agent/runner/provider.rs#L396-L414) |
+| OpenAI | `api.openai.com` | `OPENAI_API_KEY` [RISK: HIGH] | [provider.rs:L384](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/agent/runner/provider.rs#L384), [model_manager.rs:L172](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/routes/model_manager.rs#L172) |
+| Anthropic | `api.anthropic.com` | `ANTHROPIC_API_KEY` [RISK: HIGH] | [anthropic.rs:L116](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/agent/anthropic.rs#L116), [model_manager.rs:L126](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/routes/model_manager.rs#L126) |
+| Google Gemini | `generativelanguage.googleapis.com` | `GOOGLE_API_KEY` [RISK: HIGH] | [gemini.rs:L142](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/agent/gemini.rs#L142), [model_manager.rs:L135](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/routes/model_manager.rs#L135) |
+| Groq | `api.groq.com` | `GROQ_API_KEY` [RISK: HIGH] | [groq.rs:L136](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/agent/groq.rs#L136), [model_manager.rs:L171](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/routes/model_manager.rs#L171) |
+| Inception | `api.inceptionlabs.ai` | `INCEPTION_API_KEY` [RISK: HIGH] | [provider.rs:L393](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/agent/runner/provider.rs#L393) |
+| DeepSeek | `api.deepseek.com` | `DEEPSEEK_API_KEY` [RISK: HIGH] | [provider.rs:L396-414](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/agent/runner/provider.rs#L396-L414) |
 
 ### 2.1 Network Data Path (Cloud Providers)
 
@@ -154,9 +154,9 @@ The engine monitors provider health using a state machine:
 
 ---
 
-**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
+**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
 
-<!-- Last verified against commit b1c347b1 on 2026-06-11 -->
+<!-- Last verified against commit bbcf0d4 on 2026-10-01 -->
 [//]: # (wiki-page: LLM-Providers)
 
 

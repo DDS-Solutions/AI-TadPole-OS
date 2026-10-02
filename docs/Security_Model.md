@@ -9,8 +9,8 @@
 
 > **Intelligence Level**: High (Sovereign Context)  
 > **Status**: Verified & Hardened  
-> **Version**: 1.2.2  
-> **Last Audited**: 2026-07-30  
+> **Version**: 1.1.463  
+> **Last Audited**: 2026-10-01 (tip `bbcf0d4`)  
 > **Fault Ledger**: [`directives/FAULT_REGISTRY.md`](../directives/FAULT_REGISTRY.md) (100% Resolved)  
 > **Audit Context**: `reports/intelligence/audit_context.json`  
 
@@ -34,9 +34,10 @@ Tadpole OS implements a **Debounced Persistence** pattern for budget tracking:
 - **In-Memory Buffering**: Token usage is captured in thread-safe `DashMap` storage.
 - **Aggregated Enforcement**: The kernel monitors both on-disk totals and in-memory buffs for instant enforcement.
 - **Background Sync**: A dedicated task in `startup.rs` flushes buffered usage to SQLite every 10 seconds to minimize database contention.
-- **STASIS Mode** *(IDENTITY.md Directive #7)*: Upon budget threshold breach, the system enters `STASIS` — all Specialist Nodes are suspended, task states are snapshotted to the Merkle Audit Trail, and a `BUDGET_BREACH` alert is emitted to Entity 0. The system does **not** self-terminate or self-resume. Entity 0 must issue an explicit `RESUME` or `TERMINATE`.
+- **Budget metering (implemented)**: `server-rs/src/security/metering.rs` checks, records, and periodically flushes usage. Missions that exceed allocation surface as **`BUDGET_EXHAUSTED`** (and related runner errors) — not a global STASIS mode.
+- **STASIS Mode** *(IDENTITY.md Directive #7 — **aspirational / policy**)*: The IDENTITY directive describes suspending Specialist Nodes, Merkle snapshotting, and emitting `BUDGET_BREACH` until Entity 0 `RESUME`/`TERMINATE`. **As of v1.1.463 / tip `bbcf0d4`, STASIS is not implemented as a runtime mode** — there are no `STASIS` / `BUDGET_BREACH` emitters in `server-rs`. Treat registry rows marked `emitted: false` as policy placeholders.
 
-> Consult `docs/ERROR_REGISTRY.json` → `BUDGET_BREACH` / `STASIS_ACTIVE` for remediation paths.
+> Consult `docs/ERROR_REGISTRY.json` → `BUDGET_EXHAUSTED` for live remediation; `BUDGET_BREACH` / `STASIS_ACTIVE` are non-emitted policy placeholders until STASIS ships.
 
 ### 2. Guarding Mechanisms (The Tools)
 The specific cryptographic and logical controls used to protect the system.
@@ -95,7 +96,7 @@ To protect sensitive system parameters and operational details from leaking acro
 Client-side encryption for API keys built on the **W3C SubtleCrypto API**. 
 - **Encryption**: AES-256-GCM.
 - **Decryption**: Isolated in a dedicated **Web Worker** thread to prevent main-thread credential exposure.
-- **Persistance**: Purely volatile memory or encrypted `sessionStorage`.
+- **Persistence (align with SEC-02 / SECURITY.md)**: Encrypted API-key **blobs** may live in `localStorage` (`tadpole-vault-secrets`). The **plaintext master key / passphrase** and decrypted provider secrets stay **memory-only** — never `sessionStorage` or disk plaintext. Settings API keys follow the same in-memory rule.
 
 ### TLS Strategy
 - **LAN Traffic**: Encrypted via WireGuard (Tailscale).

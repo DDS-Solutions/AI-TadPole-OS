@@ -8,7 +8,7 @@
 # 🚀 Sovereign Starter Kits
 
 > **Status**: Active  
-> **Last Verified**: 2026-07-13  
+> **Last Verified**: 2026-10-01 (tip `bbcf0d4`)  
 > **Classification**: Sovereign  
 
 ---
@@ -52,6 +52,15 @@ All built-in kits live in `starter_kits/`.
 - **Required Agents**: `scout-alpha`, `github-analyst`
 - **Workflow**: `workflows/github_scout.md`
 - **Goal**: Repository discovery and competitive codebase scouting.
+
+
+## Skill resolution caveat (Round 3)
+
+Starter-kit `agents/*.json` `skills` arrays must name **registry-native** tools the dispatcher actually implements (examples: `read_file`, `write_file`, `get_file_contents`, `fetch_url`, `spawn_subagent`, `recruit_specialist`, `issue_alpha_directive`, `update_working_memory`).
+
+Historically some kit JSON listed **aspirational** skill names (`analyze_budget`, `edit_content`, `keyword_research`, `delegate`, `list_commits`, …) that are **not** in the tool registry — installs succeed (`POST /v1/engine/templates/install` exists) but those skills fail at resolution time. As of 2026-10-01 the worst offenders in `starter_kits/**/agents/*.json` were remapped to registry-real skills; treat any remaining unknown names as aspirational templates, not guaranteed capabilities.
+
+Industry template catalogs (223-agent / multi-industry) live in the separate [AI-TadPole-OS-Industry-Templates](https://github.com/DDS-Solutions/AI-TadPole-OS-Industry-Templates) repo — do not confuse those marketing counts with the **four** tracked kits under `starter_kits/`.
 
 ## How To Use
 

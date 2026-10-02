@@ -1,9 +1,24 @@
 # 📋 Tadpole OS: Technical Debt Ledger
 
-This document lists all deliberate shortcuts and architectural ceilings marked with `pollywog:` comments.
+> **Status**: Stub (Round-3 docs fix, 2026-10-01)  
+> **Tip**: `bbcf0d4` / v1.1.463
 
-| File | Line | Shortcut / Ceiling | Upgrade Trigger | Status |
-| :--- | :--- | :--- | :--- | :--- |
-| [AI_ASSIST_NOTES_AUDIT.json](file:///D:\TadpoleOS-Dev\docs\AI_ASSIST_NOTES_AUDIT.json#L2958) | 2958 | <ceiling> | <upgrade trigger>'\")\n        sys.exit(1)\n        \n    sys.exit(0)\n\nif __name__ == \"__main__\":\n    main()" | ✅ Tracked |
+The previous auto-generated ledger was **corrupted** (embedded `file:///D:\...` paths and Python `sys.exit` fragments). Do not treat that content as authoritative.
 
-**Summary**: 1 markers found, 0 with no upgrade trigger.
+## Where to look instead
+
+| Source | Use |
+| :--- | :--- |
+| [`ROADMAP.md`](ROADMAP.md) | Planned phases and feature intent |
+| [`TODO.md`](TODO.md) | Open backlog items |
+| `pollywog:` comments in source | Inline ceilings (regenerate ledger via `execution/pollywog_debt_ledger.py` when the generator is healthy) |
+
+## Regenerating
+
+When ready to restore an automated ledger:
+
+```bash
+python execution/pollywog_debt_ledger.py
+```
+
+Verify the output table has real file paths (repo-relative) and no embedded interpreter source before committing.

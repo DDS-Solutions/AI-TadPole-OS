@@ -3,8 +3,8 @@ title: "Updates & Backups"
 tier: "2"
 status: "verified"
 version: "1.2.0"
-last-verified: "2026-06-17"
-commit: "b1c347b1"
+last-verified: "2026-10-01"
+commit: "bbcf0d4"
 network-badge: "none"
 risk-tags:
   - "RISK: MEDIUM"
@@ -45,7 +45,7 @@ If your local computer runs low on GPU memory (VRAM) while loading a local Ollam
 2. Intercepts the error and dynamically down-ranks the active model by appending a `:q4_K_M` quantization suffix.
 3. Reroutes the generation request, preserving project progress and resuming the active mission.
 
-This prevents out-of-memory crashes on typical office hardware (8–16 GB VRAM). Quoted in the source code at [openai.rs:L336-361](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/agent/openai.rs#L336-L361) and [openai.rs:L596-614](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/agent/openai.rs#L596-L614).
+This prevents out-of-memory crashes on typical office hardware (8–16 GB VRAM). Quoted in the source code at [openai.rs:L336-361](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/agent/openai.rs#L336-L361) and [openai.rs:L596-614](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/agent/openai.rs#L596-L614).
 
 ---
 
@@ -150,9 +150,9 @@ For backward compatibility, the engine supports a legacy JSON backup mode:
 
 ---
 
-**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
+**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
 
-<!-- Last verified against commit b1c347b1 on 2026-06-11 -->
+<!-- Last verified against commit bbcf0d4 on 2026-10-01 -->
 [//]: # (wiki-page: Updates-&-Backups)
 
 

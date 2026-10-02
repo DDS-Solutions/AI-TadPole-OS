@@ -3,8 +3,8 @@ title: "Virtual Employees"
 tier: "2"
 status: "verified"
 version: "1.2.0"
-last-verified: "2026-06-17"
-commit: "b1c347b1"
+last-verified: "2026-10-01"
+commit: "bbcf0d4"
 network-badge: "none"
 risk-tags:
   - "RISK: MEDIUM"
@@ -91,7 +91,7 @@ The primary interface for designing custom virtual employee profiles.
 
 ### 1.4 Reasoning Engine (Mythos)
 
-Tune the agent's internal monologue and reasoning settings (verified in [`ModelSlotConfig.tsx:L134-164`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/src/components/agent-config/ModelSlotConfig.tsx#L134-L164)):
+Tune the agent's internal monologue and reasoning settings (verified in [`ModelSlotConfig.tsx:L134-164`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/src/components/agent-config/ModelSlotConfig.tsx#L134-L164)):
 
 - **[Slider] Reasoning Depth**
   - *Default state*: `1` turn.
@@ -153,16 +153,16 @@ The [[Glossary#department-lead|Department Lead]] can recruit sub-agents to handl
 | Setting | Default | Description |
 |---------|---------|-------------|
 | `MAX_SWARM_DEPTH` [RISK: MEDIUM] | `5` | Hard limit on recursive agent-spawning depth. |
-| `MAX_AGENTS` [RISK: MEDIUM] | `50` | Registry limit for maximum concurrent agent identities. Code default is `50` (defined in [state/mod.rs:L547-551](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/state/mod.rs#L547-L551)). `.env.example` ships `100`. |
+| `MAX_AGENTS` [RISK: MEDIUM] | `50` | Registry limit for maximum concurrent agent identities. Code default is `50` (defined in [state/mod.rs:L547-551](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/state/mod.rs#L547-L551)). `.env.example` ships `100`. |
 
 > [!TIP]
 > **Recommended Max Depth**: 3 for standard office hardware. Deeper delegation increases memory usage and latency. The absolute maximum is 5.
 
 ---
 
-**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
+**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
 
-<!-- Last verified against commit b1c347b1 on 2026-06-11 -->
+<!-- Last verified against commit bbcf0d4 on 2026-10-01 -->
 [//]: # (wiki-page: Virtual-Employees)
 
 

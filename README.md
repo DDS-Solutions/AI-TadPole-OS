@@ -160,6 +160,10 @@ Zero-trust governance with human-in-the-loop gates.
 
 ---
 
+## 📱 Android companion
+
+An Android companion app lives at [`apps/mobile-android`](apps/mobile-android) (see that folder’s README for Studio open steps and design tokens). It is separate from the main web/Tauri dashboard; align auth/oversight contracts with the engine before production use.
+
 ## 🚀 Quick Start
 
 Get up and running in under 60 seconds with either the pre-compiled native desktop application or developer mode:

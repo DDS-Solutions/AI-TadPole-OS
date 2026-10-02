@@ -3,8 +3,8 @@ title: "Dashboard Guide"
 tier: "1"
 status: "verified"
 version: "1.2.0"
-last-verified: "2026-06-17"
-commit: "b1c347b1"
+last-verified: "2026-10-01"
+commit: "bbcf0d4"
 network-badge: "optional"
 risk-tags:
   - "RISK: LOW"
@@ -52,7 +52,7 @@ Located permanently at the top of the viewport, the Multi-Tab Bar manages your a
 
 A persistent command surface at the top of the page:
 
-- **Engine Status**: Real-time local connection status (**🟢 ONLINE**), synchronized via the `useEngineStatus` hook (defined in [`use_engine_status.ts:L42`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/src/hooks/use_engine_status.ts#L42)).
+- **Engine Status**: Real-time local connection status (**🟢 ONLINE**), synchronized via the `useEngineStatus` hook (defined in [`use_engine_status.ts:L42`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/src/hooks/use_engine_status.ts#L42)).
 - **Page-Specific Actions**: Direct action shortcuts (e.g., "Start New Project" when on the Projects tab).
 - **Core Metrics**: High-level telemetry tailored to the active operation.
 
@@ -68,7 +68,7 @@ A persistent command surface at the top of the page:
 | 6 | Settings | Provider config, agent profiles, system parameters |
 
 **Keyboard Shortcuts:**
-- `[Shortcut: Ctrl+K]` or `[Shortcut: Ctrl+/]` — Toggle Command Palette (cited in [`useLayoutNavigation.ts:L51-83`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/src/hooks/layout/useLayoutNavigation.ts#L51-L83)).
+- `[Shortcut: Ctrl+K]` or `[Shortcut: Ctrl+/]` — Toggle Command Palette (cited in [`useLayoutNavigation.ts:L51-83`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/src/hooks/layout/useLayoutNavigation.ts#L51-L83)).
 - `[Shortcut: 1-6]` — Quick-navigate to tabs when input fields are out of focus.
 
 ---
@@ -138,9 +138,9 @@ Exposes structural codebase references and semantic knowledge networks. Accessib
 
 ---
 
-**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
+**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
 
-<!-- Last verified against commit b1c347b1 on 2026-06-11 -->
+<!-- Last verified against commit bbcf0d4 on 2026-10-01 -->
 [//]: # (wiki-page: Dashboard-Guide)
 
 

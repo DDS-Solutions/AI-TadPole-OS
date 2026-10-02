@@ -45,7 +45,7 @@ ADG v2 classifies all repository claims into three distinct layers:
   - `Test Coverage:`
 
 ### B. M-Class (Machine-Derived Facts)
-- **Location**: [`adg.manifest.json`](file:///d:/TadpoleOS-Dev/adg.manifest.json).
+- **Location**: [`adg.manifest.json`](../adg.manifest.json).
 - **Purpose**: Empirical repository facts computed deterministically by static analysis tools.
 - **Contents**:
   - `claims.witness_map`: Deterministic co-location mapping of source files to test files.
@@ -54,7 +54,7 @@ ADG v2 classifies all repository claims into three distinct layers:
 - **Ratchet Rule**: The number of witnessed source files can never decrease without explicit administrative override.
 
 ### C. E-Class (Executable Invariants)
-- **Location**: Dedicated test suites in [`tests/invariants/`](file:///d:/TadpoleOS-Dev/tests/invariants/).
+- **Location**: Dedicated test suites in [`tests/invariants/`](../tests/invariants/).
 - **Purpose**: Automated, executable verification of critical safety, crypto, security, and governance invariants.
 - **Rule**: Every security or behavioral policy must be proven by a running test that fails if the code deviates.
 
@@ -62,7 +62,7 @@ ADG v2 classifies all repository claims into three distinct layers:
 
 ## 3. Tooling & CLI Reference (`tools/adg/adg.mjs`)
 
-ADG v2 provides a zero-dependency, high-speed CLI tool located at [`tools/adg/adg.mjs`](file:///d:/TadpoleOS-Dev/tools/adg/adg.mjs).
+ADG v2 provides a zero-dependency, high-speed CLI tool located at [`tools/adg/adg.mjs`](../tools/adg/adg.mjs).
 
 ### Available Commands
 
@@ -75,7 +75,7 @@ ADG v2 provides a zero-dependency, high-speed CLI tool located at [`tools/adg/ad
 
 ### CI Verification Scripts
 
-In [`package.json`](file:///d:/TadpoleOS-Dev/package.json), the standard CI hooks are wired directly to ADG v2:
+In [`package.json`](../package.json), the standard CI hooks are wired directly to ADG v2:
 ```json
 "verify:adg": "node tools/adg/adg.mjs verify src/",
 "test:witness": "node tools/adg/adg.mjs verify src/"
@@ -85,7 +85,7 @@ In [`package.json`](file:///d:/TadpoleOS-Dev/package.json), the standard CI hook
 
 ## 4. Must-Fail Meta-Test Fixtures
 
-To ensure the verification tool itself never suffers from false negatives, ADG v2 includes positive proof fixtures in [`tools/adg/fixtures/must-fail/`](file:///d:/TadpoleOS-Dev/tools/adg/fixtures/must-fail/):
+To ensure the verification tool itself never suffers from false negatives, ADG v2 includes positive proof fixtures in [`tools/adg/fixtures/must-fail/`](../tools/adg/fixtures/must-fail/):
 
 1. **`v1_header.ts`**: Contains a forbidden `Witness Tests:` header. Proves `lint-headers` catches legacy metadata.
 2. **`fabricated_witness.ts`**: Declares a nonexistent witness test. Proves phantom test references cannot slip through.
@@ -96,24 +96,24 @@ To ensure the verification tool itself never suffers from false negatives, ADG v
 
 ## 5. Seed Executable Invariants Catalog
 
-The initial seed invariant test suites in [`tests/invariants/`](file:///d:/TadpoleOS-Dev/tests/invariants/) assert repository-wide behavioral contracts:
+The initial seed invariant test suites in [`tests/invariants/`](../tests/invariants/) assert repository-wide behavioral contracts:
 
-1. **`INV-001` ([`inv_001_oversight.test.ts`](file:///d:/TadpoleOS-Dev/tests/invariants/inv_001_oversight.test.ts))**: User question decisions strictly map to `'approved'` vs `'rejected'`, match on exact `question_id`, and revert on network failure.
-2. **`INV-002` ([`inv_002_vault_pbkdf2.test.ts`](file:///d:/TadpoleOS-Dev/tests/invariants/inv_002_vault_pbkdf2.test.ts))**: Vault master key derivation enforces $\ge 600,000$ PBKDF2 iterations, produces non-extractable keys, and verifies AES-GCM encryption.
-3. **`INV-003` ([`inv_003_telemetry_scrub.test.ts`](file:///d:/TadpoleOS-Dev/tests/invariants/inv_003_telemetry_scrub.test.ts))**: Telemetry redacts Google, Anthropic, OpenAI, Groq, HuggingFace, and GitHub API keys, Bearer tokens, and nested object fields.
-4. **`INV-004` ([`inv_004_ws_cooldown.test.ts`](file:///d:/TadpoleOS-Dev/tests/invariants/inv_004_ws_cooldown.test.ts))**: WebSocket reconnection exponential backoff enforces a 90s cooldown timer and online event recovery.
-5. **`INV-005` ([`inv_005_openui_depth.test.ts`](file:///d:/TadpoleOS-Dev/tests/invariants/inv_005_openui_depth.test.ts))**: OpenUI JSON rendering enforces `MAX_RENDER_DEPTH \le 10` with fallback component badge.
-6. **`INV-006` ([`inv_006_csp_grammar_meta.test.ts`](file:///d:/TadpoleOS-Dev/tests/invariants/inv_006_csp_grammar_meta.test.ts))**: Meta-test verifying ADG parser catches RFC 1918 wildcards, unquoted keywords, and unsafe scripts.
-7. **`INV-SEC-001` ([`inv_sec_001_settings_persist.test.ts`](file:///d:/TadpoleOS-Dev/tests/invariants/inv_sec_001_settings_persist.test.ts))**: Settings store partialize blanks API keys, migrates from localStorage, and purges legacy tokens.
-8. **`INV-SEC-002` ([`inv_sec_002_session_storage.test.ts`](file:///d:/TadpoleOS-Dev/tests/invariants/inv_sec_002_session_storage.test.ts))**: Strict AST/static scan guaranteeing zero writes or reads of auth tokens to/from `sessionStorage`.
+1. **`INV-001` ([`tests/invariants/inv_001_oversight.test.ts`](../tests/invariants/inv_001_oversight.test.ts))**: User question decisions strictly map to `'approved'` vs `'rejected'`, match on exact `question_id`, and revert on network failure.
+2. **`INV-002` ([`tests/invariants/inv_002_vault_pbkdf2.test.ts`](../tests/invariants/inv_002_vault_pbkdf2.test.ts))**: Vault master key derivation enforces $\ge 600,000$ PBKDF2 iterations, produces non-extractable keys, and verifies AES-GCM encryption.
+3. **`INV-003` ([`tests/invariants/inv_003_telemetry_scrub.test.ts`](../tests/invariants/inv_003_telemetry_scrub.test.ts))**: Telemetry redacts Google, Anthropic, OpenAI, Groq, HuggingFace, and GitHub API keys, Bearer tokens, and nested object fields.
+4. **`INV-004` ([`tests/invariants/inv_004_ws_cooldown.test.ts`](../tests/invariants/inv_004_ws_cooldown.test.ts))**: WebSocket reconnection exponential backoff enforces a 90s cooldown timer and online event recovery.
+5. **`INV-005` ([`tests/invariants/inv_005_openui_depth.test.ts`](../tests/invariants/inv_005_openui_depth.test.ts))**: OpenUI JSON rendering enforces `MAX_RENDER_DEPTH \le 10` with fallback component badge.
+6. **`INV-006` ([`tests/invariants/inv_006_csp_grammar_meta.test.ts`](../tests/invariants/inv_006_csp_grammar_meta.test.ts))**: Meta-test verifying ADG parser catches RFC 1918 wildcards, unquoted keywords, and unsafe scripts.
+7. **`INV-SEC-001` ([`tests/invariants/inv_sec_001_settings_persist.test.ts`](../tests/invariants/inv_sec_001_settings_persist.test.ts))**: Settings store partialize blanks API keys, migrates from localStorage, and purges legacy tokens.
+8. **`INV-SEC-002` ([`tests/invariants/inv_sec_002_session_storage.test.ts`](../tests/invariants/inv_sec_002_session_storage.test.ts))**: Strict AST/static scan guaranteeing zero writes or reads of auth tokens to/from `sessionStorage`.
 
 ---
 
 ## 6. Integration with the Python AI Gate
 
-[`execution/verify_ai_context.py`](file:///d:/TadpoleOS-Dev/execution/verify_ai_context.py) integrates seamlessly with ADG v2:
+[`execution/verify_ai_context.py`](../execution/verify_ai_context.py) integrates seamlessly with ADG v2:
 - Gates 1–4 continue to verify header presence, documentation links, telemetry tags, and AST symbols.
-- Gate 6 queries [`adg.manifest.json`](file:///d:/TadpoleOS-Dev/adg.manifest.json) to resolve witness claims for any source file that has migrated to ADG v2 (no manual headers needed).
+- Gate 6 queries [`adg.manifest.json`](../adg.manifest.json) to resolve witness claims for any source file that has migrated to ADG v2 (no manual headers needed).
 - All 617 source files are verified continuously across both TypeScript and Python pipelines.
 
 ---
@@ -126,3 +126,6 @@ When authoring or modifying code in this codebase:
 3. **Co-Locate Tests**: Place your unit test adjacent to the implementation (e.g., `my_service.ts` $\rightarrow$ `my_service.test.ts`).
 4. **Regenerate Manifest**: Run `npm run adg:generate` after adding new tests to update `adg.manifest.json`.
 5. **Verify**: Ensure `npm run adg:verify` and `npx vitest run tests/invariants/` both pass.
+
+
+> **Round-3 note (2026-10-01):** `adg.manifest.json` `verified_at` may lag tip `bbcf0d4` / product **v1.1.463**. Treat the manifest commit as last ADG witness seed, not as a claim that tip equals that SHA.

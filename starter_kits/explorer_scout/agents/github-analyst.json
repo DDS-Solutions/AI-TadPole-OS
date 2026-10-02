@@ -5,9 +5,8 @@
   "department": "Intelligence",
   "description": "Expert in GitHub API interaction, repository structure analysis, and code graph scanning.",
   "skills": [
-    "search_code",
     "get_file_contents",
-    "list_commits"
+    "read_file"
   ],
   "model_config": {
     "model_id": "gemma4:31b-cloud",

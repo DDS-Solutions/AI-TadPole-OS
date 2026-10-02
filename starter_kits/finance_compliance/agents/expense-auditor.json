@@ -5,8 +5,7 @@
   "department": "Finance",
   "description": "Scans mission logs and usage data for budget anomalies.",
   "skills": [
-    "analyze_budget",
-    "query_financial_logs"
+    "read_file"
   ],
   "model_config": {
     "model_id": "gemma4:31b-cloud",

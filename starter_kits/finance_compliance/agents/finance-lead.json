@@ -6,7 +6,7 @@
   "description": "Orchestrates financial audits and ensures missions stay within budget.",
   "skills": [
     "issue_alpha_directive",
-    "delegate",
+    "spawn_subagent",
     "recruit_specialist",
     "update_working_memory"
   ],

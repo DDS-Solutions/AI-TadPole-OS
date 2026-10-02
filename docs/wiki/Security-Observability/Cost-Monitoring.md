@@ -3,8 +3,8 @@ title: "Cost Monitoring"
 tier: "3"
 status: "verified"
 version: "1.2.0"
-last-verified: "2026-06-17"
-commit: "b1c347b1"
+last-verified: "2026-10-01"
+commit: "bbcf0d4"
 network-badge: "none"
 risk-tags:
   - "RISK: MEDIUM"
@@ -114,11 +114,11 @@ Each agent tracks its own cost accumulation via `RunContext::current_cost_usd`. 
 
 ## 4. Telemetry & Accumulation
 
-The engine tracks tokens globally via `GovernanceHub::tpm_accumulator` ([gov.rs:L38](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/state/hubs/gov.rs#L38)) (Tokens Per Minute), which feeds into the dashboard metrics:
+The engine tracks tokens globally via `GovernanceHub::tpm_accumulator` ([gov.rs:L38](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/state/hubs/gov.rs#L38)) (Tokens Per Minute), which feeds into the dashboard metrics:
 
 | Metric | Source | Description |
 |--------|--------|-------------|
-| TPM (Tokens Per Minute) | `GovernanceHub::tpm_accumulator` ([gov.rs:L38](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/state/hubs/gov.rs#L38)) | Global token throughput counter |
+| TPM (Tokens Per Minute) | `GovernanceHub::tpm_accumulator` ([gov.rs:L38](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/state/hubs/gov.rs#L38)) | Global token throughput counter |
 | Per-run cost | `RunContext::current_cost_usd` | Cumulative cost for the active agent run |
 | Budget cap | `RunContext::budget_usd` | Maximum spend allowed for the run |
 
@@ -139,9 +139,9 @@ The engine tracks tokens globally via `GovernanceHub::tpm_accumulator` ([gov.rs:
 
 ---
 
-**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
+**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
 
-<!-- Last verified against commit b1c347b1 on 2026-06-11 -->
+<!-- Last verified against commit bbcf0d4 on 2026-10-01 -->
 [//]: # (wiki-page: Cost-Monitoring)
 
 

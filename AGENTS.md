@@ -70,3 +70,4 @@ All agent capabilities in this codebase must adhere to the **`agentskills.io` Op
 - **AI Observability Assets** (*IDENTITY.md Directive #6*):
   - Check `docs/ERROR_REGISTRY.json` for mapping error codes to failure paths.
   - Check `docs/TELEMETRY_MAP.json` for log emitter tag locations.
+    > **Scope note**: `scripts/generate_telemetry_map.cjs` scans **frontend `src/` only** (`.ts`/`.tsx`). It is not a full Rust/server emitter map — do not treat missing Rust tags as evidence that server telemetry is undocumented.

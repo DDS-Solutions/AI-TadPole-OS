@@ -6,7 +6,7 @@
   "description": "Orchestrates repository exploration and synthesizes high-level research reports.",
   "skills": [
     "issue_alpha_directive",
-    "delegate",
+    "spawn_subagent",
     "recruit_specialist"
   ],
   "model_config": {

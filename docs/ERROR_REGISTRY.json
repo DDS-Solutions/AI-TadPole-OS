@@ -28,7 +28,13 @@
     "code_pattern": "DOMAIN_ERROR:{DOMAIN_CODE}",
     "type_uri_pattern": "https://tadpole.os/errors/domain%3A{domain-code}",
     "source": "server-rs/src/error/metadata.rs",
-    "statuses": [400, 402, 403, 409, 500]
+    "statuses": [
+      400,
+      402,
+      403,
+      409,
+      500
+    ]
   },
   "INTERNAL_SERVER_ERROR": {
     "type_uri": "https://tadpole.os/errors/internal",
@@ -79,7 +85,10 @@
   "MULTI_ERROR": {
     "type_uri": "https://tadpole.os/errors/multi-error",
     "source": "server-rs/src/error/metadata.rs",
-    "statuses": [400, 500],
+    "statuses": [
+      400,
+      500
+    ],
     "behavior": "Uses the first error status unless any member is a server error."
   },
   "SECURITY_BOUNDARY_VIOLATION": {
@@ -128,7 +137,9 @@
     "status": 402,
     "directive": "IDENTITY.md Directive #7",
     "remediation": "System has entered STASIS mode. All Specialist Nodes are suspended. Snapshot written to Merkle Audit Trail. Entity 0 must issue an explicit RESUME or TERMINATE command. Do NOT restart the engine to self-resume.",
-    "stasis_behavior": "Suspend all nodes → snapshot to Merkle Trail → alert Entity 0 → await RESUME or TERMINATE"
+    "stasis_behavior": "Suspend all nodes \u2192 snapshot to Merkle Trail \u2192 alert Entity 0 \u2192 await RESUME or TERMINATE",
+    "emitted": false,
+    "status_note": "Policy/IDENTITY placeholder as of v1.1.463 \u2014 not emitted by tip server-rs (metering has no STASIS/BUDGET_BREACH symbols)."
   },
   "STASIS_ACTIVE": {
     "type_uri": "https://tadpole.os/errors/stasis-active",
@@ -136,15 +147,17 @@
     "status": 503,
     "directive": "IDENTITY.md Directive #7",
     "remediation": "System is in STASIS mode pending Entity 0 authorization. No new tool calls or API requests will be processed. Check the active task inventory in the BUDGET_BREACH alert and await Entity 0 RESUME or TERMINATE.",
-    "recovery": "Entity 0 must issue explicit RESUME or TERMINATE — system will NOT self-resume"
+    "recovery": "Entity 0 must issue explicit RESUME or TERMINATE \u2014 system will NOT self-resume",
+    "emitted": false,
+    "status_note": "Policy/IDENTITY placeholder as of v1.1.463 \u2014 not emitted by tip server-rs (metering has no STASIS/BUDGET_BREACH symbols)."
   },
   "LOGIC_BLOCKER": {
     "type_uri": "https://tadpole.os/errors/logic-blocker",
     "source": "server-rs/src/agent/runner/mod.rs",
     "status": 422,
     "directive": "IDENTITY.md Directive #3",
-    "remediation": "The Aletheia Protocol (Generator → Verifier → Reviser) failed to converge after 3 cycles. The Alpha Node has halted recursion. Entity 0 must resolve the contradiction before any further autonomous revision is permitted. Check the Verified Facts and Pending Blockers fields in the current task-slug handoff file.",
-    "escalation": "Alpha Node → Entity 0 via Logic-Blocker escalation. No autonomous re-assignment permitted."
+    "remediation": "The Aletheia Protocol (Generator \u2192 Verifier \u2192 Reviser) failed to converge after 3 cycles. The Alpha Node has halted recursion. Entity 0 must resolve the contradiction before any further autonomous revision is permitted. Check the Verified Facts and Pending Blockers fields in the current task-slug handoff file.",
+    "escalation": "Alpha Node \u2192 Entity 0 via Logic-Blocker escalation. No autonomous re-assignment permitted."
   },
   "COMPLIANCE_DRIFT": {
     "type_uri": "https://tadpole.os/errors/compliance-drift",
@@ -165,5 +178,13 @@
     "source": "server-rs/src/agent/mcp/ipc_bridge.rs",
     "status": 400,
     "remediation": "Failed to parse incoming JSON-RPC 2.0 NDJSON frame from local IPC client. Verify client conforms to protocol specification."
+  },
+  "WORKFLOW_STEP_FAILED": {
+    "type_uri": "https://tadpole.os/errors/workflow-step-failed",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 422,
+    "severity": "Warning",
+    "emitted": true,
+    "remediation": "A continuity/workflow step failed validation or execution. Inspect the workflow run step detail, fix the step definition or inputs, then re-run or cancel the run via /v1/continuity/*."
   }
 }

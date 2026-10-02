@@ -61,6 +61,12 @@ See `.env.example` and `docs/OPERATIONS_MANUAL.md` for the full matrix.
 
 ## Desktop Packaging Scripts
 
+### Auth token on packaged desktop builds
+
+Packaged Tauri apps persist **`<install_dir>/.neural_token`** and inject it as `NEURAL_TOKEN` into the engine sidecar. The UI obtains the same value through IPC **`get_neural_token`** (`settings_store.resolve_tauri_token()`). Operators normally do not set `VITE_NEURAL_TOKEN` in production desktop builds.
+
+
+
 | Script | Purpose |
 | :--- | :--- |
 | `scripts/build-linux-light.ps1` | Builds Linux `.deb` and `.AppImage` artifacts inside Docker. |

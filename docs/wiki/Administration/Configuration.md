@@ -2,9 +2,9 @@
 title: "Configuration"
 tier: "2"
 status: "verified"
-version: "1.2.0"
-last-verified: "2026-06-17"
-commit: "b1c347b1"
+version: "1.1.463"
+last-verified: "2026-10-01"
+commit: "bbcf0d4"
 network-badge: "optional"
 risk-tags:
   - "RISK: HIGH"
@@ -33,13 +33,14 @@ This page is the comprehensive reference for all environment variables, feature 
 
 | Variable | Risk | Type | Default | Description |
 |----------|------|------|---------|-------------|
-| `NEURAL_TOKEN` | [RISK: HIGH] | string | `""` | Secret API token required to authenticate all client-dashboard requests. |
+| `NEURAL_TOKEN` | [RISK: HIGH] | string | `""` | Secret API token required to authenticate all client-dashboard requests. Engine panics if neither `NEURAL_TOKEN` nor `NEURAL_ENGINE_ACCESS_TOKEN` is set. |
+| `NEURAL_ENGINE_ACCESS_TOKEN` | [RISK: HIGH] | string | `""` | Alias for `NEURAL_TOKEN` (checked first). |
+| `ADMIN_TOKEN` / `NEURAL_ADMIN_TOKEN` | [RISK: HIGH] | string | `""` | Privileged/admin API token. **Required in production**; must **differ** from `NEURAL_TOKEN`. Non-prod may fall back to `NEURAL_TOKEN` with a warning. |
 | `GEV_MCP_AUTHORIZATION` | [RISK: HIGH] | string | `""` | Complete `Bearer <test-token>` header value injected into the local GEV Port 3000 MCP client; never store a literal value in `.agent/mcp_config.json`. |
-| `NEURAL_ENGINE_ACCESS_TOKEN` | [RISK: HIGH] | string | `""` | Core sidecar access token. |
 | `AUDIT_PRIVATE_KEY` | [RISK: HIGH] | string | `""` | Private key seed for cryptographically signing transaction logs. |
 | `WORKFLOW_ENCRYPTION_KEY` | [RISK: HIGH] | string | `""` | Encryption key for securing workflow states. |
-| `CAPABILITY_KEY_CURR` | [RISK: HIGH] | string | `""` | Current signing key for client tokens. |
-| `CAPABILITY_KEY_PREV` | [RISK: HIGH] | string | `""` | Previous signing key for client tokens. |
+| `CAPABILITY_KEY_CURR` | [RISK: HIGH] | string | `""` | CBS signing key — **64-char hex** (`openssl rand -hex 32`) or leave empty for ephemeral in-memory key. Malformed values **panic at boot**. |
+| `CAPABILITY_KEY_PREV` | [RISK: HIGH] | string | `""` | Previous CBS signing key for zero-downtime rotation. |
 | `TEST_PROVIDER_KEY` | [RISK: HIGH] | string | `""` | Used in integration tests to bypass API keys. |
 
 → *See [[Vault-&-Credentials|§1]] for how API keys are encrypted and stored client-side.*
@@ -71,9 +72,9 @@ This page is the comprehensive reference for all environment variables, feature 
 
 | Variable | Risk | Type | Default | Description |
 |----------|------|------|---------|-------------|
-| `PRIVACY_MODE` | [RISK: HIGH] | boolean | `false` | When `true`, strictly blocks outbound cloud AI connections. |
+| `PRIVACY_MODE` | [RISK: HIGH] | boolean | `false` | When `true`, only reachable **local models ≤15B** are allowed; cloud blocked. If none available → `NullProvider` and missions complete with `is_degraded=true`. |
 | `TADPOLE_ALLOW_LOCAL_HTTP` | [RISK: HIGH] | boolean | `false` | Bypasses secure HTTPS checks for local development loops. |
-| `AUTO_APPROVE_SAFE_SKILLS` | [RISK: HIGH] | boolean | `true` | Allows safe read-only operations to bypass the [[Approvals-&-Quotas|Oversight Queue]]. |
+| `AUTO_APPROVE_SAFE_SKILLS` | [RISK: HIGH] | boolean | `false` | When `true`, allows safe read-only operations to bypass the [[Approvals-&-Quotas|Oversight Queue]]. **Default is `false`** (fail-closed). |
 
 ---
 
@@ -83,7 +84,7 @@ This page is the comprehensive reference for all environment variables, feature 
 |----------|------|------|---------|-------------|
 | `PORT` | [RISK: LOW] | number | `8000` | The HTTP server listen port. |
 | `BIND_ADDRESS` | [RISK: HIGH] | string | `127.0.0.1` | The local loopback IP address of the engine. |
-| `ALLOWED_ORIGINS` | [RISK: HIGH] | string | `http://localhost:5173` | List of permitted browser CORS locations. |
+| `ALLOWED_ORIGINS` | [RISK: HIGH] | string | *(built-in defaults)* | Comma-separated CORS origins. When unset, engine allows Vite/Tauri locals: `localhost/127.0.0.1:5173|5174|8000`, `tauri://localhost`, `http://tauri.localhost`. Production WS fails closed if empty. |
 | `TRUST_PRIVATE_NETWORKS` | [RISK: HIGH] | boolean | `false` | Bypasses proxy verification on local subnet cards. |
 | `ALLOW_UNSAFE_CORS` | [RISK: HIGH] | boolean | `false` | Enables unsafe open CORS profiles. |
 | `TRUSTED_PROXIES` | [RISK: HIGH] | string | `""` | Permitted proxy IP lists. |
@@ -100,7 +101,7 @@ This page is the comprehensive reference for all environment variables, feature 
 |----------|------|------|---------|-------------|
 | `DATABASE_URL` | [RISK: HIGH] | string | `sqlite://data/tadpole.db` | Database connection file path. |
 | `DATA_DIR` | [RISK: MEDIUM] | string | `./data` | Root data storage path. |
-| `WORKSPACE_ROOT` | [RISK: MEDIUM] | string | (Dynamic) | Base sandboxing root path. Resolves to current directory or parent if in `server-rs` (code: [state/mod.rs:L412-421](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/state/mod.rs#L412-L421)). |
+| `WORKSPACE_ROOT` | [RISK: MEDIUM] | string | (Dynamic) | Base sandboxing root path. Resolves to current directory or parent if in `server-rs` (code: [state/mod.rs:L84](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/state/mod.rs#L84)). |
 | `RESOURCE_ROOT` | [RISK: LOW] | string | `./resources` | Storage path for system instructions and graphics. |
 | `STATIC_DIR` | [RISK: MEDIUM] | string | `./static` | Directory path for static frontend assets. |
 
@@ -112,7 +113,7 @@ This page is the comprehensive reference for all environment variables, feature 
 
 | Variable | Risk | Type | Default | Description |
 |----------|------|------|---------|-------------|
-| `MAX_AGENTS` | [RISK: MEDIUM] | number | `50` | Registry limit for maximum concurrent agent identities. Code default is `50` (defined in [state/mod.rs:L547-551](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/state/mod.rs#L547-L551)). `.env.example` ships `100`. |
+| `MAX_AGENTS` | [RISK: MEDIUM] | number | `50` | Registry limit for maximum concurrent agent identities. Code default is `50` (defined in [state/mod.rs:L264](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/state/mod.rs#L264)). `.env.example` ships `100`. |
 | `MAX_CLUSTERS` | [RISK: MEDIUM] | number | `10` | Caps active project directories. |
 | `MAX_SWARM_DEPTH` | [RISK: MEDIUM] | number | `5` | Hard limits recursive agent-spawning depth. Recommended: 3 for standard office hardware. |
 | `MAX_TASK_LENGTH` | [RISK: MEDIUM] | number | `32768` | Caps token consumption boundaries per prompt. |
@@ -196,7 +197,7 @@ This utility relies on command-line arguments and does not read any `PARITY_GUAR
 
 **Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/AI-Tadpole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
 
-<!-- Last verified against commit b1c347b1 on 2026-06-11 -->
+<!-- Last verified against commit bbcf0d4 on 2026-10-01 -->
 [//]: # (wiki-page: Configuration)
 
 

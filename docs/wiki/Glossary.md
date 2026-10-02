@@ -3,8 +3,8 @@ title: "Glossary"
 tier: "reference"
 status: "verified"
 version: "1.3.0"
-last-verified: "2026-07-15"
-commit: "b1c347b1"
+last-verified: "2026-10-01"
+commit: "bbcf0d4"
 network-badge: "none"
 risk-tags: []
 ---

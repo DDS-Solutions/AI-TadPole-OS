@@ -62,6 +62,15 @@ To ensure your instance of Tadpole OS remains private and sovereign, you must su
 | `ADMIN_TOKEN` / `NEURAL_ADMIN_TOKEN` | Admin / privileged API token | **Required in production** (`TADPOLE_ENV` or `NODE_ENV=production`). Must **differ** from `NEURAL_TOKEN`. Non-prod falls back to `NEURAL_TOKEN` with a warning. |
 | `CAPABILITY_KEY_CURR` | Capability-token signing key | **64-char hex** (`openssl rand -hex 32`) or leave empty for an ephemeral in-memory key. Malformed values **panic at boot**. |
 | `VITE_NEURAL_TOKEN` | Frontend token (Vite env var) | **Local/dev only** — set to match `NEURAL_TOKEN` so the UI auto-configures. **Do not bake into production web builds** (Vite embeds it in JS). Prefer Settings → Engine Connection for deployed UIs. |
+
+### Desktop (Tauri) token path
+
+Desktop installs do **not** require pasting `NEURAL_TOKEN` into the UI:
+
+1. On first launch, Tauri creates **`<install_dir>/.neural_token`** (restricted permissions) if missing.
+2. The sidecar process receives `NEURAL_TOKEN` from that file.
+3. The UI reads it via IPC command **`get_neural_token`** (`settings_store.resolve_tauri_token()`).
+4. Web/dev still uses `.env` + optional `VITE_NEURAL_TOKEN` / Settings; see also `localStorage.tadpole_token` caveats for live-voice.
 | `AUDIT_PRIVATE_KEY` | Ed25519 Private Key (Hex) | **Recommended for production**. Enables non-repudiation and tamper-evident Merkle logging. |
 | `ALLOWED_ORIGINS` | Extra CORS origins (comma-separated) | **Built-in defaults** (always present when unset/empty): `http://localhost:5173`, `http://127.0.0.1:5173`, `http://localhost:5174`, `http://127.0.0.1:5174`, `http://localhost:8000`, `http://127.0.0.1:8000`, `tauri://localhost`, `http://tauri.localhost`. Env adds LAN/Tailscale/etc. |
 | `MAX_SWARM_DEPTH` | Maximum agent recursion/spawn depth | Default: `5` |

@@ -1,7 +1,7 @@
 {
   "$schema": "https://tadpole.os/schemas/security-registry.json",
-  "version": "1.0.0",
-  "updated_at": "2026-08-19",
+  "version": "1.0.1",
+  "updated_at": "2026-10-01",
   "frameworks": {
     "mitre_attack": "v19.2",
     "mitre_atlas": "v2026.07",

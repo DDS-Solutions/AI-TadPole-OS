@@ -6,7 +6,7 @@
   "description": "Orchestrates multi-channel marketing campaigns and delegates content tasks.",
   "skills": [
     "issue_alpha_directive",
-    "delegate",
+    "spawn_subagent",
     "recruit_specialist"
   ],
   "model_config": {

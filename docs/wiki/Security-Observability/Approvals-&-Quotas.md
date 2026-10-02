@@ -3,8 +3,8 @@ title: "Approvals & Quotas"
 tier: "3"
 status: "verified"
 version: "1.3.0"
-last-verified: "2026-08-08"
-commit: "b1c347b1"
+last-verified: "2026-10-01"
+commit: "bbcf0d4"
 network-badge: "none"
 risk-tags:
   - "RISK: HIGH"
@@ -119,7 +119,7 @@ The dashboard tracks hardware safety and cloud costs in real-time:
 | Setting | Default | Description |
 |---------|---------|-------------|
 | `DEFAULT_AGENT_BUDGET_USD` [RISK: MEDIUM] | `1.0` | Per-agent spending cap in USD |
-| Budget enforcement engine | `SecurityHub::budget_guard` ([sec.rs:L31](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/state/hubs/sec.rs#L31)) | Persistent budget governance and metering |
+| Budget enforcement engine | `SecurityHub::budget_guard` ([sec.rs:L31](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/state/hubs/sec.rs#L31)) | Persistent budget governance and metering |
 
 When an agent exceeds its budget, a `BudgetExhausted` error ([[Glossary#runnererror|RunnerError]]) is raised and the mission transitions to `Failed` status.
 
@@ -167,9 +167,9 @@ The **Safe Execution** toggle in [[Chat-&-Voice|SovereignChat]] provides an addi
 
 ---
 
-**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
+**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
 
-<!-- Last verified against commit b1c347b1 on 2026-06-11 -->
+<!-- Last verified against commit bbcf0d4 on 2026-10-01 -->
 [//]: # (wiki-page: Approvals-&-Quotas)
 
 

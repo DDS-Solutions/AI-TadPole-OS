@@ -3,8 +3,8 @@ title: "Chat & Voice"
 tier: "1"
 status: "verified"
 version: "1.2.0"
-last-verified: "2026-06-17"
-commit: "b1c347b1"
+last-verified: "2026-10-01"
+commit: "bbcf0d4"
 network-badge: "required"
 risk-tags:
   - "RISK: HIGH"
@@ -101,7 +101,7 @@ The primary natural language interface for issuing directives to your virtual de
 | `[Shortcut: 1-6]` | Quick-navigate to tabs (when input fields are out of focus) |
 
 > [!NOTE]
-> Keyboard shortcuts cited in [`useLayoutNavigation.ts:L51-83`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/src/hooks/layout/useLayoutNavigation.ts#L51-L83).
+> Keyboard shortcuts cited in [`useLayoutNavigation.ts:L51-83`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/src/hooks/layout/useLayoutNavigation.ts#L51-L83).
 
 ### 1.4 Swarm Visualizer Integration
 
@@ -197,9 +197,9 @@ A voice-driven extension providing hands-free inputs and a dedicated "Standup Me
 
 ---
 
-**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
+**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
 
-<!-- Last verified against commit b1c347b1 on 2026-06-11 -->
+<!-- Last verified against commit bbcf0d4 on 2026-10-01 -->
 [//]: # (wiki-page: Chat-&-Voice)
 
 

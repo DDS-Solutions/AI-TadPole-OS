@@ -3,8 +3,8 @@ title: "RAG & Memory"
 tier: "2"
 status: "verified"
 version: "1.2.0"
-last-verified: "2026-06-17"
-commit: "b1c347b1"
+last-verified: "2026-10-01"
+commit: "bbcf0d4"
 network-badge: "none"
 risk-tags:
   - "RISK: MEDIUM"
@@ -22,7 +22,7 @@ The data intelligence layer synchronizes your local folders and databases with t
 
 ### 1.1 Multi-Factor Scoring (MFS)
 
-Combines three scoring dimensions to find the most accurate records. Defined in [`rag_scoring.rs`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/types/rag_scoring.rs):
+Combines three scoring dimensions to find the most accurate records. Defined in [`rag_scoring.rs`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/server-rs/src/types/rag_scoring.rs):
 
 | Factor | Weight | Description |
 |--------|--------|-------------|
@@ -171,9 +171,9 @@ Tadpole OS implements dialogue context compaction in the `ContextManager` to kee
 
 ---
 
-**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
+**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
 
-<!-- Last verified against commit b1c347b1 on 2026-06-11 -->
+<!-- Last verified against commit bbcf0d4 on 2026-10-01 -->
 [//]: # (wiki-page: RAG-&-Memory)
 
 

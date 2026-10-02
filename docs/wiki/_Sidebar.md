@@ -6,6 +6,7 @@
 * [[Chat-&-Voice]]
 * [[Projects-&-Missions]]
 * [[Daily-Workflows]]
+* [[Continuity]]
 
 ## ⚙️ Administration (Tier 2)
 * [[Installation]]
@@ -28,4 +29,4 @@
 
 ---
 
-*Version: 1.1.463 | [Main Repo](https://github.com/DDS-Solutions/Tadpole-OS) | [Operations Manual](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/docs/OPERATIONS_MANUAL.md)*
+*Version: 1.1.463 | [Main Repo](https://github.com/DDS-Solutions/AI-TadPole-OS) | [Operations Manual](https://github.com/DDS-Solutions/AI-TadPole-OS/blob/main/docs/OPERATIONS_MANUAL.md)*

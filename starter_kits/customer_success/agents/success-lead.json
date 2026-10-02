@@ -6,7 +6,7 @@
   "description": "Manages customer feedback loops and ensures high-priority issues are resolved.",
   "skills": [
     "issue_alpha_directive",
-    "delegate",
+    "spawn_subagent",
     "recruit_specialist"
   ],
   "model_config": {

@@ -5,8 +5,7 @@
   "department": "Growth",
   "description": "Generates high-conversion copy, social media posts, and blog drafts.",
   "skills": [
-    "write_file",
-    "edit_content"
+    "write_file"
   ],
   "model_config": {
     "model_id": "gemma4:31b-cloud",
