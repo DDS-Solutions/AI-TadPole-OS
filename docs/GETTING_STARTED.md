@@ -10,7 +10,7 @@
 > **Intelligence Level**: Configuration: Standard Business Setup
 > **Status**: Verified Production-Ready
 > **Version**: 1.1.463
-> **Last Hardened**: 2026-08-19
+> **Last Hardened**: 2026-10-01
 > **Classification**: Sovereign
 
 ---
@@ -18,6 +18,7 @@
 ## 📚 Table of Contents
 
 - [🛡️ Secure Configuration (The Zero-Secrets Handshake)](#-secure-configuration-the-zero-secrets-handshake)
+- [⚠️ Boot & Runtime Gotchas (Read Before Production)](#️-boot--runtime-gotchas-read-before-production)
 - [🏗️ Hardware Requirements (Scaling Spec)](#-hardware-requirements-scaling-spec)
 - [Step 1: Connect to the Operations Dashboard](#step-1-connect-to-the-operations-dashboard)
 - [Step 2: Unlock the Neural Vault & Add Your Groq Provider](#step-2-unlock-the-neural-vault--add-your-groq-provider)
@@ -58,7 +59,9 @@ To ensure your instance of Tadpole OS remains private and sovereign, you must su
 | `DATABASE_URL` | Path to `tadpole.db` SQLite database | **Path to database** (e.g., `sqlite:data/tadpole.db` or `sqlite:%CD%\data\tadpole.db`). Defaults to `data/tadpole.db` relative to engine CWD. |
 | `NEURAL_TOKEN` | Engine Access Token for WebSocket/API access | **Required** — engine panics if neither `NEURAL_TOKEN` nor `NEURAL_ENGINE_ACCESS_TOKEN` is set. |
 | `NEURAL_ENGINE_ACCESS_TOKEN` | Alias for `NEURAL_TOKEN` | Can be used instead of `NEURAL_TOKEN`. Engine checks this first. |
-| `VITE_NEURAL_TOKEN` | Frontend token (Vite env var) | Set to match `NEURAL_TOKEN` so the frontend auto-configures. |
+| `ADMIN_TOKEN` / `NEURAL_ADMIN_TOKEN` | Admin / privileged API token | **Required in production** (`TADPOLE_ENV` or `NODE_ENV=production`). Must **differ** from `NEURAL_TOKEN`. Non-prod falls back to `NEURAL_TOKEN` with a warning. |
+| `CAPABILITY_KEY_CURR` | Capability-token signing key | **64-char hex** (`openssl rand -hex 32`) or leave empty for an ephemeral in-memory key. Malformed values **panic at boot**. |
+| `VITE_NEURAL_TOKEN` | Frontend token (Vite env var) | **Local/dev only** — set to match `NEURAL_TOKEN` so the UI auto-configures. **Do not bake into production web builds** (Vite embeds it in JS). Prefer Settings → Engine Connection for deployed UIs. |
 | `AUDIT_PRIVATE_KEY` | Ed25519 Private Key (Hex) | **Recommended for production**. Enables non-repudiation and tamper-evident Merkle logging. |
 | `ALLOWED_ORIGINS` | Comma-separated CORS origins | Default: `http://localhost:5173` |
 | `MAX_SWARM_DEPTH` | Maximum agent recursion/spawn depth | Default: `5` |
@@ -72,7 +75,7 @@ To ensure your instance of Tadpole OS remains private and sovereign, you must su
 | `OLLAMA_HOST` | Local LLM Endpoint | Default: `http://localhost:11434` |
 | `DISCORD_WEBHOOK` | Discord notification URL | Required only for `notify_discord` tool |
 | `PRIVACY_MODE` | Block all cloud providers, enforce local-only | Default: `false` |
-| `AUTO_APPROVE_SAFE_SKILLS` | Auto-approve tools tagged as "safe" | Default: `true` |
+| `AUTO_APPROVE_SAFE_SKILLS` | Auto-approve tools tagged as "safe" | Default: **`false`** (must opt in) |
 | `SME_SYNC_INTERVAL_MINS` | Ingestion Worker sync frequency (minutes) | Default: `30` |
 
 ### 3. Local-First (Zero Cost) Option
@@ -80,6 +83,20 @@ If you prefer not to use external APIs, install **Ollama** and set `PRIVACY_MODE
 
 > [!IMPORTANT]
 > Your keys are only stored in `.env`. When you save provider configurations in the UI, the engine automatically sanitizes them and only stores metadata (URLs, model names) in the repo-committed JSON files.
+
+---
+
+## ⚠️ Boot & Runtime Gotchas (Read Before Production)
+
+| Topic | Behavior at tip `bbcf0d4` / v1.1.463 |
+| :--- | :--- |
+| **HTTP timeouts** | Global Axum `TimeoutLayer` is **~60s**. Long `POST /v1/agents/{id}/tasks` and `POST /v1/agents/chat/completions` abort with **HTTP 408**. Extended (~600s) timeout applies only to select engine routes (WebSocket, live-voice, transcribe/speak, Ollama pull). Prefer **WebSocket** for long agent runs. |
+| **Stuck agents** | Halt via Oversight, or `POST /v1/engine/kill` with `Authorization: Bearer $NEURAL_TOKEN`. |
+| **Compose LAN bind** | `docker-compose.yml` publishes **`0.0.0.0:8000`** and Grafana defaults to password **`admin`**. Harden (`GF_ADMIN_PASSWORD`, firewall/Tailscale, prefer `127.0.0.1` bind) before exposing on a LAN. |
+| **chat/completions** | Uses **only the last `role=user` message**; forces `active_model_slot=default`. Multi-turn history and Neural Pivot slot switching are **not** honored here — use the UI Agent Card slots or `POST /v1/agents/{id}/tasks` with `activeModelSlot`. |
+| **Agent card URL** | Bundled `company-agent-card.json` uses `http://localhost:8000/...`. Before GitHub Pages publish, **rewrite `url`** to your Pages endpoint. |
+| **Node engines** | `package.json` requires Node **^22.22.2+** (Docker frontend-builder uses `node:22-slim`). |
+
 
 ---
 
@@ -102,7 +119,7 @@ Tadpole OS is optimized for low-footprint Rust execution. Requirements scale lin
 ## Step 1: Connect to the Operations Dashboard
 
 1. Open Tadpole OS in your browser:
-   - **Local Dev**: `http://localhost:5173` (Vite 6 / React 19)
+   - **Local Dev**: `http://localhost:5173` (Vite **8** / React 19)
    - **Production (Local Server)**: `http://<local-ip>:8000` (Axum)
 2. Go to **⚙️ Settings** from the sidebar (bottom-left gear icon).
 3. Under **Engine Connection**, verify the **TadpoleOS URL** is set to your engine endpoint and the **Neural Engine Access Token** matches your `.env` value.
@@ -360,9 +377,10 @@ If you clone or fork this repository and want to host your A2A Agent Card public
 3. **Place Your Agent Card**: Your static A2A assets live in `docs/public/` — VitePress automatically includes them in the deployed site:
    - `docs/public/a2a/v1/company-agent-card.json` — your A2A agent card
    - `docs/public/.well-known/agent.json` — IETF standard discovery endpoint
-4. **Live Public Endpoint**: After the `Deploy VitePress Site` workflow runs, your agent card is live at:
+4. **Rewrite the card `url`**: The checked-in JSON hardcodes `http://localhost:8000/a2a/v1/company-agent-card.json`. Update the `url` field (in both `public/a2a/v1/` and `docs/public/a2a/v1/`) to your public Pages URL before publishing.
+5. **Live Public Endpoint**: After the `Deploy VitePress Site` workflow runs, your agent card is live at:
    `https://<your-username>.github.io/<your-repo>/a2a/v1/company-agent-card.json`
-5. **Automatic AI Discovery**: External web agents, AI crawlers, and search engines automatically locate your card via:
+6. **Automatic AI Discovery**: External web agents, AI crawlers, and search engines automatically locate your card via:
    - Global IETF discovery: `/.well-known/agent.json`
    - HTML `<head>` meta tags: `<link rel="agent-card" href="/a2a/v1/company-agent-card.json">`
    - AI search crawler directives in `robots.txt` and `sitemap.xml`
@@ -462,6 +480,10 @@ For advanced users and AI agents, the `execution/` directory contains standardiz
 | Tool-Calling fails (Groq) | The engine includes **Self-Healing Retries** for Groq. Malformed tool syntax is automatically corrected in a second pass. |
 | Agent is slow / rate limited | The engine enforces `rpm`/`tpm` limits set on the model. The agent will wait for the quota window to reset rather than drop requests. |
 | `NEURAL_TOKEN` panic on start | Either `NEURAL_TOKEN` or `NEURAL_ENGINE_ACCESS_TOKEN` env var is required for the engine to start. Set it in your `.env` file. |
+| HTTP **408 Request Timeout** | Global ~60s timeout on HTTP agent/chat routes. Use WebSocket for long runs, or break work into shorter tasks. |
+| `CAPABILITY_KEY_CURR` panic | Value must be empty (ephemeral key) or valid 64-char hex (`openssl rand -hex 32`). |
+| Production admin token fatal | Set `ADMIN_TOKEN` or `NEURAL_ADMIN_TOKEN` distinct from `NEURAL_TOKEN` when `TADPOLE_ENV`/`NODE_ENV=production`. |
+| Agent stuck Thinking / Active | `curl -X POST http://localhost:8000/v1/engine/kill -H "Authorization: Bearer $NEURAL_TOKEN"` (or Oversight Halt). |
 | Workspace file access denied | Agent tried to access a path outside its sandbox. Check `cluster_id` mapping and ensure no path traversal in the filename. |
 | Database not found on Windows | Ensure `DATABASE_URL` is set, e.g., `sqlite:data/tadpole.db` or `sqlite:%CD%\data\tadpole.db` |
 
@@ -512,10 +534,10 @@ curl -X PUT http://localhost:8000/v1/agents/1 \
   -H "Authorization: Bearer YOUR_NEURAL_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "model_id": "llama-3.3-70b-versatile",
+    "modelId": "llama-3.3-70b-versatile",
     "provider": "groq",
     "temperature": 0.8,
-    "budget_usd": 2.0,
+    "budgetUsd": 2.0,
     "skills": ["issue_alpha_directive", "web_search"]
   }'
 ```
@@ -526,10 +548,10 @@ curl -X PUT http://localhost:8000/v1/agents/2 \
   -H "Authorization: Bearer YOUR_NEURAL_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "model_id": "llama-3.3-70b-versatile",
+    "modelId": "llama-3.3-70b-versatile",
     "provider": "groq",
     "temperature": 0.6,
-    "budget_usd": 3.0,
+    "budgetUsd": 3.0,
     "skills": ["web_search", "write_file", "read_file", "spawn_subagent"]
   }'
 ```
@@ -540,16 +562,20 @@ curl -X PUT http://localhost:8000/v1/agents/3 \
   -H "Authorization: Bearer YOUR_NEURAL_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "model_id": "llama-3.1-8b-instant",
+    "modelId": "llama-3.1-8b-instant",
     "provider": "groq",
     "temperature": 0.3,
-    "budget_usd": 1.0,
+    "budgetUsd": 1.0,
     "skills": ["code_execute", "write_file", "read_file", "list_files"]
   }'
 ```
 
 > [!NOTE]
 > Replace `YOUR_NEURAL_TOKEN` with the value from your `.env` file. There is no built-in development token anymore.
+>
+> **Wire format:** `PUT /v1/agents/{id}` expects **camelCase** fields (`modelId`, `budgetUsd`, `provider`). For multi-slot configs use `modelConfig2` / `modelConfig3` on PUT — there is **no** `planningSlot` alias on the update DTO (seed/wire may still accept `planningSlot` ↔ `modelConfig2`).
+>
+> **Tasks vs PUT:** `POST /v1/agents/{id}/tasks` still accepts snake_case `model_id` / `budget_usd` on the task payload.
 
 ---
 

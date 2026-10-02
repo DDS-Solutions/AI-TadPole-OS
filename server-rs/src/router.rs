@@ -94,9 +94,10 @@ pub fn create_router(app_state: Arc<AppState>) -> Router {
             app_state.clone(),
             middleware::deprecation::deprecation_middleware,
         ))
-        // GAP-PERF-03: Default timeout for standard API routes.
-        // LLM-bound routes (ws, agent tasks) apply their own extended timeout
-        // via route-level layers in build_engine_protected_routes.
+        // GAP-PERF-03: Default timeout for standard API routes (~60s → HTTP 408).
+        // Extended timeout (~600s) is applied only to select engine routes
+        // (ws, live-voice, transcribe/speak, ollama pull) in build_engine_protected_routes.
+        // Agent HTTP tasks and chat/completions still use this global default.
         .layer(tower_http::timeout::TimeoutLayer::with_status_code(
             axum::http::StatusCode::REQUEST_TIMEOUT,
             std::time::Duration::from_secs(DEFAULT_TIMEOUT_SECS),

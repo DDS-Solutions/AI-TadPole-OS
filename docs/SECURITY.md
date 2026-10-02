@@ -9,10 +9,10 @@
 
 > **Intelligence Level**: High-Fidelity (Sovereign Context)  
 > **Status**: Verified Production-Ready  
-> **Version**: 1.3.0  
-> **Last Hardened**: 2026-08-16 (RFC 9457 registry parity and fail-closed outward state locks)
+> **Version**: 1.1.463  
+> **Last Hardened**: 2026-10-01 (docs parity: admin token, capability key, metrics auth)
 > **Classification**: Sovereign  
-> **Last Code/Docs Parity Check**: 2026-08-16
+> **Last Code/Docs Parity Check**: 2026-10-01
 
 ---
 

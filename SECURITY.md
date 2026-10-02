@@ -9,8 +9,8 @@
 
 > **Intelligence Level**: High-Fidelity (Sovereign Context)  
 > **Status**: Verified Production-Ready  
-> **Last Verified Against Release**: 1.1.392
-> **Last Hardened**: 2026-06-23 (Audit Ledger v3 + Scanner Hardening)  
+> **Last Verified Against Release**: 1.1.463
+> **Last Hardened**: 2026-10-01 (docs parity: admin token, capability key, metrics auth)  
 > **Classification**: Sovereign  
 
 ---

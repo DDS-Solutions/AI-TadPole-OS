@@ -594,6 +594,12 @@ A real-time force-graph visualizer showing how your agents interact and how your
 - **High-Res Export**: Download high-quality PNG charts of your workflow hierarchies directly from the canvas.
 - **Detach & Recall**: Pop the visualizer into a dedicated browser window for persistent multi-monitor oversight. Recall it back from the placeholder panel on the main dashboard.
 
+
+### 6.1.1 Prometheus Metrics (Authenticated)
+- **Path**: `GET /v1/engine/metrics` — Prometheus exposition format.
+- **Auth**: Requires `Authorization: Bearer <NEURAL_TOKEN>` (engine protected route). There is **no** bare public `/metrics` route in tip code.
+- **Scrape config**: See `monitoring/prometheus/prometheus.yml` (`metrics_path: /v1/engine/metrics` + bearer credentials).
+
 ### 6.2 Neural Footprint & Token Cost Monitoring (`Command_Table`)
 A cost-accounting dashboard for monitoring API expenses. The `Command_Table` component is embedded in the **Oversight** page:
 
@@ -691,10 +697,11 @@ Tadpole OS leverages environment variables to manage hardware performance, netwo
 
 - `NEURAL_TOKEN` [RISK: HIGH] — Type: string; Default: `""`. Secret API token required to authenticate all client-dashboard requests.
 - `NEURAL_ENGINE_ACCESS_TOKEN` [RISK: HIGH] — Type: string; Default: `""`. Core sidecar access token.
+- `ADMIN_TOKEN` / `NEURAL_ADMIN_TOKEN` [RISK: HIGH] — Type: string; Default: `""`. **Required in production**; must differ from `NEURAL_TOKEN`. Non-prod may fall back to `NEURAL_TOKEN` with a warning.
 - `AUDIT_PRIVATE_KEY` [RISK: HIGH] — Type: string; Default: `""`. The private key seed used to cryptographically sign transaction logs.
 - `WORKFLOW_ENCRYPTION_KEY` [RISK: HIGH] — Type: string; Default: `""`. Encryption key for securing workflow states.
-- `CAPABILITY_KEY_CURR` [RISK: HIGH] — Type: string; Default: `""`. Current signing key for client tokens.
-- `CAPABILITY_KEY_PREV` [RISK: HIGH] — Type: string; Default: `""`. Previous signing key for client tokens.
+- `CAPABILITY_KEY_CURR` [RISK: HIGH] — Type: string; Default: `""`. Capability-token signing key: leave empty for ephemeral in-memory key, or set **64-char hex** (`openssl rand -hex 32`). Malformed values **panic at keyring init**.
+- `CAPABILITY_KEY_PREV` [RISK: HIGH] — Type: string; Default: `""`. Previous signing key for client tokens (rotation).
 - `TEST_PROVIDER_KEY` [RISK: HIGH] — Type: string; Default: `""`. Used in integration tests to bypass API keys.
 - `OPENAI_API_KEY` [RISK: HIGH] — Type: string; Default: `""`. ☁️ REQUIRES NETWORK API key for OpenAI model querying.
 - `GROQ_API_KEY` [RISK: HIGH] — Type: string; Default: `""`. ☁️ REQUIRES NETWORK API key for Groq model querying.
@@ -712,7 +719,7 @@ Tadpole OS leverages environment variables to manage hardware performance, netwo
 
 - `PRIVACY_MODE` [RISK: HIGH] — Type: boolean; Default: `false`. When true, strictly blocks outbound cloud AI connections.
 - `TADPOLE_ALLOW_LOCAL_HTTP` [RISK: HIGH] — Type: boolean; Default: `false`. Bypasses secure HTTPS checks for local development loops.
-- `AUTO_APPROVE_SAFE_SKILLS` [RISK: HIGH] — Type: boolean; Default: `true`. Allows safe read-only operations to bypass the Oversight Queue.
+- `AUTO_APPROVE_SAFE_SKILLS` [RISK: HIGH] — Type: boolean; Default: `false`. When true, allows safe read-only operations to bypass the Oversight Queue (opt-in).
 
 </details>
 

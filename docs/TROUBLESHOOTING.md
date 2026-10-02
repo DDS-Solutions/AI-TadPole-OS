@@ -10,7 +10,7 @@
 > **Intelligence Level**: Operational (Level 4)
 > **Status**: Verified Production-Ready
 > **Version**: 1.1.463
-> **Last Hardened**: 2026-08-19
+> **Last Hardened**: 2026-10-01
 > **Classification**: Sovereign
 
 ---
@@ -88,3 +88,42 @@
 **Symptoms**: Log shows `ERROR opentelemetry_sdk: BatchSpanProcessor.ExportError ... connection refused`.
 1.  **Collector Offline**: This occurs if the OpenTelemetry collector (e.g. Jaeger or Datadog) is not running on your host machine.
 2.  **To Disable**: Set `OTEL_STDOUT_EXPORTER=false` and unset or comment out `OTEL_EXPORTER_OTLP_ENDPOINT` in your `.env` to prevent the engine from attempting to send trace spans.
+
+
+---
+
+## ⏱️ Timeouts & Stuck Agents
+
+### 🕐 HTTP 408 Request Timeout (~60s)
+**Symptoms**: Long `POST /v1/agents/{id}/tasks` or `POST /v1/agents/chat/completions` fail with **408**; browser/fetch shows `Request Timeout`.
+1. **Expected**: The root Axum `TimeoutLayer` is **~60 seconds** for most HTTP routes. Extended (~600s) timeout applies only to WebSocket, live-voice, transcribe/speak, and Ollama pull — **not** agent task or chat-completions HTTP.
+2. **Mitigation**: Drive long missions over the **engine WebSocket**, split work into shorter HTTP tasks, or raise/route-layer timeouts in a follow-up code change (out of scope for docs-only drift fixes).
+
+### 🛑 Agent Stuck in Thinking / Active
+**Symptoms**: Mission log shows "Thinking..." indefinitely; hierarchy status stuck on Active.
+1. Use **Oversight Halt**, or call the kill switch:
+   ```bash
+   curl -X POST http://localhost:8000/v1/engine/kill \
+     -H "Authorization: Bearer $NEURAL_TOKEN"
+   ```
+2. Confirm the agent returns to Idle on the Hierarchy / Operations views.
+
+---
+
+## 🔐 Boot & Capability Keys
+
+### 💥 Engine panics on `CAPABILITY_KEY_CURR`
+**Symptoms**: Process aborts at start with a capability/keyring panic.
+1. Leave `CAPABILITY_KEY_CURR` **empty** for a local ephemeral key (logged warning), **or**
+2. Set a valid **64-character hex** value: `openssl rand -hex 32`.
+3. Non-hex or wrong length values panic — do not use quotes/spaces/partial hex.
+
+### 🏭 Production missing admin token
+**Symptoms**: Fatal boot when `TADPOLE_ENV` or `NODE_ENV` is `production`.
+1. Set `ADMIN_TOKEN` or `NEURAL_ADMIN_TOKEN`.
+2. Ensure it **differs** from `NEURAL_TOKEN`.
+
+### 📊 Prometheus scrape 401 / 404
+**Symptoms**: Scraper cannot pull metrics from `/metrics`.
+1. Tip code exposes **`GET /v1/engine/metrics` behind Bearer `NEURAL_TOKEN`** — there is **no** public `/metrics` route.
+2. Point Prometheus at `/v1/engine/metrics` and configure bearer auth (see `monitoring/prometheus/prometheus.yml`).

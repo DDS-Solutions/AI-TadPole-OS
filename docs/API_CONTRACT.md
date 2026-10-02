@@ -44,6 +44,7 @@ Every response from the engine includes these observability headers:
 | Method | Path | Description |
 |:--- |:--- |:--- |
 | `GET` | `/v1/engine/health` | Engine health & uptime pulse. |
+| `GET` | `/v1/engine/metrics` | Prometheus metrics (**Bearer `NEURAL_TOKEN` required**). No public `/metrics` route. |
 | `POST` | `/v1/engine/deploy` | Trigger external deployment logic. |
 | `POST` | `/v1/engine/kill` | Emergency shutdown of all active agent tasks. |
 | `POST` | `/v1/engine/speak` | Text-to-Speech (TTS) synthesis. |
@@ -57,7 +58,8 @@ Every response from the engine includes these observability headers:
 | `POST` | `/v1/agents` | Register a new agent node. |
 | `GET` | `/v1/agents/{id}`| Retrieve a specific agent's schematic. |
 | `PUT` | `/v1/agents/{id}`| Update agent configuration. |
-| `POST` | `/v1/agents/{id}/tasks` | **Execute**: Dispatch a task to the agent runner. |
+| `POST` | `/v1/agents/{id}/tasks` | **Execute**: Dispatch a task to the agent runner (supports `activeModelSlot`; prefer for Neural Pivot). |
+| `POST` | `/v1/agents/chat/completions` | OpenAI-shaped helper: **last user message only**; forces `active_model_slot=default`. Not multi-turn / not slot-aware. |
 | `DELETE` | `/v1/agents/{id}` | De-register an agent node. |
 
 ### Oversight & Governance
@@ -99,6 +101,9 @@ Malformed, empty, or oversized imports return RFC 9457 `BAD_REQUEST` and do not 
 | `POST` | `/v1/engine/templates/import` | Bearer token (Admin) | Validate and atomically import local swarm bundle, workflows, and MCP servers. |
 | `GET` | `/v1/engine/templates/installed` | Bearer token | List all installed swarm packages and asset summaries from `installed_manifest.json`. |
 | `POST` | `/v1/engine/templates/uninstall` | Bearer token (Admin) | Safely unregister agents from database/registry, prune MCP servers, and archive or delete files. |
+
+### Agent update wire format (`PUT /v1/agents/{id}`)
+`AgentConfigUpdate` deserializes with **camelCase** (`modelId`, `budgetUsd`, `provider`, `modelConfig2`, `modelConfig3`). Seed/list payloads may still expose `planningSlot` as an alias of `modelConfig2`, but **PUT does not accept `planningSlot`**.
 
 ### 🧠 Mythos Engine Config (ModelConfig)
 
@@ -155,6 +160,7 @@ Errors return `application/problem+json` for machine-readable remediation.
 | Status | Code | Meaning |
 |:--- |:--- |:--- |
 | `401` | `UNAUTHORIZED` | Invalid or missing `NEURAL_TOKEN`. |
+| `408` | `REQUEST_TIMEOUT` | Global ~60s HTTP `TimeoutLayer` (agent tasks / chat completions). |
 | `403` | `BUDGET_LIMIT_EXCEEDED` | Mission budget allocation cap exceeded (PAUSED status). |
 | `429` | `RATE_LIMITED` | Engine-level or provider-level rate limit bucket exhausted. |
 | `503` | `OLLAMA_OFFLINE` | Local Ollama socket is down, prompting failover or manual restart. |

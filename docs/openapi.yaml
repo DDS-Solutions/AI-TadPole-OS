@@ -1329,27 +1329,15 @@ paths:
         '200':
           description: File restored successfully
 
-  /metrics:
-    get:
-      operationId: getMetrics
-      summary: Prometheus Metrics Exporter
-      description: Exposes internal system, process, and engine metrics in Prometheus exposition format.
-      security: []
-      tags: [Engine]
-      responses:
-        '200':
-          description: Prometheus metrics in text format
-          content:
-            text/plain:
-              schema:
-                type: string
-
   /v1/engine/metrics:
     get:
       operationId: getEngineMetrics
-      summary: Prometheus Metrics Exporter (Versioned)
-      description: Exposes internal system, process, and engine metrics in Prometheus exposition format.
-      security: []
+      summary: Prometheus Metrics Exporter
+      description: |
+        Exposes internal system, process, and engine metrics in Prometheus exposition format.
+        Authenticated via Bearer NEURAL_TOKEN (engine protected route). There is no bare public `/metrics` route.
+      security:
+        - bearerAuth: []
       tags: [Engine]
       responses:
         '200':
@@ -1358,6 +1346,8 @@ paths:
             text/plain:
               schema:
                 type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
 
   /v1/engine/health:
     get:
@@ -1683,8 +1673,11 @@ paths:
       operationId: createChatCompletion
       summary: Create agent chat completion
       description: |
-        OpenAI-compatible completion endpoint that routes the task to a specific Swarm agent (the "model")
-        and executes the task synchronously, returning the final report/result.
+        OpenAI-shaped completion helper that routes work to a Swarm agent synchronously.
+        Limitations (tip code): only the **last** `messages[]` entry with `role=user` is used;
+        prior turns are ignored. `active_model_slot` is forced to `default` (Neural Pivot / slots
+        must use the UI Agent Card or `POST /v1/agents/{id}/tasks`). Subject to the global ~60s
+        HTTP TimeoutLayer (408 on long runs).
       tags: [Agents]
       requestBody:
         required: true

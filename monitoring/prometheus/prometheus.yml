@@ -5,6 +5,12 @@ global:
 scrape_configs:
   - job_name: 'tadpole-os'
     scrape_interval: 5s  # High-frequency scraping for real-time engine metrics
-    metrics_path: '/metrics'
+    # Tip code registers GET /v1/engine/metrics behind Bearer NEURAL_TOKEN.
+    # There is no unauthenticated /metrics route — scrapes without auth get 401.
+    metrics_path: '/v1/engine/metrics'
+    authorization:
+      type: Bearer
+      # Inject via file or env substitution in your deploy (do not commit real tokens).
+      credentials: '${NEURAL_TOKEN}'
     static_configs:
       - targets: ['tadpole:8000']
