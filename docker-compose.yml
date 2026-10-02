@@ -19,6 +19,13 @@ services:
       - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-}
       - BIND_ADDRESS=0.0.0.0
+      # Production / hardened nodes — set in .env (empty defaults so demos still boot):
+      # ADMIN_TOKEN / NEURAL_ADMIN_TOKEN must differ from NEURAL_TOKEN in production.
+      - ADMIN_TOKEN=${ADMIN_TOKEN:-}
+      - NEURAL_ADMIN_TOKEN=${NEURAL_ADMIN_TOKEN:-}
+      - CAPABILITY_KEY_CURR=${CAPABILITY_KEY_CURR:-}
+      - CAPABILITY_KEY_PREV=${CAPABILITY_KEY_PREV:-}
+      - PRIVACY_MODE=${PRIVACY_MODE:-false}
       - DATABASE_URL=sqlite:/app/data/tadpole.db
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
     volumes:

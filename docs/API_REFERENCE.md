@@ -9,8 +9,20 @@
 
 **Version**: 1.1.463
 
-**Generated**: 2026-09-20 14:01:59
+**Generated**: 2026-09-20 14:01:59 (Round-2 operator notes 2026-10-01)
 Welcome to the official API reference for the Tadpole OS Sovereign Engine. Protected endpoints require a valid `NEURAL_TOKEN` provided via the `Authorization: Bearer <token>` header. The public outward agent-card and catalog-search endpoints are token-free and enforce a 60-request-per-minute IP fixed window.
+
+
+---
+
+### Engine WebSockets
+
+| Endpoint | Notes |
+| :--- | :--- |
+| `GET /v1/engine/ws` | Telemetry hub. Auth via `Sec-WebSocket-Protocol: bearer.<NEURAL_TOKEN>`. Inbound app commands: `ping`, `oversight:decision` only. See `docs/WEBSOCKET_EVENTS.md`. |
+| `GET /v1/engine/live-voice` | Gemini Live multimodal proxy. Same bearer subprotocol. UI may read orphan `localStorage.tadpole_token` — see WEBSOCKET_EVENTS caveat. |
+
+**Related caveats (also in GETTING_STARTED):** global HTTP `TimeoutLayer` ≈60s → **408** on long agent HTTP tasks; Prometheus metrics at `GET /v1/engine/metrics` require bearer; agent memory LanceDB routes require Cargo feature **`vector-memory`** (often off in GHCR builds).
 
 ## Endpoints
 

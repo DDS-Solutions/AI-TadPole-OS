@@ -14,9 +14,9 @@
 > **Status**: Verified Production-Ready
 > **Version**: 1.1.463
 > **Last Hardened**: 2026-09-17 (AI-Tadpole-OS Architectural Synthesis, IPC Bridge, OpenUI DSL, Mission Benchmarks)
-> **Last Verified Against Codebase**: v1.4.0 working tree on 2026-09-17
+> **Last Verified Against Codebase**: v1.1.463 / tip `bbcf0d4` on 2026-10-01
 > **Data Privacy**: 100% Local-First / Zero Data Leaks
-> **Last Code/Docs Parity Check**: 2026-09-17
+> **Last Code/Docs Parity Check**: 2026-10-01
 
 ---
 
@@ -569,7 +569,7 @@ All external API connections use the client-side **`use_vault_store`** framework
 
 ### 5.4 Client-Side API Resilience (Circuit Breaker)
 
-<!-- Last verified against tag/commit v1.1.165 (commit adb41393) on 2026-06-11 -->
+<!-- Last verified against tip bbcf0d4 / v1.1.463 on 2026-10-01 -->
 
 To shield the front-end dashboard from backend service failures, network timeouts, or offline logical bunkers, the application implements a client-side **Circuit Breaker** system for all core service namespaces (e.g., `infra`, `engine`, `continuity`).
 
@@ -619,7 +619,7 @@ A cost-accounting dashboard for monitoring API expenses. The `Command_Table` com
 
 ### 6.3 Parity Guard
 
-<!-- Last verified against tag/commit v1.1.165 (commit adb41393) on 2026-06-11 -->
+<!-- Last verified against tip bbcf0d4 / v1.1.463 on 2026-10-01 -->
 
 The `parity_guard.py` script serves as the codebase's canonical drift detector, ensuring documentation, Rust routes, environmental variables, and skill manifests remain in absolute alignment.
 
@@ -717,7 +717,7 @@ Tadpole OS leverages environment variables to manage hardware performance, netwo
 <details>
 <summary>🛡️ Security Posture</summary>
 
-- `PRIVACY_MODE` [RISK: HIGH] — Type: boolean; Default: `false`. When true, strictly blocks outbound cloud AI connections.
+- `PRIVACY_MODE` [RISK: HIGH] — Type: boolean; Default: `false`. When true, blocks outbound cloud AI and allows only reachable **local models ≤15B** (fallback `phi3.5-safe:latest`). If none are available, provider resolution installs `NullProvider` (`PrivacyModeEnforced`) and missions complete with `is_degraded=true`.
 - `TADPOLE_ALLOW_LOCAL_HTTP` [RISK: HIGH] — Type: boolean; Default: `false`. Bypasses secure HTTPS checks for local development loops.
 - `AUTO_APPROVE_SAFE_SKILLS` [RISK: HIGH] — Type: boolean; Default: `false`. When true, allows safe read-only operations to bypass the Oversight Queue (opt-in).
 
@@ -728,7 +728,7 @@ Tadpole OS leverages environment variables to manage hardware performance, netwo
 
 - `PORT` [RISK: LOW] — Type: number; Default: `8000`. The HTTP server listen port.
 - `BIND_ADDRESS` [RISK: HIGH] — Type: string; Default: `127.0.0.1`. The local loopback IP address of the engine.
-- `ALLOWED_ORIGINS` [RISK: HIGH] — Type: string; Default: `http://localhost:5173`. List of permitted browser CORS locations.
+- `ALLOWED_ORIGINS` [RISK: HIGH] — Type: string; Default: empty (engine still permits built-in localhost **5173/5174/8000** + Tauri origins from `cors.rs`). Comma-separated extras for LAN/Tailscale/custom hosts.
 - `TRUST_PRIVATE_NETWORKS` [RISK: HIGH] — Type: boolean; Default: `false`. Bypasses proxy verification on local subnet cards.
 - `ALLOW_UNSAFE_CORS` [RISK: HIGH] — Type: boolean; Default: `false`. Enables unsafe open CORS profiles.
 - `TRUSTED_PROXIES` [RISK: HIGH] — Type: string; Default: `""`. Permitted proxy IP lists.
@@ -811,4 +811,4 @@ Tadpole OS provides compilation flags that allow optimizing VRAM footprint on of
 ---
 
 [//]: # (Metadata: [OPERATIONS_MANUAL])
-<!-- Last verified against tag/commit v1.1.165 (commit adb41393) on 2026-06-11 -->
+<!-- Last verified against tip bbcf0d4 / v1.1.463 on 2026-10-01 -->

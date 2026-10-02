@@ -64,14 +64,9 @@
 - **M9** — Stuck-agent → `POST /v1/engine/kill` in GETTING_STARTED + TROUBLESHOOTING.
 - **M10** — OpenAPI metrics security aligned.
 
-### Remaining / deferred (do **not** treat as closed)
-- **Code follow-ups (explicitly out of this PR)**: attach extended timeout to agent task/completions HTTP; chat.rs multi-turn/slot behavior; MCP `env_clear` hardening.
-- **M3** — Full `ALLOWED_ORIGINS` default set still understated vs `cors.rs` (partial).
-- **M11** — `DEPLOYMENT_GUIDE.md` Last Verified / GHCR-compose refresh still stale.
-- **M12** — Fast-path vs Conductor / SpecReview operator narrative still thin in GETTING_STARTED.
-- **M13** — `version.json` `version_updated_at` metadata still dated 2026-09-14.
-- **M14** — `docker-compose.yml` still does not inject `ADMIN_TOKEN` / `CAPABILITY_KEY_*` (docs-only callouts for now).
-- **L*** — Rust pin badge nuance, seed roster fragility, PRIVACY_MODE nuance, thin DEVELOPMENT.md — deferred.
+### Remaining / deferred after Round-1 PR body (see Round-2 addendum below for closures)
+- **Code follow-ups (explicitly out of Round-1/2 docs PRs)**: attach extended timeout to agent task/completions HTTP; chat.rs multi-turn/slot behavior; MCP `env_clear` hardening; Live Voice Settings-token wiring; optional tracked agents seed.
+- Round-1 **M3/M11–M14/L*** deferred items are addressed as **R2-*** in the Round-2 addendum when this stacked PR lands.
 
 ### Prior "Gaps Found — Current State" (2026-08-16)
 The empty/all-closed statements below this addendum reflected the 2026-08-16 audit only. Treat the 2026-10-01 list above as the current remaining-work view.
@@ -88,3 +83,36 @@ The empty/all-closed statements below this addendum reflected the 2026-08-16 aud
 ### Stale Documentation
 - All files in `directives/` and `docs/` updated to IDENTITY.md v1.2.1 compliance.
 - `documentation_policy.md` Section 6 now enforces version string tracking for future `IDENTITY.md` version bumps.
+
+---
+
+## Round-2 Addendum — 2026-10-01 (stacked on PR #261)
+
+**Branch**: `docs/round2-deploy-ws-seed-privacy-2026-10`  
+**Base**: `docs/getting-started-ops-drift-2026-10` (PR #261 @ `1aa2335`). After #261 merges, retarget this PR base to `main` (or rebase).
+
+### Closed in Round 2 (docs + tiny metadata)
+
+| ID | Fix |
+| :--- | :--- |
+| **R2-H1** | GETTING_STARTED seed truth — gitignore / Alpha-only fallback; create agents 2/3 |
+| **R2-H2** | DEPLOYMENT_GUIDE refresh — GHCR compose, ADMIN/CAPABILITY/PRIVACY/bind; remove dead `publish-public.ps1` |
+| **R2-H3** | WEBSOCKET_EVENTS match `ws.rs`; document `/v1/engine/live-voice`; fix oversight wire shape; mark `agent:send` / `agent:user_answer` REST-only |
+| **R2-H4** | Live Voice `tadpole_token` orphan caveat (GETTING_STARTED + WEBSOCKET + API_REFERENCE) |
+| **R2-H5** | Fast-path / SpecReview / Conductor operator boxes (GETTING_STARTED, TEST_MISSIONS, Agent_Runner) |
+| **R2-H6** | OPERATIONS verified banner → 1.1.463 / `bbcf0d4`; footer stamps |
+| **R2-M1** | PRIVACY_MODE ≤15B + NullProvider / `is_degraded` |
+| **R2-M2** | ALLOWED_ORIGINS full `cors.rs` defaults |
+| **R2-M3** | Compose `${ADMIN_TOKEN:-}` / CAPABILITY / PRIVACY inject (empty defaults; demos still boot) |
+| **R2-M4** | `version.json` `version_updated_at` → 2026-10-01 |
+| **R2-M5** | DEVELOPMENT clone/Tokio/GHCR; CONTRIBUTING drop `deploy.ps1` + version.json; README badges |
+| **R2-M6** | CLI_TOOLS pointer to `scripts/doctor.mjs`; dead publish script removed from DEPLOYMENT |
+| **R2-M9** | Knowledge_Memory GHCR/`vector-memory` callout; SWARM `spawn_subagent` vs `recruit_specialist` |
+| **R2-M8** | API_REFERENCE live-voice + timeout/metrics/vector-memory caveats |
+
+### Still deferred / product follow-ups
+
+- Code: Live Voice should read Settings bearer instead of `tadpole_token`; optional tracked seed JSON; agent-card Pages URL placeholder.
+- #261 Round-1 items remain on the stack until that PR merges.
+- Do **not** treat chat.rs timeout/MCP `env_clear` as Round-2 doc work.
+

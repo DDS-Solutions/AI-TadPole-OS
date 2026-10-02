@@ -10,7 +10,7 @@
 > **Intelligence Level**: High (Sovereign Context)  
 > **Status**: Verified Production-Ready  
 > **Version**: 1.3.0  
-> **Last Hardened**: 2026-07-11 (A2A Economics Protocol, runner/tools sub-module, CapabilityToken CBS)
+> **Last Hardened**: 2026-10-01 (fast-path / SpecReview / Conductor operator notes)
 
 The **Agent Runner** is the stateful heart of Tadpole OS. It transforms a high-level intent into a chain of tactical successes through a disciplined "Intelligence Loop."
 
@@ -55,6 +55,18 @@ Final results are aggregated and distilled.
 - **Mission Analysis (Agent 99)**: Post-mission debriefing is handled by `runner/analysis.rs`, which evaluates success criteria and generates prescriptive improvement insights.
 
 ---
+
+
+---
+
+## ⚡ Fast-Path, UTS SpecReview & Conductor Skip
+
+Implemented in `runner/intelligence/turn.rs` (`is_fast_path_query`), `runner/context.rs` (Conductor gate), and mission status `SpecReview`.
+
+1. **Fast-path heuristics** — Short inquiry prefixes (`what is`, `why`, `explain`, …) or simple triggers (`who are you`, `get status`, `health`, …) return **true** unless tokenized **complex action words** appear (`implement`, `build`, `fix`, `add`, `create`, …).
+2. **Effects** — Fast-path sets **`max_turns = 2`** and **skips Conductor DAG** planning (`context.rs` only generates a plan when depth 0, not safe-mode, not fast-path, and conductor-required).
+3. **SpecReview / UTS** — Mission Mode can generate a Unified Technical Specification and park the mission in **`spec_review`** until an operator approves. Chat-only / fast-path Q&A will not exercise this gate.
+4. **Operator tip** — If a “mission” finishes in one short reply with no swarm edges, check whether the prompt matched fast-path; rephrase with concrete build/research verbs and use Mission Mode.
 
 ## 🏛️ Swarm Protocols
 

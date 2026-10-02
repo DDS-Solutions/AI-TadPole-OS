@@ -8,24 +8,65 @@
 # 🚢 Deployment Guide
 
 > **Status**: Active  
-> **Last Verified**: 2026-07-13  
+> **Last Verified**: 2026-10-01 (vs tip `bbcf0d4` / v1.1.463)  
 > **Classification**: Sovereign  
 
 ---
 
-This guide covers the deployment workflow that currently exists in the repo. The shipped scripts build Linux desktop artifacts, deploy a `.deb` to a reachable Linux host, and prepare a sanitized public release workspace.
+This guide covers the **supported** deployment paths in-repo today:
 
-## Supported Scripts
+1. **GHCR + `docker-compose.yml`** (primary server/node path)
+2. **Linux desktop `.deb` / `.AppImage`** via PowerShell packaging helpers
+
+> [!WARNING]
+> There is **no** maintained `scripts/publish-public.ps1` (or root `deploy.ps1`) on tip. Public release staging is owned by GitHub Actions / `docs/RELEASE_PROCESS.md`, not a local publish script.
+
+## Primary Path: GHCR Compose
+
+`docker-compose.yml` pulls the prebuilt image (no local `build:` step):
+
+```yaml
+image: ghcr.io/dds-solutions/ai-tadpole-os:latest
+```
+
+### Quick start
+
+```bash
+cp .env.example .env
+# Set NEURAL_TOKEN (required). For production also set ADMIN_TOKEN and CAPABILITY_KEY_CURR.
+docker compose up -d
+```
+
+Engine health: `curl -sf http://localhost:8000/v1/engine/health`
+
+| Compose fact | Operator note |
+| :--- | :--- |
+| Bind | Publishes **`0.0.0.0:8000`** and sets `BIND_ADDRESS=0.0.0.0` — reachable on LAN; harden with firewall/Tailscale or prefer loopback for local-only. |
+| Required | `NEURAL_TOKEN` — compose fails fast if unset (`${NEURAL_TOKEN:?...}`). |
+| Optional inject | `ADMIN_TOKEN` / `NEURAL_ADMIN_TOKEN`, `CAPABILITY_KEY_CURR` / `CAPABILITY_KEY_PREV`, `PRIVACY_MODE` — compose passes `${VAR:-}` so demos still boot; set them in `.env` for production. Production **requires** admin token ≠ `NEURAL_TOKEN`. |
+| CORS | `ALLOWED_ORIGINS` may be empty in compose; engine still allows built-in localhost/Tauri origins when unset (see GETTING_STARTED). |
+| Observability | Prometheus scrapes `/v1/engine/metrics` (bearer). Grafana binds `127.0.0.1:3000` (default password `admin`). |
+
+### Production secrets checklist
+
+| Variable | Why |
+| :--- | :--- |
+| `NEURAL_TOKEN` | API / WS bearer |
+| `ADMIN_TOKEN` or `NEURAL_ADMIN_TOKEN` | Required when `TADPOLE_ENV`/`NODE_ENV=production`; must differ from `NEURAL_TOKEN` |
+| `CAPABILITY_KEY_CURR` | 64-char hex (`openssl rand -hex 32`) or empty for ephemeral key; malformed → **panic at boot** |
+| `PRIVACY_MODE` | `true` → local Ollama only, **≤15B** models; no safe local model → `NullProvider` / degraded missions |
+| Provider keys | As needed (`GOOGLE_API_KEY`, `GROQ_API_KEY`, …) |
+
+See `.env.example` and `docs/OPERATIONS_MANUAL.md` for the full matrix.
+
+## Desktop Packaging Scripts
 
 | Script | Purpose |
 | :--- | :--- |
 | `scripts/build-linux-light.ps1` | Builds Linux `.deb` and `.AppImage` artifacts inside Docker. |
 | `scripts/deploy-linuxlite.ps1` | Copies the built `.deb` to a Linux target over SSH and installs it with `dpkg`. |
-| `scripts/publish-public.ps1` | Creates a sanitized staging directory for publishing a public GitHub mirror. |
 
-## Pre-Flight Checks
-
-Run these from the repo root before packaging or deployment:
+### Pre-Flight Checks
 
 ```powershell
 python execution/verify_all.py
@@ -38,65 +79,31 @@ npm run build
 
 Use `cargo build --release --manifest-path server-rs/Cargo.toml` when you also want an explicit backend release build locally.
 
-## Build Linux Artifacts
+### Build Linux Artifacts
 
-`scripts/build-linux-light.ps1` is the current packaging entry point for Linux desktop output.
-
-Requirements:
-- Docker Desktop or another working Docker daemon
-- PowerShell 7+
-
-Run:
+Requirements: Docker daemon + PowerShell 7+.
 
 ```powershell
 ./scripts/build-linux-light.ps1
 ```
 
-Artifacts are extracted to:
+Artifacts: `dist/linux-light/appimage/`, `dist/linux-light/deb/`.
 
-- `dist/linux-light/appimage/`
-- `dist/linux-light/deb/`
+### Deploy To a Linux Host
 
-## Deploy To a Linux Host
-
-`scripts/deploy-linuxlite.ps1` is the current SSH-based deployment helper.
-
-What it does:
-1. Finds the first `.deb` inside `dist/linux-light/`
-2. Copies it to the target machine with `scp`
-3. Installs it remotely with `sudo dpkg -i` and `apt-get install -f -y`
-
-Before running it:
-- Update `TargetIP` and `TargetUser` in `scripts/deploy-linuxlite.ps1`
-- Ensure SSH key-based access works
-- Build the Linux artifacts first
-
-Run:
+1. Find the first `.deb` inside `dist/linux-light/`
+2. Copy with `scp`, install with `sudo dpkg -i` + `apt-get install -f -y`
+3. Update `TargetIP` / `TargetUser` in `scripts/deploy-linuxlite.ps1` first
 
 ```powershell
 ./scripts/deploy-linuxlite.ps1
 ```
 
-## Public Release Staging
-
-`scripts/publish-public.ps1` prepares a sanitized `.tmp/public-release/` directory from tracked files only.
-
-It currently:
-- Copies tracked repo files into a clean staging directory
-- Rewrites known hostnames and non-placeholder IP addresses
-- Removes internal deployment and scratch artifacts
-- Initializes a clean git repo in the staged directory for push/publish workflows
-
-Run:
-
-```powershell
-./scripts/publish-public.ps1
-```
-
 ## Monitoring And Verification
 
 After deployment:
-- Verify the engine is reachable on the expected host/port.
-- Confirm `NEURAL_TOKEN`, `DATABASE_URL`, and provider secrets are set correctly on the target host.
-- Run a smoke test against `/v1/engine/live-voice`, `/v1/agents`, or another expected route based on your deployment profile.
-- Check the dashboard and the engine log stream for WebSocket connectivity and telemetry health.
+
+- Verify the engine on the expected host/port (`/v1/engine/health`).
+- Confirm `NEURAL_TOKEN`, `DATABASE_URL`, admin/capability secrets, and provider keys on the target.
+- Smoke-test `/v1/agents`, telemetry WS `/v1/engine/ws`, and (if used) `/v1/engine/live-voice`.
+- Check dashboard + engine logs for WebSocket connectivity and telemetry health.

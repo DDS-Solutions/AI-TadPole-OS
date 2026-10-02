@@ -7,48 +7,74 @@
 
 # 🛠 Tadpole OS: Developer Guide
 
-Welcome to the Tadpole OS development ecosystem! This guide is designed to help you fork, modify, and contribute to the project, with a specific focus on **resource-constrained environments (8GB RAM / 30GB Disk)**.
+Welcome to the Tadpole OS development ecosystem. This guide helps you fork, modify, and contribute — including on **resource-constrained** machines (≈8GB RAM / 30GB disk).
 
 ---
 
 ## 🏗 System Architecture Overview
 
-Tadpole OS is built using a modern 3-layer architecture:
-1.  **Core Engine (`server-rs`)**: High-performance Rust backend using Axum and Tokyo.
-2.  **Operations Dashboard (`src/`)**: React + Vite frontend with Zustand state management.
-3.  **Deployment Swarm**: PowerShell/Bash scripts for multi-bunker orchestration.
+1. **Core Engine (`server-rs`)** — High-performance Rust backend using Axum and **Tokio**.
+2. **Operations Dashboard (`src/`)** — React + Vite frontend with Zustand state management.
+3. **Deployment helpers** — PowerShell/Bash scripts for packaging and Linux host install (see `docs/DEPLOYMENT_GUIDE.md`).
+
+### Toolchain pins (tip)
+
+| Layer | Pin |
+| :--- | :--- |
+| Rust | `rust-toolchain.toml` → **`stable`** (CI uses stable; do not assume a frozen `1.85` MSRV badge) |
+| Node | `package.json` engines → **^22.22.2+** (also 24.x / 26+) |
+| Frontend | React **^19.3**, Vite **^8.3**, Tailwind **^4.3** |
 
 ---
 
 ## 🚀 Getting Started (Low-RAM Optimized)
 
-If you are developing on a machine with **8GB RAM**, follow these steps to avoid system freezes during compilation.
-
 ### 1. Clone & Setup
+
 ```bash
-git clone https://github.com/your-username/tadpole-os.git
-cd tadpole-os
+git clone https://github.com/DDS-Solutions/AI-TadPole-OS.git
+cd AI-TadPole-OS
 cp .env.example .env
-
-# Install NVIDIA SkillSpector locally for skill security audits
-pip install skillspector
+# Set NEURAL_TOKEN at minimum. See docs/GETTING_STARTED.md for ADMIN/CAPABILITY/PRIVACY.
+npm install
 ```
 
-### 2. Docker Development (Recommended)
-Our `Dockerfile` is pre-configured with memory throttles. To start the environment:
+Optional: `pip install skillspector` for NVIDIA SkillSpector audits.
+
+### 2. Local dual-process (recommended for active development)
+
 ```bash
-docker compose up --build
+# Terminal A — Rust engine (:8000)
+npm run engine
+
+# Terminal B — Vite dashboard (:5173)
+npm run dev
 ```
+
+### 3. Docker / GHCR (runtime node, not a full rebuild)
+
+`docker-compose.yml` uses the **prebuilt** image `ghcr.io/dds-solutions/ai-tadpole-os:latest` — there is **no** `build:` section. Prefer:
+
+```bash
+docker compose up -d
 ```
+
+Use `docker compose up --build` only if you intentionally add a local build service; stock compose will not rebuild the engine from this Dockerfile.
+
+For a from-source container image, see the root `Dockerfile` and CI publish workflows.
 
 ---
 
 ## 🎨 UI/UX Guidelines
-- **Color Palette**: Use the curated HSL tokens in `tailwind.config.js`.
-- **Animations**: Prefer CSS transitions or RAF-throttled animations for performance.
-- **Responsiveness**: All cards must be draggable/resizable (see `LineageStream.tsx`).
+
+- **Color palette**: curated HSL tokens / Tailwind theme variables.
+- **Animations**: CSS transitions or RAF-throttled animations.
+- **Responsiveness**: cards that are draggable/resizable (see `LineageStream.tsx`).
 
 ---
 
 ## ❓ Need Help?
-Check the `README.md` for project goals or open an Issue on GitHub for architectural clarification.
+
+- Operator onboarding: `docs/GETTING_STARTED.md`
+- Deploy: `docs/DEPLOYMENT_GUIDE.md`
+- Project goals: `README.md` — or open a GitHub Issue for architectural clarification.

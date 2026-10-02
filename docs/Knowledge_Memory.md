@@ -39,6 +39,10 @@ default = []
 vector-memory = ["dep:lancedb", "dep:arrow-schema", "dep:arrow-array"]
 ```
 
+
+> [!IMPORTANT]
+> **Operator callout (GHCR / default builds):** Stock `cargo build` / published GHCR images typically ship **without** the `vector-memory` Cargo feature. LanceDB routes and dense episodic search are then **offline** (router falls back; cognitive memory logs feature-disabled). Enable with `--features vector-memory` (or an image built with that feature) when you need vector RAG. Graph + BM25 + SQLite still work on default builds.
+
 ### Why Default Builds Omit `vector-memory` (Default-Off Rationale)
 1. **Zero Build Friction & Maximum Portability**:
    - The core engine (Graph Intelligence + BM25 + SQLite) compiles in pure Rust across all commodity OS and legacy CPU environments without requiring C++ compilers, `libclang`, `protoc`, or native CMake toolchains.

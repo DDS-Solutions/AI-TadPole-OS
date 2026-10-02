@@ -152,3 +152,15 @@ a configured Linux host.
 ### Features
 - `scripts/build-linux-light.ps1`: builds `.deb` and `.AppImage` artifacts using Docker.
 - `scripts/deploy-linuxlite.ps1`: transfers and installs a built `.deb` over SSH.
+
+---
+
+## 🩺 Version / Env Doctor (`scripts/doctor.mjs`)
+
+Node helper for local toolchain and version-governance checks (pairs with `scripts/bump_version.cjs`).
+
+```bash
+node scripts/doctor.mjs
+```
+
+Use this instead of any removed root `deploy.ps1` / `publish-public.ps1` when validating release readiness locally. Public publishing remains CI / `docs/RELEASE_PROCESS.md`.

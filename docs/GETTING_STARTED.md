@@ -63,7 +63,7 @@ To ensure your instance of Tadpole OS remains private and sovereign, you must su
 | `CAPABILITY_KEY_CURR` | Capability-token signing key | **64-char hex** (`openssl rand -hex 32`) or leave empty for an ephemeral in-memory key. Malformed values **panic at boot**. |
 | `VITE_NEURAL_TOKEN` | Frontend token (Vite env var) | **Local/dev only** — set to match `NEURAL_TOKEN` so the UI auto-configures. **Do not bake into production web builds** (Vite embeds it in JS). Prefer Settings → Engine Connection for deployed UIs. |
 | `AUDIT_PRIVATE_KEY` | Ed25519 Private Key (Hex) | **Recommended for production**. Enables non-repudiation and tamper-evident Merkle logging. |
-| `ALLOWED_ORIGINS` | Comma-separated CORS origins | Default: `http://localhost:5173` |
+| `ALLOWED_ORIGINS` | Extra CORS origins (comma-separated) | **Built-in defaults** (always present when unset/empty): `http://localhost:5173`, `http://127.0.0.1:5173`, `http://localhost:5174`, `http://127.0.0.1:5174`, `http://localhost:8000`, `http://127.0.0.1:8000`, `tauri://localhost`, `http://tauri.localhost`. Env adds LAN/Tailscale/etc. |
 | `MAX_SWARM_DEPTH` | Maximum agent recursion/spawn depth | Default: `5` |
 | `MAX_AGENTS` | Maximum agents in the registry | Default: `50` |
 | `MAX_CLUSTERS` | Maximum active clusters | Default: `10` |
@@ -74,12 +74,12 @@ To ensure your instance of Tadpole OS remains private and sovereign, you must su
 | `DEEPSEEK_API_KEY` | DeepSeek Provider Key | Optional ([DeepSeek Platform](https://platform.deepseek.com/)) |
 | `OLLAMA_HOST` | Local LLM Endpoint | Default: `http://localhost:11434` |
 | `DISCORD_WEBHOOK` | Discord notification URL | Required only for `notify_discord` tool |
-| `PRIVACY_MODE` | Block all cloud providers, enforce local-only | Default: `false` |
+| `PRIVACY_MODE` | Block cloud providers; local Ollama only | Default: `false`. When `true`: only reachable **local models ≤15B**; fallback model `phi3.5-safe:latest`. If none available → `NullProvider` (`PrivacyModeEnforced`) and missions complete with `is_degraded=true`. |
 | `AUTO_APPROVE_SAFE_SKILLS` | Auto-approve tools tagged as "safe" | Default: **`false`** (must opt in) |
 | `SME_SYNC_INTERVAL_MINS` | Ingestion Worker sync frequency (minutes) | Default: `30` |
 
 ### 3. Local-First (Zero Cost) Option
-If you prefer not to use external APIs, install **Ollama** and set `PRIVACY_MODE=true`. This forces the engine to use local models for all reasoning tasks.
+If you prefer not to use external APIs, install **Ollama** and set `PRIVACY_MODE=true`. This forces the engine to use **local** models only — with a hard **≤15B** size gate. Pull a small model (e.g. `phi3.5-safe:latest` or another ≤15B tag) before enabling privacy mode, or missions will run through `NullProvider` and mark `is_degraded`.
 
 > [!IMPORTANT]
 > Your keys are only stored in `.env`. When you save provider configurations in the UI, the engine automatically sanitizes them and only stores metadata (URLs, model names) in the repo-committed JSON files.
@@ -96,6 +96,9 @@ If you prefer not to use external APIs, install **Ollama** and set `PRIVACY_MODE
 | **chat/completions** | Uses **only the last `role=user` message**; forces `active_model_slot=default`. Multi-turn history and Neural Pivot slot switching are **not** honored here — use the UI Agent Card slots or `POST /v1/agents/{id}/tasks` with `activeModelSlot`. |
 | **Agent card URL** | Bundled `company-agent-card.json` uses `http://localhost:8000/...`. Before GitHub Pages publish, **rewrite `url`** to your Pages endpoint. |
 | **Node engines** | `package.json` requires Node **^22.22.2+** (Docker frontend-builder uses `node:22-slim`). |
+| **Seed roster** | `data/agents.json` is **gitignored** (`**/data/*.json`). Fresh DB seed falls back to a single agent: id `"1"`, name **`Alpha`**, role **`Agent of Nine`**. Agents `2`/`3` (Tadpole/Elon) are **not** auto-created — create them via UI or `POST /v1/agents` before Starter Swarm PUTs. |
+| **Fast-path / Conductor / SpecReview** | Short inquiry prompts (`what is…`, `who are you`, `get status`, …) hit **`is_fast_path`**: `max_turns=2` and **skip Conductor DAG**. Complex verbs (`implement`, `build`, `fix`, …) force full path. Mission Mode may enter **SpecReview** (UTS gate) before execution — approve the spec to continue. See TEST_MISSIONS / Agent_Runner_Workflow. |
+| **Live Voice token** | Live Voice WS uses `/v1/engine/live-voice`. UI reads orphan `localStorage.tadpole_token` (Settings keeps API key memory-only) — may auth as anonymous unless you set that key. |
 
 
 ---
@@ -439,7 +442,9 @@ The terminal bar is at the bottom of every page.
 5. Click **End Sync** once the verbal handshake is complete.
 
 > [!NOTE]
-> If the agent's `voice_engine` is set to `gemini-live`, the **Live Voice Hub** overlay will activate for a persistent, low-latency bidirectional audio session.
+> If the agent's `voice_engine` is set to `gemini-live`, the **Live Voice Hub** overlay will activate for a persistent, low-latency bidirectional audio session over `GET /v1/engine/live-voice`.
+>
+> **Auth caveat:** the hub reads `localStorage.tadpole_token` (not the Settings memory-only API key). Set `tadpole_token` to your `NEURAL_TOKEN` in DevTools for local testing, or expect anonymous/failed auth until the UI is fixed.
 
 ---
 
@@ -492,6 +497,39 @@ For advanced users and AI agents, the `execution/` directory contains standardiz
 ## 🐸 Starter Swarm Configuration (Quick-Deploy)
 
 This section provides a **ready-to-use 3-agent swarm** with concrete settings optimized for Groq's free tier. Follow this to have a working hierarchical swarm in under 5 minutes.
+
+> [!IMPORTANT]
+> **Seed truth (fresh install):** Without a tracked `data/agents.json`, boot seeds **only** agent `1` (`Alpha` / role Agent of Nine). The roster below assumes you **create** agents `2` and `3` first (Hierarchy UI → Add Agent, or the `POST /v1/agents` examples). PUTs to missing IDs return 404.
+
+### Create agents 2 & 3 (API)
+
+```bash
+curl -X POST http://localhost:8000/v1/agents \
+  -H "Authorization: Bearer YOUR_NEURAL_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": "2",
+    "name": "Tadpole",
+    "role": "COO",
+    "department": "Operations",
+    "description": "Alpha coordinator",
+    "budget_usd": 3.0,
+    "skills": ["web_search", "write_file", "read_file", "spawn_subagent"]
+  }'
+
+curl -X POST http://localhost:8000/v1/agents \
+  -H "Authorization: Bearer YOUR_NEURAL_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": "3",
+    "name": "Elon",
+    "role": "CTO",
+    "department": "Engineering",
+    "description": "Specialist executor",
+    "budget_usd": 1.0,
+    "skills": ["code_execute", "write_file", "read_file", "list_files"]
+  }'
+```
 
 ### Agent Roster
 

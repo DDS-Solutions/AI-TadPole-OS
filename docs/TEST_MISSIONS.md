@@ -9,7 +9,7 @@
 
 > **Status**: Stable  
 > **Version**: 1.3.0  
-> **Last Updated**: 2026-07-13  
+> **Last Updated**: 2026-10-01  
 > **Classification**: Sovereign  
 
 ---
@@ -35,6 +35,19 @@ While you can technically use any agent for these missions, their success depend
 - **Mission 9 (Self-Annealing)**: Executed via the CLI to trigger memory writes.
 
 ---
+
+
+---
+
+## ⚡ Fast-Path, SpecReview & Conductor (operator expectations)
+
+| Behavior | When it happens | What you observe |
+| :--- | :--- | :--- |
+| **Fast-path** (`is_fast_path_query`) | Short inquiries (`what is…`, `who are you`, `get status`, `read file`, …) **without** complex action verbs | `max_turns=2`; **Conductor DAG skipped**; quick Q&A — not a multi-agent mission |
+| **Full path** | Complex verbs (`implement`, `build`, `fix`, `refactor`, `deploy`, …) or long non-inquiry prompts | Normal turn budget; Conductor may plan a DAG when heuristics say multi-agent work is needed |
+| **SpecReview / UTS** | Mission Mode generates a Unified Technical Specification before execution | Status `spec_review`; **approve the spec** before the engine continues — Mission 3 should use non-fast-path wording |
+
+> Mission 1–style identity prompts often take the **fast path** (expected). Mission 3 must use an actionable research/recruit prompt in **Mission Mode**, not Chat, so recruitment + SpecReview/Conductor can run.
 
 ## 🏗️ Mission Registry
 
@@ -78,7 +91,8 @@ While you can technically use any agent for these missions, their success depend
 > [!IMPORTANT]
 > **Mission Mode Required**: This test **must** be run as a structured **Mission** (via Mission Control or the Dashboard). Do not run this as a simple Chat, as the swarm handoff and context breadcrumb propagation logic are specifically part of the Mission Execution runtime.
 
-*   **Prompt**: `"Research the Tadpole OS persistence layer and recruit a specialist to explain how SQLite is used in persistence.rs."`
+*   **Prompt**: `"Research the Tadpole OS persistence layer and recruit a specialist to explain how SQLite is used in persistence.rs."` (non-fast-path wording — contains research/recruit intent; avoid pure `what is` inquiries)
+*   **Expect**: May pause in **SpecReview** for UTS approval before swarm execution; Conductor may emit a DAG for multi-agent work.
 *   **Verification**:
     - [ ] Alpha agent calls `recruit_specialist`.
     - [ ] A new Specialist agent appears in the "Recruits" list.

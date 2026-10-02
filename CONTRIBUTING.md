@@ -23,6 +23,7 @@ All code contributions must respect our architecture:
 2. **Clone & Install**: `npm install` in the root, then ensure `cargo check` passes in `server-rs/`.
 3. **Environment**: Copy `.env.example` to `.env` and fill in required keys.
 4. **Run Locally**: `npm run engine` (backend on `:8000`) + `npm run dev` (frontend on `:5173`).
+5. **Toolchain pins**: Rust **stable** (`rust-toolchain.toml`), Node **^22.22.2+**, React **^19.3** / Vite **^8.3** / Tailwind **^4.3**.
 
 ---
 
@@ -101,11 +102,11 @@ When filing issues, include:
 
 ## Release Process
 
-1. Update version in `package.json` and `Cargo.toml`
+1. Bump version in **`version.json`**, `package.json`, and `server-rs/Cargo.toml` (keep them aligned; see `scripts/bump_version.cjs` / `scripts/doctor.mjs`).
 2. Run full test suite (`cargo test` + `npm run test`)
 3. Build production bundle (`npm run build`)
-4. Tag the release: `git tag -a v0.x.x -m "Release description"`
-5. Deploy via `./deploy.ps1` to the Swarm Bunker
+4. Tag the release: `git tag -a vX.Y.Z -m "Release description"`
+5. Publish via CI / GHCR (`ghcr.io/dds-solutions/ai-tadpole-os`) and follow `docs/RELEASE_PROCESS.md`. There is **no** maintained root `./deploy.ps1` — Linux desktop packaging uses `scripts/build-linux-light.ps1` + `scripts/deploy-linuxlite.ps1`.
 
 ---
 

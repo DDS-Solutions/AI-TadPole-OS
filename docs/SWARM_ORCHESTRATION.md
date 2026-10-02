@@ -186,6 +186,10 @@ Follow this template for maximum reliability:
 The Overlord (Entity 0) (AKA Human-in-the-loop) identifies the scope.
 > "Alpha, research the impact of Quantum Computing on the current finance market."
 
+
+> [!NOTE]
+> **`spawn_subagent` vs `recruit_specialist`:** Both tools exist in the registry. Use **`spawn_subagent`** for bounded fan-out / Alpha delegation of concrete agent IDs (starter kits emphasize this; ACL may require COO → Alpha via `spawn_subagent`). Use **`recruit_specialist`** when an Alpha/commander should pull a specialist by role/id into the mission with strategic context handoff (SWARM narrative / Mission 3). Leaf specialists are typically ACL-denied from both.
+
 ### Phase B: Parallelization (Depth 2)
 The Alpha recruits specialists using the standardized **`recruit_specialist`** MCP tool.
 > `recruit_specialist(agent_id: "researcher_a", message: "Analyze GPU stock trends")`

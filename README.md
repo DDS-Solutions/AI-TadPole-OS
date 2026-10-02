@@ -15,9 +15,9 @@
 
   **Version**: 1.1.463
 
-  [![Rust](https://img.shields.io/badge/Rust-1.85+-zinc?style=for-the-badge&logo=rust&logoColor=white)](https://www.rust-lang.org/)
-  [![React](https://img.shields.io/badge/React-19.0-zinc?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
-  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4.0-zinc?style=for-the-badge&logo=tailwindcss&logoColor=06B6D4)](https://tailwindcss.com/)
+  [![Rust](https://img.shields.io/badge/Rust-stable-zinc?style=for-the-badge&logo=rust&logoColor=white)](https://www.rust-lang.org/)
+  [![React](https://img.shields.io/badge/React-19.3-zinc?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
+  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4.3-zinc?style=for-the-badge&logo=tailwindcss&logoColor=06B6D4)](https://tailwindcss.com/)
   [![Download Installer](https://img.shields.io/badge/Download-Windows_Installer_(.exe)-06B6D4?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/DDS-Solutions/AI-TadPole-OS/releases/latest)
   [![CI Status](https://github.com/DDS-Solutions/AI-Tadpole-OS/actions/workflows/ci.yml/badge.svg)](https://github.com/DDS-Solutions/AI-Tadpole-OS/actions/workflows/ci.yml)
    [![License](https://img.shields.io/badge/License-MIT-zinc?style=for-the-badge&logo=rust&logoColor=white)](LICENSE)
@@ -184,7 +184,7 @@ Download the self-contained desktop release bundle with embedded Rust runtime, z
 For developers who wish to customize engine routes, develop agent skills, or run live AST symbol graph analysis:
 
 #### 1. Prerequisites
-- **Rust 1.85+** and **Node.js 22.22.2+ (22.x), 24.15.0+ (24.x), or 26+**
+- **Rust stable** (`rust-toolchain.toml`) and **Node.js 22.22.2+ (22.x), 24.15.0+ (24.x), or 26+**
 - **Ollama** (for local models) or an **API Key** (OpenAI, Anthropic, Google, Groq).
 
 #### 2. Installation
