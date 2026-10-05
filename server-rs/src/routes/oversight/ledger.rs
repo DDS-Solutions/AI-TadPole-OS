@@ -554,8 +554,6 @@ pub(crate) fn verify_oversight_signature_canonical(
         );
     }
 
-    // C-03: Check against pinned key from state (loaded once at startup).
-    // Dev/test direct calls can still fall back to env var for backward compatibility.
     let effective_pinned = pinned_key.map(str::to_string).or_else(|| {
         if require_pinned_key {
             None
@@ -564,17 +562,17 @@ pub(crate) fn verify_oversight_signature_canonical(
         }
     });
 
-    if let Some(ref pinned) = effective_pinned {
-        let pinned_bytes = hex::decode(pinned.trim())
-            .map_err(|e| format!("Invalid pinned public key hex: {}", e))?;
-        if pubkey_bytes != pinned_bytes {
-            return Err(
-                "Provided public key does not match the pinned OVERSIGHT_PUBLIC_KEY".to_string(),
-            );
-        }
-    } else {
-        tracing::warn!(
-            "⚠️ OVERSIGHT_PUBLIC_KEY is not configured in environment. Oversight signatures are verified but NOT pinned to an authorized operator!"
+    let Some(ref pinned) = effective_pinned else {
+        return Err(
+            "OVERSIGHT_PUBLIC_KEY is not configured. Signed oversight approvals are rejected without a pinned operator key.".to_string(),
+        );
+    };
+
+    let pinned_bytes =
+        hex::decode(pinned.trim()).map_err(|e| format!("Invalid pinned public key hex: {}", e))?;
+    if pubkey_bytes != pinned_bytes {
+        return Err(
+            "Provided public key does not match the pinned OVERSIGHT_PUBLIC_KEY".to_string(),
         );
     }
 

@@ -17,12 +17,13 @@
 
 ## Gaps Closed (2026-10-05 — Security Review Remediation)
 
-- **Execution Environment Isolation**: Enforced `cmd.env_clear()` with minimal host execution allowlists across shell tools (`system_tools.rs`) and skill runners (`skill.rs`). Prohibited caller-supplied `envs` dictionaries to eliminate `LD_PRELOAD`, `PATH`, and interpreter redirection escapes.
-- **Skill Command Argv Unification**: Unified tokenization in `skill.rs` using `parse_command_tokens` across both security gate validation and process spawning, closing parser divergence across quoted arguments.
-- **CBS Capability Keyring Hardening**: Replaced raw `panic!()` invocations in `build_keyring_from_env()` with structured logging and fallback generation. Added startup validation (`validate_capability_key_config`) to require a valid 32-byte hex `CAPABILITY_KEY_CURR` in production.
-- **Reliable Budget Persistence**: Directly awaited `budget_guard.record_usage()` in `finalize.rs` during both success and failure finalization, closing memory vs disk STASIS desynchronization.
-- **Deploy Path Pinning**: Pinned deploy scripts under `scripts/deploy-bunker-*.ps1` with path-containment verification, and added bunker deployment scripts and unit test coverage.
-- **WebSocket Bearer Subprotocol**: Enforced `bearer.<token>` WebSocket subprotocol in frontend and gateway middleware, and added positive and negative unit test coverage for the handshake.
+- **Centralized Subprocess Isolation (`create_isolated_command`)**: Consolidated process execution across all 8 call sites (`system_tools.rs`, `skill.rs`, `hooks.rs`, `plugin.rs`, `native.rs`, `skillspector.rs`, `deploy.rs`, `templates/source.rs`) onto a single spawn helper that enforces `cmd.env_clear()`, safe host environment variable allowlisting, and process group cleanup (`kill_on_drop`).
+- **Plugin Runner & Integrity Sandboxing**: Enforced `interpreters_trusted()` (`TADPOLE_TRUST_INTERPRETERS`) on plugin interpreters and `run_integrity_check`, bounded plugin child execution with a 60-second timeout, and eliminated ambient parent credential inheritance.
+- **Oversight Public Key Pinning**: Refused signed oversight approvals in `verify_oversight_signature_canonical` when `OVERSIGHT_PUBLIC_KEY` is not pinned, preventing self-approved decisions. Added fail-fast startup validation requiring a valid 32-byte hex `OVERSIGHT_PUBLIC_KEY` in production.
+- **Template Clone Target URL Binding**: Pinned `git clone` to the pre-validated `validated_target.url` rather than caller-supplied raw strings, and isolated git subprocess environments.
+- **Fail-Closed NullProvider**: Replaced silent degraded completions and zeroed embeddings with `AppError::ServiceUnavailable` outside explicit test harnesses, preventing corrupted mission rankings.
+- **Node Discovery Contract Alignment**: Replaced stubbed discovery scans that returned false positive success with explicit `AppError::NotImplemented` responses.
+- **Audio Synthesis Contract Unification**: Aligned `/v1/engine/speak` responses to consistently stream binary audio bytes, rejecting browser fallback or unsupported configurations with appropriate HTTP errors.
 
 ---
 

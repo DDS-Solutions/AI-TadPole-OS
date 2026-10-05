@@ -253,19 +253,12 @@ pub async fn scan_path_with_policy(
         )));
     }
 
-    let mut cmd = tokio::process::Command::new(&policy.python_bin);
+    let mut cmd = crate::utils::security::create_isolated_command(&policy.python_bin);
     cmd.args(["-m", "skillspector", "scan"])
         .arg(path)
         .args(["--no-llm", "--format", "json"])
         .stdout(std::process::Stdio::piped())
         .stderr(std::process::Stdio::piped());
-
-    #[cfg(windows)]
-    {
-        #[allow(unused_imports)]
-        use std::os::windows::process::CommandExt;
-        cmd.creation_flags(0x08000000); // CREATE_NO_WINDOW
-    }
 
     let mut child = match cmd.spawn() {
         Ok(c) => c,

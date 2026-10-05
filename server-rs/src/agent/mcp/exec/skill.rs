@@ -39,36 +39,12 @@ pub async fn execute_legacy_skill(
         .ok_or_else(|| AppError::BadRequest("Empty execution command".to_string()))?;
     let args = &tokens[1..];
 
-    let mut cmd = Command::new(program);
+    let mut cmd = crate::utils::security::create_isolated_command(program);
     cmd.args(args);
     cmd.current_dir(workspace_root);
     cmd.stdin(std::process::Stdio::piped());
     cmd.stdout(std::process::Stdio::piped());
     cmd.stderr(std::process::Stdio::piped());
-
-    // Kill the process immediately if the future/task is dropped
-    cmd.kill_on_drop(true);
-
-    // Isolate execution environment: clear parent process environment and pass explicit allowlist
-    cmd.env_clear();
-    for key in [
-        "PATH",
-        "SYSTEMROOT",
-        "WINDIR",
-        "COMSPEC",
-        "PATHEXT",
-        "TEMP",
-        "TMP",
-        "HOME",
-        "USER",
-        "LOGNAME",
-        "SHELL",
-        "TMPDIR",
-    ] {
-        if let Ok(val) = std::env::var(key) {
-            cmd.env(key, val);
-        }
-    }
 
     // Set controlled execution environment
     cmd.env("TADPOLE_SKILL_NAME", &skill.name);

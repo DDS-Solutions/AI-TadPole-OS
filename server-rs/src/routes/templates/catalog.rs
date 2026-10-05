@@ -74,12 +74,12 @@ pub fn get_offline_catalog() -> Vec<TemplateCatalogEntry> {
     vec![TemplateCatalogEntry {
         id: "marketing-swarm".to_string(),
         name: "Marketing Swarm (Offline Fallback)".to_string(),
-        description: "Offline fallback for the marketing automation swarm. Run locally."
+        description: "Offline fallback for the marketing automation swarm. Configured for local model runtime."
             .to_string(),
         repository_url: "https://github.com/DDS-Solutions/AI-Tadpole-OS-Industry-Templates.git"
             .to_string(),
         path: "templates/marketing".to_string(),
-        required_models: vec!["gemma4:31b-cloud".to_string()],
+        required_models: vec!["gemma4:local".to_string(), "ollama".to_string()],
         required_skills: vec!["web_search".to_string(), "write_file".to_string()],
     }]
 }

@@ -48,8 +48,7 @@ pub async fn clone_template_repository(
         validated_target.host, validated_target.port, validated_target.ip
     );
 
-    let mut git_cmd = tokio::process::Command::new("git");
-    git_cmd.kill_on_drop(true);
+    let mut git_cmd = crate::utils::security::create_isolated_command("git");
     if cfg!(target_os = "windows") {
         git_cmd.arg("-c").arg("http.sslBackend=schannel");
     }
@@ -65,7 +64,10 @@ pub async fn clone_template_repository(
         git_cmd.arg("--branch").arg(safe_ref);
     }
 
-    let output_fut = git_cmd.arg(repository_url).arg(target_dir).output();
+    let output_fut = git_cmd
+        .arg(validated_target.url.as_str())
+        .arg(target_dir)
+        .output();
 
     let output = match tokio::time::timeout(GIT_CLONE_TIMEOUT, output_fut).await {
         Ok(Ok(o)) => o,
@@ -97,9 +99,8 @@ pub async fn clone_template_repository(
 }
 
 pub async fn cloned_revision(repository_root: &Path) -> Option<String> {
-    let mut command = tokio::process::Command::new("git");
+    let mut command = crate::utils::security::create_isolated_command("git");
     command
-        .kill_on_drop(true)
         .arg("-C")
         .arg(repository_root)
         .arg("rev-parse")

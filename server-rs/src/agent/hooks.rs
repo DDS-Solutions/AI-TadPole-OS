@@ -149,7 +149,7 @@ impl HooksManager {
 
         let mut cmd = match ext {
             "ps1" => {
-                let mut c = Command::new("powershell");
+                let mut c = crate::utils::security::create_isolated_command("powershell");
                 c.args([
                     "-NoProfile",
                     "-NonInteractive",
@@ -161,25 +161,24 @@ impl HooksManager {
                 c
             }
             "bat" | "cmd" => {
-                let mut c = Command::new("cmd");
+                let mut c = crate::utils::security::create_isolated_command("cmd");
                 c.arg("/C").arg(path);
                 c
             }
             "py" => {
-                let mut c = Command::new("python3");
+                let mut c = crate::utils::security::create_isolated_command("python3");
                 c.arg(path);
                 c
             }
             "sh" => {
-                let mut c = Command::new("/bin/sh");
+                let mut c = crate::utils::security::create_isolated_command("/bin/sh");
                 c.arg(path);
                 c
             }
-            _ => Command::new(path),
+            _ => crate::utils::security::create_isolated_command(path.to_str().unwrap_or("")),
         };
 
         // H1 & H8: Environment isolation - clear parent process environment and pass explicit allowlist
-        cmd.env_clear();
         cmd.env("AGENT_ID", &ctx.agent_id);
         cmd.env("SKILL", &ctx.skill);
         if let Some(mission_id) = &ctx.mission_id {

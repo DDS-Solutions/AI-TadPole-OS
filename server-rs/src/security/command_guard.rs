@@ -59,11 +59,46 @@ pub fn parse_command_tokens(command: &str) -> Vec<String> {
     tokens
 }
 
-fn interpreters_trusted() -> bool {
+pub fn interpreters_trusted() -> bool {
     matches!(
         std::env::var("TADPOLE_TRUST_INTERPRETERS").ok().as_deref(),
         Some("1") | Some("true") | Some("TRUE")
     )
+}
+
+/// Standard safe host execution environment variables permitted across isolated child processes.
+pub const SAFE_HOST_ENV_VARS: &[&str] = &[
+    "PATH",
+    "SYSTEMROOT",
+    "WINDIR",
+    "COMSPEC",
+    "PATHEXT",
+    "TEMP",
+    "TMP",
+    "HOME",
+    "USER",
+    "LOGNAME",
+    "SHELL",
+    "TMPDIR",
+];
+
+/// Creates an isolated Tokio Command with ambient parent environment cleared and safe variables injected.
+pub fn create_isolated_command(program: &str) -> tokio::process::Command {
+    let mut cmd = tokio::process::Command::new(program);
+    cmd.kill_on_drop(true);
+    cmd.env_clear();
+    for key in SAFE_HOST_ENV_VARS {
+        if let Ok(val) = std::env::var(key) {
+            cmd.env(key, val);
+        }
+    }
+    #[cfg(windows)]
+    {
+        #[allow(unused_imports)]
+        use std::os::windows::process::CommandExt;
+        cmd.creation_flags(0x08000000); // CREATE_NO_WINDOW
+    }
+    cmd
 }
 
 /// Validates a shell command against a ZERO-TRUST whitelist, preventing separators (S-001) and subprocess RCEs.

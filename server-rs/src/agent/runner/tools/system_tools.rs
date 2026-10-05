@@ -643,32 +643,12 @@ impl AgentRunner {
                 .unwrap_or_else(|| ctx.workspace_root.clone())
         });
 
-        let mut cmd = tokio::process::Command::new(&executable);
+        let mut cmd = crate::utils::security::create_isolated_command(&executable);
         cmd.args(&args)
             .current_dir(&run_dir)
             .stdout(std::process::Stdio::piped())
             .stderr(std::process::Stdio::piped());
 
-        // Environment isolation: clear ambient host env and inject minimal safe execution allowlist
-        cmd.env_clear();
-        for key in [
-            "PATH",
-            "SYSTEMROOT",
-            "WINDIR",
-            "COMSPEC",
-            "PATHEXT",
-            "TEMP",
-            "TMP",
-            "HOME",
-            "USER",
-            "LOGNAME",
-            "SHELL",
-            "TMPDIR",
-        ] {
-            if let Ok(val) = std::env::var(key) {
-                cmd.env(key, val);
-            }
-        }
         cmd.env(
             "TADPOLE_WORKSPACE",
             ctx.workspace_root.to_string_lossy().as_ref(),

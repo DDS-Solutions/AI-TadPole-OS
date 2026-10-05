@@ -16,7 +16,10 @@ use std::net::IpAddr;
 use std::path::{Path, PathBuf};
 use unicode_normalization::UnicodeNormalization;
 
-pub use crate::security::command_guard::{parse_command_tokens, validate_shell_command};
+pub use crate::security::command_guard::{
+    create_isolated_command, interpreters_trusted, parse_command_tokens, validate_shell_command,
+    SAFE_HOST_ENV_VARS,
+};
 pub use crate::security::path_guard::{validate_path, SafePath};
 pub use crate::security::ssrf_guard::{validate_public_http_url, ValidatedUrl};
 
@@ -282,6 +285,14 @@ mod tests {
 
         // git transport RCE (S-004)
         assert!(validate_shell_command("git clone ext::sh -c evil").is_err());
+    }
+
+    #[test]
+    fn test_create_isolated_command_environment() {
+        let _cmd = create_isolated_command("git");
+        assert!(!SAFE_HOST_ENV_VARS.is_empty());
+        assert!(SAFE_HOST_ENV_VARS.contains(&"PATH"));
+        assert!(SAFE_HOST_ENV_VARS.contains(&"TEMP") || SAFE_HOST_ENV_VARS.contains(&"TMP"));
     }
 
     #[test]
