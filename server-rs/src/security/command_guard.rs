@@ -59,7 +59,6 @@ pub fn parse_command_tokens(command: &str) -> Vec<String> {
     tokens
 }
 
-
 fn interpreters_trusted() -> bool {
     matches!(
         std::env::var("TADPOLE_TRUST_INTERPRETERS").ok().as_deref(),

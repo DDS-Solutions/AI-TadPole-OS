@@ -347,7 +347,6 @@ fn build_core_tool_manifest() -> Vec<ToolDefinitionData> {
                     "executable": { "type": "string", "description": "Binary file to execute directly (e.g. 'cargo', 'git', 'npm', 'python')" },
                     "args": { "type": "array", "items": { "type": "string" }, "description": "List of command arguments passed directly to binary" },
                     "cwd": { "type": "string", "description": "Optional working directory override strictly relative to workspace root" },
-                    "envs": { "type": "object", "additionalProperties": { "type": "string" }, "description": "Optional key-value map of environment variables" },
                     "command": { "type": "string", "description": "Legacy command string (must not contain compound operators like &&, ||, ;, |)" }
                 },
                 "required": ["executable"]

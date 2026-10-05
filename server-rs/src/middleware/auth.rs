@@ -431,6 +431,51 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_auth_websocket_authorized_bearer_subprotocol() {
+        let state = Arc::new(AppState::new_minimal_mock().await);
+        let valid_token = state.security.deploy_token.clone();
+        let app = Router::new()
+            .route("/v1/engine/ws", get(dummy_handler))
+            .layer(from_fn_with_state(state, validate_token));
+
+        // Combined bearer subprotocol with pulse subprotocol -> accepted with 200 OK
+        let req = Request::builder()
+            .uri("/v1/engine/ws")
+            .header(header::UPGRADE, "websocket")
+            .header(
+                "sec-websocket-protocol",
+                format!("bearer.{}, tadpole-pulse-v1", valid_token),
+            )
+            .body(Body::empty())
+            .unwrap();
+
+        let res = app.clone().oneshot(req).await.unwrap();
+        assert_eq!(
+            res.status(),
+            StatusCode::OK,
+            "Valid bearer subprotocol must be accepted"
+        );
+
+        // Invalid bearer token -> rejected with 401 Unauthorized
+        let req_invalid = Request::builder()
+            .uri("/v1/engine/ws")
+            .header(header::UPGRADE, "websocket")
+            .header(
+                "sec-websocket-protocol",
+                "bearer.definitely_invalid_token_12345, tadpole-pulse-v1",
+            )
+            .body(Body::empty())
+            .unwrap();
+
+        let res_invalid = app.oneshot(req_invalid).await.unwrap();
+        assert_eq!(
+            res_invalid.status(),
+            StatusCode::UNAUTHORIZED,
+            "Invalid bearer subprotocol must be rejected"
+        );
+    }
+
+    #[tokio::test]
     async fn test_require_admin_role_separation() {
         let state = Arc::new(AppState::new_minimal_mock().await);
         let app = Router::new()

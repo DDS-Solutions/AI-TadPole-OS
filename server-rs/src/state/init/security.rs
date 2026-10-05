@@ -58,6 +58,15 @@ pub fn load_security_tokens() -> Result<SecurityTokens, AppError> {
         ));
     }
 
+    if let Err(err_msg) = crate::agent::runner::tools::capability::validate_capability_key_config()
+    {
+        if is_production {
+            return Err(AppError::Unauthorized(format!("🚨 FATAL: {}", err_msg)));
+        } else {
+            tracing::warn!("⚠️ [crypto] {}", err_msg);
+        }
+    }
+
     Ok(SecurityTokens {
         deploy_token,
         admin_token,

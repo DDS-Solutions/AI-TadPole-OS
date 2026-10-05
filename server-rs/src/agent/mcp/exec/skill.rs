@@ -6,7 +6,7 @@
 //! ### ⚠️ Invariants & Non-Negotiables
 //! - `[Structural]` Child process kill_on_drop(true) to prevent orphaned zombie processes.
 //! - `[Structural]` Strict output stream limits (8 MiB stdout, 512 KiB stderr) preventing heap exhaustion.
-//! - `[Structural]` Sensitive host environment scrubbing (tokens, keys, secrets, TADPOLE_*).
+//! - `[Structural]` Isolated execution environment (env_clear with safe allowlist).
 //!
 //! ### 🔍 Debugging & Observability
 //! - **Local Errors**: `AppError::InfrastructureError`, `AppError::Forbidden`
@@ -33,14 +33,14 @@ pub async fn execute_legacy_skill(
     crate::utils::security::validate_shell_command(&skill.execution_command)
         .map_err(|e| AppError::Forbidden(format!("Skill security violation: {}", e)))?;
 
-    let mut parts = skill.execution_command.split_whitespace();
-    let program = parts
-        .next()
+    let tokens = crate::utils::security::parse_command_tokens(&skill.execution_command);
+    let program = tokens
+        .first()
         .ok_or_else(|| AppError::BadRequest("Empty execution command".to_string()))?;
-    let args: Vec<&str> = parts.collect();
+    let args = &tokens[1..];
 
     let mut cmd = Command::new(program);
-    cmd.args(&args);
+    cmd.args(args);
     cmd.current_dir(workspace_root);
     cmd.stdin(std::process::Stdio::piped());
     cmd.stdout(std::process::Stdio::piped());
@@ -49,16 +49,24 @@ pub async fn execute_legacy_skill(
     // Kill the process immediately if the future/task is dropped
     cmd.kill_on_drop(true);
 
-    // Scrub sensitive host environment variables to prevent accidental credential leakage
-    for (k, _) in std::env::vars() {
-        let upper = k.to_uppercase();
-        if upper.starts_with("TADPOLE_")
-            || upper.contains("TOKEN")
-            || upper.contains("KEY")
-            || upper.contains("SECRET")
-            || upper == "ADMIN_TOKEN"
-        {
-            cmd.env_remove(&k);
+    // Isolate execution environment: clear parent process environment and pass explicit allowlist
+    cmd.env_clear();
+    for key in [
+        "PATH",
+        "SYSTEMROOT",
+        "WINDIR",
+        "COMSPEC",
+        "PATHEXT",
+        "TEMP",
+        "TMP",
+        "HOME",
+        "USER",
+        "LOGNAME",
+        "SHELL",
+        "TMPDIR",
+    ] {
+        if let Ok(val) = std::env::var(key) {
+            cmd.env(key, val);
         }
     }
 

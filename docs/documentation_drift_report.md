@@ -9,9 +9,20 @@
 
 ## Summary
 **Audited**: application source, Rust routes/error metadata, governance scripts, and the complete `docs/` publication set
-**Date**: 2026-08-16
+**Date**: 2026-10-05
 **Baseline**: `IDENTITY.md v1.2.1`  
 **Tool**: symbol graph blast guards + `parity_guard.py` + `verify_ai_context.py` + observability sync + VitePress build
+
+---
+
+## Gaps Closed (2026-10-05 — Security Review Remediation)
+
+- **Execution Environment Isolation**: Enforced `cmd.env_clear()` with minimal host execution allowlists across shell tools (`system_tools.rs`) and skill runners (`skill.rs`). Prohibited caller-supplied `envs` dictionaries to eliminate `LD_PRELOAD`, `PATH`, and interpreter redirection escapes.
+- **Skill Command Argv Unification**: Unified tokenization in `skill.rs` using `parse_command_tokens` across both security gate validation and process spawning, closing parser divergence across quoted arguments.
+- **CBS Capability Keyring Hardening**: Replaced raw `panic!()` invocations in `build_keyring_from_env()` with structured logging and fallback generation. Added startup validation (`validate_capability_key_config`) to require a valid 32-byte hex `CAPABILITY_KEY_CURR` in production.
+- **Reliable Budget Persistence**: Directly awaited `budget_guard.record_usage()` in `finalize.rs` during both success and failure finalization, closing memory vs disk STASIS desynchronization.
+- **Deploy Path Pinning**: Pinned deploy scripts under `scripts/deploy-bunker-*.ps1` with path-containment verification, and added bunker deployment scripts and unit test coverage.
+- **WebSocket Bearer Subprotocol**: Enforced `bearer.<token>` WebSocket subprotocol in frontend and gateway middleware, and added positive and negative unit test coverage for the handshake.
 
 ---
 

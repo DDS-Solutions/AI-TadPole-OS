@@ -459,12 +459,19 @@ impl AgentRunner {
         fc: &crate::agent::types::ToolCall,
         output_text: &mut String,
     ) -> Result<(), AppError> {
-        let (executable, args, target_cwd, envs) = if let Some(exe) = fc
+        let (executable, args, target_cwd) = if let Some(exe) = fc
             .args
             .get("executable")
             .and_then(|v| v.as_str())
             .filter(|s| !s.trim().is_empty())
         {
+            if fc.args.get("envs").is_some() {
+                *output_text =
+                    "(SECURITY BLOCKED: Caller-supplied environment variables ('envs') are prohibited)"
+                        .to_string();
+                return Ok(());
+            }
+
             let args_list: Vec<String> = fc
                 .args
                 .get("args")
@@ -482,14 +489,7 @@ impl AgentRunner {
                 .and_then(|v| v.as_str())
                 .map(std::path::PathBuf::from);
 
-            let env_map: Option<std::collections::HashMap<String, String>> =
-                fc.args.get("envs").and_then(|v| v.as_object()).map(|obj| {
-                    obj.iter()
-                        .filter_map(|(k, v)| v.as_str().map(|s| (k.clone(), s.to_string())))
-                        .collect()
-                });
-
-            (exe.to_string(), args_list, cwd_path, env_map)
+            (exe.to_string(), args_list, cwd_path)
         } else {
             let command_str = fc
                 .args
@@ -502,6 +502,13 @@ impl AgentRunner {
                 return Ok(());
             }
 
+            if fc.args.get("envs").is_some() {
+                *output_text =
+                    "(SECURITY BLOCKED: Caller-supplied environment variables ('envs') are prohibited)"
+                        .to_string();
+                return Ok(());
+            }
+
             // In-memory tokenization fallback for command strings
             let tokens = crate::utils::security::parse_command_tokens(command_str);
             if tokens.is_empty() {
@@ -511,7 +518,7 @@ impl AgentRunner {
 
             let exe = tokens[0].clone();
             let args_list = tokens[1..].to_vec();
-            (exe, args_list, None, None)
+            (exe, args_list, None)
         };
 
         let full_command_display = if args.is_empty() {
@@ -642,9 +649,31 @@ impl AgentRunner {
             .stdout(std::process::Stdio::piped())
             .stderr(std::process::Stdio::piped());
 
-        if let Some(ref env_map) = envs {
-            cmd.envs(env_map);
+        // Environment isolation: clear ambient host env and inject minimal safe execution allowlist
+        cmd.env_clear();
+        for key in [
+            "PATH",
+            "SYSTEMROOT",
+            "WINDIR",
+            "COMSPEC",
+            "PATHEXT",
+            "TEMP",
+            "TMP",
+            "HOME",
+            "USER",
+            "LOGNAME",
+            "SHELL",
+            "TMPDIR",
+        ] {
+            if let Ok(val) = std::env::var(key) {
+                cmd.env(key, val);
+            }
         }
+        cmd.env(
+            "TADPOLE_WORKSPACE",
+            ctx.workspace_root.to_string_lossy().as_ref(),
+        );
+        cmd.env("TADPOLE_AGENT_ID", &ctx.agent_id);
 
         let child = cmd.spawn();
 

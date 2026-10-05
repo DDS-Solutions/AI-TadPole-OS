@@ -149,17 +149,13 @@ mod tests {
         assert!(validate_public_http_url("http://10.0.0.1/status")
             .await
             .is_err());
-        assert!(
-            validate_public_http_url("http://10.0.0.1/latest/meta-data")
-                .await
-                .is_err()
-        );
+        assert!(validate_public_http_url("http://10.0.0.1/latest/meta-data")
+            .await
+            .is_err());
         assert!(validate_public_http_url("file:///etc/passwd")
             .await
             .is_err());
-        assert!(validate_public_http_url("https://10.0.0.1/")
-            .await
-            .is_ok());
+        assert!(validate_public_http_url("https://10.0.0.1/").await.is_ok());
     }
 
     #[test]

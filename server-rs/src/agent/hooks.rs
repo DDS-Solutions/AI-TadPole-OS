@@ -31,7 +31,6 @@ pub struct HooksManager {
     hooks_dir: PathBuf,
 }
 
-
 fn hook_shells_trusted() -> bool {
     matches!(
         std::env::var("TADPOLE_TRUST_HOOK_SHELLS").ok().as_deref(),

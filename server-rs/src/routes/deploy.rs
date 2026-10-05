@@ -22,16 +22,16 @@ use serde_json::json;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
-
 fn pinned_deploy_script(script_name: &str) -> Result<std::path::PathBuf, String> {
     let scripts_dir = std::path::Path::new("scripts");
     let canon_dir = scripts_dir.canonicalize().map_err(|_| {
-        "Deployment scripts directory is missing. Expected ./scripts/deploy-bunker-N.ps1".to_string()
+        "Deployment scripts directory is missing. Expected ./scripts/deploy-bunker-N.ps1"
+            .to_string()
     })?;
     let candidate = scripts_dir.join(script_name);
-    let canon = candidate.canonicalize().map_err(|_| {
-        format!("Deployment script not found: scripts/{script_name}")
-    })?;
+    let canon = candidate
+        .canonicalize()
+        .map_err(|_| format!("Deployment script not found: scripts/{script_name}"))?;
     if !canon.starts_with(&canon_dir) {
         return Err("Deployment script escaped the scripts directory".to_string());
     }
@@ -293,5 +293,23 @@ mod tests {
 
         let second_guard = DEPLOY_LOCK.try_lock();
         assert!(second_guard.is_err());
+    }
+
+    #[test]
+    fn test_pinned_deploy_script_resolution() {
+        if std::path::Path::new("scripts").exists() {
+            let res = pinned_deploy_script("deploy-bunker-1.ps1");
+            assert!(
+                res.is_ok(),
+                "Expected deploy-bunker-1.ps1 to resolve: {:?}",
+                res
+            );
+
+            let res_escape = pinned_deploy_script("../Cargo.toml");
+            assert!(res_escape.is_err(), "Expected escaping scripts dir to fail");
+
+            let res_nonexistent = pinned_deploy_script("nonexistent_script_xyz.ps1");
+            assert!(res_nonexistent.is_err(), "Expected missing script to fail");
+        }
     }
 }
