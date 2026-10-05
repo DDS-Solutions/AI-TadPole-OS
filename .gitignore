@@ -145,3 +145,8 @@ startup_status_report.md
 scratch/
 external/
 
+
+# Generated sidecars and vendored compiler binaries (build in CI; do not commit)
+src-tauri/bin/*.exe
+server-rs/.protoc/
+server-rs/vendor/protoc/

@@ -233,10 +233,12 @@ mod tests {
 
     #[test]
     fn test_validate_shell_zero_trust() {
-        // Authorized
+        // Authorized inspection commands. Interpreters are default-deny.
         assert!(validate_shell_command("ls -la").is_ok());
-        assert!(validate_shell_command("cargo build --release").is_ok());
         assert!(validate_shell_command("npm test").is_ok());
+        assert!(validate_shell_command("cargo build --release").is_err());
+        assert!(validate_shell_command("python script.py").is_err());
+        assert!(validate_shell_command("node script.js").is_err());
 
         // Unauthorized Command
         assert!(validate_shell_command("rm -rf .").is_err());

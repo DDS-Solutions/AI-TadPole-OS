@@ -31,6 +31,14 @@ pub struct HooksManager {
     hooks_dir: PathBuf,
 }
 
+
+fn hook_shells_trusted() -> bool {
+    matches!(
+        std::env::var("TADPOLE_TRUST_HOOK_SHELLS").ok().as_deref(),
+        Some("1") | Some("true") | Some("TRUE")
+    )
+}
+
 impl HooksManager {
     pub fn new(data_dir: &Path) -> Self {
         Self {
@@ -133,6 +141,12 @@ impl HooksManager {
         params: &serde_json::Value,
     ) -> Result<Command, AppError> {
         let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("");
+        let shell_hook = matches!(ext, "ps1" | "bat" | "cmd" | "py" | "sh");
+        if shell_hook && !hook_shells_trusted() {
+            return Err(AppError::Forbidden(
+                "Shell hook interpreters are disabled. Set TADPOLE_TRUST_HOOK_SHELLS=1 only on a trusted operator workstation. This flag is not a sandbox.".to_string(),
+            ));
+        }
 
         let mut cmd = match ext {
             "ps1" => {
@@ -141,7 +155,7 @@ impl HooksManager {
                     "-NoProfile",
                     "-NonInteractive",
                     "-ExecutionPolicy",
-                    "Bypass",
+                    "RemoteSigned",
                     "-File",
                 ])
                 .arg(path);

@@ -7,7 +7,7 @@
 //! - `[Structural]` Type-safe state handling and bounded execution without unhandled panics.
 //! - `[Structural]` Security: role-based distinction (`AuthenticatedRole::Admin` vs `AuthenticatedRole::Deploy`) enforced via request extensions with strict 403 Forbidden separation.
 //! - `[Structural]` Constant-time credential comparison avoiding timing side-channel leakage.
-//! - `[Structural]` Unauthenticated WebSocket upgrade pass-through restricted to explicit post-connect allowlist.
+//! - `[Structural]` WebSocket upgrades require a `bearer.<token>` subprotocol. Post-connect frames are not a substitute for the upgrade check.
 //!
 //! ### 🔍 Debugging & Observability
 //! - **Local Errors**: StatusCode::UNAUTHORIZED, StatusCode::FORBIDDEN
@@ -24,10 +24,6 @@ use axum::{
 use std::sync::Arc;
 
 use subtle::ConstantTimeEq;
-
-/// Single source of truth for WebSocket routes permitted to complete the handshake
-/// prior to in-band post-connect authentication.
-pub const POST_CONNECT_AUTH_WS_PATHS: &[&str] = &["/v1/engine/ws", "/engine/ws"];
 
 /// Constant-time string comparison to prevent timing-based side-channel attacks.
 ///
@@ -199,23 +195,14 @@ pub async fn validate_token(
                 return Ok(res);
             }
         } else {
-            // Defend WebSocket surface: only explicit post-connect routes may pass without subprotocol auth.
             let path = req.uri().path();
-            let is_allowed_post_connect = POST_CONNECT_AUTH_WS_PATHS.contains(&path);
-            if is_allowed_post_connect {
-                // Upgrade request doesn't request bearer.<token> (e.g. it requests 'tadpole-pulse-v1').
-                // We allow the upgrade to proceed, but since PreAuthenticated is NOT in extensions,
-                // the WebSocket handler will require post-connect authentication.
-                return Ok(next.run(req).await);
-            } else {
-                tracing::warn!(
-                    "🚫 Unauthorized WebSocket upgrade: path '{}' requires bearer subprotocol auth",
-                    path
-                );
-                let mut res = StatusCode::UNAUTHORIZED.into_response();
-                res.extensions_mut().insert(AuthFailure);
-                return Ok(res);
-            }
+            tracing::warn!(
+                "🚫 Unauthorized WebSocket upgrade: path '{}' requires bearer subprotocol auth",
+                path
+            );
+            let mut res = StatusCode::UNAUTHORIZED.into_response();
+            res.extensions_mut().insert(AuthFailure);
+            return Ok(res);
         }
     } else {
         tracing::warn!("🚫 Missing or malformed Authorization header");
@@ -398,17 +385,17 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_auth_websocket_protocol_post_connect_allowed_paths() {
+    async fn test_auth_websocket_protocol_pulse_only_rejected() {
         let state = Arc::new(AppState::new_minimal_mock().await);
         let app = Router::new()
             .route("/v1/engine/ws", get(dummy_handler))
             .route("/engine/ws", get(dummy_handler))
             .layer(from_fn_with_state(state, validate_token));
 
-        // Allowed path (/v1/engine/ws) without bearer subprotocol -> allowed to proceed for post-connect auth
-        for path in POST_CONNECT_AUTH_WS_PATHS {
+        // Pulse-only upgrade is no longer sufficient. The bearer subprotocol is required.
+        for path in ["/v1/engine/ws", "/engine/ws"] {
             let req = Request::builder()
-                .uri(*path)
+                .uri(path)
                 .header(header::UPGRADE, "websocket")
                 .header("sec-websocket-protocol", "tadpole-pulse-v1")
                 .body(Body::empty())
@@ -417,8 +404,8 @@ mod tests {
             let res = app.clone().oneshot(req).await.unwrap();
             assert_eq!(
                 res.status(),
-                StatusCode::OK,
-                "Path {} should be allowed for post-connect auth",
+                StatusCode::UNAUTHORIZED,
+                "Path {} must reject a pulse-only upgrade",
                 path
             );
         }

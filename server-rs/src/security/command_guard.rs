@@ -59,6 +59,14 @@ pub fn parse_command_tokens(command: &str) -> Vec<String> {
     tokens
 }
 
+
+fn interpreters_trusted() -> bool {
+    matches!(
+        std::env::var("TADPOLE_TRUST_INTERPRETERS").ok().as_deref(),
+        Some("1") | Some("true") | Some("TRUE")
+    )
+}
+
 /// Validates a shell command against a ZERO-TRUST whitelist, preventing separators (S-001) and subprocess RCEs.
 pub fn validate_shell_command(command: &str) -> Result<(), AppError> {
     let lower = command.to_lowercase();
@@ -148,11 +156,15 @@ pub fn validate_shell_command(command: &str) -> Result<(), AppError> {
         ));
     }
 
-    // 7. Whitelist of Allowed Base Commands
+    // 7. Whitelist of Allowed Base Commands.
+    // Interpreters stay listed so an explicit operator opt-in can still use the
+    // option filters below, but they are denied unless TADPOLE_TRUST_INTERPRETERS=1.
+    // This is a filter, not an OS sandbox.
     let allowed_commands = [
         "ls", "cd", "pwd", "cat", "echo", "grep", "find", "cargo", "npm", "pnpm", "git", "python",
         "node", "rustc", "mkdir", "cp", "mv", "touch", "test",
     ];
+    const INTERPRETER_COMMANDS: &[&str] = &["python", "node", "cargo"];
 
     let tokens = parse_command_tokens(command);
     let first_word = match tokens.first() {
@@ -169,6 +181,12 @@ pub fn validate_shell_command(command: &str) -> Result<(), AppError> {
             "Command '{}' is not in the authorized whitelist",
             first_word
         )));
+    }
+
+    if INTERPRETER_COMMANDS.contains(&first_word.as_str()) && !interpreters_trusted() {
+        return Err(AppError::Forbidden(
+            "Interpreter commands (python, node, cargo) are denied by default. Set TADPOLE_TRUST_INTERPRETERS=1 only on a trusted operator workstation. This flag is not a sandbox.".to_string(),
+        ));
     }
 
     // 8. Command-specific option restrictions to prevent sub-shell escapes (S-002, S-003, S-004)

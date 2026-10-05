@@ -14,6 +14,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+- Restricted Gitleaks allowlists to test fixtures and stopped suppressing private-key and `sk-` patterns.
+- Denied `python`, `node`, and `cargo` agent commands unless `TADPOLE_TRUST_INTERPRETERS=1` is set.
+- Denied shell hook interpreters unless `TADPOLE_TRUST_HOOK_SHELLS=1` is set, and removed `ExecutionPolicy Bypass`.
+- Pinned bunker deploy scripts under `scripts/` and required the admin token when configured.
+- Required the WebSocket `bearer.<token>` subprotocol before the upgrade completes.
+- Removed committed engine and `protoc` binaries from the tree. History rewrite is a follow-up.
+
+
 ## [1.1.463] - 2026-09-14
 
 ### Security
