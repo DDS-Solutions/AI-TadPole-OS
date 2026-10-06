@@ -101,17 +101,16 @@ impl PermissionGate {
                         arg_summary
                     );
 
-                    let decision =
-                        prompter
-                            .prompt_agent(Some(scope.agent_id), tool_name, &prompt_msg)
-                            .await
-                            .map_err(|e| {
-                                AppError::Forbidden(format!(
-                                    "Prompt failed for tool '{}': {}",
-                                    sanitize_reflected(tool_name, 64),
-                                    e
-                                ))
-                            })?;
+                    let decision = prompter
+                        .prompt_agent(Some(scope.agent_id), tool_name, &prompt_msg)
+                        .await
+                        .map_err(|e| {
+                            AppError::Forbidden(format!(
+                                "Prompt failed for tool '{}': {}",
+                                sanitize_reflected(tool_name, 64),
+                                e
+                            ))
+                        })?;
 
                     if decision != PermissionMode::Allow {
                         return Err(AppError::Forbidden(format!(

@@ -126,7 +126,10 @@ impl OutwardAppState {
             if path.exists() {
                 if let Ok(content) = std::fs::read_to_string(path) {
                     if let Ok(persisted) = serde_json::from_str::<PersistedOutwardState>(&content) {
-                        gateway.update_business_profile(&persisted.business_name, &persisted.description);
+                        gateway.update_business_profile(
+                            &persisted.business_name,
+                            &persisted.description,
+                        );
                         if let Err(e) = gateway.set_model_profile(&persisted.model_profile) {
                             tracing::warn!("Failed to apply persisted model profile: {}", e);
                         }
@@ -135,7 +138,10 @@ impl OutwardAppState {
                             gateway.update_hours_and_location(persisted.address, persisted.hours);
                         }
                         if persisted.support_email.is_some() || persisted.support_phone.is_some() {
-                            gateway.update_support_contact(persisted.support_email, persisted.support_phone);
+                            gateway.update_support_contact(
+                                persisted.support_email,
+                                persisted.support_phone,
+                            );
                         }
                         if let Some(policy) = persisted.return_policy {
                             gateway.update_return_policy(Some(policy));
@@ -398,9 +404,16 @@ pub async fn update_profile_handler(
         }
         if let Ok(json_str) = serde_json::to_string_pretty(&persisted_state) {
             if let Err(e) = tokio::fs::write(storage_path, json_str).await {
-                tracing::error!("Failed to persist outward profile to {:?}: {}", storage_path, e);
+                tracing::error!(
+                    "Failed to persist outward profile to {:?}: {}",
+                    storage_path,
+                    e
+                );
             } else {
-                tracing::info!("Persisted outward profile successfully to {:?}", storage_path);
+                tracing::info!(
+                    "Persisted outward profile successfully to {:?}",
+                    storage_path
+                );
             }
         }
     }
@@ -490,7 +503,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_profile_persistence_and_reload() {
-        let temp_file = std::env::temp_dir().join(format!("test_outward_{}.json", uuid::Uuid::new_v4()));
+        let temp_file =
+            std::env::temp_dir().join(format!("test_outward_{}.json", uuid::Uuid::new_v4()));
         let state = OutwardAppState::new_with_storage("Initial SMB", Some(temp_file.clone()));
 
         let payload = UpdateProfilePayload {
@@ -510,13 +524,17 @@ mod tests {
         assert!(temp_file.exists());
 
         // Reload fresh state from disk
-        let reloaded = OutwardAppState::new_with_storage("Default Fallback", Some(temp_file.clone()));
+        let reloaded =
+            OutwardAppState::new_with_storage("Default Fallback", Some(temp_file.clone()));
         let gateway = reloaded.gateway.lock().unwrap();
         assert_eq!(gateway.get_agent_card().name, "Updated SMB Hardware");
         assert_eq!(gateway.profile().description, "Durable description");
         assert_eq!(gateway.profile().address.as_deref(), Some("42 Harbor Road"));
         assert_eq!(gateway.profile().hours.as_deref(), Some("Mon-Sat 8-8"));
-        assert_eq!(gateway.profile().support_email.as_deref(), Some("help@smb.io"));
+        assert_eq!(
+            gateway.profile().support_email.as_deref(),
+            Some("help@smb.io")
+        );
 
         // Cleanup
         let _ = std::fs::remove_file(temp_file);

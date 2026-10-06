@@ -142,11 +142,10 @@ pub async fn add_mission_cost(
 /// reconciling them to `failed`, updating their timestamp, and logging the interruption.
 pub async fn sweep_interrupted_missions(pool: &SqlitePool) -> Result<u64, AppError> {
     let now = Utc::now();
-    let interrupted: Vec<(String, Option<String>)> = sqlx::query_as(
-        "SELECT id, agent_id FROM mission_history WHERE status = 'active'",
-    )
-    .fetch_all(pool)
-    .await?;
+    let interrupted: Vec<(String, Option<String>)> =
+        sqlx::query_as("SELECT id, agent_id FROM mission_history WHERE status = 'active'")
+            .fetch_all(pool)
+            .await?;
 
     for (mission_id, agent_id_opt) in &interrupted {
         let log_id = uuid::Uuid::new_v4().to_string();
@@ -680,9 +679,10 @@ mod tests {
         assert_eq!(m2.0, "failed");
 
         // Verify diagnostic log was recorded for swept mission
-        let log_count: (i64,) = sqlx::query_as("SELECT COUNT(*) FROM mission_logs WHERE mission_id = 'm-active-1'")
-            .fetch_one(&pool)
-            .await?;
+        let log_count: (i64,) =
+            sqlx::query_as("SELECT COUNT(*) FROM mission_logs WHERE mission_id = 'm-active-1'")
+                .fetch_one(&pool)
+                .await?;
         assert_eq!(log_count.0, 1);
 
         // Verify pending and completed remain unchanged

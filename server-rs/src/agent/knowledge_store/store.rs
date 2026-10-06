@@ -191,7 +191,13 @@ impl KnowledgeStore {
         let vector: Option<Vec<f32>> = {
             match std::env::var("GOOGLE_API_KEY") {
                 Ok(api_key) if !api_key.trim().is_empty() => {
-                    match crate::agent::memory::get_gemini_embedding(&http_client, &api_key, &req.text).await {
+                    match crate::agent::memory::get_gemini_embedding(
+                        &http_client,
+                        &api_key,
+                        &req.text,
+                    )
+                    .await
+                    {
                         Ok(emb) => Some(emb),
                         Err(e) => {
                             tracing::warn!(
@@ -542,10 +548,7 @@ impl KnowledgeStore {
                 "[IKS] Failed to sync confirmed concept node to TrustGraph: {}",
                 e
             );
-            AppError::InternalServerError(format!(
-                "Failed to write concept to trust graph: {}",
-                e
-            ))
+            AppError::InternalServerError(format!("Failed to write concept to trust graph: {}", e))
         })?;
 
         if let Some(ref parent_id) = entry.parent_id {

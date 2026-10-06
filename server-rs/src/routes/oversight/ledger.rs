@@ -837,7 +837,9 @@ async fn resolve_oversight_decision_inner(
         Some((_, e)) => e,
         None => {
             let _ = tx.rollback().await;
-            return Err(AppError::Conflict("Oversight entry was resolved by a concurrent request".to_string()));
+            return Err(AppError::Conflict(
+                "Oversight entry was resolved by a concurrent request".to_string(),
+            ));
         }
     };
 
@@ -848,18 +850,32 @@ async fn resolve_oversight_decision_inner(
     match tokio::time::timeout(DB_QUERY_TIMEOUT, tx.commit()).await {
         Ok(Ok(_)) => {}
         Ok(Err(sqlx_err)) => {
-            state.comms.oversight_queue.insert(entry_id.to_string(), entry);
+            state
+                .comms
+                .oversight_queue
+                .insert(entry_id.to_string(), entry);
             if let Some((_, shooter)) = maybe_shooter {
-                state.comms.oversight_resolvers.insert(entry_id.to_string(), shooter);
+                state
+                    .comms
+                    .oversight_resolvers
+                    .insert(entry_id.to_string(), shooter);
             }
             return Err(AppError::Sqlx(sqlx_err));
         }
         Err(_) => {
-            state.comms.oversight_queue.insert(entry_id.to_string(), entry);
+            state
+                .comms
+                .oversight_queue
+                .insert(entry_id.to_string(), entry);
             if let Some((_, shooter)) = maybe_shooter {
-                state.comms.oversight_resolvers.insert(entry_id.to_string(), shooter);
+                state
+                    .comms
+                    .oversight_resolvers
+                    .insert(entry_id.to_string(), shooter);
             }
-            return Err(AppError::InternalServerError("Database commit timed out".to_string()));
+            return Err(AppError::InternalServerError(
+                "Database commit timed out".to_string(),
+            ));
         }
     }
 

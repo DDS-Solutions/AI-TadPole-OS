@@ -174,23 +174,24 @@ impl Tool for PluginTool {
         };
 
         const PLUGIN_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(60);
-        let (status, stdout_buf, stderr_buf) = match tokio::time::timeout(PLUGIN_TIMEOUT, run_future).await {
-            Ok((Ok(status), out, err)) => (status, out, err),
-            Ok((Err(e), _, _)) => {
-                return Err(ToolExecutionError::ExecutionFailed(format!(
-                    "Failed waiting for plugin subprocess: {}",
-                    e
-                )));
-            }
-            Err(_) => {
-                let _ = child.start_kill();
-                let _ = child.wait().await;
-                return Err(ToolExecutionError::ExecutionFailed(format!(
-                    "Plugin subprocess timed out after {:?} and was killed",
-                    PLUGIN_TIMEOUT
-                )));
-            }
-        };
+        let (status, stdout_buf, stderr_buf) =
+            match tokio::time::timeout(PLUGIN_TIMEOUT, run_future).await {
+                Ok((Ok(status), out, err)) => (status, out, err),
+                Ok((Err(e), _, _)) => {
+                    return Err(ToolExecutionError::ExecutionFailed(format!(
+                        "Failed waiting for plugin subprocess: {}",
+                        e
+                    )));
+                }
+                Err(_) => {
+                    let _ = child.start_kill();
+                    let _ = child.wait().await;
+                    return Err(ToolExecutionError::ExecutionFailed(format!(
+                        "Plugin subprocess timed out after {:?} and was killed",
+                        PLUGIN_TIMEOUT
+                    )));
+                }
+            };
 
         let stdout = String::from_utf8_lossy(&stdout_buf).to_string();
         let stderr = String::from_utf8_lossy(&stderr_buf).to_string();

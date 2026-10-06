@@ -580,7 +580,11 @@ impl A2AMailbox {
                     Some(a) => {
                         let status = a.health.status.clone();
                         let bankrupt = a.is_bankrupt();
-                        (true, status == crate::routes::agent::STATUS_SUSPENDED, bankrupt)
+                        (
+                            true,
+                            status == crate::routes::agent::STATUS_SUSPENDED,
+                            bankrupt,
+                        )
                     }
                     None => (false, false, false),
                 };
@@ -623,10 +627,11 @@ impl A2AMailbox {
                 );
 
                 // Mark directive as acknowledged so it won't be double-delivered on concurrent sweeps
-                let _ = sqlx::query("UPDATE agent_directives SET status = 'acknowledged' WHERE id = ?")
-                    .bind(&dir_id)
-                    .execute(&state.resources.pool)
-                    .await;
+                let _ =
+                    sqlx::query("UPDATE agent_directives SET status = 'acknowledged' WHERE id = ?")
+                        .bind(&dir_id)
+                        .execute(&state.resources.pool)
+                        .await;
 
                 let payload = crate::agent::types::TaskPayload {
                     message: instruction,
@@ -637,7 +642,11 @@ impl A2AMailbox {
                 };
 
                 let (join_handle, runner_handle, start_tx) =
-                    crate::routes::agent::tasks::spawn_agent_runner(state, &target_agent_id, payload);
+                    crate::routes::agent::tasks::spawn_agent_runner(
+                        state,
+                        &target_agent_id,
+                        payload,
+                    );
                 crate::routes::agent::tasks::register_agent_runner(
                     state,
                     &target_agent_id,

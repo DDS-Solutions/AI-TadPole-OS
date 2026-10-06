@@ -287,11 +287,7 @@ pub async fn trigger_deploy(
             .trim()
             .to_string();
         let error_msg = if combined.is_empty() {
-            format!(
-                "{} exited with code {:?}",
-                script_file,
-                status.code()
-            )
+            format!("{} exited with code {:?}", script_file, status.code())
         } else {
             combined
         };

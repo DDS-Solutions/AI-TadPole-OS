@@ -820,7 +820,10 @@ mod tests {
             State(state.clone()),
         )
         .await;
-        assert!(matches!(non_existent_result, Err(crate::error::AppError::NotFound(_))));
+        assert!(matches!(
+            non_existent_result,
+            Err(crate::error::AppError::NotFound(_))
+        ));
 
         // 2. Register an agent without initialized memory directory
         let agent = crate::agent::types::EngineAgent {
@@ -831,13 +834,13 @@ mod tests {
             },
             ..Default::default()
         };
-        state.registry.agents.insert("test-agent-init".to_string(), agent);
+        state
+            .registry
+            .agents
+            .insert("test-agent-init".to_string(), agent);
 
-        let registered_result = super::get_agent_memory(
-            Path("test-agent-init".to_string()),
-            State(state),
-        )
-        .await;
+        let registered_result =
+            super::get_agent_memory(Path("test-agent-init".to_string()), State(state)).await;
         assert!(registered_result.is_ok());
         let (status, axum::Json(val)) = registered_result.unwrap();
         assert_eq!(status, axum::http::StatusCode::OK);

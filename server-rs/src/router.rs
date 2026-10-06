@@ -59,7 +59,10 @@ pub fn create_router(app_state: Arc<AppState>) -> Router {
         ));
 
     // 6. Build Outward Gateway routes (/a2a/v1)
-    let outward_storage_path = app_state.base_dir.join("data").join("company_agent_card.json");
+    let outward_storage_path = app_state
+        .base_dir
+        .join("data")
+        .join("company_agent_card.json");
     let outward_state = routes::outward_routes::OutwardAppState::new_with_storage(
         "Tadpole SMB Solutions",
         Some(outward_storage_path),

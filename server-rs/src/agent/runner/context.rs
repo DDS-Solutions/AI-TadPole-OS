@@ -258,11 +258,12 @@ impl AgentRunner {
                     .await
             {
                 if ctx.budget_usd > m.budget_usd {
-                    if let Err(e) = sqlx::query("UPDATE mission_history SET budget_usd = ?1 WHERE id = ?2")
-                        .bind(ctx.budget_usd)
-                        .bind(mission_id)
-                        .execute(&self.state.resources.pool)
-                        .await
+                    if let Err(e) =
+                        sqlx::query("UPDATE mission_history SET budget_usd = ?1 WHERE id = ?2")
+                            .bind(ctx.budget_usd)
+                            .bind(mission_id)
+                            .execute(&self.state.resources.pool)
+                            .await
                     {
                         tracing::error!(
                             mission_id = %mission_id,

@@ -471,7 +471,8 @@ pub async fn run_workflow_handler(
         None => serde_json::json!({}),
     };
 
-    let repo = crate::agent::continuity::repository::WorkflowRepository::new(state.resources.pool.clone());
+    let repo =
+        crate::agent::continuity::repository::WorkflowRepository::new(state.resources.pool.clone());
     let workflow = repo.get_workflow(&workflow_id, &tenant_id).await?;
     if !workflow.enabled {
         return Err(AppError::Conflict("Workflow is disabled".to_string()));
@@ -489,8 +490,16 @@ pub async fn run_workflow_handler(
     let r_id = run_id.clone();
 
     tokio::spawn(async move {
-        if let Err(e) = engine.run_workflow_with_id(&t_id, &wf_id, &r_id, initial_context).await {
-            tracing::error!("❌ [Workflow] Background execution of workflow '{}' run '{}' failed: {}", wf_id, r_id, e);
+        if let Err(e) = engine
+            .run_workflow_with_id(&t_id, &wf_id, &r_id, initial_context)
+            .await
+        {
+            tracing::error!(
+                "❌ [Workflow] Background execution of workflow '{}' run '{}' failed: {}",
+                wf_id,
+                r_id,
+                e
+            );
         }
     });
 

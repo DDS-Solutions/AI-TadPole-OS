@@ -291,10 +291,9 @@ impl PermissionPrompter for AsyncOversightPrompter {
             created_at: chrono::Utc::now().to_rfc3339(),
         };
 
-        let params_json = serde_json::to_string(&tool_call.params)
-            .unwrap_or_else(|_| "{}".to_string());
-        let payload_json = serde_json::to_string(&entry)
-            .unwrap_or_else(|_| "{}".to_string());
+        let params_json =
+            serde_json::to_string(&tool_call.params).unwrap_or_else(|_| "{}".to_string());
+        let payload_json = serde_json::to_string(&entry).unwrap_or_else(|_| "{}".to_string());
 
         // 1. Write to SQLite oversight_log
         let _ = sqlx::query(
@@ -312,7 +311,9 @@ impl PermissionPrompter for AsyncOversightPrompter {
         // 2. Setup oneshot resolver and queue entry with cleanup guard
         let (tx, rx) = tokio::sync::oneshot::channel();
         self.comms.oversight_resolvers.insert(entry_id.clone(), tx);
-        self.comms.oversight_queue.insert(entry_id.clone(), entry.clone());
+        self.comms
+            .oversight_queue
+            .insert(entry_id.clone(), entry.clone());
 
         let _guard = OversightCleanupGuard {
             comms: self.comms.clone(),

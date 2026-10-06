@@ -230,18 +230,19 @@ impl HooksManager {
             (status, stdout_buf, stderr_buf)
         };
 
-        let (status, _stdout_buf, stderr_buf) = match tokio::time::timeout(DEFAULT_HOOK_TIMEOUT, run_future).await {
-            Ok((Ok(status), out, err)) => (status, out, err),
-            Ok((Err(e), _, _)) => return Err(AppError::Io(e)),
-            Err(_) => {
-                let _ = child.start_kill();
-                let _ = child.wait().await;
-                return Err(AppError::InternalServerError(format!(
-                    "Hook script execution timed out after {:?}: {:?}",
-                    DEFAULT_HOOK_TIMEOUT, path
-                )));
-            }
-        };
+        let (status, _stdout_buf, stderr_buf) =
+            match tokio::time::timeout(DEFAULT_HOOK_TIMEOUT, run_future).await {
+                Ok((Ok(status), out, err)) => (status, out, err),
+                Ok((Err(e), _, _)) => return Err(AppError::Io(e)),
+                Err(_) => {
+                    let _ = child.start_kill();
+                    let _ = child.wait().await;
+                    return Err(AppError::InternalServerError(format!(
+                        "Hook script execution timed out after {:?}: {:?}",
+                        DEFAULT_HOOK_TIMEOUT, path
+                    )));
+                }
+            };
 
         if !status.success() {
             let stderr = String::from_utf8_lossy(&stderr_buf);

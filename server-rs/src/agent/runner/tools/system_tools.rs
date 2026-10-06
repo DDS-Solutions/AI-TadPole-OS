@@ -711,7 +711,13 @@ impl AgentRunner {
                         Err(_) => -1,
                     };
 
-                    (exit_code, stdout_trunc, stdout_buf, stderr_trunc, stderr_buf)
+                    (
+                        exit_code,
+                        stdout_trunc,
+                        stdout_buf,
+                        stderr_trunc,
+                        stderr_buf,
+                    )
                 };
 
                 match tokio::time::timeout(command_timeout, run_future).await {
@@ -721,13 +727,13 @@ impl AgentRunner {
                             .map(|d| d.as_millis() as u64)
                             .unwrap_or(0);
 
-                        ctx.execution_records
-                            .lock()
-                            .push(crate::agent::runner::ProcessExecutionRecord {
+                        ctx.execution_records.lock().push(
+                            crate::agent::runner::ProcessExecutionRecord {
                                 command: full_command_display.clone(),
                                 exit_code,
                                 timestamp_ms,
-                            });
+                            },
+                        );
 
                         let stdout_str = String::from_utf8_lossy(&stdout_buf);
                         let stderr_str = String::from_utf8_lossy(&stderr_buf);
@@ -752,13 +758,13 @@ impl AgentRunner {
                             .map(|d| d.as_millis() as u64)
                             .unwrap_or(0);
 
-                        ctx.execution_records
-                            .lock()
-                            .push(crate::agent::runner::ProcessExecutionRecord {
+                        ctx.execution_records.lock().push(
+                            crate::agent::runner::ProcessExecutionRecord {
                                 command: format!("{} [TIMED_OUT]", full_command_display),
                                 exit_code: -1,
                                 timestamp_ms,
-                            });
+                            },
+                        );
 
                         *output_text = format!(
                             "(TOOL TIMEOUT: Child process '{}' timed out after {:?} and was killed)",

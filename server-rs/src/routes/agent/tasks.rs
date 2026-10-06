@@ -269,7 +269,10 @@ pub async fn register_agent_runner(
                 None,
             );
             if let Err(e) = state.save_agents().await {
-                tracing::warn!("Failed to persist agent status in runner replacement: {}", e);
+                tracing::warn!(
+                    "Failed to persist agent status in runner replacement: {}",
+                    e
+                );
             }
         }
     }

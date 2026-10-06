@@ -290,7 +290,8 @@ async fn run_ingestion_cycle(state: &crate::state::AppState) -> Result<(), AppEr
                                                 .await
                                             {
                                                 Ok(_) => {
-                                                    if latest_update.map_or(true, |lu| item.updated_at > lu)
+                                                    if latest_update
+                                                        .map_or(true, |lu| item.updated_at > lu)
                                                     {
                                                         latest_update = Some(item.updated_at);
                                                     }
@@ -344,7 +345,8 @@ async fn run_ingestion_cycle(state: &crate::state::AppState) -> Result<(), AppEr
                 };
 
                 if has_errors {
-                    crate::agent::persistence::update_sync_status(pool, &manifest.id, "error").await?;
+                    crate::agent::persistence::update_sync_status(pool, &manifest.id, "error")
+                        .await?;
                 } else {
                     crate::agent::persistence::complete_sync(
                         pool,
