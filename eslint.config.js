@@ -20,7 +20,7 @@ import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['**/dist/**', 'node_modules', '.tmp', 'coverage', 'src-tauri', 'external', '**/target/**', 'docs/.vitepress/cache']),
+  globalIgnores(['**/dist/**', 'node_modules', '.tmp', 'scratch', 'coverage', 'src-tauri', 'external', '**/target/**', 'docs/.vitepress/cache']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

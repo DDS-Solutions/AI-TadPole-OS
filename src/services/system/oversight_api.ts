@@ -109,8 +109,9 @@ export const oversight_api = {
             .join('');
 
         const security_state = use_security_store.getState();
+        const sec_record = security_state as unknown as Record<string, unknown>;
         const has_operator_key = security_state.key_source === 'operator' || 
-            Boolean((security_state as any).privateKey && (security_state as any).publicKey);
+            Boolean(sec_record.privateKey && sec_record.publicKey);
         const credentials = has_operator_key
             ? await security_state.sign_oversight(
                 clean_id,
@@ -123,8 +124,9 @@ export const oversight_api = {
             : null;
 
         if (!credentials) {
+            const meta_record = import.meta as unknown as { env?: { PROD?: boolean } };
             const is_prod = (typeof process !== 'undefined' && process.env?.NODE_ENV === 'production') ||
-                            (typeof import.meta !== 'undefined' && (import.meta as any).env?.PROD);
+                            (typeof import.meta !== 'undefined' && Boolean(meta_record?.env?.PROD));
             if (is_prod) {
                 throw new Error(
                     'Cryptographic operator key pair required for oversight decisions in production. Please configure or import your operator keys in Settings.'

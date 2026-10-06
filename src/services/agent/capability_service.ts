@@ -47,14 +47,15 @@ export class CapabilityRegistryService {
                 method: 'POST',
                 body: form_data,
             });
-        } catch (err: any) {
-            if (err?.status === 403 || err?.statusCode === 403 || (err instanceof AuthError && err.status === 403)) {
+        } catch (err: unknown) {
+            const error_obj = err as { status?: number; statusCode?: number; type?: string; error_code?: string; help_link?: string };
+            if (error_obj?.status === 403 || error_obj?.statusCode === 403 || (err instanceof AuthError && err.status === 403)) {
                 throw new AuthError(
                     'Administrative privileges required to import skills. Please ensure you are authenticated with an operator admin session.',
-                    err.type || 'about:blank',
+                    error_obj?.type || 'about:blank',
                     403,
-                    err.error_code || 'AUTH_FORBIDDEN',
-                    err.help_link
+                    error_obj?.error_code || 'AUTH_FORBIDDEN',
+                    error_obj?.help_link
                 );
             }
             throw map_api_error(err);
@@ -67,14 +68,15 @@ export class CapabilityRegistryService {
                 method: 'POST',
                 body: JSON.stringify({ type, data, category })
             });
-        } catch (err: any) {
-            if (err?.status === 403 || err?.statusCode === 403 || (err instanceof AuthError && err.status === 403)) {
+        } catch (err: unknown) {
+            const error_obj = err as { status?: number; statusCode?: number; type?: string; error_code?: string; help_link?: string };
+            if (error_obj?.status === 403 || error_obj?.statusCode === 403 || (err instanceof AuthError && err.status === 403)) {
                 throw new AuthError(
                     'Administrative privileges required to register capabilities. Please ensure you are authenticated with an operator admin session.',
-                    err.type || 'about:blank',
+                    error_obj?.type || 'about:blank',
                     403,
-                    err.error_code || 'AUTH_FORBIDDEN',
-                    err.help_link
+                    error_obj?.error_code || 'AUTH_FORBIDDEN',
+                    error_obj?.help_link
                 );
             }
             throw map_api_error(err);

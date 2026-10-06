@@ -44,7 +44,7 @@ export const workspace_api = {
             timeout: options?.timeout
         });
         if (!res) return [];
-        return Array.isArray(res) ? res : ((res as any).data || []);
+        return Array.isArray(res) ? res : (res.data || []);
     },
 
     restore_file_version: async (filePath: string, versionNum: number, workspaceRoot?: string, options?: RequestOptions): Promise<RevisionSummary> => {
@@ -59,6 +59,6 @@ export const workspace_api = {
             signal: options?.signal,
             timeout: options?.timeout
         });
-        return (res as any)?.data ?? res;
+        return res && 'data' in res ? res.data : res;
     }
 };

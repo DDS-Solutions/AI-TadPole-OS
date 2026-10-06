@@ -77,10 +77,10 @@ export const Customer_Catalog_Manager: React.FC = () => {
     if (!isLoaded) return;
 
     const controller = new AbortController();
-    setSyncStatus('syncing');
-    setSyncError(null);
 
     const timeout = window.setTimeout(async () => {
+      setSyncStatus('syncing');
+      setSyncError(null);
       try {
         await api_request('/a2a/v1/profile', {
           method: 'PUT',

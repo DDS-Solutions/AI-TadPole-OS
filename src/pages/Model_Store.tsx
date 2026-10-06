@@ -65,7 +65,14 @@ export default function Model_Store() {
             set_catalog(catalog_data);
             const online_nodes = (nodes_data || []).filter(n => n.status !== 'offline');
             if (online_nodes.length === 0) {
-                set_nodes([{ id: 'local', name: 'Local Engine (Ollama)', address: '127.0.0.1:11434', status: 'online' }]);
+                set_nodes([{
+                    id: 'local',
+                    name: 'Local Engine (Ollama)',
+                    address: '127.0.0.1:11434',
+                    status: 'online',
+                    last_seen: new Date().toISOString(),
+                    metadata: {},
+                }]);
             } else {
                 set_nodes(online_nodes);
             }
