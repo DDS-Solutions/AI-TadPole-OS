@@ -1,0 +1,3 @@
+[env]
+# Point to the vendorized protoc binary
+PROTOC = "C:\\Users\\Home Office_PC\\.gemini\\antigravity\\playground\\tadpole-os\\server-rs\\vendor\\protoc\\bin\\protoc.exe"

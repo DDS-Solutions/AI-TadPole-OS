@@ -1,0 +1,11 @@
+name: "Tadpole OS CodeQL Configuration"
+
+# Exclude non-compiled mobile subdirectories and temp buffers from CodeQL extraction
+paths-ignore:
+  - 'apps/mobile-android/**'
+  - '.tmp/**'
+  - 'tmp/**'
+  - 'dist/**'
+  - 'node_modules/**'
+  - 'wiki/**'
+  - 'scratch/**'

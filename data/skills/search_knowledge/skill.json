@@ -1,0 +1,25 @@
+{
+  "schema_version": "1",
+  "name": "search_knowledge",
+  "display_name": "Search Knowledge",
+  "description": "Semantic search across the Institutional Knowledge Store for cross-cluster and cross-restart intelligence.",
+  "version": "1.0.0",
+  "author": "Sovereign Engineering",
+  "permissions": [],
+  "danger_level": "low",
+  "requires_oversight": false,
+  "parameters": {
+    "query": {
+      "type": "string",
+      "required": true
+    },
+    "topic": {
+      "type": "string",
+      "required": false
+    },
+    "limit": {
+      "type": "integer",
+      "required": false
+    }
+  }
+}
