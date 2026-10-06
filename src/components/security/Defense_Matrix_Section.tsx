@@ -88,18 +88,42 @@ export function Defense_Matrix_Section({ system_defense }: DefenseMatrixSectionP
                             <div className="flex justify-between items-center mb-1">
                                 <span className="text-xs text-zinc-400">{i18n.t('security.secret_leak_prevention')}</span>
                                 <div className="flex items-center gap-2">
-                                    <span className="px-1.5 py-0.5 rounded-md text-[8px] font-bold bg-emerald-500/10 text-emerald-500">
-                                        VERIFIED
+                                    <span className={`px-1.5 py-0.5 rounded-md text-[8px] font-bold ${
+                                        (system_defense?.merkle_integrity ?? -1.0) === 1.0 
+                                            ? "bg-emerald-500/10 text-emerald-500" 
+                                            : (system_defense?.merkle_integrity ?? -1.0) === 0.0 
+                                                ? "bg-amber-500/10 text-amber-500" 
+                                                : "bg-red-500/10 text-red-500"
+                                    }`}>
+                                        {(system_defense?.merkle_integrity ?? -1.0) === 1.0 
+                                            ? "VERIFIED" 
+                                            : (system_defense?.merkle_integrity ?? -1.0) === 0.0 
+                                                ? "UNINITIALIZED" 
+                                                : "FAILED"}
                                     </span>
-                                    <span className="text-[10px] text-emerald-500 font-mono">
-                                        {((system_defense?.merkle_integrity ?? 0.85) * 100).toFixed(2)}%
+                                    <span className={`text-[10px] font-mono ${
+                                        (system_defense?.merkle_integrity ?? -1.0) === 1.0 
+                                            ? "text-emerald-500" 
+                                            : (system_defense?.merkle_integrity ?? -1.0) === 0.0 
+                                                ? "text-amber-500" 
+                                                : "text-red-500"
+                                    }`}>
+                                        {system_defense?.merkle_integrity !== undefined && system_defense.merkle_integrity >= 0
+                                            ? `${(system_defense.merkle_integrity * 100).toFixed(2)}%`
+                                            : "N/A (ERROR)"}
                                     </span>
                                 </div>
                             </div>
                             <div className="h-1 bg-zinc-800 rounded-full overflow-hidden">
                                 <div
-                                    className="h-full bg-emerald-500 transition-all duration-1000 shadow-[0_0_10px_rgba(16,185,129,0.3)]"
-                                    style={{ width: `${(system_defense?.merkle_integrity ?? 0.85) * 100}%` }}
+                                    className={`h-full transition-all duration-1000 ${
+                                        (system_defense?.merkle_integrity ?? -1.0) === 1.0 
+                                            ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.3)]" 
+                                            : (system_defense?.merkle_integrity ?? -1.0) === 0.0 
+                                                ? "bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.3)]" 
+                                                : "bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]"
+                                    }`}
+                                    style={{ width: `${Math.max(0, Math.min(100, (system_defense?.merkle_integrity ?? 0) * 100))}%` }}
                                 />
                             </div>
                         </div>

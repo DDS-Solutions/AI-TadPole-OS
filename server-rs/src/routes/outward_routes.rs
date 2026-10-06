@@ -78,23 +78,81 @@ impl IpRateLimiter {
     }
 }
 
+use std::path::PathBuf;
+
+/// Persisted state for outward company agent card
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PersistedOutwardState {
+    pub business_name: String,
+    pub description: String,
+    pub model_profile: String,
+    pub skills: Vec<crate::agent::outward::A2aSkill>,
+    #[serde(default)]
+    pub address: Option<String>,
+    #[serde(default)]
+    pub hours: Option<String>,
+    #[serde(default)]
+    pub support_email: Option<String>,
+    #[serde(default)]
+    pub support_phone: Option<String>,
+    #[serde(default)]
+    pub return_policy: Option<String>,
+}
+
 /// Shared Outward Gateway Service State
 #[derive(Clone)]
 pub struct OutwardAppState {
     pub gateway: Arc<Mutex<OutwardGateway>>,
     pub catalog: Arc<Mutex<CustomerCatalog>>,
     pub rate_limiter: IpRateLimiter,
+    pub storage_path: Option<PathBuf>,
 }
 
 impl OutwardAppState {
     pub fn new(business_name: &str) -> Self {
+        Self::new_with_storage(business_name, None)
+    }
+
+    pub fn new_with_storage(business_name: &str, storage_path: Option<PathBuf>) -> Self {
+        let port = std::env::var("PORT").unwrap_or_else(|_| "8000".to_string());
+        let card_url = std::env::var("TADPOLE_AGENT_CARD_URL").unwrap_or_else(|_| {
+            format!("http://localhost:{}/a2a/v1/company-agent-card.json", port)
+        });
+
+        let mut gateway = OutwardGateway::new(business_name, card_url);
+        let mut catalog = CustomerCatalog::new(business_name);
+
+        if let Some(ref path) = storage_path {
+            if path.exists() {
+                if let Ok(content) = std::fs::read_to_string(path) {
+                    if let Ok(persisted) = serde_json::from_str::<PersistedOutwardState>(&content) {
+                        gateway.update_business_profile(&persisted.business_name, &persisted.description);
+                        if let Err(e) = gateway.set_model_profile(&persisted.model_profile) {
+                            tracing::warn!("Failed to apply persisted model profile: {}", e);
+                        }
+                        gateway.update_skills(persisted.skills);
+                        if persisted.address.is_some() || persisted.hours.is_some() {
+                            gateway.update_hours_and_location(persisted.address, persisted.hours);
+                        }
+                        if persisted.support_email.is_some() || persisted.support_phone.is_some() {
+                            gateway.update_support_contact(persisted.support_email, persisted.support_phone);
+                        }
+                        if let Some(policy) = persisted.return_policy {
+                            gateway.update_return_policy(Some(policy));
+                        }
+                        catalog.business_name = persisted.business_name;
+                        catalog.default_model_profile = persisted.model_profile;
+                        tracing::info!("Loaded persisted outward profile from {:?}", path);
+                    }
+                }
+            }
+        }
+
         Self {
-            gateway: Arc::new(Mutex::new(OutwardGateway::new(
-                business_name,
-                "http://localhost:8000/a2a/v1/company-agent-card.json",
-            ))),
-            catalog: Arc::new(Mutex::new(CustomerCatalog::new(business_name))),
+            gateway: Arc::new(Mutex::new(gateway)),
+            catalog: Arc::new(Mutex::new(catalog)),
             rate_limiter: IpRateLimiter::new(60, 60), // 60 requests per minute
+            storage_path,
         }
     }
 }
@@ -315,6 +373,38 @@ pub async fn update_profile_handler(
         }
     }
 
+    // Persist to disk if storage path is configured
+    if let Some(ref storage_path) = state.storage_path {
+        let persisted_state = {
+            let gateway = state.gateway.lock().map_err(|_| {
+                AppError::InternalServerError("Outward gateway state lock is poisoned".to_string())
+            })?;
+            let prof = gateway.profile();
+            PersistedOutwardState {
+                business_name: prof.name.clone(),
+                description: prof.description.clone(),
+                model_profile: gateway.get_model_profile().to_string(),
+                skills: card.skills.clone(),
+                address: prof.address.clone(),
+                hours: prof.hours.clone(),
+                support_email: prof.support_email.clone(),
+                support_phone: prof.support_phone.clone(),
+                return_policy: prof.return_policy.clone(),
+            }
+        };
+
+        if let Some(parent) = storage_path.parent() {
+            let _ = tokio::fs::create_dir_all(parent).await;
+        }
+        if let Ok(json_str) = serde_json::to_string_pretty(&persisted_state) {
+            if let Err(e) = tokio::fs::write(storage_path, json_str).await {
+                tracing::error!("Failed to persist outward profile to {:?}: {}", storage_path, e);
+            } else {
+                tracing::info!("Persisted outward profile successfully to {:?}", storage_path);
+            }
+        }
+    }
+
     Ok((
         StatusCode::OK,
         Json(ApiResponse {
@@ -396,5 +486,39 @@ mod tests {
 
         assert!(matches!(result, Err(AppError::BadRequest(_))));
         assert!(state.catalog.lock().unwrap().items.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_profile_persistence_and_reload() {
+        let temp_file = std::env::temp_dir().join(format!("test_outward_{}.json", uuid::Uuid::new_v4()));
+        let state = OutwardAppState::new_with_storage("Initial SMB", Some(temp_file.clone()));
+
+        let payload = UpdateProfilePayload {
+            business_name: Some("Updated SMB Hardware".to_string()),
+            description: Some("Durable description".to_string()),
+            model_profile: Some("gemma4:e4b".to_string()),
+            skills: None,
+            address: Some("42 Harbor Road".to_string()),
+            hours: Some("Mon-Sat 8-8".to_string()),
+            support_email: Some("help@smb.io".to_string()),
+            support_phone: None,
+            return_policy: Some("30 days refund".to_string()),
+        };
+
+        let res = update_profile_handler(State(state), Json(payload)).await;
+        assert!(res.is_ok());
+        assert!(temp_file.exists());
+
+        // Reload fresh state from disk
+        let reloaded = OutwardAppState::new_with_storage("Default Fallback", Some(temp_file.clone()));
+        let gateway = reloaded.gateway.lock().unwrap();
+        assert_eq!(gateway.get_agent_card().name, "Updated SMB Hardware");
+        assert_eq!(gateway.profile().description, "Durable description");
+        assert_eq!(gateway.profile().address.as_deref(), Some("42 Harbor Road"));
+        assert_eq!(gateway.profile().hours.as_deref(), Some("Mon-Sat 8-8"));
+        assert_eq!(gateway.profile().support_email.as_deref(), Some("help@smb.io"));
+
+        // Cleanup
+        let _ = std::fs::remove_file(temp_file);
     }
 }

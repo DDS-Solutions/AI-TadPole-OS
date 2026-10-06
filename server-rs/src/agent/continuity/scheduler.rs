@@ -501,8 +501,8 @@ pub async fn recover_interrupted_jobs(pool: &SqlitePool) -> Result<(), AppError>
     .await?
     .rows_affected();
 
-    // Reconcile stuck agents on restart
-    let agents_released = sqlx::query("UPDATE agents SET status = 'idle' WHERE status = 'busy'")
+    // Reconcile stuck agents on restart and clear lingering mission references
+    let agents_released = sqlx::query("UPDATE agents SET status = 'idle', active_mission = NULL, current_task = NULL WHERE status = 'busy'")
         .execute(&mut *tx)
         .await?
         .rows_affected();

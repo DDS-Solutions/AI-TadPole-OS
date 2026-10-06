@@ -103,7 +103,7 @@ impl PermissionGate {
 
                     let decision =
                         prompter
-                            .prompt_user(tool_name, &prompt_msg)
+                            .prompt_agent(Some(scope.agent_id), tool_name, &prompt_msg)
                             .await
                             .map_err(|e| {
                                 AppError::Forbidden(format!(

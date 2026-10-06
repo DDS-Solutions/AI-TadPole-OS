@@ -161,16 +161,43 @@ describe('engine_api', () => {
 
     describe('shutdown_engine', () => {
         it('calls POST /v1/engine/shutdown', async () => {
-            vi.mocked(api_request).mockResolvedValueOnce({});
-            await engine_api.shutdown_engine();
+            vi.mocked(api_request).mockResolvedValueOnce({ status: 'ok', message: 'Shutdown initiated' });
+            const res = await engine_api.shutdown_engine();
             expect(api_request).toHaveBeenCalledWith('/v1/engine/shutdown', expect.objectContaining({
                 method: 'POST'
             }));
+            expect(res.status).toBe('ok');
         });
 
         it('propagates errors when shutdown_engine rejects', async () => {
             vi.mocked(api_request).mockRejectedValueOnce(new Error('Permission denied'));
             await expect(engine_api.shutdown_engine()).rejects.toThrow('Permission denied');
+        });
+
+        it('polls check_health until failure when wait_for_termination is true', async () => {
+            vi.mocked(api_request)
+                .mockResolvedValueOnce({ status: 'ok', message: 'Shutdown initiated' }) // /shutdown
+                .mockRejectedValueOnce(new Error('Connection refused')); // /health poll fails immediately
+            
+            const res = await engine_api.shutdown_engine({ wait_for_termination: true, timeout_ms: 500, poll_interval_ms: 10 });
+            expect(res.status).toBe('ok');
+        });
+    });
+
+    describe('get_metrics', () => {
+        it('calls GET /v1/engine/metrics and returns text', async () => {
+            vi.mocked(api_request).mockResolvedValueOnce('# HELP tadpole_active_agents\ntadpole_active_agents 5');
+            const metrics = await engine_api.get_metrics();
+            expect(api_request).toHaveBeenCalledWith('/v1/engine/metrics', expect.objectContaining({
+                method: 'GET',
+                response_type: 'text'
+            }));
+            expect(metrics).toContain('tadpole_active_agents 5');
+        });
+
+        it('propagates errors when get_metrics rejects', async () => {
+            vi.mocked(api_request).mockRejectedValueOnce(new Error('Unauthorized'));
+            await expect(engine_api.get_metrics()).rejects.toThrow('Unauthorized');
         });
     });
 

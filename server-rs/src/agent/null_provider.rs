@@ -79,14 +79,19 @@ impl LlmProvider for NullProvider {
             self.reason.as_str()
         );
 
-        let degraded_msg = format!(
-            "[DEGRADED: {}] This agent has no configured provider. \
-             Please configure a valid LLM provider and API key in Settings.",
-            self.reason.as_str()
-        );
+        if matches!(self.reason, NullReason::TestMode) {
+            let degraded_msg = format!(
+                "[DEGRADED: {}] This agent has no configured provider. \
+                 Please configure a valid LLM provider and API key in Settings.",
+                self.reason.as_str()
+            );
+            return Ok((degraded_msg, vec![], None));
+        }
 
-        // Return Ok — not Err — so the mission records as degraded, not failed.
-        Ok((degraded_msg, vec![], None))
+        Err(AppError::DegradedState(format!(
+            "Mission provider unavailable: {}. Please configure a valid LLM provider and API key in Settings.",
+            self.reason.as_str()
+        )))
     }
 
     async fn embed(&self, _text: &str) -> Result<Vec<f32>, AppError> {
@@ -94,7 +99,14 @@ impl LlmProvider for NullProvider {
             "⚠️ NULL PROVIDER ACTIVE (embed) — agent='{}'",
             self.agent_id
         );
-        Ok(vec![0.0; 768]) // Return a zeroed vector or fixed dimension placeholder
+        if matches!(self.reason, NullReason::TestMode) {
+            return Ok(vec![0.0; 768]);
+        }
+
+        Err(AppError::DegradedState(format!(
+            "Embedding provider unavailable: {}. Real vector embeddings cannot be computed without a configured model provider.",
+            self.reason.as_str()
+        )))
     }
 }
 
@@ -103,15 +115,35 @@ mod tests {
     use super::*;
 
     #[tokio::test]
-    async fn null_provider_returns_ok_not_err() {
+    async fn null_provider_returns_ok_in_test_mode() {
         let provider = NullProvider::new("agent-test", NullReason::TestMode);
         let result = provider.generate("sys", "user", None).await;
-        assert!(result.is_ok(), "NullProvider must return Ok, not Err");
+        assert!(result.is_ok(), "NullProvider in test mode must return Ok");
         let (text, calls, _usage) = result.unwrap();
         assert!(
             text.contains("DEGRADED"),
             "Response must contain DEGRADED marker"
         );
         assert!(calls.is_empty(), "No function calls from NullProvider");
+    }
+
+    #[tokio::test]
+    async fn null_provider_fails_closed_in_production() {
+        let provider = NullProvider::new(
+            "agent-prod",
+            NullReason::MissingApiKey {
+                env_var: "OPENAI_API_KEY",
+            },
+        );
+        let result = provider.generate("sys", "user", None).await;
+        assert!(
+            result.is_err(),
+            "NullProvider without test mode must fail closed"
+        );
+        let embed_res = provider.embed("sample text").await;
+        assert!(
+            embed_res.is_err(),
+            "Embedding without real provider must fail closed"
+        );
     }
 }

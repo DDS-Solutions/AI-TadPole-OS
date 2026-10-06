@@ -51,4 +51,26 @@ describe('Security_Header Component', () => {
 
         expect(screen.getByRole('banner')).toBeDefined();
     });
+
+    it('displays ledger empty when integrity is 0.0', () => {
+        render(
+            <Security_Header
+                agent_health={mock_health}
+                merkle_integrity={0.0}
+            />
+        );
+
+        expect(screen.getByRole('banner')).toBeDefined();
+    });
+
+    it('displays compromised status when integrity is negative error', () => {
+        render(
+            <Security_Header
+                agent_health={mock_health}
+                merkle_integrity={-1.0}
+            />
+        );
+
+        expect(screen.getByRole('banner')).toBeDefined();
+    });
 });

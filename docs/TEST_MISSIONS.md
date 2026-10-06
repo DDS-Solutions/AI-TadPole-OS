@@ -113,7 +113,8 @@ While you can technically use any agent for these missions, their success depend
     - **Schedule**: `*/5 * * * *` (Every 5 minutes)
     - **Budget**: `$0.05`
 *   **Verification**:
-    - [ ] check the SQLite `missions` table or `Mission History` UI for background entries.
+    - [ ] Triggering manual execution via `POST /v1/continuity/jobs/{id}/run` returns `202 Accepted` with synchronous `run_id` and `job_id`.
+    - [ ] Check the SQLite `missions` table or `Mission History` UI for background entries correlating with `run_id`.
     - [ ] Verify `health.log` is created/updated in the workspace.
 
 ## 7. The Governance Gate (Agent-Level Security)
@@ -168,6 +169,19 @@ While you can technically use any agent for these missions, their success depend
     - [ ] **Tool Grounding**: The agent invokes its read-only tools (`read_file` or `list_files`) to verify whether `Glossary_Drift_Report.md` exists.
     - [ ] **Accurate Factual Report**: The agent correctly reports that no such audit file exists on disk, refusing to fabricate three fake workstreams or non-existent `/api/v3` routes.
     - [ ] **Pre-Flight Validation**: Running `python execution/validate_sprint_plan.py --text "<agent_output>"` outputs `[PASS]` and confirms all cited artifacts exist.
+
+---
+
+## 11. The Workflow Pipeline (Deterministic Continuity)
+**Goal**: Verify deterministic multi-step workflow execution and dispatch task correlation.
+
+*   **Setup**: Create a multi-step workflow via `/v1/continuity/workflows` or the Continuity UI.
+*   **Action**: Trigger execution via `POST /v1/continuity/workflows/{id}/run` or `continuity_api.run_workflow(id)`.
+*   **Verification**:
+    - [ ] Endpoint returns `202 Accepted` with a deterministic `{ status: "accepted", workflow_id, run_id }` contract.
+    - [ ] `engine:workflow_run_started` telemetry event is broadcast across the WebSocket.
+    - [ ] Querying `/v1/continuity/workflow-runs/{run_id}/steps` reflects progressive step state transitions (`pending` -> `running` -> `completed`).
+    - [ ] Dispatching tasks via `POST /v1/agents/{id}/tasks` returns `task_id` in `202 Accepted` for end-to-end task correlation.
 
 ---
 

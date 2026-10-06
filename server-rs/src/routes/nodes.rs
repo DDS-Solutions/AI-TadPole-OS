@@ -42,27 +42,15 @@ pub async fn get_nodes(State(state): State<Arc<AppState>>) -> Result<impl IntoRe
 }
 
 /// POST /v1/infra/nodes/discover — Triggers a network discovery scan for new Bunkers.
-#[tracing::instrument(skip(state, _admin), name = "infra_nodes::discover")]
+#[tracing::instrument(skip(_state, _admin), name = "infra_nodes::discover")]
 pub async fn discover_nodes(
-    State(state): State<Arc<AppState>>,
+    State(_state): State<Arc<AppState>>,
     _admin: crate::middleware::auth::RequireAdmin,
-) -> Result<impl IntoResponse, AppError> {
-    tracing::info!("🔍 Discovery scan initiated across registered subnet...");
-
-    // Production network scan: verify reactivity of currently registered nodes
-    let discovered: Vec<String> = Vec::new();
-
-    // Broadcast scan completion to connected operators
-    state.broadcast_sys(
-        "Subnet scan completed. No unmanaged bunker nodes discovered.",
-        "info",
-        None,
-    );
-
-    Ok(Json(serde_json::json!({
-        "status": "success",
-        "discovered": discovered
-    })))
+) -> Result<Json<serde_json::Value>, AppError> {
+    tracing::warn!("⚠️ Discovery scan requested but subnet discovery scanner is not implemented.");
+    Err(AppError::NotImplemented(
+        "Network subnet discovery scan is not yet implemented. Nodes must be registered directly via POST /v1/infra/nodes.".to_string(),
+    ))
 }
 
 #[cfg(test)]
@@ -88,5 +76,18 @@ mod tests {
         let response = get_nodes(State(state)).await.expect("get_nodes succeeds");
         let into_resp = response.into_response();
         assert_eq!(into_resp.status(), axum::http::StatusCode::OK);
+    }
+
+    #[tokio::test]
+    async fn test_discover_nodes_returns_not_implemented() {
+        let state = Arc::new(AppState::new_minimal_mock().await);
+        let res = discover_nodes(State(state), crate::middleware::auth::RequireAdmin).await;
+        match res {
+            Err(AppError::NotImplemented(msg)) => {
+                assert!(msg.contains("not yet implemented"));
+            }
+            Ok(_) => panic!("Expected NotImplemented, got Ok"),
+            Err(other) => panic!("Expected NotImplemented, got error {:?}", other),
+        }
     }
 }

@@ -121,4 +121,19 @@ describe('intelligence_api_service', () => {
         );
         expect(result).toEqual([]);
     });
+
+    it('confirm_knowledge calls /v1/knowledge/:id/confirm via POST', async () => {
+        vi.mocked(api_request).mockResolvedValueOnce({ status: 'confirmed' });
+        const controller = new AbortController();
+        const result = await intelligence_api_service.confirm_knowledge('k-entry-1', controller.signal);
+
+        expect(api_request).toHaveBeenCalledWith(
+            '/v1/knowledge/k-entry-1/confirm',
+            {
+                method: 'POST',
+                signal: controller.signal
+            }
+        );
+        expect(result).toEqual({ status: 'confirmed' });
+    });
 });

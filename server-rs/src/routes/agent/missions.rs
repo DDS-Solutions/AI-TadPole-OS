@@ -23,6 +23,10 @@ use std::sync::Arc;
 /// POST /agents/:id/mission
 ///
 /// Synchronizes a mission objective to an agent's active mission state.
+///
+/// NOTE: This persists the mission configuration on the agent entity. It does NOT
+/// enqueue or start runner execution turns. To launch execution, dispatch a task
+/// via POST /v1/agents/{id}/tasks.
 #[tracing::instrument(skip(state, mission), fields(agent_id = %id), name = "agent_registry::sync_mission")]
 pub async fn sync_mission(
     Path(id): Path<String>,
@@ -34,7 +38,12 @@ pub async fn sync_mission(
     })
     .await?;
 
-    Ok(Json(serde_json::json!({ "status": "ok" })))
+    Ok(Json(serde_json::json!({
+        "status": "synchronized",
+        "executed": false,
+        "agent_id": id,
+        "message": "Mission definition saved to agent state; dispatch via /tasks to start execution"
+    })))
 }
 
 /// GET /v1/agents/graph
@@ -49,6 +58,9 @@ pub async fn get_swarm_graph_handler(
 }
 
 /// Clones an existing mission into a fresh record with a unique UUID.
+///
+/// The cloned mission starts in `pending` draft status with zeroed financial spend
+/// and does not automatically start execution or copy prior findings/logs.
 pub async fn clone_mission(
     State(state): State<Arc<AppState>>,
     Path(id): Path<String>,

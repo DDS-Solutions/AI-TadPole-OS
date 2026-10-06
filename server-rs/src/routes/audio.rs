@@ -61,17 +61,12 @@ pub async fn text_to_speech(
 
     // Default to browser-side TTS if no engine is specified or if configured as such
     let engine = payload.engine.as_deref().unwrap_or("browser");
+    tracing::info!("[audio] Speech synthesis requested via engine: {}", engine);
 
     if engine == "browser" {
-        // Return a signal that browser should handle it locally
-        return Ok((
-            StatusCode::OK,
-            Json(json!({
-                "status": "browser_fallback",
-                "message": "Use Web Speech API for this request"
-            })),
-        )
-            .into_response());
+        return Err(AppError::BadRequest(
+            "Browser speech synthesis does not use server endpoint /v1/engine/speak. Use window.speechSynthesis in client.".to_string(),
+        ));
     }
 
     if engine == "piper" {
@@ -80,37 +75,26 @@ pub async fn text_to_speech(
             // Check Bunker Cache for zero-latency hit
             if let Ok(Some(cached_audio)) = state.resources.audio_cache.get(&payload.text).await {
                 info!("[BunkerCache] Zero-latency hit for: {}", payload.text);
-                let tx = state.comms.audio_stream_tx.clone();
-                if let Err(e) = tx.send(cached_audio) {
-                    tracing::debug!("[audio] Audio stream receiver closed: {:?}", e);
-                }
                 return Ok((
                     StatusCode::OK,
-                    Json(json!({
-                        "status": "cached",
-                        "message": "Serving from zero-latency Bunker Cache"
-                    })),
+                    [(header::CONTENT_TYPE, "audio/wav")],
+                    cached_audio,
                 )
                     .into_response());
             }
 
-            let tx = state.comms.audio_stream_tx.clone();
             let engine = state.resources.get_audio_engine().await;
-            let cache = state.resources.audio_cache.clone();
-            let text = payload.text.clone();
-
-            tokio::spawn(async move {
-                if let Err(e) = engine.speak_stream(&text, tx, cache).await {
-                    error!("Piper stream error: {}", e);
-                }
-            });
+            let audio_bytes = engine.speak(&payload.text).await?;
+            let _ = state
+                .resources
+                .audio_cache
+                .set(&payload.text, audio_bytes.clone())
+                .await;
 
             return Ok((
                 StatusCode::OK,
-                Json(json!({
-                    "status": "streaming",
-                    "message": "Audio chunks are being broadcast over WebSocket"
-                })),
+                [(header::CONTENT_TYPE, "audio/wav")],
+                audio_bytes,
             )
                 .into_response());
         }
@@ -118,7 +102,7 @@ pub async fn text_to_speech(
         #[cfg(not(feature = "neural-audio"))]
         {
             return Err(AppError::NotImplemented(
-                "Local Piper TTS is disabled in this 'Legacy' build. Use 'browser' or 'high-tier' (OpenAI) instead.".to_string()
+                "Local Piper TTS is disabled in this build ('neural-audio' feature required). Use 'browser' or 'openai' instead.".to_string(),
             ));
         }
     }

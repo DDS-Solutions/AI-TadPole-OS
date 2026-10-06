@@ -58,8 +58,14 @@ pub async fn health_check(
         .await
         .is_ok();
 
+    // Merkle audit trail integrity verification (last 10 records)
+    let audit_ok = match state.security.audit_trail.verify_last_n(10, None).await {
+        Ok((verified, total)) => total == 0 || verified == total,
+        Err(_) => false,
+    };
+
     let mut health_state = state.health_state();
-    if !db_ok && health_state != crate::types::SystemHealthState::Degraded {
+    if (!db_ok || !audit_ok) && health_state != crate::types::SystemHealthState::Degraded {
         health_state = crate::types::SystemHealthState::Degraded;
     }
 
@@ -77,10 +83,11 @@ pub async fn health_check(
         .filter(|a| a.health.status != "idle")
         .count();
 
-    let http_status = if health_state == crate::types::SystemHealthState::Degraded {
-        StatusCode::SERVICE_UNAVAILABLE
-    } else {
-        StatusCode::OK
+    let http_status = match health_state {
+        crate::types::SystemHealthState::Ready => StatusCode::OK,
+        crate::types::SystemHealthState::Warming | crate::types::SystemHealthState::Degraded => {
+            StatusCode::SERVICE_UNAVAILABLE
+        }
     };
 
     Ok((

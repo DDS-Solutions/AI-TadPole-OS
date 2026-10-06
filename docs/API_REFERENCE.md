@@ -9,7 +9,7 @@
 
 **Version**: 1.1.463
 
-**Generated**: 2026-09-20 14:01:59
+**Generated**: 2026-10-06 11:00:38
 Welcome to the official API reference for the Tadpole OS Sovereign Engine. Protected endpoints require a valid `NEURAL_TOKEN` provided via the `Authorization: Bearer <token>` header. The public outward agent-card and catalog-search endpoints are token-free and enforce a 60-request-per-minute IP fixed window.
 
 ## Endpoints
@@ -58,11 +58,6 @@ Updates the outward business profile, model profile, or advertised skills.
 Retrieves the list of all registered agents in the swarm. Implements
 HATEOAS-compliant pagination to allow for efficient UI rendering and discovery.
 
-### 🛰️ Registry Introspection
-This handler pulls directly from the engine's memory-mapped `AgentResponse`.
-It maps raw back-end models into a clean, RESTful representation for
-dashboard consumption.
-
 ---
 
 ### GetAgentMemory
@@ -88,7 +83,7 @@ Provides O(1) discovery for high-density swarms.
 ### ResetAgent
 
 - **Endpoint**: `POST /v1/agents/:id/reset`
-- **Handler**: `pub async fn reset_agent` in `agent/recovery.rs`
+- **Handler**: `pub async fn reset_agent` in `agent/crud.rs`
 
 Resets an agent's failure count and returns it to idle status.
 Used to clear "Self-heal cooldowns" after configuration fixes.

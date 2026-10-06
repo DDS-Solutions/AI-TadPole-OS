@@ -141,7 +141,21 @@ pub async fn get_symbol_body(
 pub async fn run_integrity_check(
     workspace_root: std::path::PathBuf,
 ) -> Result<McpResult, AppError> {
-    let mut cmd = tokio::process::Command::new("python");
+    if !crate::utils::security::interpreters_trusted() {
+        return Err(AppError::Forbidden(
+            "Integrity check script interpreter (python) is disabled by default. Set TADPOLE_TRUST_INTERPRETERS=1 on a trusted operator workstation.".to_string(),
+        ));
+    }
+
+    let script_path = workspace_root.join("execution/self_audit_tool.py");
+    if !script_path.exists() {
+        return Err(AppError::NotFound(format!(
+            "Integrity check audit script missing: {:?}",
+            script_path
+        )));
+    }
+
+    let mut cmd = crate::utils::security::create_isolated_command("python");
     cmd.arg("execution/self_audit_tool.py");
     cmd.current_dir(workspace_root);
 

@@ -139,9 +139,32 @@ pub async fn add_mission_cost(
 }
 
 /// Sweeps any abandoned missions that were left in `active` state due to a crash or unexpected shutdown,
-/// reconciling them to `failed` and updating their timestamp.
+/// reconciling them to `failed`, updating their timestamp, and logging the interruption.
 pub async fn sweep_interrupted_missions(pool: &SqlitePool) -> Result<u64, AppError> {
     let now = Utc::now();
+    let interrupted: Vec<(String, Option<String>)> = sqlx::query_as(
+        "SELECT id, agent_id FROM mission_history WHERE status = 'active'",
+    )
+    .fetch_all(pool)
+    .await?;
+
+    for (mission_id, agent_id_opt) in &interrupted {
+        let log_id = uuid::Uuid::new_v4().to_string();
+        let agent_id = agent_id_opt.as_deref().unwrap_or("system");
+        let log_text = "🚨 ENGINE RESTART: Mission was interrupted by unexpected engine termination or ungraceful restart and marked as failed.";
+        let _ = sqlx::query(
+            "INSERT INTO mission_logs (id, mission_id, agent_id, source, text, severity, timestamp, hash) \
+             VALUES (?1, ?2, ?3, 'system', ?4, 'fatal', ?5, '')",
+        )
+        .bind(&log_id)
+        .bind(mission_id)
+        .bind(agent_id)
+        .bind(log_text)
+        .bind(now)
+        .execute(pool)
+        .await;
+    }
+
     let result = sqlx::query::<sqlx::Sqlite>(
         "UPDATE mission_history SET status = 'failed', updated_at = ?1 WHERE status = 'active'",
     )
@@ -631,7 +654,8 @@ mod tests {
     async fn test_sweep_interrupted_missions() -> Result<(), AppError> {
         let pool = SqlitePool::connect("sqlite::memory:").await?;
 
-        sqlx::query("CREATE TABLE mission_history (id TEXT PRIMARY KEY, agent_id TEXT, title TEXT, status TEXT, budget_usd REAL, cost_usd REAL, created_at DATETIME, updated_at DATETIME, is_degraded BOOLEAN, is_pinned BOOLEAN)").execute(&pool).await?;
+        sqlx::query("CREATE TABLE mission_history (id TEXT PRIMARY KEY, agent_id TEXT, title TEXT, status TEXT, budget_usd REAL, cost_usd REAL, created_at DATETIME, updated_at DATETIME, completed_at DATETIME, is_degraded BOOLEAN, is_pinned BOOLEAN)").execute(&pool).await?;
+        sqlx::query("CREATE TABLE mission_logs (id TEXT PRIMARY KEY, mission_id TEXT, agent_id TEXT, source TEXT, text TEXT, severity TEXT, timestamp DATETIME, metadata TEXT, hash TEXT, prev_hash TEXT)").execute(&pool).await?;
 
         // Seed an active mission, a pending mission, and a completed mission
         sqlx::query("INSERT INTO mission_history (id, agent_id, title, status, budget_usd, cost_usd, created_at, updated_at) VALUES ('m-active-1', 'a1', 'Active Task', 'active', 1.0, 0.1, datetime('now'), datetime('now'))").execute(&pool).await?;
@@ -654,6 +678,12 @@ mod tests {
                 .fetch_one(&pool)
                 .await?;
         assert_eq!(m2.0, "failed");
+
+        // Verify diagnostic log was recorded for swept mission
+        let log_count: (i64,) = sqlx::query_as("SELECT COUNT(*) FROM mission_logs WHERE mission_id = 'm-active-1'")
+            .fetch_one(&pool)
+            .await?;
+        assert_eq!(log_count.0, 1);
 
         // Verify pending and completed remain unchanged
         let m_pend: (String,) =

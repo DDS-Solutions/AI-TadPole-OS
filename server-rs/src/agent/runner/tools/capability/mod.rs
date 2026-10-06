@@ -23,7 +23,7 @@ pub use crypto::reset_keyring_for_test;
 #[allow(unused_imports)]
 pub use crypto::{
     canonical_a2a_message, compute_hmac, set_active_key_id, set_key, sign_a2a_canonical,
-    sign_a2a_envelope, verify_a2a_canonical, verify_a2a_envelope,
+    sign_a2a_envelope, validate_capability_key_config, verify_a2a_canonical, verify_a2a_envelope,
 };
 #[allow(unused_imports)]
 pub use guard::{is_revoked, revoke_token, revoke_token_with_expiry, ZeroTrustGuard};

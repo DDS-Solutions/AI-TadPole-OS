@@ -243,7 +243,7 @@ export function useOversightDashboard(): UseOversightDashboardHook {
         if (userInput !== 'SHUTDOWN') return;
 
         try {
-            await system_api_service.engine.shutdown_engine();
+            await system_api_service.engine.shutdown_engine({ wait_for_termination: true });
             alert(i18n.t('oversight.engine_shutting_down'));
         } catch (e: unknown) {
             alert(i18n.t('oversight.kill_engine_failed', { error: e instanceof Error ? e.message : 'Unknown error' }));

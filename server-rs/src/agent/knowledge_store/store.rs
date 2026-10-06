@@ -188,13 +188,27 @@ impl KnowledgeStore {
 
         // ── Compute embedding ──────────────────────────────────────────────
         #[cfg(feature = "vector-memory")]
-        let vector = {
-            let api_key = std::env::var("GOOGLE_API_KEY").map_err(|_| {
-                AppError::BadRequest(
-                    "[IKS] GOOGLE_API_KEY required for embedding. Set it in .env.".to_string(),
-                )
-            })?;
-            crate::agent::memory::get_gemini_embedding(&http_client, &api_key, &req.text).await?
+        let vector: Option<Vec<f32>> = {
+            match std::env::var("GOOGLE_API_KEY") {
+                Ok(api_key) if !api_key.trim().is_empty() => {
+                    match crate::agent::memory::get_gemini_embedding(&http_client, &api_key, &req.text).await {
+                        Ok(emb) => Some(emb),
+                        Err(e) => {
+                            tracing::warn!(
+                                "[IKS] Gemini embedding failed (falling back to SQLite text storage): {}",
+                                e
+                            );
+                            None
+                        }
+                    }
+                }
+                _ => {
+                    tracing::warn!(
+                        "[IKS] GOOGLE_API_KEY missing — storing knowledge entry in SQLite text store without vector embedding"
+                    );
+                    None
+                }
+            }
         };
 
         // ── Prepare metadata ───────────────────────────────────────────────
@@ -270,14 +284,16 @@ impl KnowledgeStore {
         // ── Insert LanceDB vector row ──────────────────────────────────────
         #[cfg(feature = "vector-memory")]
         {
-            let lance = self.get_lance().await?;
-            lance.ensure_table().await?;
-            if let Err(e) = lance.add_memory(&id, &req.text, &topic, vector).await {
-                let _ = tx.rollback().await;
-                return Err(AppError::InternalServerError(format!(
-                    "[IKS] LanceDB insert failed: {}",
-                    e
-                )));
+            if let Some(vec) = vector {
+                let lance = self.get_lance().await?;
+                lance.ensure_table().await?;
+                if let Err(e) = lance.add_memory(&id, &req.text, &topic, vec).await {
+                    let _ = tx.rollback().await;
+                    return Err(AppError::InternalServerError(format!(
+                        "[IKS] LanceDB insert failed: {}",
+                        e
+                    )));
+                }
             }
         }
 
@@ -521,12 +537,18 @@ impl KnowledgeStore {
                 .or_else(|| Some(entry.text.clone())),
             mission_id: None,
         };
-        if let Err(e) = trust_engine.add_node(&concept_node).await {
-            tracing::warn!(
+        trust_engine.add_node(&concept_node).await.map_err(|e| {
+            tracing::error!(
                 "[IKS] Failed to sync confirmed concept node to TrustGraph: {}",
                 e
             );
-        } else if let Some(ref parent_id) = entry.parent_id {
+            AppError::InternalServerError(format!(
+                "Failed to write concept to trust graph: {}",
+                e
+            ))
+        })?;
+
+        if let Some(ref parent_id) = entry.parent_id {
             if !parent_id.trim().is_empty() {
                 let parent_node = crate::agent::trustgraph::TrustGraphNode {
                     id: format!("concept:{}", parent_id),
@@ -535,7 +557,13 @@ impl KnowledgeStore {
                     description: None,
                     mission_id: None,
                 };
-                let _ = trust_engine.add_node(&parent_node).await;
+                trust_engine.add_node(&parent_node).await.map_err(|e| {
+                    tracing::error!("[IKS] Failed to add parent node to TrustGraph: {}", e);
+                    AppError::InternalServerError(format!(
+                        "Failed to write parent concept to trust graph: {}",
+                        e
+                    ))
+                })?;
 
                 let rel_id = format!("rel:depends_on:{}:{}", entry.id, parent_id);
                 let rel = crate::agent::trustgraph::TrustGraphRelation {
@@ -546,12 +574,16 @@ impl KnowledgeStore {
                     weight: 1.0,
                     mission_id: None,
                 };
-                if let Err(e) = trust_engine.add_relation(&rel).await {
-                    tracing::warn!(
+                trust_engine.add_relation(&rel).await.map_err(|e| {
+                    tracing::error!(
                         "[IKS] Failed to sync concept DEPENDS_ON relation to TrustGraph: {}",
                         e
                     );
-                }
+                    AppError::InternalServerError(format!(
+                        "Failed to write DEPENDS_ON relation to trust graph: {}",
+                        e
+                    ))
+                })?;
             }
         }
 

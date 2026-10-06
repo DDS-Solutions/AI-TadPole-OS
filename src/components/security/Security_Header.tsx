@@ -65,10 +65,32 @@ export function Security_Header({ agent_health, merkle_integrity }: SecurityHead
                     </div>
                     <div className="h-8 w-px bg-zinc-800 mx-2" />
                     <UITooltip content={i18n.t('security.tooltip_audit_integrity')}>
-                        <div className={`px-3 py-1 border rounded-full flex items-center gap-2 ${merkle_integrity === 1.0 ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-red-500/10 border-red-500/30'}`}>
-                            <div className={`w-2 h-2 rounded-full animate-pulse ${merkle_integrity === 1.0 ? 'bg-emerald-500' : 'bg-red-500'}`} />
-                            <span className={`text-[10px] font-bold uppercase tracking-widest ${merkle_integrity === 1.0 ? 'text-emerald-400' : 'text-red-400'}`}>
-                                {merkle_integrity === 1.0 ? i18n.t('security.system_secured') : i18n.t('security.integrity_compromised')}
+                        <div className={`px-3 py-1 border rounded-full flex items-center gap-2 ${
+                            merkle_integrity === 1.0 
+                                ? 'bg-emerald-500/10 border-emerald-500/30' 
+                                : merkle_integrity === 0.0 
+                                    ? 'bg-amber-500/10 border-amber-500/30' 
+                                    : 'bg-red-500/10 border-red-500/30'
+                        }`}>
+                            <div className={`w-2 h-2 rounded-full animate-pulse ${
+                                merkle_integrity === 1.0 
+                                    ? 'bg-emerald-500' 
+                                    : merkle_integrity === 0.0 
+                                        ? 'bg-amber-500' 
+                                        : 'bg-red-500'
+                            }`} />
+                            <span className={`text-[10px] font-bold uppercase tracking-widest ${
+                                merkle_integrity === 1.0 
+                                    ? 'text-emerald-400' 
+                                    : merkle_integrity === 0.0 
+                                        ? 'text-amber-400' 
+                                        : 'text-red-400'
+                            }`}>
+                                {merkle_integrity === 1.0 
+                                    ? i18n.t('security.system_secured') 
+                                    : merkle_integrity === 0.0 
+                                        ? i18n.t('security.ledger_empty', { defaultValue: 'Ledger Uninitialized' }) 
+                                        : i18n.t('security.integrity_compromised')}
                             </span>
                         </div>
                     </UITooltip>

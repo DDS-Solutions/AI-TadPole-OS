@@ -106,7 +106,7 @@ export class AgentTaskDispatchService {
         return body;
     }
 
-    public async send_command(input: DispatchCommandInput): Promise<boolean> {
+    public async dispatch_task(input: DispatchCommandInput): Promise<{ success: boolean; task_id?: string }> {
         return track_operation('AgentAPI', `Dispatching command to agent: ${input.agent_id.toUpperCase()}`, async () => {
             try {
                 const { provider_api_key, warning } = await this.checkPrerequisites(input.provider, input.agent_id);
@@ -130,17 +130,34 @@ export class AgentTaskDispatchService {
                     input.analysis
                 );
 
-                await this.api_request_fn(`/v1/agents/${input.agent_id}/tasks`, {
-                    method: 'POST',
-                    body: JSON.stringify(body),
-                    headers: input.request_id ? { 'X-Request-Id': input.request_id } : undefined
-                });
+                const response = await this.api_request_fn<{ status: string; agent_id: string; task_id?: string }>(
+                    `/v1/agents/${input.agent_id}/tasks`,
+                    {
+                        method: 'POST',
+                        body: JSON.stringify(body),
+                        headers: input.request_id ? { 'X-Request-Id': input.request_id } : undefined
+                    }
+                );
 
-                return true;
+                if (response?.task_id) {
+                    this.event_bus_inst.emit_log({
+                        source: 'Agent',
+                        agent_id: input.agent_id,
+                        text: `Task accepted [${response.task_id}]`,
+                        severity: 'info'
+                    });
+                }
+
+                return { success: true, task_id: response?.task_id };
             } catch (err) {
                 throw map_api_error(err);
             }
         }, { agent_id: input.agent_id, mission_id: input.cluster_id });
+    }
+
+    public async send_command(input: DispatchCommandInput): Promise<boolean> {
+        const res = await this.dispatch_task(input);
+        return res.success;
     }
 }
 

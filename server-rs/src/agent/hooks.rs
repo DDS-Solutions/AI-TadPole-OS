@@ -31,6 +31,13 @@ pub struct HooksManager {
     hooks_dir: PathBuf,
 }
 
+fn hook_shells_trusted() -> bool {
+    matches!(
+        std::env::var("TADPOLE_TRUST_HOOK_SHELLS").ok().as_deref(),
+        Some("1") | Some("true") | Some("TRUE")
+    )
+}
+
 impl HooksManager {
     pub fn new(data_dir: &Path) -> Self {
         Self {
@@ -133,40 +140,45 @@ impl HooksManager {
         params: &serde_json::Value,
     ) -> Result<Command, AppError> {
         let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("");
+        let shell_hook = matches!(ext, "ps1" | "bat" | "cmd" | "py" | "sh");
+        if shell_hook && !hook_shells_trusted() {
+            return Err(AppError::Forbidden(
+                "Shell hook interpreters are disabled. Set TADPOLE_TRUST_HOOK_SHELLS=1 only on a trusted operator workstation. This flag is not a sandbox.".to_string(),
+            ));
+        }
 
         let mut cmd = match ext {
             "ps1" => {
-                let mut c = Command::new("powershell");
+                let mut c = crate::utils::security::create_isolated_command("powershell");
                 c.args([
                     "-NoProfile",
                     "-NonInteractive",
                     "-ExecutionPolicy",
-                    "Bypass",
+                    "RemoteSigned",
                     "-File",
                 ])
                 .arg(path);
                 c
             }
             "bat" | "cmd" => {
-                let mut c = Command::new("cmd");
+                let mut c = crate::utils::security::create_isolated_command("cmd");
                 c.arg("/C").arg(path);
                 c
             }
             "py" => {
-                let mut c = Command::new("python3");
+                let mut c = crate::utils::security::create_isolated_command("python3");
                 c.arg(path);
                 c
             }
             "sh" => {
-                let mut c = Command::new("/bin/sh");
+                let mut c = crate::utils::security::create_isolated_command("/bin/sh");
                 c.arg(path);
                 c
             }
-            _ => Command::new(path),
+            _ => crate::utils::security::create_isolated_command(path.to_str().unwrap_or("")),
         };
 
         // H1 & H8: Environment isolation - clear parent process environment and pass explicit allowlist
-        cmd.env_clear();
         cmd.env("AGENT_ID", &ctx.agent_id);
         cmd.env("SKILL", &ctx.skill);
         if let Some(mission_id) = &ctx.mission_id {
@@ -192,12 +204,38 @@ impl HooksManager {
     ) -> Result<(), AppError> {
         let mut cmd = self.build_command(path, ctx, params)?;
 
-        // H4: Bounded execution with timeout
-        let child = cmd.output();
-        let output = match tokio::time::timeout(DEFAULT_HOOK_TIMEOUT, child).await {
-            Ok(Ok(out)) => out,
-            Ok(Err(e)) => return Err(AppError::Io(e)),
+        // H4: Bounded execution with timeout and child process termination
+        cmd.stdout(std::process::Stdio::piped());
+        cmd.stderr(std::process::Stdio::piped());
+        let mut child = cmd.spawn().map_err(AppError::Io)?;
+        let mut child_stdout = child.stdout.take();
+        let mut child_stderr = child.stderr.take();
+
+        let run_future = async {
+            let mut stdout_buf = Vec::new();
+            let mut stderr_buf = Vec::new();
+            tokio::join!(
+                async {
+                    if let Some(pipe) = child_stdout.as_mut() {
+                        let _ = tokio::io::AsyncReadExt::read_to_end(pipe, &mut stdout_buf).await;
+                    }
+                },
+                async {
+                    if let Some(pipe) = child_stderr.as_mut() {
+                        let _ = tokio::io::AsyncReadExt::read_to_end(pipe, &mut stderr_buf).await;
+                    }
+                }
+            );
+            let status = child.wait().await;
+            (status, stdout_buf, stderr_buf)
+        };
+
+        let (status, _stdout_buf, stderr_buf) = match tokio::time::timeout(DEFAULT_HOOK_TIMEOUT, run_future).await {
+            Ok((Ok(status), out, err)) => (status, out, err),
+            Ok((Err(e), _, _)) => return Err(AppError::Io(e)),
             Err(_) => {
+                let _ = child.start_kill();
+                let _ = child.wait().await;
                 return Err(AppError::InternalServerError(format!(
                     "Hook script execution timed out after {:?}: {:?}",
                     DEFAULT_HOOK_TIMEOUT, path
@@ -205,8 +243,8 @@ impl HooksManager {
             }
         };
 
-        if !output.status.success() {
-            let stderr = String::from_utf8_lossy(&output.stderr);
+        if !status.success() {
+            let stderr = String::from_utf8_lossy(&stderr_buf);
             return Err(AppError::InternalServerError(format!(
                 "Hook script failed: {}. Error: {}",
                 path.display(),
@@ -225,6 +263,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_hooks_deterministic_sorting() {
+        std::env::set_var("TADPOLE_TRUST_HOOK_SHELLS", "1");
         let dir = tempdir().unwrap();
         let hooks_dir = dir.path().join("hooks").join("pre_validation");
         tokio::fs::create_dir_all(&hooks_dir).await.unwrap();

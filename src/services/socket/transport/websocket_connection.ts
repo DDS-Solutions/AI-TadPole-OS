@@ -192,7 +192,7 @@ export class WebSocketConnection {
         const gen = ++this.generation;
 
         try {
-            const ws = new WebSocket(ws_url, ['tadpole-pulse-v1']);
+            const ws = new WebSocket(ws_url, [`bearer.${token}`, 'tadpole-pulse-v1']);
             ws.binaryType = 'arraybuffer';
             this.socket = ws;
 

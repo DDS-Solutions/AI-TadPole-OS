@@ -145,6 +145,13 @@ pub async fn start_scheduler(state: Arc<AppState>) {
         {
             tracing::error!("❌ [A2A Sweep] Failed to sweep expired locks: {:?}", e);
         }
+
+        // A2A Mailbox Sweeper: Deliver pending directives to idle recipient agents
+        if let Err(e) =
+            crate::agent::runner::a2a_mailbox::A2AMailbox::sweep_and_deliver_pending(&state).await
+        {
+            tracing::error!("❌ [A2A Mailbox Sweep] Failed to sweep pending mailbox envelopes: {:?}", e);
+        }
     }
 }
 
@@ -197,6 +204,19 @@ pub fn execute_job(
     state: Arc<AppState>,
     job: super::types::ScheduledJob,
 ) -> futures::future::BoxFuture<'static, ()> {
+    execute_job_with_run(state, job, None)
+}
+
+/// Executes a single scheduled job with optional pre-created run record:
+/// 1. Atomically claims the agent → skip if busy (prevents concurrency conflicts).
+/// 2. Creates a run record if not already provided.
+/// 3. Executes workflow or calls `AgentRunner::run()`.
+/// 4. Finalises the run record with financial spend and advances cron.
+pub fn execute_job_with_run(
+    state: Arc<AppState>,
+    job: super::types::ScheduledJob,
+    existing_run: Option<super::types::ScheduledJobRun>,
+) -> futures::future::BoxFuture<'static, ()> {
     Box::pin(async move {
         tracing::info!(
             "🚀 [Continuity] Starting job '{}' for agent '{}' (budget: ${:.3})",
@@ -223,7 +243,11 @@ pub fn execute_job(
                         job.name,
                         job.agent_id
                     );
-                    if let Ok(run) = create_job_run(&state.resources.pool, &job.id).await {
+                    let run_res = match existing_run {
+                        Some(r) => Ok(r),
+                        None => create_job_run(&state.resources.pool, &job.id).await,
+                    };
+                    if let Ok(run) = run_res {
                         let _ = complete_job_run(
                             &state.resources.pool,
                             &run.id,
@@ -254,17 +278,20 @@ pub fn execute_job(
             None
         };
 
-        // 2. Create run record
-        let run = match create_job_run(&state.resources.pool, &job.id).await {
-            Ok(r) => r,
-            Err(e) => {
-                tracing::error!(
-                    "❌ [Continuity] Failed to create run record for job '{}': {}",
-                    job.id,
-                    e
-                );
-                return;
-            }
+        // 2. Create or reuse run record
+        let run = match existing_run {
+            Some(r) => r,
+            None => match create_job_run(&state.resources.pool, &job.id).await {
+                Ok(r) => r,
+                Err(e) => {
+                    tracing::error!(
+                        "❌ [Continuity] Failed to create run record for job '{}': {}",
+                        job.id,
+                        e
+                    );
+                    return;
+                }
+            },
         };
 
         // 3. Spawn keep-alive task to maintain agent heartbeat during execution (if agent claimed)

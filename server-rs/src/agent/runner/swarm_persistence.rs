@@ -73,7 +73,7 @@ pub async fn get_pending_directives(
     let rows = sqlx::query_as::<_, AgentDirective>(
         "SELECT id, mission_id, source_agent_id, target_agent_id, instruction, status, result, reasoning_trace, artifacts
          FROM agent_directives 
-         WHERE target_agent_id = ? AND status = 'pending'
+         WHERE target_agent_id = ? AND status IN ('pending', 'acknowledged')
          ORDER BY created_at ASC",
     )
     .bind(agent_id)
@@ -117,7 +117,7 @@ pub async fn complete_pending_directives_for_agent(
                  WHEN result IS NOT NULL AND length(result) > 0 THEN result
                  ELSE ?
              END
-         WHERE target_agent_id = ? AND status = 'pending'",
+         WHERE target_agent_id = ? AND status IN ('pending', 'acknowledged')",
     )
     .bind(result_summary)
     .bind(agent_id)

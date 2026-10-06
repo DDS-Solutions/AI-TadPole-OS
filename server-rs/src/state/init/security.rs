@@ -58,6 +58,39 @@ pub fn load_security_tokens() -> Result<SecurityTokens, AppError> {
         ));
     }
 
+    if let Err(err_msg) = crate::agent::runner::tools::capability::validate_capability_key_config()
+    {
+        if is_production {
+            return Err(AppError::Unauthorized(format!("🚨 FATAL: {}", err_msg)));
+        } else {
+            tracing::warn!("⚠️ [crypto] {}", err_msg);
+        }
+    }
+
+    if is_production {
+        match std::env::var("OVERSIGHT_PUBLIC_KEY") {
+            Ok(key_str) => {
+                let bytes = hex::decode(key_str.trim()).map_err(|e| {
+                    AppError::Unauthorized(format!(
+                        "🚨 FATAL: OVERSIGHT_PUBLIC_KEY is not a valid hex string: {}",
+                        e
+                    ))
+                })?;
+                if bytes.len() != 32 {
+                    return Err(AppError::Unauthorized(format!(
+                        "🚨 FATAL: OVERSIGHT_PUBLIC_KEY must be a 32-byte hex string (64 characters, got {})",
+                        key_str.trim().len()
+                    )));
+                }
+            }
+            Err(_) => {
+                return Err(AppError::Unauthorized(
+                    "🚨 FATAL: OVERSIGHT_PUBLIC_KEY environment variable MUST be set in production for cryptographic oversight pinning.".to_string(),
+                ));
+            }
+        }
+    }
+
     Ok(SecurityTokens {
         deploy_token,
         admin_token,

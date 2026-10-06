@@ -24,17 +24,62 @@ import { Tooltip } from '../components/ui';
 import type { CatalogItem } from '../utils/csv_parser';
 import { DEFAULT_INFO_CARDS, compileInfoCardsToSkills, type InfoCard } from '../utils/agent_card_compiler';
 import { api_request } from '../services/base_api_service';
+import { use_settings_store } from '../stores/settings_store';
 
 export const Customer_Catalog_Manager: React.FC = () => {
   const [businessName, setBusinessName] = useState('Tadpole SMB Solutions');
   const [modelProfile, setModelProfile] = useState<ModelProfile>('gemma4:e4b');
   const [infoCards, setInfoCards] = useState<InfoCard[]>([...DEFAULT_INFO_CARDS]);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | 'synced' | 'error'>('idle');
+  const [syncError, setSyncError] = useState<string | null>(null);
 
   const activeSkills = compileInfoCardsToSkills(infoCards);
+  const tadpole_os_url = use_settings_store((state) => state.settings.tadpole_os_url);
+
+  const previewUrl = useMemo(() => {
+    const raw = tadpole_os_url?.trim() || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:8000');
+    const base = raw.replace(/\/+$/, '');
+    return `${base}/a2a/v1/company-agent-card.json`;
+  }, [tadpole_os_url]);
+
+  // Initial fetch of published agent card to align local UI with engine state
+  useEffect(() => {
+    let mounted = true;
+    const fetchExistingCard = async () => {
+      try {
+        const card = await api_request<{
+          name?: string;
+          model_profile?: ModelProfile;
+          skills?: Array<{ id: string; name: string; description: string; tags: string[] }>;
+        }>('/a2a/v1/company-agent-card.json', { method: 'GET' });
+
+        if (mounted && card) {
+          if (card.name) setBusinessName(card.name);
+          if (card.model_profile) setModelProfile(card.model_profile);
+          setIsLoaded(true);
+        }
+      } catch (err) {
+        if (mounted) {
+          console.warn('[Customer_Catalog_Manager] Failed to fetch published agent card on mount, using initial state:', err);
+          setIsLoaded(true);
+        }
+      }
+    };
+    fetchExistingCard();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   // Debounced authenticated sync of published agent-card metadata to the Rust backend.
   useEffect(() => {
+    if (!isLoaded) return;
+
     const controller = new AbortController();
+    setSyncStatus('syncing');
+    setSyncError(null);
+
     const timeout = window.setTimeout(async () => {
       try {
         await api_request('/a2a/v1/profile', {
@@ -46,9 +91,13 @@ export const Customer_Catalog_Manager: React.FC = () => {
           }),
           signal: controller.signal,
         });
+        setSyncStatus('synced');
       } catch (err) {
         if (controller.signal.aborted) return;
+        const msg = err instanceof Error ? err.message : 'Failed to synchronize published card';
         console.warn('[Customer_Catalog_Manager] A2A Gateway auto-sync warning:', err);
+        setSyncStatus('error');
+        setSyncError(msg);
       }
     }, 300);
 
@@ -56,7 +105,7 @@ export const Customer_Catalog_Manager: React.FC = () => {
       window.clearTimeout(timeout);
       controller.abort();
     };
-  }, [businessName, modelProfile, infoCards]);
+  }, [businessName, modelProfile, infoCards, isLoaded]);
 
   // Catalog Search Tester State
   const [searchQuery, setSearchQuery] = useState('');
@@ -124,6 +173,25 @@ export const Customer_Catalog_Manager: React.FC = () => {
           </Tooltip>
         </div>
       </div>
+
+      {syncError && (
+        <div className="bg-red-500/10 border border-red-500/20 px-4 py-3 rounded-xl flex items-center justify-between text-red-400 text-xs font-mono">
+          <span>⚠️ Profile Sync Error: {syncError}. Preview may not reflect published state.</span>
+          <button 
+            onClick={() => setSyncError(null)}
+            className="text-red-300 hover:text-red-100 underline text-[11px] ml-4 cursor-pointer"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
+
+      {syncStatus === 'syncing' && (
+        <div className="bg-cyan-500/10 border border-cyan-500/20 px-4 py-2 rounded-xl flex items-center gap-2 text-cyan-400 text-xs font-mono">
+          <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+          <span>Synchronizing card profile with engine...</span>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Left Column: Config & Ingestion */}
@@ -206,7 +274,7 @@ export const Customer_Catalog_Manager: React.FC = () => {
             name={businessName || 'Unnamed Business'} 
             modelProfile={modelProfile} 
             skills={activeSkills} 
-            url={typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}:8000/a2a/v1/company-agent-card.json` : 'http://localhost:8000/a2a/v1/company-agent-card.json'} 
+            url={previewUrl} 
           />
         </div>
       </div>

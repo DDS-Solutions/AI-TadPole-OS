@@ -80,10 +80,25 @@ pub struct BlastRadiusQuery {
 pub async fn get_code_graph(
     State(state): State<Arc<AppState>>,
 ) -> Result<Json<serde_json::Value>, AppError> {
-    let graph_lock = get_built_symbol_graph(&state).await?;
+    let graph_lock = match get_built_symbol_graph(&state).await {
+        Ok(lock) => lock,
+        Err(e) => {
+            tracing::warn!(
+                "⚠️ [Intelligence] Symbol graph unavailable or unindexed: {}",
+                e
+            );
+            return Ok(Json(serde_json::json!({
+                "nodes": [],
+                "links": [],
+                "anomalies": [],
+                "status": "unindexed",
+                "message": format!("Symbol graph unindexed or build error: {}", e),
+            })));
+        }
+    };
     let lock_clone = Arc::clone(&graph_lock);
 
-    let (nodes, edges, anomalies) = tokio::task::spawn_blocking(move || {
+    let res = tokio::task::spawn_blocking(move || {
         let guard = lock_clone.read();
 
         let mut nodes = Vec::with_capacity(guard.graph.node_count());
@@ -109,14 +124,33 @@ pub async fn get_code_graph(
 
         (nodes, edges, anomalies)
     })
-    .await
-    .map_err(|e| AppError::InternalServerError(format!("Graph processing worker failed: {}", e)))?;
+    .await;
 
-    Ok(Json(serde_json::json!({
-        "nodes": nodes,
-        "links": edges,
-        "anomalies": anomalies,
-    })))
+    match res {
+        Ok((nodes, edges, anomalies)) => {
+            let status = if nodes.is_empty() {
+                "unindexed"
+            } else {
+                "ready"
+            };
+            Ok(Json(serde_json::json!({
+                "nodes": nodes,
+                "links": edges,
+                "anomalies": anomalies,
+                "status": status,
+            })))
+        }
+        Err(e) => {
+            tracing::error!("❌ [Intelligence] Graph processing worker failed: {}", e);
+            Ok(Json(serde_json::json!({
+                "nodes": [],
+                "links": [],
+                "anomalies": [],
+                "status": "unindexed",
+                "message": format!("Graph processing worker failed: {}", e),
+            })))
+        }
+    }
 }
 
 /// GET /v1/intelligence/blast-radius

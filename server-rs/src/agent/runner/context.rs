@@ -258,11 +258,18 @@ impl AgentRunner {
                     .await
             {
                 if ctx.budget_usd > m.budget_usd {
-                    let _ = sqlx::query("UPDATE mission_history SET budget_usd = ?1 WHERE id = ?2")
+                    if let Err(e) = sqlx::query("UPDATE mission_history SET budget_usd = ?1 WHERE id = ?2")
                         .bind(ctx.budget_usd)
                         .bind(mission_id)
                         .execute(&self.state.resources.pool)
-                        .await;
+                        .await
+                    {
+                        tracing::error!(
+                            mission_id = %mission_id,
+                            error = %e,
+                            "❌ [Runner] Failed to sync updated budget_usd to mission_history"
+                        );
+                    }
                 }
             }
         }

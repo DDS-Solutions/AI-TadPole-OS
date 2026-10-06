@@ -12,7 +12,10 @@
 //! - **Witness Tests**: `continuity::tests::test_tenant_sanitization`, `continuity::tests::test_create_job_db_propagation`
 
 use crate::agent::continuity::{
-    scheduler::{create_job, delete_job, get_job_by_id, list_jobs, list_runs_for_job, update_job},
+    scheduler::{
+        create_job, create_job_run, delete_job, get_job_by_id, list_jobs, list_runs_for_job,
+        update_job,
+    },
     types::{CreateJobRequest, UpdateJobRequest},
     workflow::WorkflowEngine,
 };
@@ -447,6 +450,61 @@ pub async fn get_workflow_run_steps_handler(
     ))
 }
 
+#[tracing::instrument(skip(state, headers, payload), name = "continuity::run_workflow")]
+pub async fn run_workflow_handler(
+    State(state): State<Arc<AppState>>,
+    headers: axum::http::HeaderMap,
+    Path(workflow_id): Path<String>,
+    payload: Option<Json<serde_json::Value>>,
+) -> Result<impl IntoResponse, AppError> {
+    let tenant_id = extract_tenant_id(&headers);
+    let initial_context = match payload {
+        Some(Json(v)) => {
+            if let Some(ctx) = v.get("initial_context") {
+                ctx.clone()
+            } else if v.is_object() {
+                v
+            } else {
+                serde_json::json!({})
+            }
+        }
+        None => serde_json::json!({}),
+    };
+
+    let repo = crate::agent::continuity::repository::WorkflowRepository::new(state.resources.pool.clone());
+    let workflow = repo.get_workflow(&workflow_id, &tenant_id).await?;
+    if !workflow.enabled {
+        return Err(AppError::Conflict("Workflow is disabled".to_string()));
+    }
+    let steps = repo.get_workflow_steps(&workflow_id, &tenant_id).await?;
+    if steps.is_empty() {
+        return Err(AppError::BadRequest("Workflow has no steps".to_string()));
+    }
+    crate::agent::continuity::workflow::helpers::detect_dependency_cycle(&steps)?;
+
+    let run_id = uuid::Uuid::new_v4().to_string();
+    let engine = WorkflowEngine::new(Arc::clone(&state));
+    let t_id = tenant_id.clone();
+    let wf_id = workflow_id.clone();
+    let r_id = run_id.clone();
+
+    tokio::spawn(async move {
+        if let Err(e) = engine.run_workflow_with_id(&t_id, &wf_id, &r_id, initial_context).await {
+            tracing::error!("❌ [Workflow] Background execution of workflow '{}' run '{}' failed: {}", wf_id, r_id, e);
+        }
+    });
+
+    Ok((
+        StatusCode::ACCEPTED,
+        Json(json!({
+            "status": "accepted",
+            "workflow_id": workflow_id,
+            "run_id": run_id,
+            "message": "Workflow run dispatched"
+        })),
+    ))
+}
+
 #[tracing::instrument(skip(state, headers), name = "continuity::list_workflow_runs")]
 pub async fn list_workflow_runs_handler(
     State(state): State<Arc<AppState>>,
@@ -506,16 +564,20 @@ pub async fn run_job_now_handler(
         return Err(AppError::Conflict("Scheduled job is disabled".to_string()));
     }
 
+    let run = create_job_run(&state.resources.pool, &job.id).await?;
+    let run_id = run.id.clone();
+
     state.emit_event(json!({
         "type": "continuity:job_triggered",
         "job_id": job.id,
+        "run_id": &run_id,
         "agent_id": job.agent_id,
         "timestamp": chrono::Utc::now().to_rfc3339()
     }));
 
     let state_clone = Arc::clone(&state);
     tokio::spawn(async move {
-        crate::agent::continuity::executor::execute_job(state_clone, job).await;
+        crate::agent::continuity::executor::execute_job_with_run(state_clone, job, Some(run)).await;
     });
 
     Ok((
@@ -523,6 +585,7 @@ pub async fn run_job_now_handler(
         Json(json!({
             "status": "accepted",
             "job_id": job_id,
+            "run_id": run_id,
             "message": "Job execution dispatched"
         })),
     ))

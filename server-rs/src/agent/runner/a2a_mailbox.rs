@@ -547,6 +547,111 @@ impl A2AMailbox {
             })
             .collect())
     }
+
+    /// Scans the mailbox for pending directives destined for local agents and triggers runner execution if the recipient is idle.
+    pub async fn sweep_and_deliver_pending(
+        state: &std::sync::Arc<crate::state::AppState>,
+    ) -> Result<usize, AppError> {
+        let pending_targets: Vec<String> = sqlx::query_scalar(
+            "SELECT DISTINCT target_agent_id FROM agent_directives WHERE status = 'pending' LIMIT 20",
+        )
+        .fetch_all(&state.resources.pool)
+        .await?;
+
+        if pending_targets.is_empty() {
+            return Ok(0);
+        }
+
+        let mut delivered_count = 0;
+        for target_agent_id in pending_targets {
+            // Skip remote targets
+            if is_remote_target(&target_agent_id) {
+                continue;
+            }
+
+            // Skip if target agent is currently executing a task
+            if state.comms.active_runners.contains_key(&target_agent_id) {
+                continue;
+            }
+
+            // Verify if agent exists in registry
+            let (agent_exists, is_suspended, is_bankrupt) =
+                match state.registry.agents.get(&target_agent_id) {
+                    Some(a) => {
+                        let status = a.health.status.clone();
+                        let bankrupt = a.is_bankrupt();
+                        (true, status == crate::routes::agent::STATUS_SUSPENDED, bankrupt)
+                    }
+                    None => (false, false, false),
+                };
+
+            if !agent_exists {
+                tracing::warn!(
+                    "⚠️ [A2A Mailbox] Target agent '{}' does not exist in registry; marking pending directives as failed",
+                    target_agent_id
+                );
+                let _ = sqlx::query(
+                    "UPDATE agent_directives SET status = 'failed', result = 'Target agent not found in registry' WHERE target_agent_id = ? AND status = 'pending'",
+                )
+                .bind(&target_agent_id)
+                .execute(&state.resources.pool)
+                .await;
+                continue;
+            }
+
+            if is_suspended || is_bankrupt {
+                tracing::warn!(
+                    "⚠️ [A2A Mailbox] Target agent '{}' is suspended or bankrupt; postponing directive delivery",
+                    target_agent_id
+                );
+                continue;
+            }
+
+            // Fetch oldest pending directive for this agent
+            let directive: Option<(String, String, String)> = sqlx::query_as(
+                "SELECT id, mission_id, instruction FROM agent_directives WHERE target_agent_id = ? AND status = 'pending' ORDER BY created_at ASC LIMIT 1",
+            )
+            .bind(&target_agent_id)
+            .fetch_optional(&state.resources.pool)
+            .await?;
+
+            if let Some((dir_id, mission_id, instruction)) = directive {
+                tracing::info!(
+                    "📨 [A2A Mailbox] Delivering pending directive {} to agent {}",
+                    dir_id,
+                    target_agent_id
+                );
+
+                // Mark directive as acknowledged so it won't be double-delivered on concurrent sweeps
+                let _ = sqlx::query("UPDATE agent_directives SET status = 'acknowledged' WHERE id = ?")
+                    .bind(&dir_id)
+                    .execute(&state.resources.pool)
+                    .await;
+
+                let payload = crate::agent::types::TaskPayload {
+                    message: instruction,
+                    department: Some("A2A Directive".to_string()),
+                    cluster_id: Some(mission_id),
+                    safe_mode: Some(true),
+                    ..Default::default()
+                };
+
+                let (join_handle, runner_handle, start_tx) =
+                    crate::routes::agent::tasks::spawn_agent_runner(state, &target_agent_id, payload);
+                crate::routes::agent::tasks::register_agent_runner(
+                    state,
+                    &target_agent_id,
+                    runner_handle,
+                    start_tx,
+                )
+                .await;
+                drop(join_handle);
+                delivered_count += 1;
+            }
+        }
+
+        Ok(delivered_count)
+    }
 }
 
 pub(crate) fn is_remote_target(target_agent_id: &str) -> bool {

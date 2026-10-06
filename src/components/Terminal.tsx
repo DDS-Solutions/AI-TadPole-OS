@@ -113,7 +113,8 @@ export default function Terminal_Component({ agents }: Terminal_Props) {
 
     const load_workspace_files = async () => {
         try {
-            const files = await system_api_service.workspace.get_workspace_files();
+            const res = await system_api_service.workspace.get_workspace_files();
+            const files = Array.isArray(res) ? res : (res?.files ?? []);
             set_workspace_files(files);
         } catch (err) {
             console.error('[Terminal] Failed to fetch workspace files:', err);

@@ -16,7 +16,10 @@ use std::net::IpAddr;
 use std::path::{Path, PathBuf};
 use unicode_normalization::UnicodeNormalization;
 
-pub use crate::security::command_guard::{parse_command_tokens, validate_shell_command};
+pub use crate::security::command_guard::{
+    create_isolated_command, interpreters_trusted, parse_command_tokens, validate_shell_command,
+    SAFE_HOST_ENV_VARS,
+};
 pub use crate::security::path_guard::{validate_path, SafePath};
 pub use crate::security::ssrf_guard::{validate_public_http_url, ValidatedUrl};
 
@@ -149,17 +152,13 @@ mod tests {
         assert!(validate_public_http_url("http://10.0.0.1/status")
             .await
             .is_err());
-        assert!(
-            validate_public_http_url("http://10.0.0.1/latest/meta-data")
-                .await
-                .is_err()
-        );
+        assert!(validate_public_http_url("http://10.0.0.1/latest/meta-data")
+            .await
+            .is_err());
         assert!(validate_public_http_url("file:///etc/passwd")
             .await
             .is_err());
-        assert!(validate_public_http_url("https://10.0.0.1/")
-            .await
-            .is_ok());
+        assert!(validate_public_http_url("https://10.0.0.1/").await.is_ok());
     }
 
     #[test]
@@ -233,10 +232,12 @@ mod tests {
 
     #[test]
     fn test_validate_shell_zero_trust() {
-        // Authorized
+        // Authorized inspection commands. Interpreters are default-deny.
         assert!(validate_shell_command("ls -la").is_ok());
-        assert!(validate_shell_command("cargo build --release").is_ok());
         assert!(validate_shell_command("npm test").is_ok());
+        assert!(validate_shell_command("cargo build --release").is_err());
+        assert!(validate_shell_command("python script.py").is_err());
+        assert!(validate_shell_command("node script.js").is_err());
 
         // Unauthorized Command
         assert!(validate_shell_command("rm -rf .").is_err());
@@ -284,6 +285,14 @@ mod tests {
 
         // git transport RCE (S-004)
         assert!(validate_shell_command("git clone ext::sh -c evil").is_err());
+    }
+
+    #[test]
+    fn test_create_isolated_command_environment() {
+        let _cmd = create_isolated_command("git");
+        assert!(!SAFE_HOST_ENV_VARS.is_empty());
+        assert!(SAFE_HOST_ENV_VARS.contains(&"PATH"));
+        assert!(SAFE_HOST_ENV_VARS.contains(&"TEMP") || SAFE_HOST_ENV_VARS.contains(&"TMP"));
     }
 
     #[test]

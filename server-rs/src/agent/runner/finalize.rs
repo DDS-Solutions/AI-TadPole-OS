@@ -202,11 +202,20 @@ impl AgentRunner {
 
         // Record to persistent budget guard if turn incurred a cost
         if turn_cost > 0.0 {
-            let budget_guard = self.state.security.budget_guard.clone();
-            let agent_id = ctx.agent_id.clone();
-            tokio::spawn(async move {
-                let _ = budget_guard.record_usage(&agent_id, turn_cost).await;
-            });
+            if let Err(e) = self
+                .state
+                .security
+                .budget_guard
+                .record_usage(&ctx.agent_id, turn_cost)
+                .await
+            {
+                tracing::error!(
+                    "❌ [Runner] Failed to persist budget usage for agent {} (cost: {}): {}",
+                    ctx.agent_id,
+                    turn_cost,
+                    e
+                );
+            }
         }
 
         // 📢 BROADCAST & STATUS: Broadcast assistant message and transition to idle
@@ -657,11 +666,20 @@ impl AgentRunner {
 
         // Record final cost if usage was provided and cost > 0
         if turn_cost > 0.0 {
-            let budget_guard = self.state.security.budget_guard.clone();
-            let agent_id = ctx.agent_id.clone();
-            tokio::spawn(async move {
-                let _ = budget_guard.record_usage(&agent_id, turn_cost).await;
-            });
+            if let Err(e) = self
+                .state
+                .security
+                .budget_guard
+                .record_usage(&ctx.agent_id, turn_cost)
+                .await
+            {
+                tracing::error!(
+                    "❌ [Runner] Failed to persist budget usage during failure finalization for agent {} (cost: {}): {}",
+                    ctx.agent_id,
+                    turn_cost,
+                    e
+                );
+            }
         }
 
         // 3. 📢 BROADCAST & STATUS: Broadcast error message and transition to idle

@@ -52,3 +52,8 @@ docker compose up --build
 
 ## ❓ Need Help?
 Check the `README.md` for project goals or open an Issue on GitHub for architectural clarification.
+
+## Sidecar and protoc binaries
+
+Do not commit `src-tauri/bin/server-rs-*.exe` or vendored `protoc.exe` copies. Build the engine with `cargo build --release --manifest-path server-rs/Cargo.toml` and copy the product into `src-tauri/bin/` using the Tauri sidecar name before `tauri build`. Install `protoc` from the official Protocol Buffers release and set `PROTOC` if a build script requires it.
+

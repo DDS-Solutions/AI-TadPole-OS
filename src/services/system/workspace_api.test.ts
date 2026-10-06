@@ -51,7 +51,7 @@ describe('workspace_api', () => {
 
     describe('get_workspace_files', () => {
         it('calls GET /v1/system/workspaces/files', async () => {
-            const mock_files = ['file1.ts', 'file2.ts'];
+            const mock_files = { files: ['file1.ts', 'file2.ts'], total: 2, truncated: false };
             vi.mocked(api_request).mockResolvedValueOnce(mock_files);
 
             const result = await workspace_api.get_workspace_files();
@@ -63,12 +63,55 @@ describe('workspace_api', () => {
 
         it('propagates abort signal and timeout option', async () => {
             const controller = new AbortController();
-            vi.mocked(api_request).mockResolvedValueOnce([]);
+            vi.mocked(api_request).mockResolvedValueOnce({ files: [], total: 0, truncated: false });
 
             await workspace_api.get_workspace_files({ signal: controller.signal, timeout: 10000 });
             expect(api_request).toHaveBeenCalledWith('/v1/system/workspaces/files', expect.objectContaining({
                 signal: controller.signal,
                 timeout: 10000
+            }));
+        });
+    });
+
+    describe('get_file_history', () => {
+        it('calls GET /v1/cas/history with query params', async () => {
+            const mock_history = [{
+                id: 1,
+                workspace_id: 'ws-1',
+                file_path: 'test.rs',
+                hash: 'abc123hash',
+                size_bytes: 42,
+                version_num: 1,
+                created_at: '2026-10-06T12:00:00Z'
+            }];
+            vi.mocked(api_request).mockResolvedValueOnce({ success: true, data: mock_history });
+
+            const res = await workspace_api.get_file_history('test.rs', '/root');
+            expect(res).toEqual(mock_history);
+            expect(api_request).toHaveBeenCalledWith('/v1/cas/history?file_path=test.rs&workspace_root=%2Froot', expect.objectContaining({
+                method: 'GET'
+            }));
+        });
+    });
+
+    describe('restore_file_version', () => {
+        it('calls POST /v1/cas/restore with payload', async () => {
+            const mock_revision = {
+                id: 1,
+                workspace_id: 'ws-1',
+                file_path: 'test.rs',
+                hash: 'abc123hash',
+                size_bytes: 42,
+                version_num: 1,
+                created_at: '2026-10-06T12:00:00Z'
+            };
+            vi.mocked(api_request).mockResolvedValueOnce({ success: true, data: mock_revision });
+
+            const res = await workspace_api.restore_file_version('test.rs', 1, '/root');
+            expect(res).toEqual(mock_revision);
+            expect(api_request).toHaveBeenCalledWith('/v1/cas/restore', expect.objectContaining({
+                method: 'POST',
+                body: JSON.stringify({ file_path: 'test.rs', version_num: 1, workspace_root: '/root' })
             }));
         });
     });

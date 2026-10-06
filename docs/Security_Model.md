@@ -8,15 +8,22 @@
 # 🛡️ Security Model: Sovereign Protection
 
 > **Intelligence Level**: High (Sovereign Context)  
-> **Status**: Verified & Hardened  
+> **Status**: Controls implemented; host isolation is not complete  
 > **Version**: 1.2.2  
-> **Last Audited**: 2026-07-30  
-> **Fault Ledger**: [`directives/FAULT_REGISTRY.md`](../directives/FAULT_REGISTRY.md) (100% Resolved)  
+> **Last Reviewed**: 2026-10-04  
+> **Fault Ledger**: [`directives/FAULT_REGISTRY.md`](../directives/FAULT_REGISTRY.md). Open items are tracked in `docs/SECURITY_REMEDIATION_PLAN.md`.  
 > **Audit Context**: `reports/intelligence/audit_context.json`  
 
 Tadpole OS implements a Zero-Trust security model designed to provide "Sovereign Protection" for both local and distributed agent clusters. Architecture follows the principle of **Hardened Containment**.
 
 ---
+
+
+## Residual risk (2026-10-04)
+
+The command guard is a string filter, not an operating-system sandbox. Interpreter commands (`python`, `node`, `cargo`) and shell hook launchers are denied unless the operator sets `TADPOLE_TRUST_INTERPRETERS=1` or `TADPOLE_TRUST_HOOK_SHELLS=1`. Those flags re-enable host execution as the engine user. A separate OS user, network namespace, and binary allowlist remain follow-up work.
+
+WebSocket upgrades require a `bearer.<token>` subprotocol. A pulse-only handshake is rejected.
 
 ## 🏗️ Technical Hierarchy: Policy → Mechanism → Enforcement
 

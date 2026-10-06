@@ -377,16 +377,22 @@ pub async fn pause_agent(
         runner.abort_handle.abort();
 
         // Mark running mission in mission_history terminal to prevent stranded active rows
-        let _ = sqlx::query(
-            "UPDATE mission_history SET status = 'cancelled', completed_at = ?1 WHERE agent_id = ?2 AND status IN ('pending', 'active')"
+        sqlx::query(
+            "UPDATE mission_history SET status = 'cancelled', updated_at = ?1 WHERE agent_id = ?2 AND status IN ('pending', 'active')"
         )
         .bind(chrono::Utc::now())
         .bind(clean_id)
         .execute(&state.resources.pool)
-        .await;
+        .await
+        .map_err(AppError::Sqlx)?;
     }
 
-    Ok(Json(serde_json::json!({ "status": "ok" })))
+    Ok(Json(serde_json::json!({
+        "status": "ok",
+        "agent_id": clean_id,
+        "paused": true,
+        "message": "Agent paused and active tasks cancelled"
+    })))
 }
 
 /// POST /agents/:id/resume
@@ -402,7 +408,13 @@ pub async fn resume_agent(
     })
     .await?;
 
-    Ok(Json(serde_json::json!({ "status": "ok" })))
+    Ok(Json(serde_json::json!({
+        "status": "ok",
+        "agent_id": clean_id,
+        "state": "idle",
+        "reopened_mission": false,
+        "message": "Agent resumed to idle state. Dispatch a new task to continue work."
+    })))
 }
 
 /// POST /v1/agents/:id/reset
@@ -430,17 +442,18 @@ pub async fn reset_agent(
         );
         runner.abort_handle.abort();
 
-        let _ = sqlx::query(
-            "UPDATE mission_history SET status = 'cancelled', completed_at = ?1 WHERE agent_id = ?2 AND status IN ('pending', 'active')"
+        sqlx::query(
+            "UPDATE mission_history SET status = 'cancelled', updated_at = ?1 WHERE agent_id = ?2 AND status IN ('pending', 'active')"
         )
         .bind(chrono::Utc::now())
         .bind(clean_id)
         .execute(&state.resources.pool)
-        .await;
+        .await
+        .map_err(AppError::Sqlx)?;
     }
 
     Ok(Json(
-        serde_json::json!({ "status": "ok", "message": "Failure count reset and tasks terminated." }),
+        serde_json::json!({ "status": "ok", "agent_id": clean_id, "message": "Failure count reset and tasks terminated." }),
     ))
 }
 
@@ -479,7 +492,7 @@ pub async fn delete_agent(
 
     // 2. Mark pending/active missions as cancelled in mission_history
     let _ = sqlx::query(
-        "UPDATE mission_history SET status = 'cancelled', completed_at = ?1 WHERE agent_id = ?2 AND status IN ('pending', 'active')"
+        "UPDATE mission_history SET status = 'cancelled', updated_at = ?1 WHERE agent_id = ?2 AND status IN ('pending', 'active')"
     )
     .bind(chrono::Utc::now())
     .bind(clean_id)

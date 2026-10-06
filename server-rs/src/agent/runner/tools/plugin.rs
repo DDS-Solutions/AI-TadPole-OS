@@ -113,8 +113,13 @@ impl Tool for PluginTool {
             ));
         }
 
-        // Enforce the Oversight Gate for all dynamic plugins
-        // This keeps dynamic plugin execution secure
+        let is_interpreter = matches!(ext.as_str(), "py" | "js" | "cjs" | "mjs" | "wasm");
+        if is_interpreter && !crate::utils::security::interpreters_trusted() {
+            return Err(ToolExecutionError::ExecutionFailed(
+                "Plugin interpreter execution (python, node, wasm) is denied by default. Set TADPOLE_TRUST_INTERPRETERS=1 on a trusted operator workstation.".to_string(),
+            ));
+        }
+
         tracing::info!(
             "🔌 [Plugins] Spawning dynamic tool '{}' via process: {}",
             self.manifest.name,
@@ -123,7 +128,7 @@ impl Tool for PluginTool {
 
         let input_json = serde_json::to_string(&args).unwrap_or_default();
 
-        let mut child = tokio::process::Command::new(cmd)
+        let mut child = crate::utils::security::create_isolated_command(cmd)
             .args(&args_list)
             .current_dir(&ctx.workspace_root)
             .stdin(std::process::Stdio::piped())
@@ -144,18 +149,53 @@ impl Tool for PluginTool {
             let _ = stdin.flush().await;
         }
 
-        // Wait for execution to finish
-        let output = child.wait_with_output().await.map_err(|e| {
-            ToolExecutionError::ExecutionFailed(format!(
-                "Failed waiting for plugin subprocess: {}",
-                e
-            ))
-        })?;
+        // Wait for execution to finish with bounded timeout
+        let mut child_stdout = child.stdout.take();
+        let mut child_stderr = child.stderr.take();
 
-        let stdout = String::from_utf8_lossy(&output.stdout).to_string();
-        let stderr = String::from_utf8_lossy(&output.stderr).to_string();
+        let run_future = async {
+            use tokio::io::AsyncReadExt;
+            let mut stdout_buf = Vec::new();
+            let mut stderr_buf = Vec::new();
+            let _ = tokio::join!(
+                async {
+                    if let Some(pipe) = child_stdout.as_mut() {
+                        let _ = pipe.read_to_end(&mut stdout_buf).await;
+                    }
+                },
+                async {
+                    if let Some(pipe) = child_stderr.as_mut() {
+                        let _ = pipe.read_to_end(&mut stderr_buf).await;
+                    }
+                }
+            );
+            let status = child.wait().await;
+            (status, stdout_buf, stderr_buf)
+        };
 
-        if !output.status.success() {
+        const PLUGIN_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(60);
+        let (status, stdout_buf, stderr_buf) = match tokio::time::timeout(PLUGIN_TIMEOUT, run_future).await {
+            Ok((Ok(status), out, err)) => (status, out, err),
+            Ok((Err(e), _, _)) => {
+                return Err(ToolExecutionError::ExecutionFailed(format!(
+                    "Failed waiting for plugin subprocess: {}",
+                    e
+                )));
+            }
+            Err(_) => {
+                let _ = child.start_kill();
+                let _ = child.wait().await;
+                return Err(ToolExecutionError::ExecutionFailed(format!(
+                    "Plugin subprocess timed out after {:?} and was killed",
+                    PLUGIN_TIMEOUT
+                )));
+            }
+        };
+
+        let stdout = String::from_utf8_lossy(&stdout_buf).to_string();
+        let stderr = String::from_utf8_lossy(&stderr_buf).to_string();
+
+        if !status.success() {
             return Err(ToolExecutionError::ExecutionFailed(format!(
                 "Plugin process exited with error:\nSTDOUT: {}\nSTDERR: {}",
                 stdout, stderr

@@ -25,6 +25,30 @@ pub(crate) struct Keyring {
     pub(crate) active_key_id: String,
 }
 
+/// Validates the capability signing key configuration according to operational environment.
+/// In production, `CAPABILITY_KEY_CURR` MUST be set and must be a 32-byte hex string (64 characters).
+/// In development/testing, an unset key falls back to an ephemeral key, but a malformed key is always rejected.
+pub fn validate_capability_key_config() -> Result<(), String> {
+    let is_production = crate::utils::security::is_production_env();
+    match std::env::var("CAPABILITY_KEY_CURR") {
+        Ok(curr_val) => {
+            let key_bytes = hex::decode(&curr_val)
+                .map_err(|e| format!("CAPABILITY_KEY_CURR is not a valid hex string: {}", e))?;
+            if key_bytes.len() != 32 {
+                return Err(format!(
+                    "CAPABILITY_KEY_CURR must be a 32-byte hex string (64 characters, got {})",
+                    curr_val.len()
+                ));
+            }
+            Ok(())
+        }
+        Err(_) if is_production => Err(
+            "CAPABILITY_KEY_CURR environment variable MUST be set in production for cross-node and restart A2A envelope verification.".to_string(),
+        ),
+        Err(_) => Ok(()),
+    }
+}
+
 pub(crate) fn build_keyring_from_env() -> Keyring {
     let mut keys = HashMap::new();
 
@@ -32,17 +56,33 @@ pub(crate) fn build_keyring_from_env() -> Keyring {
     let prev = std::env::var("CAPABILITY_KEY_PREV").ok();
 
     let active_key_id = if let Some(curr_val) = curr {
-        if let Ok(key_bytes) = hex::decode(&curr_val) {
-            if key_bytes.len() == 32 {
+        match hex::decode(&curr_val) {
+            Ok(key_bytes) if key_bytes.len() == 32 => {
                 let mut key = [0u8; 32];
                 key.copy_from_slice(&key_bytes);
                 keys.insert("curr".to_string(), key);
                 "curr".to_string()
-            } else {
-                panic!("CAPABILITY_KEY_CURR must be a 32-byte hex string (64 characters)");
             }
-        } else {
-            panic!("CAPABILITY_KEY_CURR is not a valid hex string");
+            Ok(key_bytes) => {
+                tracing::error!(
+                    "[crypto] CAPABILITY_KEY_CURR must be a 32-byte hex string (64 characters, got {} bytes). Generated fallback ephemeral development key.",
+                    key_bytes.len()
+                );
+                let mut key = [0u8; 32];
+                rand::rng().fill_bytes(&mut key);
+                keys.insert("dev".to_string(), key);
+                "dev".to_string()
+            }
+            Err(e) => {
+                tracing::error!(
+                    "[crypto] CAPABILITY_KEY_CURR is not a valid hex string: {}. Generated fallback ephemeral development key.",
+                    e
+                );
+                let mut key = [0u8; 32];
+                rand::rng().fill_bytes(&mut key);
+                keys.insert("dev".to_string(), key);
+                "dev".to_string()
+            }
         }
     } else {
         tracing::warn!("[crypto] No CAPABILITY_KEY_CURR configured; generated ephemeral development key. Tokens will not persist across restarts.");

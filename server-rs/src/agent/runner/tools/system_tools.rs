@@ -459,12 +459,19 @@ impl AgentRunner {
         fc: &crate::agent::types::ToolCall,
         output_text: &mut String,
     ) -> Result<(), AppError> {
-        let (executable, args, target_cwd, envs) = if let Some(exe) = fc
+        let (executable, args, target_cwd) = if let Some(exe) = fc
             .args
             .get("executable")
             .and_then(|v| v.as_str())
             .filter(|s| !s.trim().is_empty())
         {
+            if fc.args.get("envs").is_some() {
+                *output_text =
+                    "(SECURITY BLOCKED: Caller-supplied environment variables ('envs') are prohibited)"
+                        .to_string();
+                return Ok(());
+            }
+
             let args_list: Vec<String> = fc
                 .args
                 .get("args")
@@ -482,14 +489,7 @@ impl AgentRunner {
                 .and_then(|v| v.as_str())
                 .map(std::path::PathBuf::from);
 
-            let env_map: Option<std::collections::HashMap<String, String>> =
-                fc.args.get("envs").and_then(|v| v.as_object()).map(|obj| {
-                    obj.iter()
-                        .filter_map(|(k, v)| v.as_str().map(|s| (k.clone(), s.to_string())))
-                        .collect()
-                });
-
-            (exe.to_string(), args_list, cwd_path, env_map)
+            (exe.to_string(), args_list, cwd_path)
         } else {
             let command_str = fc
                 .args
@@ -502,6 +502,13 @@ impl AgentRunner {
                 return Ok(());
             }
 
+            if fc.args.get("envs").is_some() {
+                *output_text =
+                    "(SECURITY BLOCKED: Caller-supplied environment variables ('envs') are prohibited)"
+                        .to_string();
+                return Ok(());
+            }
+
             // In-memory tokenization fallback for command strings
             let tokens = crate::utils::security::parse_command_tokens(command_str);
             if tokens.is_empty() {
@@ -511,7 +518,7 @@ impl AgentRunner {
 
             let exe = tokens[0].clone();
             let args_list = tokens[1..].to_vec();
-            (exe, args_list, None, None)
+            (exe, args_list, None)
         };
 
         let full_command_display = if args.is_empty() {
@@ -636,15 +643,17 @@ impl AgentRunner {
                 .unwrap_or_else(|| ctx.workspace_root.clone())
         });
 
-        let mut cmd = tokio::process::Command::new(&executable);
+        let mut cmd = crate::utils::security::create_isolated_command(&executable);
         cmd.args(&args)
             .current_dir(&run_dir)
             .stdout(std::process::Stdio::piped())
             .stderr(std::process::Stdio::piped());
 
-        if let Some(ref env_map) = envs {
-            cmd.envs(env_map);
-        }
+        cmd.env(
+            "TADPOLE_WORKSPACE",
+            ctx.workspace_root.to_string_lossy().as_ref(),
+        );
+        cmd.env("TADPOLE_AGENT_ID", &ctx.agent_id);
 
         let child = cmd.spawn();
 
@@ -657,70 +666,106 @@ impl AgentRunner {
 
                 use tokio::io::AsyncReadExt;
 
-                let mut child_stdout = child.stdout.take();
-                let mut child_stderr = child.stderr.take();
+                let timeout_secs = fc
+                    .args
+                    .get("timeout")
+                    .and_then(|v| v.as_u64())
+                    .unwrap_or(60);
+                let command_timeout = std::time::Duration::from_secs(timeout_secs.clamp(1, 300));
 
-                // Read both pipes concurrently to prevent OS pipe buffer deadlock
-                let ((stdout_trunc, stdout_buf), (stderr_trunc, stderr_buf)) = tokio::join!(
-                    async {
-                        let mut buf = Vec::new();
-                        let mut is_trunc = false;
-                        if let Some(pipe) = child_stdout.as_mut() {
-                            if let Ok(n) = pipe.take(32_769).read_to_end(&mut buf).await {
-                                if n > 32_768 {
-                                    buf.truncate(32_768);
-                                    is_trunc = true;
+                let run_future = async {
+                    let mut child_stdout = child.stdout.take();
+                    let mut child_stderr = child.stderr.take();
+
+                    let ((stdout_trunc, stdout_buf), (stderr_trunc, stderr_buf)) = tokio::join!(
+                        async {
+                            let mut buf = Vec::new();
+                            let mut is_trunc = false;
+                            if let Some(pipe) = child_stdout.as_mut() {
+                                if let Ok(n) = pipe.take(32_769).read_to_end(&mut buf).await {
+                                    if n > 32_768 {
+                                        buf.truncate(32_768);
+                                        is_trunc = true;
+                                    }
                                 }
                             }
-                        }
-                        (is_trunc, buf)
-                    },
-                    async {
-                        let mut buf = Vec::new();
-                        let mut is_trunc = false;
-                        if let Some(pipe) = child_stderr.as_mut() {
-                            if let Ok(n) = pipe.take(32_769).read_to_end(&mut buf).await {
-                                if n > 32_768 {
-                                    buf.truncate(32_768);
-                                    is_trunc = true;
+                            (is_trunc, buf)
+                        },
+                        async {
+                            let mut buf = Vec::new();
+                            let mut is_trunc = false;
+                            if let Some(pipe) = child_stderr.as_mut() {
+                                if let Ok(n) = pipe.take(32_769).read_to_end(&mut buf).await {
+                                    if n > 32_768 {
+                                        buf.truncate(32_768);
+                                        is_trunc = true;
+                                    }
                                 }
                             }
+                            (is_trunc, buf)
                         }
-                        (is_trunc, buf)
-                    }
-                );
+                    );
 
-                let exit_code = match child.wait().await {
-                    Ok(status) => status.code().unwrap_or(-1),
-                    Err(_) => -1,
+                    let exit_code = match child.wait().await {
+                        Ok(status) => status.code().unwrap_or(-1),
+                        Err(_) => -1,
+                    };
+
+                    (exit_code, stdout_trunc, stdout_buf, stderr_trunc, stderr_buf)
                 };
 
-                let timestamp_ms = std::time::SystemTime::now()
-                    .duration_since(std::time::UNIX_EPOCH)
-                    .map(|d| d.as_millis() as u64)
-                    .unwrap_or(0);
+                match tokio::time::timeout(command_timeout, run_future).await {
+                    Ok((exit_code, stdout_trunc, stdout_buf, stderr_trunc, stderr_buf)) => {
+                        let timestamp_ms = std::time::SystemTime::now()
+                            .duration_since(std::time::UNIX_EPOCH)
+                            .map(|d| d.as_millis() as u64)
+                            .unwrap_or(0);
 
-                ctx.execution_records
-                    .lock()
-                    .push(crate::agent::runner::ProcessExecutionRecord {
-                        command: full_command_display.clone(),
-                        exit_code,
-                        timestamp_ms,
-                    });
+                        ctx.execution_records
+                            .lock()
+                            .push(crate::agent::runner::ProcessExecutionRecord {
+                                command: full_command_display.clone(),
+                                exit_code,
+                                timestamp_ms,
+                            });
 
-                let stdout_str = String::from_utf8_lossy(&stdout_buf);
-                let stderr_str = String::from_utf8_lossy(&stderr_buf);
+                        let stdout_str = String::from_utf8_lossy(&stdout_buf);
+                        let stderr_str = String::from_utf8_lossy(&stderr_buf);
 
-                let combined = format!("{}{}", stdout_str, stderr_str);
-                let mut truncated = self.safe_truncate(&combined, 5000);
-                if stdout_trunc || stderr_trunc {
-                    truncated.push_str("\n(OUTPUT TRUNCATED AT 32KB SAFETY LIMIT)");
+                        let combined = format!("{}{}", stdout_str, stderr_str);
+                        let mut truncated = self.safe_truncate(&combined, 5000);
+                        if stdout_trunc || stderr_trunc {
+                            truncated.push_str("\n(OUTPUT TRUNCATED AT 32KB SAFETY LIMIT)");
+                        }
+
+                        *output_text = format!(
+                            "(PROCESS OUTPUT of '{}' [exit code: {}]):\n\n{}",
+                            full_command_display, exit_code, truncated
+                        );
+                    }
+                    Err(_) => {
+                        let _ = child.start_kill();
+                        let _ = child.wait().await;
+
+                        let timestamp_ms = std::time::SystemTime::now()
+                            .duration_since(std::time::UNIX_EPOCH)
+                            .map(|d| d.as_millis() as u64)
+                            .unwrap_or(0);
+
+                        ctx.execution_records
+                            .lock()
+                            .push(crate::agent::runner::ProcessExecutionRecord {
+                                command: format!("{} [TIMED_OUT]", full_command_display),
+                                exit_code: -1,
+                                timestamp_ms,
+                            });
+
+                        *output_text = format!(
+                            "(TOOL TIMEOUT: Child process '{}' timed out after {:?} and was killed)",
+                            full_command_display, command_timeout
+                        );
+                    }
                 }
-
-                *output_text = format!(
-                    "(PROCESS OUTPUT of '{}' [exit code: {}]):\n\n{}",
-                    full_command_display, exit_code, truncated
-                );
             }
             Err(e) => {
                 tracing::error!("❌ Failed to spawn process '{}': {}", executable, e);
