@@ -12,7 +12,10 @@
 //! - **Witness Tests**: `continuity::tests::test_tenant_sanitization`, `continuity::tests::test_create_job_db_propagation`
 
 use crate::agent::continuity::{
-    scheduler::{create_job, delete_job, get_job_by_id, list_jobs, list_runs_for_job, update_job},
+    scheduler::{
+        create_job, create_job_run, delete_job, get_job_by_id, list_jobs, list_runs_for_job,
+        update_job,
+    },
     types::{CreateJobRequest, UpdateJobRequest},
     workflow::WorkflowEngine,
 };
@@ -506,16 +509,20 @@ pub async fn run_job_now_handler(
         return Err(AppError::Conflict("Scheduled job is disabled".to_string()));
     }
 
+    let run = create_job_run(&state.resources.pool, &job.id).await?;
+    let run_id = run.id.clone();
+
     state.emit_event(json!({
         "type": "continuity:job_triggered",
         "job_id": job.id,
+        "run_id": &run_id,
         "agent_id": job.agent_id,
         "timestamp": chrono::Utc::now().to_rfc3339()
     }));
 
     let state_clone = Arc::clone(&state);
     tokio::spawn(async move {
-        crate::agent::continuity::executor::execute_job(state_clone, job).await;
+        crate::agent::continuity::executor::execute_job_with_run(state_clone, job, Some(run)).await;
     });
 
     Ok((
@@ -523,6 +530,7 @@ pub async fn run_job_now_handler(
         Json(json!({
             "status": "accepted",
             "job_id": job_id,
+            "run_id": run_id,
             "message": "Job execution dispatched"
         })),
     ))

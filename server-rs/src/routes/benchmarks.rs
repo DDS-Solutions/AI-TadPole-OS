@@ -152,8 +152,29 @@ pub async fn trigger_benchmark(
     let state_clone = Arc::clone(&state);
     let tid_clone = trimmed_test_id.clone();
     tokio::spawn(async move {
-        if let Err(e) = benchmarks::run_benchmark_suite(state_clone, &tid_clone).await {
+        if let Err(e) = benchmarks::run_benchmark_suite(state_clone.clone(), &tid_clone).await {
             tracing::error!("❌ [Benchmarks] Background benchmark suite failed: {}", e);
+            let fail_record = BenchmarkResult {
+                id: Uuid::new_v4().to_string(),
+                name: format!("Suite Execution ({})", tid_clone),
+                category: "Suite".to_string(),
+                test_id: tid_clone.clone(),
+                mean_ms: 0.0,
+                p95_ms: None,
+                p99_ms: None,
+                target_value: None,
+                status: "FAIL".to_string(),
+                metadata: Some(format!("Suite failure: {}", e)),
+                created_at: chrono::Utc::now().to_rfc3339(),
+            };
+            if let Err(save_err) =
+                benchmarks::save_benchmark(&state_clone.resources.pool, fail_record).await
+            {
+                tracing::error!(
+                    "❌ [Benchmarks] Failed to record benchmark failure status: {}",
+                    save_err
+                );
+            }
         }
     });
 

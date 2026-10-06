@@ -15,6 +15,13 @@
 
 ---
 
+## Gaps Closed (2026-10-06 — Mission, Continuity, Benchmark & Graph Remediation)
+
+- **Mission Sync vs. Execution & Clone Lifecycle**: Clarified `sync_mission` response contract (`status: "synchronized"`, `executed: false`, explicit message explaining dispatch via `/tasks` is required for execution); documented `clone_mission` creating a clean `pending` draft record with zeroed financial cost without copying prior findings or auto-starting.
+- **Scheduled Job Run Correlation**: In `run_job_now_handler`, synchronously generate and return `run_id` in the `202 Accepted` response while emitting the `continuity:job_triggered` telemetry event with `run_id`, allowing immediate UI tracking and linking dispatched runs into `execute_job_with_run`.
+- **Benchmark Suite Truthfulness & Failure Persistence**: Persisted `status: "FAIL"` results with error details into the SQLite benchmark ledger when background suites encounter execution errors; reclassified `BM-RUN-01` from "Agent Runner Baseline" to "Agent Registry Resolution Latency" (`category: "Registry"`) with accurate descriptions.
+- **Symbol Graph Degradation & Memory Source Truthfulness**: Gracefully degraded `/v1/intelligence/graph` to `200 OK` with `status: "unindexed"` and empty node/edge sets when symbol graph indexing is unavailable, preventing HTTP 500 error cascades in the Neural Map UI; annotated `/v1/memory/graph` with `"source": "markdown_concept_notes"` and node/edge count metadata.
+
 ## Gaps Closed (2026-10-05 — Security Review Remediation)
 
 - **Centralized Subprocess Isolation (`create_isolated_command`)**: Consolidated process execution across all 8 call sites (`system_tools.rs`, `skill.rs`, `hooks.rs`, `plugin.rs`, `native.rs`, `skillspector.rs`, `deploy.rs`, `templates/source.rs`) onto a single spawn helper that enforces `cmd.env_clear()`, safe host environment variable allowlisting, and process group cleanup (`kill_on_drop`).

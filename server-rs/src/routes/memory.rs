@@ -629,8 +629,11 @@ pub async fn get_markdown_memory_graph_handler(
         StatusCode::OK,
         Json(serde_json::json!({
             "status": "success",
+            "source": "markdown_concept_notes",
             "nodes": export.nodes,
             "edges": export.edges,
+            "node_count": export.nodes.len(),
+            "edge_count": export.edges.len(),
         })),
     ))
 }

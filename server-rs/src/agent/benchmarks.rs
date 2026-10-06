@@ -107,16 +107,17 @@ pub async fn run_benchmark_suite(
 
     match test_id {
         "BM-RUN-01" => {
-            name = "Agent Runner Baseline".to_string();
-            category = "Runner".to_string();
+            name = "Agent Registry Resolution Latency".to_string();
+            category = "Registry".to_string();
             target_value = Some("< 100ms".to_string());
 
-            // Measure agent initialization and context resolution overhead
+            // Measure runner instantiation and agent registry lookup latency
             let runner = crate::agent::runner::AgentRunner::new(state.clone());
 
             for _ in 0..10 {
                 let _ = runner.state.registry.agents.contains_key("overlord");
             }
+            metadata = Some("10 registry resolution lookups via AgentRunner state".to_string());
         }
         "BM-DB-01" => {
             name = "Persistence Stress (50 Writes)".to_string();
