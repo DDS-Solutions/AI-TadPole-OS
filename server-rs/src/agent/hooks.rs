@@ -204,12 +204,38 @@ impl HooksManager {
     ) -> Result<(), AppError> {
         let mut cmd = self.build_command(path, ctx, params)?;
 
-        // H4: Bounded execution with timeout
-        let child = cmd.output();
-        let output = match tokio::time::timeout(DEFAULT_HOOK_TIMEOUT, child).await {
-            Ok(Ok(out)) => out,
-            Ok(Err(e)) => return Err(AppError::Io(e)),
+        // H4: Bounded execution with timeout and child process termination
+        cmd.stdout(std::process::Stdio::piped());
+        cmd.stderr(std::process::Stdio::piped());
+        let mut child = cmd.spawn().map_err(AppError::Io)?;
+        let mut child_stdout = child.stdout.take();
+        let mut child_stderr = child.stderr.take();
+
+        let run_future = async {
+            let mut stdout_buf = Vec::new();
+            let mut stderr_buf = Vec::new();
+            tokio::join!(
+                async {
+                    if let Some(pipe) = child_stdout.as_mut() {
+                        let _ = tokio::io::AsyncReadExt::read_to_end(pipe, &mut stdout_buf).await;
+                    }
+                },
+                async {
+                    if let Some(pipe) = child_stderr.as_mut() {
+                        let _ = tokio::io::AsyncReadExt::read_to_end(pipe, &mut stderr_buf).await;
+                    }
+                }
+            );
+            let status = child.wait().await;
+            (status, stdout_buf, stderr_buf)
+        };
+
+        let (status, _stdout_buf, stderr_buf) = match tokio::time::timeout(DEFAULT_HOOK_TIMEOUT, run_future).await {
+            Ok((Ok(status), out, err)) => (status, out, err),
+            Ok((Err(e), _, _)) => return Err(AppError::Io(e)),
             Err(_) => {
+                let _ = child.start_kill();
+                let _ = child.wait().await;
                 return Err(AppError::InternalServerError(format!(
                     "Hook script execution timed out after {:?}: {:?}",
                     DEFAULT_HOOK_TIMEOUT, path
@@ -217,8 +243,8 @@ impl HooksManager {
             }
         };
 
-        if !output.status.success() {
-            let stderr = String::from_utf8_lossy(&output.stderr);
+        if !status.success() {
+            let stderr = String::from_utf8_lossy(&stderr_buf);
             return Err(AppError::InternalServerError(format!(
                 "Hook script failed: {}. Error: {}",
                 path.display(),
@@ -237,6 +263,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_hooks_deterministic_sorting() {
+        std::env::set_var("TADPOLE_TRUST_HOOK_SHELLS", "1");
         let dir = tempdir().unwrap();
         let hooks_dir = dir.path().join("hooks").join("pre_validation");
         tokio::fs::create_dir_all(&hooks_dir).await.unwrap();

@@ -137,5 +137,15 @@ export const intelligence_api_service = {
             method: 'GET',
             signal,
         });
+    },
+
+    /**
+     * Confirms an OKF knowledge entry, protecting it from TTL eviction.
+     */
+    async confirm_knowledge(id: string, signal?: AbortSignal): Promise<{ status: string }> {
+        return api_request<{ status: string }>(`/v1/knowledge/${id}/confirm`, {
+            method: 'POST',
+            signal,
+        });
     }
 };

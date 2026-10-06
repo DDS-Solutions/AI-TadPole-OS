@@ -70,6 +70,7 @@ export const tadpole_os_service = {
     speak: system_api_service.engine.speak,
     kill_agents: system_api_service.engine.kill_agents,
     shutdown_engine: system_api_service.engine.shutdown_engine,
+    get_metrics: system_api_service.engine.get_metrics,
     transcribe: system_api_service.engine.transcribe,
     test_provider: system_api_service.infra.test_provider,
     get_nodes: system_api_service.infra.get_nodes,

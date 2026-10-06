@@ -87,9 +87,19 @@ describe('system_api_service', () => {
     });
 
     it('shutdown_engine', async () => {
-        vi.mocked(api_request).mockResolvedValueOnce({});
+        vi.mocked(api_request).mockResolvedValueOnce({ status: 'ok', message: 'Shutdown initiated' });
         await system_api_service.engine.shutdown_engine();
         expect(api_request).toHaveBeenCalledWith('/v1/engine/shutdown', { method: 'POST' });
+    });
+
+    it('get_metrics', async () => {
+        vi.mocked(api_request).mockResolvedValueOnce('metric_name 42');
+        const res = await system_api_service.engine.get_metrics();
+        expect(res).toBe('metric_name 42');
+        expect(api_request).toHaveBeenCalledWith('/v1/engine/metrics', {
+            method: 'GET',
+            response_type: 'text'
+        });
     });
 
     it('transcribe', async () => {

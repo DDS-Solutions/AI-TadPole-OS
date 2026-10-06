@@ -60,4 +60,23 @@ describe('CapabilityRegistryService', () => {
         }));
         expect(result.status).toBe('ok');
     });
+
+    it('wraps 403 forbidden with informative administrative privilege message on import', async () => {
+        const mock_api_request = vi.fn().mockRejectedValue({ status: 403, message: 'Forbidden' });
+        const service = new CapabilityRegistryService(mock_api_request);
+
+        const valid_file = new File(['{"name":"Audit"}'], 'skill.json', { type: 'application/json' });
+        await expect(service.import_capability(valid_file)).rejects.toThrow(
+            /Administrative privileges required to import skills/
+        );
+    });
+
+    it('wraps 403 forbidden with informative administrative privilege message on register', async () => {
+        const mock_api_request = vi.fn().mockRejectedValue({ status: 403, message: 'Forbidden' });
+        const service = new CapabilityRegistryService(mock_api_request);
+
+        await expect(service.register_capability('skill', { name: 'AutoAudit' } as any, 'ai')).rejects.toThrow(
+            /Administrative privileges required to register capabilities/
+        );
+    });
 });

@@ -338,20 +338,25 @@ pub struct UpdateEnvironmentRequest {
 pub struct UpdateEnvironmentResponse {
     pub status: String,
     pub updated_keys: Vec<String>,
+    pub requires_restart: bool,
 }
 
 /// POST /v1/system/environment
 /// Securely saves environment variables (e.g. MCP API keys) into .env and runtime state.
-#[tracing::instrument(skip(_state, payload), name = "system::update_environment")]
+#[tracing::instrument(skip(state, payload), name = "system::update_environment")]
 pub async fn update_environment_variables(
-    State(_state): State<Arc<AppState>>,
+    State(state): State<Arc<AppState>>,
     _admin: crate::middleware::auth::RequireAdmin,
     Json(payload): Json<UpdateEnvironmentRequest>,
 ) -> Result<impl IntoResponse, AppError> {
     let mut updated_keys = Vec::new();
-    let env_path = std::env::current_dir()
-        .unwrap_or_else(|_| PathBuf::from("."))
-        .join(".env");
+    let env_path = if state.base_dir.join(".env").exists() {
+        state.base_dir.join(".env")
+    } else if std::path::Path::new(".env").exists() {
+        std::path::PathBuf::from(".env")
+    } else {
+        state.base_dir.join(".env")
+    };
 
     let mut existing_env_map = std::collections::HashMap::new();
     if tokio::fs::try_exists(&env_path)
@@ -397,6 +402,12 @@ pub async fn update_environment_variables(
         }
     }
 
+    if let Some(parent) = env_path.parent() {
+        tokio::fs::create_dir_all(parent)
+            .await
+            .map_err(AppError::Io)?;
+    }
+
     tokio::fs::write(&env_path, new_content.as_bytes())
         .await
         .map_err(AppError::Io)?;
@@ -406,6 +417,7 @@ pub async fn update_environment_variables(
         Json(UpdateEnvironmentResponse {
             status: "success".to_string(),
             updated_keys,
+            requires_restart: true,
         }),
     ))
 }

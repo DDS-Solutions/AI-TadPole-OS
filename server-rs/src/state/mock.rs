@@ -127,6 +127,12 @@ impl AppState {
             models.insert(m.id.clone(), m);
         }
 
+        let mcp_prompter = Arc::new(crate::security::permissions::AsyncOversightPrompter::new(
+            pool.clone(),
+            comms.clone(),
+            Some(telemetry_tx.clone()),
+        ));
+
         let registry = Arc::new(RegistryHub {
             agents,
             providers,
@@ -138,11 +144,14 @@ impl AppState {
                 base_dir.clone(),
             )),
             skill_registry: Arc::new(crate::agent::skill_manifest::SkillRegistry::new()),
-            mcp_host: Arc::new(crate::agent::mcp::McpHost::new(
-                telemetry_tx,
-                None,
-                permission_policy.clone(),
-            )),
+            mcp_host: Arc::new(
+                crate::agent::mcp::McpHost::new(
+                    telemetry_tx,
+                    None,
+                    permission_policy.clone(),
+                )
+                .with_prompter(mcp_prompter),
+            ),
             hooks: Arc::new(crate::agent::hooks::HooksManager::new(&base_dir)),
             tool_registry: Arc::new(
                 crate::agent::runner::tools::dispatcher::Dispatcher::new().registry,
@@ -316,6 +325,12 @@ impl AppState {
             models.insert(m.id.clone(), m);
         }
 
+        let mcp_prompter = Arc::new(crate::security::permissions::AsyncOversightPrompter::new(
+            pool.clone(),
+            comms.clone(),
+            Some(telemetry_tx.clone()),
+        ));
+
         let registry = Arc::new(RegistryHub {
             agents,
             providers,
@@ -327,11 +342,14 @@ impl AppState {
                 base_dir.clone(),
             )),
             skill_registry: Arc::new(crate::agent::skill_manifest::SkillRegistry::new()),
-            mcp_host: Arc::new(crate::agent::mcp::McpHost::new(
-                telemetry_tx,
-                None,
-                permission_policy.clone(),
-            )),
+            mcp_host: Arc::new(
+                crate::agent::mcp::McpHost::new(
+                    telemetry_tx,
+                    None,
+                    permission_policy.clone(),
+                )
+                .with_prompter(mcp_prompter),
+            ),
             hooks: Arc::new(crate::agent::hooks::HooksManager::new(&base_dir)),
             tool_registry: Arc::new(
                 crate::agent::runner::tools::dispatcher::Dispatcher::new().registry,
@@ -473,6 +491,12 @@ impl Default for AppState {
             pool.clone(),
         ));
 
+        let mcp_prompter = Arc::new(crate::security::permissions::AsyncOversightPrompter::new(
+            pool.clone(),
+            comms.clone(),
+            Some(event_tx.clone()),
+        ));
+
         let registry = Arc::new(RegistryHub {
             agents: DashMap::new(),
             providers: DashMap::new(),
@@ -487,11 +511,14 @@ impl Default for AppState {
             tool_registry: Arc::new(
                 crate::agent::runner::tools::dispatcher::Dispatcher::new().registry,
             ),
-            mcp_host: Arc::new(crate::agent::mcp::McpHost::new(
-                event_tx.clone(),
-                None,
-                permission_policy.clone(),
-            )),
+            mcp_host: Arc::new(
+                crate::agent::mcp::McpHost::new(
+                    event_tx.clone(),
+                    None,
+                    permission_policy.clone(),
+                )
+                .with_prompter(mcp_prompter),
+            ),
             hooks: Arc::new(crate::agent::hooks::HooksManager::new(
                 &std::path::PathBuf::from("tmp"),
             )),

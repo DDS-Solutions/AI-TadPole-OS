@@ -150,27 +150,52 @@ impl Tool for PluginTool {
         }
 
         // Wait for execution to finish with bounded timeout
+        let mut child_stdout = child.stdout.take();
+        let mut child_stderr = child.stderr.take();
+
+        let run_future = async {
+            use tokio::io::AsyncReadExt;
+            let mut stdout_buf = Vec::new();
+            let mut stderr_buf = Vec::new();
+            let _ = tokio::join!(
+                async {
+                    if let Some(pipe) = child_stdout.as_mut() {
+                        let _ = pipe.read_to_end(&mut stdout_buf).await;
+                    }
+                },
+                async {
+                    if let Some(pipe) = child_stderr.as_mut() {
+                        let _ = pipe.read_to_end(&mut stderr_buf).await;
+                    }
+                }
+            );
+            let status = child.wait().await;
+            (status, stdout_buf, stderr_buf)
+        };
+
         const PLUGIN_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(60);
-        let output = match tokio::time::timeout(PLUGIN_TIMEOUT, child.wait_with_output()).await {
-            Ok(Ok(out)) => out,
-            Ok(Err(e)) => {
+        let (status, stdout_buf, stderr_buf) = match tokio::time::timeout(PLUGIN_TIMEOUT, run_future).await {
+            Ok((Ok(status), out, err)) => (status, out, err),
+            Ok((Err(e), _, _)) => {
                 return Err(ToolExecutionError::ExecutionFailed(format!(
                     "Failed waiting for plugin subprocess: {}",
                     e
                 )));
             }
             Err(_) => {
+                let _ = child.start_kill();
+                let _ = child.wait().await;
                 return Err(ToolExecutionError::ExecutionFailed(format!(
-                    "Plugin subprocess timed out after {:?}",
+                    "Plugin subprocess timed out after {:?} and was killed",
                     PLUGIN_TIMEOUT
                 )));
             }
         };
 
-        let stdout = String::from_utf8_lossy(&output.stdout).to_string();
-        let stderr = String::from_utf8_lossy(&output.stderr).to_string();
+        let stdout = String::from_utf8_lossy(&stdout_buf).to_string();
+        let stderr = String::from_utf8_lossy(&stderr_buf).to_string();
 
-        if !output.status.success() {
+        if !status.success() {
             return Err(ToolExecutionError::ExecutionFailed(format!(
                 "Plugin process exited with error:\nSTDOUT: {}\nSTDERR: {}",
                 stdout, stderr

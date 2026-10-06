@@ -148,6 +148,12 @@ pub async fn receive_envelope(
         A2AMailbox::persist_received_envelope(&state.resources.pool, &envelope, &nonce, ts).await?;
     A2AMailbox::record_dispatch_audit(&envelope, false, Some(&state.security.audit_trail)).await;
     let delivery_status = if queued {
+        let state_sweep = state.clone();
+        tokio::spawn(async move {
+            if let Err(e) = A2AMailbox::sweep_and_deliver_pending(&state_sweep).await {
+                tracing::warn!("⚠️ [A2A Mailbox] Immediate delivery sweep error: {:?}", e);
+            }
+        });
         "queued"
     } else {
         "already_processed"

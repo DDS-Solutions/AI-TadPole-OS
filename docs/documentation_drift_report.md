@@ -15,6 +15,26 @@
 
 ---
 
+## Gaps Closed (2026-10-06 — Phase 1–4 Completion Failure Remediation)
+
+- **Phase 1: Workspace Files & Task Dispatch Envelope Alignment**:
+  - Reconciled `/v1/system/workspaces/files` response type contract (`{ files: string[], total: number, truncated: boolean }`) with `Terminal.tsx` autocomplete parser to gracefully handle both plain array and object envelopes without breaking file search.
+  - Updated `POST /v1/agents/{id}/tasks` to synchronously return `task_id` in the `202 Accepted` response, and updated `dispatch_service.ts` to return `{ success, task_id }` with telemetry event emission.
+- **Phase 2: Agent Pause/Resume Lifecycle & Workflow Execution Route**:
+  - Replaced silent `let _ =` queries in `pause_agent` and `reset_agent` with explicit DB error propagation. Updated `resume_agent` response contract to return `{ status: "ok", agent_id, state: "idle", reopened_mission: false }` with actionable status messaging.
+  - Added missing `POST /v1/continuity/workflows/{id}/run` route in `routes/continuity.rs` and `router.rs`, added `run_workflow` to `continuity_api.ts`, registered key in `system_api_service.ts` allowlist, and added full unit tests.
+- **Phase 3: Auth Integrity & Model Infrastructure Truthfulness**:
+  - Enhanced `decide_oversight` in `oversight_api.ts` to sign requests whenever valid keys exist (not strictly restricted to `key_source === 'operator'`), and throw an actionable error in production when operator key pair is missing.
+  - Added local Ollama proxy fallback for `node_id == "local" || "localhost"` in `pull_model` (`model_manager.rs`), and added fallback "Local Engine (Ollama)" node in `Model_Store.tsx` when no remote swarm bunkers are discovered.
+  - Returned `requires_restart: true` in `UpdateEnvironmentResponse` from `/v1/system/environment` (`system.rs` & `engine_api.ts`) to clarify that running runtime state requires engine restart for altered variables to take effect.
+  - Added explicit handling in `CapabilityRegistryService` to wrap HTTP 403 Forbidden responses into clear administrative privilege errors.
+- **Phase 4: Knowledge Base, CAS History & Search Transparency**:
+  - Updated `/v1/docs/knowledge` in `docs.rs` to return `200 OK` with `[]` instead of `404 Not Found` when the knowledge documentation directory is unindexed, preventing frontend crashes.
+  - Added `confirm_knowledge` client method in `intelligence_api_service.ts` matching `POST /v1/knowledge/{id}/confirm`.
+  - Added `get_file_history` and `restore_file_version` in `workspace_api.ts` and `system_api_types.ts` for `/v1/cas/history` and `/v1/cas/restore`.
+  - Annotated queried retrieval sources `["bm25", "trustgraph", "knowledge_meta"]` in `/v1/memory/search/hybrid` (`memory.rs`).
+  - Added comprehensive verification steps and Mission 11 (Workflow Pipeline) to `docs/TEST_MISSIONS.md`.
+
 ## Gaps Closed (2026-10-06 — Mission, Continuity, Benchmark & Graph Remediation)
 
 - **Mission Sync vs. Execution & Clone Lifecycle**: Clarified `sync_mission` response contract (`status: "synchronized"`, `executed: false`, explicit message explaining dispatch via `/tasks` is required for execution); documented `clone_mission` creating a clean `pending` draft record with zeroed financial cost without copying prior findings or auto-starting.

@@ -13,7 +13,7 @@
  * - **Telemetry Targets**: none declared
  */
 
-import { api_request, map_api_error, ValidationError } from '../base_api_service';
+import { api_request, map_api_error, AuthError, ValidationError } from '../base_api_service';
 import type { Skill_Definition, Workflow_Definition, Hook_Definition } from '../../stores/skill_store';
 
 export class CapabilityRegistryService {
@@ -47,7 +47,16 @@ export class CapabilityRegistryService {
                 method: 'POST',
                 body: form_data,
             });
-        } catch (err) {
+        } catch (err: any) {
+            if (err?.status === 403 || err?.statusCode === 403 || (err instanceof AuthError && err.status === 403)) {
+                throw new AuthError(
+                    'Administrative privileges required to import skills. Please ensure you are authenticated with an operator admin session.',
+                    err.type || 'about:blank',
+                    403,
+                    err.error_code || 'AUTH_FORBIDDEN',
+                    err.help_link
+                );
+            }
             throw map_api_error(err);
         }
     }
@@ -58,7 +67,16 @@ export class CapabilityRegistryService {
                 method: 'POST',
                 body: JSON.stringify({ type, data, category })
             });
-        } catch (err) {
+        } catch (err: any) {
+            if (err?.status === 403 || err?.statusCode === 403 || (err instanceof AuthError && err.status === 403)) {
+                throw new AuthError(
+                    'Administrative privileges required to register capabilities. Please ensure you are authenticated with an operator admin session.',
+                    err.type || 'about:blank',
+                    403,
+                    err.error_code || 'AUTH_FORBIDDEN',
+                    err.help_link
+                );
+            }
             throw map_api_error(err);
         }
     }

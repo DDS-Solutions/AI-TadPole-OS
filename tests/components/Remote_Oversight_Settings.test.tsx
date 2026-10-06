@@ -54,7 +54,8 @@ describe('Remote_Oversight_Settings Component', () => {
         expect(screen.getByText(/Remote Oversight & Mobile Mesh Settings/i)).toBeInTheDocument();
         expect(screen.getByText(/Zero-Trust Remote Companion Bridge/i)).toBeInTheDocument();
         expect(screen.getByText(/Active \/ Listening/i)).toBeInTheDocument();
-        expect(screen.getByDisplayValue(/10.0.0.1:8000/i)).toBeInTheDocument();
+        const expected_ip = (import.meta.env.VITE_LAN_IP as string) || '10.0.0.1:8000';
+        expect(screen.getByDisplayValue(expected_ip)).toBeInTheDocument();
     });
 
     it('opens request dialog box for device name and user name before QR screen', async () => {

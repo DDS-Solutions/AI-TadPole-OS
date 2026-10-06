@@ -159,6 +159,12 @@ export interface OkfValidation {
     message?: string;
 }
 
+export interface WorkspaceFilesResponse {
+    files: string[];
+    total: number;
+    truncated: boolean;
+}
+
 export interface Workspace_Status {
     id: string;
     agent_id: string;
@@ -223,4 +229,16 @@ export interface Workflow_Step_Run {
     agent_id: string;
     step_order: number;
     step_config: Workflow_Step_Config | null;
+}
+
+export interface RevisionSummary {
+    id: number;
+    workspace_id: string;
+    file_path: string;
+    hash: string;
+    size_bytes: number;
+    version_num: number;
+    mission_id?: string | null;
+    agent_id?: string | null;
+    created_at: string;
 }

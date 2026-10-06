@@ -59,7 +59,11 @@ pub fn create_router(app_state: Arc<AppState>) -> Router {
         ));
 
     // 6. Build Outward Gateway routes (/a2a/v1)
-    let outward_state = routes::outward_routes::OutwardAppState::new("Tadpole SMB Solutions");
+    let outward_storage_path = app_state.base_dir.join("data").join("company_agent_card.json");
+    let outward_state = routes::outward_routes::OutwardAppState::new_with_storage(
+        "Tadpole SMB Solutions",
+        Some(outward_storage_path),
+    );
     let public_outward = routes::outward_routes::public_outward_router(outward_state.clone());
     let protected_outward = routes::outward_routes::protected_outward_router(outward_state)
         .route_layer(axum::middleware::from_fn_with_state(
@@ -492,6 +496,10 @@ fn build_continuity_routes() -> Router<Arc<AppState>> {
             get(routes::continuity::list_workflow_runs_handler),
         )
         .route(
+            "/workflows/{id}/run",
+            post(routes::continuity::run_workflow_handler),
+        )
+        .route(
             "/workflows/{id}/runs/{run_id}/cancel",
             post(routes::continuity::cancel_workflow_run_handler),
         )
@@ -610,8 +618,11 @@ fn build_agent_memory_route() -> axum::routing::MethodRouter<Arc<AppState>> {
     #[cfg(not(feature = "vector-memory"))]
     return get(|| async {
         (
-            axum::http::StatusCode::NOT_IMPLEMENTED,
-            "Vector memory feature disabled",
+            axum::http::StatusCode::OK,
+            axum::Json(serde_json::json!({
+                "status": "uninitialized",
+                "entries": []
+            })),
         )
     })
     .post(|| async {

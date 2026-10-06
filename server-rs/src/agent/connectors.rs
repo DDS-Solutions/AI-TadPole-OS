@@ -242,6 +242,7 @@ async fn run_ingestion_cycle(state: &crate::state::AppState) -> Result<(), AppEr
             "fs" => Box::new(FsConnector::new(manifest.id.clone(), &manifest.source_uri)),
             _ => {
                 tracing::warn!("Unsupported connector type: {}", manifest.source_type);
+                crate::agent::persistence::update_sync_status(pool, &manifest.id, "error").await?;
                 continue;
             }
         };
@@ -261,12 +262,13 @@ async fn run_ingestion_cycle(state: &crate::state::AppState) -> Result<(), AppEr
                 }
 
                 // Resolve an embedding provider from the agent's model config
-                let latest_update = {
+                let (latest_update, has_errors) = {
                     #[cfg(feature = "vector-memory")]
                     {
                         let client = (*state.resources.http_client).clone();
                         let provider = resolve_embedding_provider(&agent, client);
                         let mut latest_update = manifest.last_sync_at;
+                        let mut has_errors = false;
 
                         let memory_path =
                             format!("data/memory/{}/knowledge.lance", agent.identity.id);
@@ -278,17 +280,29 @@ async fn run_ingestion_cycle(state: &crate::state::AppState) -> Result<(), AppEr
                                     match provider.embed(&item.content).await {
                                         Ok(vec) => {
                                             // Atomically insert memory into Vector Space
-                                            let _ = mem
+                                            match mem
                                                 .add_memory(
                                                     &item.id,
                                                     &item.content,
                                                     "sync-cycle",
                                                     vec,
                                                 )
-                                                .await;
-                                            if latest_update.map_or(true, |lu| item.updated_at > lu)
+                                                .await
                                             {
-                                                latest_update = Some(item.updated_at);
+                                                Ok(_) => {
+                                                    if latest_update.map_or(true, |lu| item.updated_at > lu)
+                                                    {
+                                                        latest_update = Some(item.updated_at);
+                                                    }
+                                                }
+                                                Err(e) => {
+                                                    tracing::error!(
+                                                        "❌ [IngestionWorker] Failed to insert memory for {}: {}",
+                                                        item.id,
+                                                        e
+                                                    );
+                                                    has_errors = true;
+                                                }
                                             }
                                         }
                                         Err(e) => {
@@ -297,6 +311,7 @@ async fn run_ingestion_cycle(state: &crate::state::AppState) -> Result<(), AppEr
                                                 item.id,
                                                 e
                                             );
+                                            has_errors = true;
                                         }
                                     }
                                 }
@@ -317,29 +332,33 @@ async fn run_ingestion_cycle(state: &crate::state::AppState) -> Result<(), AppEr
                             }
                         }
 
-                        latest_update
+                        (latest_update, has_errors)
                     }
 
                     #[cfg(not(feature = "vector-memory"))]
                     {
                         tracing::warn!("⚠️ [IngestionWorker] Vector Memory feature is disabled. Skipping SME data ingestion for agent {}.", agent.identity.id);
                         // We still update the manifest to 'idle' to avoid infinite 'syncing' state
-                        manifest.last_sync_at
+                        (manifest.last_sync_at, false)
                     }
                 };
 
-                crate::agent::persistence::complete_sync(
-                    pool,
-                    &manifest.id,
-                    latest_update.unwrap_or_else(Utc::now),
-                    file_count,
-                    total_bytes,
-                )
-                .await?;
-                tracing::info!(
-                    "✅ [IngestionWorker] Completed sync for manifest {}",
-                    manifest.id
-                );
+                if has_errors {
+                    crate::agent::persistence::update_sync_status(pool, &manifest.id, "error").await?;
+                } else {
+                    crate::agent::persistence::complete_sync(
+                        pool,
+                        &manifest.id,
+                        latest_update.unwrap_or_else(Utc::now),
+                        file_count,
+                        total_bytes,
+                    )
+                    .await?;
+                    tracing::info!(
+                        "✅ [IngestionWorker] Completed sync for manifest {}",
+                        manifest.id
+                    );
+                }
             }
             Err(e) => {
                 tracing::error!(

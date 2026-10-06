@@ -655,23 +655,59 @@ pub async fn pull_model(
         payload.node_id
     );
 
+    if payload.node_id == "local" || payload.node_id == "localhost" {
+        let ollama_payload = serde_json::json!({
+            "name": payload.tag,
+            "stream": false
+        });
+        let _ = ollama_proxy_pull(State(Arc::clone(&state)), Json(ollama_payload)).await?;
+        tracing::info!(
+            "✅ [ModelStore] Successfully initiated pull on local Ollama engine for {}",
+            payload.tag
+        );
+        return Ok((
+            StatusCode::OK,
+            Json(serde_json::json!({
+                "status": "success",
+                "message": format!("Model {} is being pulled to local node", payload.tag)
+            })),
+        ));
+    }
+
     let node = state.registry.nodes.get(&payload.node_id).ok_or_else(|| {
         AppError::NotFound(format!("Node '{}' not found in swarm", payload.node_id))
     })?;
 
-    // Validate node address format before connecting
-    let address = node.address.trim();
-    if address.is_empty() || address.contains('/') || address.contains('@') {
+    // Validate and normalize node address format before connecting
+    let raw_address = node.address.trim();
+    if raw_address.is_empty() || raw_address.contains('@') {
         return Err(AppError::BadRequest(
             "Node network address is invalid or malformed".to_string(),
         ));
     }
 
-    let clean_address = address
-        .trim_end_matches('/')
-        .strip_suffix("/v1")
-        .unwrap_or(address);
-    let ollama_url = format!("http://{}/api/pull", clean_address);
+    let stripped_address = raw_address
+        .strip_prefix("http://")
+        .or_else(|| raw_address.strip_prefix("https://"))
+        .unwrap_or(raw_address);
+
+    let (host_port, _subpath) = match stripped_address.split_once('/') {
+        Some((hp, rest)) => (hp, rest),
+        None => (stripped_address, ""),
+    };
+
+    let clean_host_port = host_port.trim();
+    if clean_host_port.is_empty()
+        || clean_host_port.contains('@')
+        || clean_host_port.contains('/')
+        || clean_host_port.contains('\\')
+    {
+        return Err(AppError::BadRequest(
+            "Node network address is invalid or malformed".to_string(),
+        ));
+    }
+
+    let ollama_url = format!("http://{}/api/pull", clean_host_port);
     validate_url_security(&ollama_url)?;
 
     let ollama_payload = serde_json::json!({

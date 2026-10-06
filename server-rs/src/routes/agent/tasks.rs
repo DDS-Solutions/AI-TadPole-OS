@@ -153,7 +153,9 @@ pub fn spawn_agent_runner(
                         "idle",
                         None,
                     );
-                    state_clone.save_agents().await;
+                    if let Err(e) = state_clone.save_agents().await {
+                        tracing::warn!("Failed to persist agent status in runner fallback: {}", e);
+                    }
                 }
                 state_clone.emit_event(serde_json::json!({
                     "type": "agent:task_failed",
@@ -266,7 +268,9 @@ pub async fn register_agent_runner(
                 "idle",
                 None,
             );
-            state.save_agents().await;
+            if let Err(e) = state.save_agents().await {
+                tracing::warn!("Failed to persist agent status in runner replacement: {}", e);
+            }
         }
     }
 
@@ -533,11 +537,14 @@ pub async fn send_task(
             "idle",
             None,
         );
-        state.save_agents().await;
+        if let Err(e) = state.save_agents().await {
+            tracing::warn!("Failed to persist aborted agent status in dispatch: {}", e);
+        }
     }
 
     // Spawn Runner via canonical helper (F-03, #6)
     let (join_handle, runner_handle, start_tx) = spawn_agent_runner(&state, &agent_id, payload);
+    let task_id = runner_handle.task_id.clone();
     register_agent_runner(&state, &agent_id, runner_handle, start_tx).await;
     // join_handle is intentionally dropped — the task runs in background.
     drop(join_handle);
@@ -546,7 +553,8 @@ pub async fn send_task(
         StatusCode::ACCEPTED,
         Json(serde_json::json!({
             "status": "accepted",
-            "agent_id": agent_id
+            "agent_id": agent_id,
+            "task_id": task_id
         })),
     ))
 }

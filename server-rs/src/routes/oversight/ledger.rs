@@ -831,25 +831,39 @@ async fn resolve_oversight_decision_inner(
         )));
     }
 
-    // Commit transaction atomically before mutating in-memory resolvers/queue
-    tokio::time::timeout(DB_QUERY_TIMEOUT, tx.commit())
-        .await
-        .map_err(|_| AppError::InternalServerError("Database commit timed out".to_string()))?
-        .map_err(AppError::Sqlx)?;
+    // 4. Claim from in-memory queue BEFORE committing transaction.
+    // If the entry was already claimed/resolved by a concurrent request, abort transaction and return Conflict.
+    let entry = match state.comms.oversight_queue.remove(entry_id) {
+        Some((_, e)) => e,
+        None => {
+            let _ = tx.rollback().await;
+            return Err(AppError::Conflict("Oversight entry was resolved by a concurrent request".to_string()));
+        }
+    };
 
-    // 4. Remove from queue ONLY after all security, replay, and durable DB updates pass.
-    let entry = state
-        .comms
-        .oversight_queue
-        .remove(entry_id)
-        .map(|(_, e)| e)
-        .ok_or_else(|| {
-            AppError::Conflict("Oversight entry was resolved by a concurrent request".to_string())
-        })?;
-
-    // 5. Claim the waiter if one is actively blocked and resolve the waiting promise.
-    // Detached entries and direct unit tests may not have an active in-flight oneshot receiver.
+    // 5. Claim the waiter if one is actively blocked
     let maybe_shooter = state.comms.oversight_resolvers.remove(entry_id);
+
+    // Commit transaction atomically only after in-memory claim succeeds
+    match tokio::time::timeout(DB_QUERY_TIMEOUT, tx.commit()).await {
+        Ok(Ok(_)) => {}
+        Ok(Err(sqlx_err)) => {
+            state.comms.oversight_queue.insert(entry_id.to_string(), entry);
+            if let Some((_, shooter)) = maybe_shooter {
+                state.comms.oversight_resolvers.insert(entry_id.to_string(), shooter);
+            }
+            return Err(AppError::Sqlx(sqlx_err));
+        }
+        Err(_) => {
+            state.comms.oversight_queue.insert(entry_id.to_string(), entry);
+            if let Some((_, shooter)) = maybe_shooter {
+                state.comms.oversight_resolvers.insert(entry_id.to_string(), shooter);
+            }
+            return Err(AppError::InternalServerError("Database commit timed out".to_string()));
+        }
+    }
+
+    // 6. Resolve the waiting runner oneshot channel
     if let Some((_, shooter)) = maybe_shooter {
         let answer = payload.user_answer.clone().or_else(|| {
             if payload.decision != "approved" && payload.decision != "rejected" {
@@ -858,14 +872,20 @@ async fn resolve_oversight_decision_inner(
                 None
             }
         });
-        let _ = shooter.send(crate::agent::types::OversightResolution {
+        if let Err(unreceived) = shooter.send(crate::agent::types::OversightResolution {
             approved,
             override_slot: payload.override_slot.clone(),
             user_answer: answer,
-        });
+        }) {
+            tracing::warn!(
+                "⚠️ [Oversight] Runner dropped oneshot receiver for entry '{}' before decision was delivered (approved={})",
+                entry_id,
+                unreceived.approved
+            );
+        }
     }
 
-    // 6. Log decision, update audit trail, and emit WebSocket events
+    // 7. Log decision, update audit trail, and emit WebSocket events
     let decision_label = if approved { "APPROVED" } else { "REJECTED" };
     state.broadcast_sys(
         &format!(
@@ -880,27 +900,25 @@ async fn resolve_oversight_decision_inner(
     let eid = entry.id.clone();
     let mission_id = entry.mission_id.clone();
     let audit_actor = actor.to_string();
-    tokio::spawn(async move {
-        let params = serde_json::to_string(&json!({
-            "entry_id": eid,
-            "approved": approved
-        }))
-        .unwrap_or_default();
-        let record_fut = audit.record(
-            &audit_actor,
-            mission_id.as_deref(),
-            None,
-            "oversight_decision",
-            &params,
-        );
-        if let Ok(res) = tokio::time::timeout(DB_QUERY_TIMEOUT, record_fut).await {
-            if let Err(e) = res {
-                tracing::error!("🚨 Failed to record audit log: {:?}", e);
-            }
-        } else {
-            tracing::error!("🚨 Audit log recording timed out");
+    let params = serde_json::to_string(&json!({
+        "entry_id": eid,
+        "approved": approved
+    }))
+    .unwrap_or_default();
+    let record_fut = audit.record(
+        &audit_actor,
+        mission_id.as_deref(),
+        None,
+        "oversight_decision",
+        &params,
+    );
+    if let Ok(res) = tokio::time::timeout(DB_QUERY_TIMEOUT, record_fut).await {
+        if let Err(e) = res {
+            tracing::error!("🚨 Failed to record audit log: {:?}", e);
         }
-    });
+    } else {
+        tracing::error!("🚨 Audit log recording timed out");
+    }
 
     state.emit_event(json!({
         "type": "oversight:decision",

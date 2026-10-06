@@ -228,6 +228,24 @@ describe('continuity_api', () => {
         });
     });
 
+    describe('run_workflow', () => {
+        it('calls POST on /v1/continuity/workflows/:id/run with optional context', async () => {
+            const mock_res = { status: 'accepted', workflow_id: 'wf-1', run_id: 'run-123', message: 'Workflow run dispatched' };
+            vi.mocked(api_request).mockResolvedValueOnce(mock_res as any);
+            const res = await continuity_api.run_workflow('wf-1', { foo: 'bar' });
+            expect(res).toEqual(mock_res);
+            expect(api_request).toHaveBeenCalledWith('/v1/continuity/workflows/wf-1/run', expect.objectContaining({
+                method: 'POST',
+                body: JSON.stringify({ initial_context: { foo: 'bar' } })
+            }));
+        });
+
+        it('blocks traversal ids', async () => {
+            await expect(continuity_api.run_workflow('../malicious'))
+                .rejects.toThrow(/Invalid identifier/);
+        });
+    });
+
     describe('get_workflow_run_steps', () => {
         it('handles array format', async () => {
             const mock_steps = [{ id: 'step-run-1', status: 'completed' }];

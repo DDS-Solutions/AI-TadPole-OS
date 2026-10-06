@@ -74,7 +74,7 @@ pub async fn list_knowledge_docs() -> Result<impl IntoResponse, AppError> {
     let knowledge_path = match find_doc_path("src/data/knowledge") {
         Some(p) => p,
         None => {
-            return Ok((StatusCode::NOT_FOUND, Json(entries)).into_response());
+            return Ok((StatusCode::OK, Json(entries)).into_response());
         }
     };
 

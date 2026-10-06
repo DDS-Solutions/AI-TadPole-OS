@@ -15,62 +15,37 @@ use crate::error::AppError;
 impl AppState {
     /// Persists all current agent states to the database in a single transaction.
     /// Batched to avoid N individual round-trips (was the #1 shutdown bottleneck).
-    pub async fn save_agents(&self) {
+    pub async fn save_agents(&self) -> Result<(), AppError> {
         // Batch all saves into a single transaction (1 fsync vs N fsyncs)
-        match self.resources.pool.begin().await {
-            Ok(mut tx) => {
-                let mut pending_versions: Vec<(String, u32)> = Vec::new();
-                for mut entry in self.registry.agents.iter_mut() {
-                    let agent = entry.value_mut();
-                    match crate::agent::persistence::save_agent_db_in_tx(&mut tx, agent).await {
-                        Ok(next_ver) => {
-                            pending_versions.push((agent.identity.id.clone(), next_ver));
-                        }
-                        Err(err) => {
-                            tracing::error!(
-                                agent_id = %agent.identity.id,
-                                error = %err,
-                                "❌ [State] Failed to persist agent during batched save_agents"
-                            );
-                        }
-                    }
+        let mut tx = self.resources.pool.begin().await?;
+        let mut pending_versions: Vec<(String, u32)> = Vec::new();
+        for mut entry in self.registry.agents.iter_mut() {
+            let agent = entry.value_mut();
+            match crate::agent::persistence::save_agent_db_in_tx(&mut tx, agent).await {
+                Ok(next_ver) => {
+                    pending_versions.push((agent.identity.id.clone(), next_ver));
                 }
-                match tx.commit().await {
-                    Ok(_) => {
-                        for (agent_id, next_ver) in pending_versions {
-                            if let Some(mut agent_entry) = self.registry.agents.get_mut(&agent_id) {
-                                agent_entry.version = next_ver;
-                            }
-                        }
-                    }
-                    Err(err) => {
-                        tracing::error!(
-                            error = %err,
-                            "❌ [State] Failed to commit agent batch transaction"
-                        );
-                    }
-                }
-            }
-            Err(err) => {
-                tracing::error!(
-                    error = %err,
-                    "❌ [State] Failed to begin agent batch transaction — falling back to individual saves"
-                );
-                // Fallback: individual saves (degraded but functional)
-                for mut entry in self.registry.agents.iter_mut() {
-                    let agent = entry.value_mut();
-                    if let Err(err) =
-                        crate::agent::persistence::save_agent_db(&self.resources.pool, agent).await
-                    {
-                        tracing::error!(
-                            agent_id = %agent.identity.id,
-                            error = %err,
-                            "❌ [State] Failed to persist agent during fallback save_agents"
-                        );
-                    }
+                Err(err) => {
+                    tracing::error!(
+                        agent_id = %agent.identity.id,
+                        error = %err,
+                        "❌ [State] Failed to persist agent during batched save_agents"
+                    );
+                    let _ = tx.rollback().await;
+                    return Err(err);
                 }
             }
         }
+
+        tx.commit().await?;
+
+        for (agent_id, next_ver) in pending_versions {
+            if let Some(mut agent_entry) = self.registry.agents.get_mut(&agent_id) {
+                agent_entry.version = next_ver;
+            }
+        }
+
+        Ok(())
     }
 
     /// Persists all provider configurations to disk.
@@ -167,13 +142,13 @@ impl AppState {
     /// Aggregates agent registry states, model updates, and budget meter logs
     /// into a batched transaction. This is the primary safety valve for
     /// graceful engine shutdowns.
-    pub async fn flush_all(&self) {
+    pub async fn flush_all(&self) -> Result<(), AppError> {
         tracing::info!(
             "💾 [System] Flushing all volatile buffers and registries to persistence..."
         );
 
         // 1. Persist Registries
-        self.save_agents().await;
+        self.save_agents().await?;
         if let Err(e) = self.save_providers().await {
             tracing::error!(
                 "❌ [State] Failed to persist providers during save_all: {:?}",
@@ -191,5 +166,7 @@ impl AppState {
         if let Err(e) = self.security.budget_guard.flush_to_db().await {
             tracing::error!("🚨 [System] Failed to flush budget data: {}", e);
         }
+
+        Ok(())
     }
 }

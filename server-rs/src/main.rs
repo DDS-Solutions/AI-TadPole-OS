@@ -304,8 +304,8 @@ async fn async_main(config: crate::config::Config) -> anyhow::Result<()> {
     tracing::info!("🛑 Tadpole OS Engine shutting down gracefully.");
     // 6. Persistence: Save all systemic registries and flush buffers before exiting.
     // This ensures that metering costs, agent status, and infrastructure configs are fully persisted.
-    app_state.flush_all().await;
-    app_state.save_agents().await;
+    let _ = app_state.flush_all().await;
+    let _ = app_state.save_agents().await;
     let _ = app_state.save_providers().await;
     let _ = app_state.save_models().await;
     Ok(())

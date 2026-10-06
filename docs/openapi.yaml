@@ -3198,6 +3198,43 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 
+  /v1/continuity/workflows/{id}/run:
+    post:
+      operationId: runWorkflow
+      summary: Trigger execution of a workflow
+      description: Dispatches an asynchronous execution of a configured workflow.
+      tags: [Continuity]
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                initial_context:
+                  type: object
+                  additionalProperties: true
+      responses:
+        '202':
+          description: Workflow execution dispatched
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: accepted }
+                  workflow_id: { type: string }
+                  run_id: { type: string }
+                  message: { type: string }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+
   /v1/continuity/workflows/{id}/runs/{run_id}/cancel:
     post:
       operationId: cancelWorkflowRun

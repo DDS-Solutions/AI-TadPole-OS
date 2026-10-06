@@ -16,8 +16,9 @@ use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
 use std::sync::Arc;
 
 /// Helper to abort in-flight agent tasks and reset their active state in memory.
-pub(crate) async fn halt_active_agents(state: &AppState) -> usize {
+pub(crate) async fn halt_active_agents(state: &AppState) -> (usize, Vec<String>) {
     let mut halted = 0usize;
+    let mut interrupted_missions = Vec::new();
 
     for mut entry in state.registry.agents.iter_mut() {
         let current_status = entry.health.status.as_str();
@@ -26,6 +27,18 @@ pub(crate) async fn halt_active_agents(state: &AppState) -> usize {
             || current_status == "coding"
             || current_status == "speaking"
         {
+            if let Some(mission) = &entry.state.active_mission {
+                let m_id = if let Some(m_str) = mission.as_str() {
+                    m_str.to_string()
+                } else if let Some(m_obj) = mission.get("id").and_then(|v| v.as_str()) {
+                    m_obj.to_string()
+                } else {
+                    mission.to_string()
+                };
+                if !m_id.is_empty() && !interrupted_missions.contains(&m_id) {
+                    interrupted_missions.push(m_id);
+                }
+            }
             entry.health.status = "idle".to_string();
             entry.state.active_mission = None;
             entry.state.current_task = None;
@@ -47,7 +60,7 @@ pub(crate) async fn halt_active_agents(state: &AppState) -> usize {
         }
     }
 
-    halted
+    (halted, interrupted_missions)
 }
 
 /// POST /v1/engine/kill
@@ -59,7 +72,7 @@ pub(crate) async fn halt_active_agents(state: &AppState) -> usize {
 /// @docs OPERATIONS_MANUAL:EmergencyKill
 #[tracing::instrument(skip(state), name = "governance::kill_swarm")]
 pub async fn kill_agents(State(state): State<Arc<AppState>>) -> impl IntoResponse {
-    let halted = halt_active_agents(&state).await;
+    let (halted, interrupted_missions) = halt_active_agents(&state).await;
 
     // Abort all pending oversight entries
     let pending_ids: Vec<String> = state
@@ -94,17 +107,21 @@ pub async fn kill_agents(State(state): State<Arc<AppState>>) -> impl IntoRespons
     }
 
     // Durably persist the idle statuses so they do not resurrect on reboot
-    state.save_agents().await;
+    if let Err(e) = state.save_agents().await {
+        tracing::error!("❌ [Kill Switch] Failed to persist agent statuses: {}", e);
+    }
 
     tracing::warn!(
-        "🛑 [Kill Switch] Halted {} agents, cleared {} pending oversight entries.",
+        "🛑 [Kill Switch] Halted {} agents across {:?} missions, cleared {} pending oversight entries.",
         halted,
+        interrupted_missions,
         pending_ids.len()
     );
 
     state.emit_event(serde_json::json!({
         "type": "engine:kill",
         "halted_agents": halted,
+        "interrupted_missions": interrupted_missions,
         "cleared_oversight": pending_ids.len(),
         "timestamp": chrono::Utc::now().to_rfc3339()
     }));
@@ -114,6 +131,7 @@ pub async fn kill_agents(State(state): State<Arc<AppState>>) -> impl IntoRespons
         Json(serde_json::json!({
             "status": "ok",
             "halted_agents": halted,
+            "interrupted_missions": interrupted_missions,
             "cleared_oversight": pending_ids.len()
         })),
     )
@@ -128,14 +146,15 @@ pub async fn shutdown_engine(State(state): State<Arc<AppState>>) -> impl IntoRes
     tracing::warn!("💀 [Shutdown] Engine shutdown requested by operator. Persisting state...");
 
     // 1. Halt running agents and abort task handles to prevent in-flight state divergence
-    let halted = halt_active_agents(&state).await;
+    let (halted, interrupted_missions) = halt_active_agents(&state).await;
     tracing::info!(
-        "💀 [Shutdown] Halted {} running agent tasks prior to shutdown",
-        halted
+        "💀 [Shutdown] Halted {} running agent tasks across missions: {:?} prior to shutdown",
+        halted,
+        interrupted_missions
     );
 
     // 2. Save all agents before shutting down
-    state.save_agents().await;
+    let save_ok = state.save_agents().await.is_ok();
 
     // 3. Flush database WAL journal checkpoint
     if let Err(e) = sqlx::query("PRAGMA wal_checkpoint(TRUNCATE)")
@@ -152,6 +171,7 @@ pub async fn shutdown_engine(State(state): State<Arc<AppState>>) -> impl IntoRes
         "type": "engine:shutdown",
         "message": "Engine shutting down. Goodbye.",
         "halted_agents": halted,
+        "interrupted_missions": interrupted_missions,
         "timestamp": chrono::Utc::now().to_rfc3339()
     }));
 
@@ -162,11 +182,19 @@ pub async fn shutdown_engine(State(state): State<Arc<AppState>>) -> impl IntoRes
         std::process::exit(0);
     });
 
+    let shutdown_message = if save_ok {
+        "Shutdown initiated. State persisted."
+    } else {
+        "Shutdown initiated. State persistence failed; check logs."
+    };
+
     (
         StatusCode::OK,
         Json(serde_json::json!({
             "status": "ok",
-            "message": "Shutdown initiated. State persisted."
+            "message": shutdown_message,
+            "halted_agents": halted,
+            "interrupted_missions": interrupted_missions
         })),
     )
 }

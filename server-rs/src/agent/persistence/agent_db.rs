@@ -659,10 +659,75 @@ pub async fn release_agent(pool: &SqlitePool, agent_id: &str) -> Result<bool, Ap
 
 /// ### ⚖️ Governance Rationale: The Swarm Reaper
 /// Identifies and harvests agents marked as 'busy' that have exceeded their heartbeat threshold.
-/// Resets status to 'idle' and clears active_mission and current_task to eliminate ghosts.
+/// Resets status to 'idle', clears active_mission/current_task, and reconciles abandoned missions in mission_history.
 pub async fn reap_stale_agents(pool: &SqlitePool, threshold_secs: i64) -> Result<u64, AppError> {
     let now = chrono::Utc::now();
     let threshold_time = now - chrono::Duration::seconds(threshold_secs);
+
+    // 1. Identify stale agent IDs and active missions
+    let stale_agents: Vec<(String, Option<String>)> = sqlx::query_as(
+        "SELECT id, active_mission FROM agents \
+         WHERE status = 'busy' AND (heartbeat_at IS NULL OR heartbeat_at < ?)",
+    )
+    .bind(threshold_time)
+    .fetch_all(pool)
+    .await?;
+
+    for (agent_id, active_mission_raw) in &stale_agents {
+        let mut mission_ids = Vec::new();
+        if let Some(ref raw) = active_mission_raw {
+            if let Ok(val) = serde_json::from_str::<serde_json::Value>(raw) {
+                if let Some(id_str) = val.get("id").and_then(|v| v.as_str()) {
+                    mission_ids.push(id_str.to_string());
+                }
+            } else if !raw.is_empty() {
+                mission_ids.push(raw.clone());
+            }
+        }
+
+        // Also query mission_history for active/pending missions under this agent
+        let db_missions: Vec<(String,)> = sqlx::query_as(
+            "SELECT id FROM mission_history WHERE agent_id = ? AND status IN ('active', 'pending')",
+        )
+        .bind(agent_id)
+        .fetch_all(pool)
+        .await
+        .unwrap_or_default();
+
+        for (db_mid,) in db_missions {
+            if !mission_ids.contains(&db_mid) {
+                mission_ids.push(db_mid);
+            }
+        }
+
+        for mid in mission_ids {
+            let log_id = uuid::Uuid::new_v4().to_string();
+            let log_text = format!(
+                "⚠️ [Reaper] Agent '{}' heartbeat timed out (>{}s). Active mission marked failed.",
+                agent_id, threshold_secs
+            );
+
+            let _ = sqlx::query(
+                "INSERT INTO mission_logs (id, mission_id, agent_id, source, text, severity, timestamp, hash) \
+                 VALUES (?1, ?2, ?3, 'system', ?4, 'warning', ?5, '')",
+            )
+            .bind(&log_id)
+            .bind(&mid)
+            .bind(agent_id)
+            .bind(&log_text)
+            .bind(now)
+            .execute(pool)
+            .await;
+
+            let _ = sqlx::query(
+                "UPDATE mission_history SET status = 'failed', updated_at = ?1 WHERE id = ?2 AND status IN ('active', 'pending')",
+            )
+            .bind(now)
+            .bind(&mid)
+            .execute(pool)
+            .await;
+        }
+    }
 
     let res = sqlx::query(
         "UPDATE agents SET status = 'idle', active_mission = NULL, current_task = NULL \

@@ -79,6 +79,7 @@ export const NAMESPACE_KEYS: Record<SystemNamespace, readonly string[]> = {
         'speak',
         'kill_agents',
         'shutdown_engine',
+        'get_metrics',
         'transcribe',
         'install_template',
         'import_template',
@@ -115,6 +116,7 @@ export const NAMESPACE_KEYS: Record<SystemNamespace, readonly string[]> = {
         'add_continuity_workflows_step',
         'delete_continuity_workflows',
         'trigger_scheduled_job',
+        'run_workflow',
         'get_workflow_run_steps'
     ],
     oversight: [
@@ -139,7 +141,9 @@ export const NAMESPACE_KEYS: Record<SystemNamespace, readonly string[]> = {
     ],
     workspace: [
         'get_workspaces_status',
-        'get_workspace_files'
+        'get_workspace_files',
+        'get_file_history',
+        'restore_file_version'
     ]
 };
 

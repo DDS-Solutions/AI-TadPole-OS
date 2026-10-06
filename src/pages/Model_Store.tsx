@@ -63,7 +63,12 @@ export default function Model_Store() {
                 tadpole_os_service.get_nodes()
             ]);
             set_catalog(catalog_data);
-            set_nodes(nodes_data.filter(n => n.status !== 'offline'));
+            const online_nodes = (nodes_data || []).filter(n => n.status !== 'offline');
+            if (online_nodes.length === 0) {
+                set_nodes([{ id: 'local', name: 'Local Engine (Ollama)', address: '127.0.0.1:11434', status: 'online' }]);
+            } else {
+                set_nodes(online_nodes);
+            }
             set_error_msg(null);
         } catch (e) {
             set_error_msg(i18n.t('model_store.fetch_failed'));

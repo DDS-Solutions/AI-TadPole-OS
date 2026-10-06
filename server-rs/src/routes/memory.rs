@@ -212,10 +212,13 @@ pub async fn get_agent_memory(
     let memory_path = match memory_path {
         Some(path) => path,
         None => {
+            if !state.registry.agents.contains_key(&agent_id) {
+                return Err(AppError::NotFound(format!("Agent {} not found", agent_id)));
+            }
             return Ok((
                 StatusCode::OK,
                 Json(MemoryResponse {
-                    status: "success".to_string(),
+                    status: "uninitialized".to_string(),
                     entries: vec![],
                 }),
             ));
@@ -226,16 +229,10 @@ pub async fn get_agent_memory(
 
     match VectorMemory::connect(&path_str, "memories").await {
         Ok(memory) => {
-            if let Err(e) = memory.ensure_table().await {
-                tracing::warn!("Table not found or error: {}", e);
-                return Ok((
-                    StatusCode::OK,
-                    Json(MemoryResponse {
-                        status: "success".to_string(),
-                        entries: vec![],
-                    }),
-                ));
-            }
+            memory.ensure_table().await.map_err(|e| {
+                tracing::error!("LanceDB ensure_table failed for agent {}: {}", agent_id, e);
+                AppError::InternalServerError(format!("Memory table initialization failed: {}", e))
+            })?;
 
             let conn = lancedb::connect(&format!("file://{}", path_str))
                 .execute()
@@ -760,6 +757,7 @@ pub async fn hybrid_rag_search_handler(
         Json(serde_json::json!({
             "status": "success",
             "query": query.q,
+            "sources": ["bm25", "trustgraph", "knowledge_meta"],
             "count": fused.len(),
             "results": fused
         })),
@@ -805,5 +803,45 @@ mod tests {
         let req2: super::SearchRequest = serde_json::from_str(json_without_agent).unwrap();
         assert_eq!(req2.query, "global query");
         assert_eq!(req2.agent_id, None);
+    }
+
+    #[tokio::test]
+    #[cfg(feature = "vector-memory")]
+    async fn test_get_agent_memory_registry_check_and_uninitialized() {
+        use crate::state::AppState;
+        use axum::extract::{Path, State};
+        use std::sync::Arc;
+
+        let state = Arc::new(AppState::new_mock().await);
+
+        // 1. Non-existent agent must return NotFound (404)
+        let non_existent_result = super::get_agent_memory(
+            Path("non-existent-agent-xyz".to_string()),
+            State(state.clone()),
+        )
+        .await;
+        assert!(matches!(non_existent_result, Err(crate::error::AppError::NotFound(_))));
+
+        // 2. Register an agent without initialized memory directory
+        let agent = crate::agent::types::EngineAgent {
+            identity: crate::agent::types::AgentIdentity {
+                id: "test-agent-init".to_string(),
+                name: "Tester".to_string(),
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+        state.registry.agents.insert("test-agent-init".to_string(), agent);
+
+        let registered_result = super::get_agent_memory(
+            Path("test-agent-init".to_string()),
+            State(state),
+        )
+        .await;
+        assert!(registered_result.is_ok());
+        let (status, axum::Json(val)) = registered_result.unwrap();
+        assert_eq!(status, axum::http::StatusCode::OK);
+        assert_eq!(val["status"], "uninitialized");
+        assert_eq!(val["entries"], serde_json::json!([]));
     }
 }

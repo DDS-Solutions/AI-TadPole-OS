@@ -145,6 +145,13 @@ pub async fn start_scheduler(state: Arc<AppState>) {
         {
             tracing::error!("❌ [A2A Sweep] Failed to sweep expired locks: {:?}", e);
         }
+
+        // A2A Mailbox Sweeper: Deliver pending directives to idle recipient agents
+        if let Err(e) =
+            crate::agent::runner::a2a_mailbox::A2AMailbox::sweep_and_deliver_pending(&state).await
+        {
+            tracing::error!("❌ [A2A Mailbox Sweep] Failed to sweep pending mailbox envelopes: {:?}", e);
+        }
     }
 }
 

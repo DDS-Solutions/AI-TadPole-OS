@@ -159,7 +159,7 @@ pub async fn trigger_deploy(
         script_file
     );
 
-    let mut cmd = tokio::process::Command::new("powershell.exe");
+    let mut cmd = crate::utils::security::create_isolated_command("powershell.exe");
     cmd.args([
         "-NoProfile",
         "-NonInteractive",
@@ -168,99 +168,75 @@ pub async fn trigger_deploy(
         "-File",
         &script_file,
     ]);
-    cmd.kill_on_drop(true);
+    cmd.stdout(std::process::Stdio::piped());
+    cmd.stderr(std::process::Stdio::piped());
 
-    // --- Async Process Execution with Timeout ---
-    let result = tokio::time::timeout(
-        std::time::Duration::from_secs(DEPLOY_TIMEOUT_SECS),
-        cmd.output(),
-    )
-    .await;
-
-    match result {
-        Ok(Ok(output)) => {
-            let mut stdout = String::from_utf8_lossy(&output.stdout).to_string();
-            let mut stderr = String::from_utf8_lossy(&output.stderr).to_string();
-
-            if stdout.len() > MAX_DEPLOY_OUTPUT_BYTES {
-                stdout.truncate(MAX_DEPLOY_OUTPUT_BYTES);
-                stdout.push_str("\n... [output truncated at 1MB ceiling]");
-            }
-            if stderr.len() > MAX_DEPLOY_OUTPUT_BYTES {
-                stderr.truncate(MAX_DEPLOY_OUTPUT_BYTES);
-                stderr.push_str("\n... [stderr truncated at 1MB ceiling]");
-            }
-
-            let redacted_stdout = state.security.secret_redactor.redact(&stdout);
-            let redacted_stderr = state.security.secret_redactor.redact(&stderr);
-
-            if output.status.success() {
-                tracing::info!("✅ Deployment succeeded for Bunker {}", target);
-                state.emit_event(json!({
-                    "type": "deploy:completed",
-                    "target": target,
-                    "status": "success",
-                    "timestamp": chrono::Utc::now().to_rfc3339()
-                }));
-
-                Ok((
-                    StatusCode::OK,
-                    Json(DeployResponse {
-                        status: "success".to_string(),
-                        output: Some(redacted_stdout),
-                        error: None,
-                    }),
-                ))
-            } else {
-                let combined = format!("{}\n{}", redacted_stdout, redacted_stderr)
-                    .trim()
-                    .to_string();
-                let error_msg = if combined.is_empty() {
-                    format!(
-                        "{} exited with code {:?}",
-                        script_file,
-                        output.status.code()
-                    )
-                } else {
-                    combined
-                };
-
-                state.emit_event(json!({
-                    "type": "deploy:completed",
-                    "target": target,
-                    "status": "failed",
-                    "error": &error_msg,
-                    "timestamp": chrono::Utc::now().to_rfc3339()
-                }));
-
-                Ok((
-                    StatusCode::INTERNAL_SERVER_ERROR,
-                    Json(DeployResponse {
-                        status: "error".to_string(),
-                        output: Some(redacted_stdout),
-                        error: Some(error_msg),
-                    }),
-                ))
-            }
-        }
-        Ok(Err(e)) => {
+    let mut child = match cmd.spawn() {
+        Ok(child) => child,
+        Err(e) => {
             tracing::error!("❌ Failed to spawn PowerShell process: {}", e);
             let safe_err = state.security.secret_redactor.redact(&e.to_string());
-            Ok((
+            return Ok((
                 StatusCode::INTERNAL_SERVER_ERROR,
                 Json(DeployResponse {
                     status: "error".to_string(),
                     output: None,
                     error: Some(safe_err),
                 }),
-            ))
+            ));
+        }
+    };
+
+    let mut child_stdout = child.stdout.take();
+    let mut child_stderr = child.stderr.take();
+
+    let run_future = async {
+        let mut stdout_buf = Vec::new();
+        let mut stderr_buf = Vec::new();
+        tokio::join!(
+            async {
+                if let Some(pipe) = child_stdout.as_mut() {
+                    let _ = tokio::io::AsyncReadExt::read_to_end(pipe, &mut stdout_buf).await;
+                }
+            },
+            async {
+                if let Some(pipe) = child_stderr.as_mut() {
+                    let _ = tokio::io::AsyncReadExt::read_to_end(pipe, &mut stderr_buf).await;
+                }
+            }
+        );
+        let status = child.wait().await;
+        (status, stdout_buf, stderr_buf)
+    };
+
+    // --- Async Process Execution with Timeout ---
+    let (status, stdout_bytes, stderr_bytes) = match tokio::time::timeout(
+        std::time::Duration::from_secs(DEPLOY_TIMEOUT_SECS),
+        run_future,
+    )
+    .await
+    {
+        Ok((Ok(status), out, err)) => (status, out, err),
+        Ok((Err(e), _, _)) => {
+            tracing::error!("❌ PowerShell process wait failed: {}", e);
+            let safe_err = state.security.secret_redactor.redact(&e.to_string());
+            return Ok((
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(DeployResponse {
+                    status: "error".to_string(),
+                    output: None,
+                    error: Some(safe_err),
+                }),
+            ));
         }
         Err(_) => {
+            let _ = child.start_kill();
+            let _ = child.wait().await;
             tracing::error!(
                 "❌ Deployment script execution timed out after {} seconds",
                 DEPLOY_TIMEOUT_SECS
             );
-            Ok((
+            return Ok((
                 StatusCode::INTERNAL_SERVER_ERROR,
                 Json(DeployResponse {
                     status: "error".to_string(),
@@ -270,8 +246,72 @@ pub async fn trigger_deploy(
                         DEPLOY_TIMEOUT_SECS
                     )),
                 }),
-            ))
+            ));
         }
+    };
+
+    let mut stdout = String::from_utf8_lossy(&stdout_bytes).to_string();
+    let mut stderr = String::from_utf8_lossy(&stderr_bytes).to_string();
+
+    if stdout.len() > MAX_DEPLOY_OUTPUT_BYTES {
+        stdout.truncate(MAX_DEPLOY_OUTPUT_BYTES);
+        stdout.push_str("\n... [output truncated at 1MB ceiling]");
+    }
+    if stderr.len() > MAX_DEPLOY_OUTPUT_BYTES {
+        stderr.truncate(MAX_DEPLOY_OUTPUT_BYTES);
+        stderr.push_str("\n... [stderr truncated at 1MB ceiling]");
+    }
+
+    let redacted_stdout = state.security.secret_redactor.redact(&stdout);
+    let redacted_stderr = state.security.secret_redactor.redact(&stderr);
+
+    if status.success() {
+        tracing::info!("✅ Deployment succeeded for Bunker {}", target);
+        state.emit_event(json!({
+            "type": "deploy:completed",
+            "target": target,
+            "status": "success",
+            "timestamp": chrono::Utc::now().to_rfc3339()
+        }));
+
+        Ok((
+            StatusCode::OK,
+            Json(DeployResponse {
+                status: "success".to_string(),
+                output: Some(redacted_stdout),
+                error: None,
+            }),
+        ))
+    } else {
+        let combined = format!("{}\n{}", redacted_stdout, redacted_stderr)
+            .trim()
+            .to_string();
+        let error_msg = if combined.is_empty() {
+            format!(
+                "{} exited with code {:?}",
+                script_file,
+                status.code()
+            )
+        } else {
+            combined
+        };
+
+        state.emit_event(json!({
+            "type": "deploy:completed",
+            "target": target,
+            "status": "failed",
+            "error": &error_msg,
+            "timestamp": chrono::Utc::now().to_rfc3339()
+        }));
+
+        Ok((
+            StatusCode::INTERNAL_SERVER_ERROR,
+            Json(DeployResponse {
+                status: "error".to_string(),
+                output: Some(redacted_stdout),
+                error: Some(error_msg),
+            }),
+        ))
     }
 }
 

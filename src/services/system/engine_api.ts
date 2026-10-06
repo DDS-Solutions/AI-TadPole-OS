@@ -42,6 +42,7 @@ export interface UninstallTemplateResponse {
 export interface UpdateEnvironmentResponse {
     status: string;
     updated_keys: string[];
+    requires_restart?: boolean;
 }
 
 export const engine_api = {
@@ -87,17 +88,43 @@ export const engine_api = {
         });
     },
 
-    kill_agents: async (options?: RequestOptions): Promise<void> => {
-        await api_request<void>('/v1/engine/kill', { 
+    kill_agents: async (options?: RequestOptions): Promise<{ status: string; halted_agents?: number; interrupted_missions?: string[]; cleared_oversight?: number }> => {
+        return await api_request<{ status: string; halted_agents?: number; interrupted_missions?: string[]; cleared_oversight?: number }>('/v1/engine/kill', { 
             method: 'POST',
             signal: options?.signal,
             timeout: options?.timeout
         });
     },
 
-    shutdown_engine: async (options?: RequestOptions): Promise<void> => {
-        await api_request<void>('/v1/engine/shutdown', { 
+    shutdown_engine: async (options?: RequestOptions & { wait_for_termination?: boolean; timeout_ms?: number; poll_interval_ms?: number }): Promise<{ status: string; message: string; halted_agents?: number; interrupted_missions?: string[] }> => {
+        const result = await api_request<{ status: string; message: string; halted_agents?: number; interrupted_missions?: string[] }>('/v1/engine/shutdown', { 
             method: 'POST',
+            signal: options?.signal,
+            timeout: options?.timeout
+        });
+
+        if (options?.wait_for_termination) {
+            const timeout_ms = options.timeout_ms ?? 5000;
+            const poll_interval = options.poll_interval_ms ?? 250;
+            const start = Date.now();
+            while (Date.now() - start < timeout_ms) {
+                try {
+                    await engine_api.check_health({ timeout: 400 });
+                    await new Promise((resolve) => setTimeout(resolve, poll_interval));
+                } catch {
+                    // Health check failed or connection closed; process has shut down.
+                    break;
+                }
+            }
+        }
+
+        return result;
+    },
+
+    get_metrics: async (options?: RequestOptions): Promise<string> => {
+        return await api_request<string>('/v1/engine/metrics', {
+            method: 'GET',
+            response_type: 'text',
             signal: options?.signal,
             timeout: options?.timeout
         });

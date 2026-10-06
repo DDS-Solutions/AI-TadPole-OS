@@ -95,7 +95,7 @@ export default function Security_Dashboard() {
 
             <Security_Header 
                 agent_health={agent_health} 
-                merkle_integrity={quotas?.system_defense?.merkle_integrity ?? 1.0} 
+                merkle_integrity={quotas?.system_defense?.merkle_integrity ?? -1.0} 
             />
 
             <section className="sovereign-panel p-5 space-y-4" aria-labelledby="oversight-key-heading">
@@ -213,11 +213,21 @@ export default function Security_Dashboard() {
                     <div className="sovereign-panel p-4 cursor-help hover:border-blue-500/30">
                         <div className="flex items-center justify-between mb-2">
                             <p className="text-zinc-400 text-xs font-mono uppercase">{i18n.t('security.verified_decisions')}</p>
-                            <Lock size={14} className={quotas?.system_defense?.merkle_integrity === 1.0 ? "text-emerald-500" : "text-red-500"} />
+                            <Lock size={14} className={quotas?.system_defense?.merkle_integrity === 1.0 ? "text-emerald-500" : (quotas?.system_defense?.merkle_integrity === 0.0 ? "text-amber-500" : "text-red-500")} />
                         </div>
                         <p className="text-2xl font-bold text-zinc-100">{audit_trail.length}</p>
-                        <p className={`text-[10px] mt-2 font-mono uppercase tracking-tighter ${quotas?.system_defense?.merkle_integrity === 1.0 ? "text-emerald-500" : "text-red-500"}`}>
-                            {i18n.t('security.crypto_integrity', { percentage: ((quotas?.system_defense?.merkle_integrity || 0) * 100).toFixed(0) })}
+                        <p className={`text-[10px] mt-2 font-mono uppercase tracking-tighter ${
+                            quotas?.system_defense?.merkle_integrity === 1.0 
+                                ? "text-emerald-500" 
+                                : (quotas?.system_defense?.merkle_integrity === 0.0 ? "text-amber-500" : "text-red-500")
+                        }`}>
+                            {quotas?.system_defense?.merkle_integrity === undefined
+                                ? i18n.t('security.integrity_unreachable', { defaultValue: 'Check Unreachable' })
+                                : quotas.system_defense.merkle_integrity < 0
+                                    ? i18n.t('security.integrity_compromised')
+                                    : quotas.system_defense.merkle_integrity === 0
+                                        ? i18n.t('security.ledger_empty', { defaultValue: 'Ledger Empty (0%)' })
+                                        : i18n.t('security.crypto_integrity', { percentage: (quotas.system_defense.merkle_integrity * 100).toFixed(0) })}
                         </p>
                     </div>
                 </Tooltip>
@@ -256,7 +266,7 @@ export default function Security_Dashboard() {
                     cpu_load: 0, 
                     sandbox_status: 'initializing', 
                     sandbox_type: 'unknown', 
-                    merkle_integrity: 1.0 
+                    merkle_integrity: -1.0 
                 }}
             />
         </div>

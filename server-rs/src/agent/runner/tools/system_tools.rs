@@ -666,70 +666,106 @@ impl AgentRunner {
 
                 use tokio::io::AsyncReadExt;
 
-                let mut child_stdout = child.stdout.take();
-                let mut child_stderr = child.stderr.take();
+                let timeout_secs = fc
+                    .args
+                    .get("timeout")
+                    .and_then(|v| v.as_u64())
+                    .unwrap_or(60);
+                let command_timeout = std::time::Duration::from_secs(timeout_secs.clamp(1, 300));
 
-                // Read both pipes concurrently to prevent OS pipe buffer deadlock
-                let ((stdout_trunc, stdout_buf), (stderr_trunc, stderr_buf)) = tokio::join!(
-                    async {
-                        let mut buf = Vec::new();
-                        let mut is_trunc = false;
-                        if let Some(pipe) = child_stdout.as_mut() {
-                            if let Ok(n) = pipe.take(32_769).read_to_end(&mut buf).await {
-                                if n > 32_768 {
-                                    buf.truncate(32_768);
-                                    is_trunc = true;
+                let run_future = async {
+                    let mut child_stdout = child.stdout.take();
+                    let mut child_stderr = child.stderr.take();
+
+                    let ((stdout_trunc, stdout_buf), (stderr_trunc, stderr_buf)) = tokio::join!(
+                        async {
+                            let mut buf = Vec::new();
+                            let mut is_trunc = false;
+                            if let Some(pipe) = child_stdout.as_mut() {
+                                if let Ok(n) = pipe.take(32_769).read_to_end(&mut buf).await {
+                                    if n > 32_768 {
+                                        buf.truncate(32_768);
+                                        is_trunc = true;
+                                    }
                                 }
                             }
-                        }
-                        (is_trunc, buf)
-                    },
-                    async {
-                        let mut buf = Vec::new();
-                        let mut is_trunc = false;
-                        if let Some(pipe) = child_stderr.as_mut() {
-                            if let Ok(n) = pipe.take(32_769).read_to_end(&mut buf).await {
-                                if n > 32_768 {
-                                    buf.truncate(32_768);
-                                    is_trunc = true;
+                            (is_trunc, buf)
+                        },
+                        async {
+                            let mut buf = Vec::new();
+                            let mut is_trunc = false;
+                            if let Some(pipe) = child_stderr.as_mut() {
+                                if let Ok(n) = pipe.take(32_769).read_to_end(&mut buf).await {
+                                    if n > 32_768 {
+                                        buf.truncate(32_768);
+                                        is_trunc = true;
+                                    }
                                 }
                             }
+                            (is_trunc, buf)
                         }
-                        (is_trunc, buf)
-                    }
-                );
+                    );
 
-                let exit_code = match child.wait().await {
-                    Ok(status) => status.code().unwrap_or(-1),
-                    Err(_) => -1,
+                    let exit_code = match child.wait().await {
+                        Ok(status) => status.code().unwrap_or(-1),
+                        Err(_) => -1,
+                    };
+
+                    (exit_code, stdout_trunc, stdout_buf, stderr_trunc, stderr_buf)
                 };
 
-                let timestamp_ms = std::time::SystemTime::now()
-                    .duration_since(std::time::UNIX_EPOCH)
-                    .map(|d| d.as_millis() as u64)
-                    .unwrap_or(0);
+                match tokio::time::timeout(command_timeout, run_future).await {
+                    Ok((exit_code, stdout_trunc, stdout_buf, stderr_trunc, stderr_buf)) => {
+                        let timestamp_ms = std::time::SystemTime::now()
+                            .duration_since(std::time::UNIX_EPOCH)
+                            .map(|d| d.as_millis() as u64)
+                            .unwrap_or(0);
 
-                ctx.execution_records
-                    .lock()
-                    .push(crate::agent::runner::ProcessExecutionRecord {
-                        command: full_command_display.clone(),
-                        exit_code,
-                        timestamp_ms,
-                    });
+                        ctx.execution_records
+                            .lock()
+                            .push(crate::agent::runner::ProcessExecutionRecord {
+                                command: full_command_display.clone(),
+                                exit_code,
+                                timestamp_ms,
+                            });
 
-                let stdout_str = String::from_utf8_lossy(&stdout_buf);
-                let stderr_str = String::from_utf8_lossy(&stderr_buf);
+                        let stdout_str = String::from_utf8_lossy(&stdout_buf);
+                        let stderr_str = String::from_utf8_lossy(&stderr_buf);
 
-                let combined = format!("{}{}", stdout_str, stderr_str);
-                let mut truncated = self.safe_truncate(&combined, 5000);
-                if stdout_trunc || stderr_trunc {
-                    truncated.push_str("\n(OUTPUT TRUNCATED AT 32KB SAFETY LIMIT)");
+                        let combined = format!("{}{}", stdout_str, stderr_str);
+                        let mut truncated = self.safe_truncate(&combined, 5000);
+                        if stdout_trunc || stderr_trunc {
+                            truncated.push_str("\n(OUTPUT TRUNCATED AT 32KB SAFETY LIMIT)");
+                        }
+
+                        *output_text = format!(
+                            "(PROCESS OUTPUT of '{}' [exit code: {}]):\n\n{}",
+                            full_command_display, exit_code, truncated
+                        );
+                    }
+                    Err(_) => {
+                        let _ = child.start_kill();
+                        let _ = child.wait().await;
+
+                        let timestamp_ms = std::time::SystemTime::now()
+                            .duration_since(std::time::UNIX_EPOCH)
+                            .map(|d| d.as_millis() as u64)
+                            .unwrap_or(0);
+
+                        ctx.execution_records
+                            .lock()
+                            .push(crate::agent::runner::ProcessExecutionRecord {
+                                command: format!("{} [TIMED_OUT]", full_command_display),
+                                exit_code: -1,
+                                timestamp_ms,
+                            });
+
+                        *output_text = format!(
+                            "(TOOL TIMEOUT: Child process '{}' timed out after {:?} and was killed)",
+                            full_command_display, command_timeout
+                        );
+                    }
                 }
-
-                *output_text = format!(
-                    "(PROCESS OUTPUT of '{}' [exit code: {}]):\n\n{}",
-                    full_command_display, exit_code, truncated
-                );
             }
             Err(e) => {
                 tracing::error!("❌ Failed to spawn process '{}': {}", executable, e);

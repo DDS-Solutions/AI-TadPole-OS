@@ -120,6 +120,16 @@ export const continuity_api = {
         });
     },
 
+    run_workflow: async (workflow_id: string, initial_context?: Record<string, unknown>, options?: RequestOptions): Promise<{ status: string; workflow_id: string; run_id: string; message: string }> => {
+        const clean_workflow_id = sanitize_id(workflow_id);
+        return api_request<{ status: string; workflow_id: string; run_id: string; message: string }>(`/v1/continuity/workflows/${clean_workflow_id}/run`, {
+            method: 'POST',
+            body: JSON.stringify(initial_context ? { initial_context } : {}),
+            signal: options?.signal,
+            timeout: options?.timeout
+        });
+    },
+
     get_workflow_run_steps: async (run_id: string, options?: RequestOptions): Promise<Workflow_Step_Run[]> => {
         const clean_run_id = sanitize_id(run_id);
         const res = await api_request<{ step_runs: Workflow_Step_Run[] } | Workflow_Step_Run[]>(`/v1/continuity/workflow-runs/${clean_run_id}/steps`, {

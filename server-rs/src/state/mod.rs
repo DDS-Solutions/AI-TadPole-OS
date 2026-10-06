@@ -432,11 +432,19 @@ impl AppState {
             "🛰️ [Registry] Initializing MCP Host (Config: {:?})...",
             mcp_config_opt
         );
-        let mcp_host = Arc::new(crate::agent::mcp::McpHost::new(
-            event_tx.clone(),
-            mcp_config_opt,
-            permission_policy.clone(),
+        let mcp_prompter = Arc::new(crate::security::permissions::AsyncOversightPrompter::new(
+            pool.clone(),
+            comms.clone(),
+            Some(event_tx.clone()),
         ));
+        let mcp_host = Arc::new(
+            crate::agent::mcp::McpHost::new(
+                event_tx.clone(),
+                mcp_config_opt,
+                permission_policy.clone(),
+            )
+            .with_prompter(mcp_prompter),
+        );
 
         tracing::info!("🛰️ [Registry] Initializing Hooks Manager...");
         let hooks = Arc::new(crate::agent::hooks::HooksManager::new(
