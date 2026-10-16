@@ -1,0 +1,15 @@
+/**
+ * @docs ARCHITECTURE:Domain
+ *
+ * ### AI Context Alignment
+ * - **Subsystem**: System Core / roles_domain
+ *
+ * ### ⚠️ Invariants & Non-Negotiables
+ * - `[Structural]` Deterministic internal state integrity and strict interface contract compliance.
+ *
+ * ### 🔍 Debugging & Observability
+ * - **Local Errors**: none
+ * - **Telemetry Targets**: none declared
+ */
+
+export * from './normalizer';

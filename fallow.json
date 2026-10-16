@@ -1,0 +1,27 @@
+{
+  "entry": [
+    "src/main.tsx",
+    "src/index.html",
+    "scripts/**/*.cjs",
+    "scripts/**/*.js",
+    "scripts/**/*.ts",
+    "tests/**/*.cjs",
+    "tests/**/*.ts",
+    "src/contracts/**/*.ts",
+    "src/api/**/*.ts",
+    "src/services/**/*.ts",
+    "src/stores/**/*.ts"
+  ],
+  "ignore": [
+    "dist/**",
+    "node_modules/**",
+    "server-rs/**",
+    ".tmp/**"
+  ],
+  "rules": {
+    "unused-export": "off",
+    "unused-class-member": "off",
+    "duplicated-code": "off",
+    "unreachable-file": "off"
+  }
+}

@@ -1,0 +1,9 @@
+[env]
+# Point to the vendorized protoc binary
+PROTOC = "C:\\Users\\Home Office_PC\\.gemini\\antigravity\\playground\\tadpole-os\\server-rs\\vendor\\protoc\\bin\\protoc.exe"
+
+# ─── Compiler Caching (sccache) ──────────────────────────────────────────────
+# Accelerates local rebuilds and checks. RUSTC_WRAPPER="sccache" is also active in user environment.
+# [build]
+# rustc-wrapper = "sccache"
+
