@@ -1,0 +1,11 @@
+# robots.txt for Tadpole OS Public Web & AI Agent Discovery
+User-agent: *
+Allow: /
+Allow: /a2a/v1/
+Allow: /.well-known/
+
+# AI Agent Card Protocol Discovery Directives
+Agent-Card: /a2a/v1/company-agent-card.json
+Agent-Card-WellKnown: /.well-known/agent.json
+
+Sitemap: https://dds-solutions.github.io/AI-Tadpole-OS-Industry-Templates/sitemap.xml

@@ -1,0 +1,25 @@
+[workspace]
+resolver = "2"
+
+members = [
+  "cairo",
+  "cairo/sys",
+  "gdk-pixbuf",
+  "gdk-pixbuf/sys",
+  "gio",
+  "gio/sys",
+  "glib-build-tools",
+  "glib",
+  "glib/gobject-sys",
+  "glib/sys",
+  "glib-macros",
+  "graphene",
+  "graphene/sys",
+  "examples",
+  "pango",
+  "pango/sys",
+  "pangocairo",
+  "pangocairo/sys",
+]
+
+exclude = ["gir", "checker"]

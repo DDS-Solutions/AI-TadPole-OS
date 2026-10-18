@@ -1,0 +1,135 @@
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+name: Windows
+
+jobs:
+
+  gvsbuild:
+    name: build GTK binaries with gvsbuild
+    runs-on: windows-2022
+
+    env:
+      # git revision of gvsbuild we use for to build GLib and the other dependencies
+      gvsbuildref: 1b3c28a3aa2312e7796f5f91b0a897a7a38b9292
+
+      # bump this number if you want to force a rebuild of gvsbuild with the same revision
+      gvsbuildupdate: 1
+
+    outputs:
+      cachekey: ${{ steps.output.outputs.cachekey }}
+
+    steps:
+      # this is needed for the cache restore to work
+      - name: (GTK binaries) create dir
+        run: mkdir C:\gtk-build\gtk\x64\release
+
+      - name: (GTK binaries) get from cache
+        uses: actions/cache@v3
+        id: cache
+        with:
+          path: C:\gtk-build\gtk\x64\release\**
+          key: gvsbuild-${{ env.gvsbuildupdate }}-${{ env.gvsbuildref }}
+
+      - name: (GTK binaries) checkout gvsbuild
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/checkout@v4
+        with:
+          repository: wingtk/gvsbuild
+          ref: ${{ env.gvsbuildref }}
+          path: gvsbuild
+
+      # Temporarily move the preinstalled git, it causes errors related to cygwin.
+      - name: (GTK binaries) move git binary
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          move "C:\Program Files\Git\usr\bin" "C:\Program Files\Git\usr\notbin"
+          move "C:\Program Files\Git\bin" "C:\Program Files\Git\notbin"
+        shell: cmd
+
+      - name: (GTK binaries) install gvsbuild
+        if: steps.cache.outputs.cache-hit != 'true'
+        working-directory: gvsbuild
+        run: python -m pip install .
+
+      - name: (GTK binaries) run gvsbuild
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: gvsbuild build --platform=x64 --vs-ver=17 --msys-dir=C:\msys64 gtk3 graphene
+
+      - name: (GTK binaries) restore git binary
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          move "C:\Program Files\Git\usr\notbin" "C:\Program Files\Git\usr\bin"
+          move "C:\Program Files\Git\notbin" "C:\Program Files\Git\bin"
+        shell: cmd
+
+      - name: (GTK binaries) output cache key
+        id: output
+        run: echo "::set-output name=cachekey::gvsbuild-${{ env.gvsbuildupdate }}-${{ env.gvsbuildref }}"
+
+  build:
+    name: build gtk-rs on Windows
+    runs-on: windows-2022
+    needs: gvsbuild
+
+    strategy:
+      matrix:
+        conf:
+          - { name: "cairo", test: true, args: "--features png,pdf,svg,ps,use_glib,v1_16,freetype,script,win32-surface" }
+          - { name: "gdk-pixbuf", test: true, args: "--features v2_42" }
+          - { name: "gio", test: true, args: "--features v2_74" }
+          - { name: "glib", test: true, args: "--features v2_74" }
+          - { name: "glib-build-tools", test: false, args: "" }
+          - { name: "graphene", test: false, args: "" }
+          - { name: "pango", test: true, args: "--features v1_50" }
+          - { name: "pangocairo", test: true, args: "" }
+          - { name: "examples", test: false, args: "--bins --examples --all-features" }
+
+    steps:
+
+      # this is needed for the cache restore to work
+      - name: Create GTK binaries dir
+        run: mkdir C:\gtk-build\gtk\x64\release
+
+      - name: Get GTK binaries from cache
+        uses: actions/cache@v3
+        id: cache
+        with:
+          path: C:\gtk-build\gtk\x64\release\**
+          key: ${{needs.gvsbuild.outputs.cachekey}}
+
+      - name: Set up env
+        run: |
+          echo "PKG_CONFIG=C:\gtk-build\gtk\x64\release\bin\pkgconf.exe" >> $GITHUB_ENV
+          echo "C:\gtk-build\gtk\x64\release\bin" >> $GITHUB_PATH
+        shell: bash
+
+      - uses: actions/checkout@v4
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          default: true
+
+      - name: test
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path ${{ matrix.conf.name }}/Cargo.toml ${{ matrix.conf.args }}
+        if: matrix.conf.test
+
+      - name: test sys
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path ${{ matrix.conf.name }}/sys/Cargo.toml ${{ matrix.conf.args }}
+        if: matrix.conf.name != 'examples' && matrix.conf.name != 'glib-build-tools'
+
+      - name: build
+        uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --manifest-path ${{ matrix.conf.name }}/Cargo.toml ${{ matrix.conf.args }}

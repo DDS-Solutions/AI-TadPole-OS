@@ -1,0 +1,27 @@
+{
+    "schema_version": "1",
+    "name": "swarm",
+    "display_name": "Swarm Governance",
+    "description": "Orchestral control over sub-agents, mission status, and collaborative task delegation.",
+    "version": "1.0.0",
+    "author": "tadpole-os",
+    "permissions": [
+        "swarm:recruit",
+        "mission:control"
+    ],
+    "toolset_group": "governance",
+    "danger_level": "medium",
+    "requires_oversight": true,
+    "parameters": {
+        "agent_id": {
+            "type": "string"
+        },
+        "directive": {
+            "type": "string"
+        }
+    },
+    "hooks": {
+        "before_execute": null,
+        "after_execute": null
+    }
+}

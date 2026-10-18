@@ -1,0 +1,18 @@
+[
+  "String", "str", "Option", "Result", "Vec", "HashMap", "HashSet", "BTreeMap", "BTreeSet",
+  "Box", "Rc", "Arc", "Cell", "RefCell", "Mutex", "RwLock", "std", "core", "alloc", "panic",
+  "Number", "Boolean", "Object", "Array", "Symbol", "BigInt", "Date", "RegExp",
+  "Error", "TypeError", "Promise", "Map", "Set", "WeakMap", "WeakSet", "JSON", "Math",
+  "Reflect", "Proxy", "console", "URL", "URLSearchParams", "Headers", "Request", "Response",
+  "any", "string", "number", "boolean", "void", "never", "unknown", "undefined", "null",
+  "true", "false", "unwrap", "localStorage", "sessionStorage", "window", "document",
+  "process", "global", "module", "exports", "require", "import", "export", "default", "const",
+  "let", "var", "function", "class", "interface", "type", "enum", "extends", "implements",
+  "return", "if", "else", "for", "while", "do", "switch", "case", "break", "continue", "throw",
+  "try", "catch", "finally", "async", "await", "yield", "public", "private", "protected",
+  "static", "readonly", "as", "keyof", "typeof", "instanceof", "in", "of", "new", "this",
+  "super", "constructor", "get", "set", "from", "satisfies", "declare", "namespace",
+  "React", "useState", "useEffect", "useContext", "useRef", "useMemo", "useCallback",
+  "useReducer", "useImperativeHandle", "useLayoutEffect", "useDebugValue",
+  "invoke", "listen", "emit", "Event", "UnlistenFn", "Some", "None", "Ok", "Err", "Self", "self"
+]

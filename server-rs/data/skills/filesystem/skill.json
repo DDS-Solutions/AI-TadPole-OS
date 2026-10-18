@@ -1,0 +1,28 @@
+{
+    "schema_version": "1",
+    "name": "filesystem",
+    "display_name": "Filesystem Management",
+    "description": "Read, write, list, and delete files in the local workspace. Essential for documentation audits and code modification.",
+    "version": "1.0.0",
+    "author": "tadpole-os",
+    "permissions": [
+        "fs:read",
+        "fs:write"
+    ],
+    "toolset_group": "utilities",
+    "danger_level": "medium",
+    "requires_oversight": true,
+    "parameters": {
+        "path": {
+            "type": "string",
+            "required": true
+        },
+        "content": {
+            "type": "string"
+        }
+    },
+    "hooks": {
+        "before_execute": null,
+        "after_execute": null
+    }
+}

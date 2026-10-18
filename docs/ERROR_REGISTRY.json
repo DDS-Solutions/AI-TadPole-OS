@@ -1,0 +1,198 @@
+{
+  "BAD_REQUEST": {
+    "type_uri": "https://tadpole.os/errors/bad-request",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 400,
+    "remediation": "Inspect request payload, argument types, and required fields against the API/tool schema before retrying."
+  },
+  "UNAUTHORIZED": {
+    "type_uri": "https://tadpole.os/errors/unauthorized",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 401,
+    "remediation": "Verify authentication credentials, bearer token validity, or API key configuration in settings or environment."
+  },
+  "FORBIDDEN": {
+    "type_uri": "https://tadpole.os/errors/forbidden",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 403,
+    "remediation": "Operation blocked by Zero Trust or capability guard. Ensure agent has the required role authority and token permissions."
+  },
+  "NOT_FOUND": {
+    "type_uri": "https://tadpole.os/errors/not-found",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 404,
+    "remediation": "Check requested resource path, symbol, or ID existence before re-querying. Use search tools if the exact identifier is unknown."
+  },
+  "VALIDATION_ERROR": {
+    "type_uri": "https://tadpole.os/errors/validation-error",
+    "source": "server-rs/src/agent/skill_error.rs",
+    "status": 400,
+    "remediation": "Refine input parameters to match required constraints, value ranges, and enum formats via RecoveryAction::RefineInput."
+  },
+  "DOMAIN_ERROR": {
+    "code_pattern": "DOMAIN_ERROR:{DOMAIN_CODE}",
+    "type_uri_pattern": "https://tadpole.os/errors/domain%3A{domain-code}",
+    "source": "server-rs/src/error/metadata.rs",
+    "statuses": [400, 402, 403, 409, 500],
+    "type_uri": "https://tadpole.os/errors/domain",
+    "remediation": "Inspect the specific domain error code and detail payload to adjust business logic constraints."
+  },
+  "INTERNAL_SERVER_ERROR": {
+    "type_uri": "https://tadpole.os/errors/internal",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 500,
+    "remediation": "Transient or unhandled runtime fault. Review server-rs logs and trace ID, and retry with exponential backoff if transient."
+  },
+  "NOT_IMPLEMENTED": {
+    "type_uri": "https://tadpole.os/errors/not-implemented",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 501,
+    "remediation": "The requested capability or route is not implemented in the current engine version. Use an alternative supported method."
+  },
+  "OOM_QUANTIZATION_FALLBACK": {
+    "code_pattern": "OOM_QUANTIZATION_FALLBACK:{MODEL_ID}",
+    "type_uri": "https://tadpole.os/errors/resource-exhaustion",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 507,
+    "remediation": "Switch to a lower quantization (e.g., q4_K_M) or increase system VRAM."
+  },
+  "RECRUITMENT_FAILED": {
+    "code_pattern": "RECRUITMENT_FAILED:{RECIPE_ID}:{ROLE}",
+    "type_uri_pattern": "https://tadpole.os/errors/recruitment%3A{role}",
+    "type_uri": "https://tadpole.os/errors/recruitment",
+    "source": "server-rs/src/agent/skill_error.rs",
+    "status": 503,
+    "remediation": "Check if an agent with the required role is registered and in 'idle' status."
+  },
+  "INFRA_ERROR": {
+    "code_pattern": "INFRA_ERROR:{PROVIDER_ID}",
+    "type_uri": "https://tadpole.os/errors/infrastructure",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 502,
+    "remediation": "Verify API credentials and endpoint connectivity in Provider Settings."
+  },
+  "RATE_LIMIT": {
+    "type_uri": "https://tadpole.os/errors/rate-limit",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 429,
+    "remediation": "Provider or internal rate limit reached. Pause execution and retry with backoff as indicated in the Retry-After header."
+  },
+  "CONFLICT": {
+    "type_uri": "https://tadpole.os/errors/conflict",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 409,
+    "remediation": "Resource state conflict (e.g., concurrent modification). Re-fetch latest state and retry the transition."
+  },
+  "DEGRADED_STATE": {
+    "type_uri": "https://tadpole.os/errors/degraded-state",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 503,
+    "remediation": "Subsystem operating in degraded mode. Check provider health, circuit breakers, and database connectivity."
+  },
+  "MULTI_ERROR": {
+    "type_uri": "https://tadpole.os/errors/multi-error",
+    "source": "server-rs/src/error/metadata.rs",
+    "statuses": [400, 500],
+    "behavior": "Uses the first error status unless any member is a server error.",
+    "remediation": "Multiple concurrent errors occurred. Inspect individual member errors in the detail list for specific remediation."
+  },
+  "SECURITY_BOUNDARY_VIOLATION": {
+    "type_uri": "https://tadpole.os/errors/security-boundary-violation",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 403,
+    "remediation": "Process or agent attempted to breach a sandboxed boundary or restricted path. Abort operation and request user elevation if required."
+  },
+  "OLLAMA_OFFLINE": {
+    "type_uri": "https://tadpole.os/errors/ollama-offline",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 503,
+    "remediation": "Local Ollama runtime unreachable. Ensure 'ollama serve' is active and listening on the configured host port."
+  },
+  "GRAPH_ERROR": {
+    "type_uri": "https://tadpole.os/errors/graph-error",
+    "source": "server-rs/src/error/metadata.rs",
+    "status": 500,
+    "remediation": "Symbol graph query or AST parsing failure. Verify file syntax and ensure the graph database index is up-to-date."
+  },
+  "BUDGET_EXHAUSTED": {
+    "type_uri": "https://tadpole.os/errors/budget-exhausted",
+    "source": "server-rs/src/agent/runner/error.rs",
+    "status": 402,
+    "remediation": "Agent or mission spend budget exhausted. Request budget replenishment from Entity 0 or pause non-critical turns."
+  },
+  "RECURSION_BLOCKED": {
+    "type_uri": "https://tadpole.os/errors/recursion-blocked",
+    "source": "server-rs/src/agent/runner/error.rs",
+    "status": 508,
+    "remediation": "Turn or depth recursion loop detected. Check agent directive to break circular subagent recruitment or self-calling loops."
+  },
+  "SENTINEL_GATE_FAILURE": {
+    "type_uri": "https://tadpole.os/errors/sentinel-gate-failure",
+    "source": "server-rs/src/agent/runner/error.rs",
+    "status": 403,
+    "remediation": "Security sentinel flagged an unauthorized or destructive action. Refine action or escalate to Entity 0."
+  },
+  "COMPRESSION_ERROR": {
+    "type_uri": "https://tadpole.os/errors/compression-error",
+    "source": "server-rs/src/agent/runner/error.rs",
+    "status": 500,
+    "remediation": "Context window compression or summarization failed. Check token budget and ensure raw prompt is not oversized."
+  },
+  "SANITIZATION_VIOLATION": {
+    "type_uri": "https://tadpole.os/errors/sanitization-violation",
+    "source": "server-rs/src/agent/skill_error.rs",
+    "status": 403,
+    "remediation": "Input or output contains forbidden control sequences or prompt injection markers. Sanitize strings before processing."
+  },
+  "BUDGET_BREACH": {
+    "type_uri": "https://tadpole.os/errors/budget-breach",
+    "source": "server-rs/src/security/metering.rs",
+    "status": 402,
+    "directive": "IDENTITY.md Directive #7",
+    "remediation": "System has entered STASIS mode. All Specialist Nodes are suspended. Snapshot written to Merkle Audit Trail. Entity 0 must issue an explicit RESUME or TERMINATE command. Do NOT restart the engine to self-resume.",
+    "stasis_behavior": "Suspend all nodes → snapshot to Merkle Trail → alert Entity 0 → await RESUME or TERMINATE"
+  },
+  "STASIS_ACTIVE": {
+    "type_uri": "https://tadpole.os/errors/stasis-active",
+    "source": "server-rs/src/security/metering.rs",
+    "status": 503,
+    "directive": "IDENTITY.md Directive #7",
+    "remediation": "System is in STASIS mode pending Entity 0 authorization. No new tool calls or API requests will be processed. Check the active task inventory in the BUDGET_BREACH alert and await Entity 0 RESUME or TERMINATE.",
+    "recovery": "Entity 0 must issue explicit RESUME or TERMINATE — system will NOT self-resume"
+  },
+  "LOGIC_BLOCKER": {
+    "type_uri": "https://tadpole.os/errors/logic-blocker",
+    "source": "server-rs/src/agent/runner/mod.rs",
+    "status": 422,
+    "directive": "IDENTITY.md Directive #3",
+    "remediation": "The Aletheia Protocol (Generator → Verifier → Reviser) failed to converge after 3 cycles. The Alpha Node has halted recursion. Entity 0 must resolve the contradiction before any further autonomous revision is permitted. Check the Verified Facts and Pending Blockers fields in the current task-slug handoff file.",
+    "escalation": "Alpha Node → Entity 0 via Logic-Blocker escalation. No autonomous re-assignment permitted."
+  },
+  "COMPLIANCE_DRIFT": {
+    "type_uri": "https://tadpole.os/errors/compliance-drift",
+    "source": "execution/parity_guard.py",
+    "status": 409,
+    "directive": "IDENTITY.md Directive #8",
+    "remediation": "The Compliance Heartbeat detected that the current execution path has drifted from the Sovereign Reality architecture. Active directives may not match IDENTITY.md v1.2.1, or the Merkle Audit Trail may be unreachable/non-writable. Run 'python execution/sovereign_audit.py' and 'python execution/verify_ai_context.py .' to identify the drift source. Escalate to Entity 0 if unresolvable.",
+    "triggers": "Mismatched IDENTITY.md version, unreachable Merkle Trail, or failed 10th-operation self-audit checksum"
+  },
+  "IPC_BRIDGE_001": {
+    "type_uri": "https://tadpole.os/errors/ipc-bridge-bind-failure",
+    "source": "server-rs/src/agent/mcp/ipc_bridge.rs",
+    "status": 500,
+    "remediation": "Failed to bind Named Pipe or Unix Domain Socket for local IPC bridge. Ensure no stale socket exists and process has proper permissions."
+  },
+  "IPC_BRIDGE_002": {
+    "type_uri": "https://tadpole.os/errors/ipc-bridge-frame-parse-error",
+    "source": "server-rs/src/agent/mcp/ipc_bridge.rs",
+    "status": 400,
+    "remediation": "Failed to parse incoming JSON-RPC 2.0 NDJSON frame from local IPC client. Verify client conforms to protocol specification."
+  },
+  "TOOL_VALIDATION_ERROR": {
+    "type_uri": "https://tadpole.os/errors/tool-validation-error",
+    "source": "server-rs/src/agent/runner/metrics_tools.rs",
+    "status": 400,
+    "recovery": "Agent should inspect supported parameters and refine input via RecoveryAction::RefineInput",
+    "remediation": "Check tool manifest argument constraints and supported enum values."
+  }
+}
