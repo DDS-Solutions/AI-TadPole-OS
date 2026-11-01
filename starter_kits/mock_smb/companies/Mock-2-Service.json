@@ -1,0 +1,98 @@
+{
+  "company_key": "Mock-2-Service",
+  "workspace_id": "d30f8382-548a-47a0-ae4c-1d8cb676aa02",
+  "environment": "mock",
+  "display_name": "Mock-2-Service",
+  "company_kind": "service",
+  "fixture_version": "2026-10-23.1",
+  "configuration_version": "1",
+  "workflow_definition_id": "customer_enquiry",
+  "workflow_version": "1",
+  "connector_mode": "mock",
+  "agent_display_name": "Mock-2-Service-Support-Agent",
+  "workflow_display_name": "Mock-2-Service-Customer-Enquiry",
+  "profile": {
+    "description": "Fictional service provider used to verify service enquiry operations.",
+    "hours": "Monday to Friday, 08:00–18:00 America/New_York",
+    "support_email": "support@mock-2-service.invalid",
+    "policy": "Appointments require availability confirmation. Cancellation is allowed at least 24 hours before a confirmed visit. A human must approve every response."
+  },
+  "offering": {
+    "id": "583dcb86-577c-40b3-979c-ed00e325a102",
+    "display_reference": "Mock-2-Service-Offering-001",
+    "title": "Mock-2-Service-Office-Cleaning-Visit",
+    "description": "One two-hour office cleaning visit for an office up to 100 square metres. Availability, taxes and additional work require a separate quote.",
+    "price_minor": 12000,
+    "currency": "USD",
+    "source_id": "Mock-2-Service-Catalog-Source-001",
+    "source_updated_at": "2026-10-23T00:00:00Z",
+    "fresh_until": "2027-01-21T00:00:00Z"
+  },
+  "customer": {
+    "id": "8db524fb-3586-49ab-ac74-54f80089a102",
+    "display_reference": "Mock-2-Service-Customer-001",
+    "name": "Mock-2-Service-Practice-Customer"
+  },
+  "sop": {
+    "id": "Mock-2-Service-Customer-Enquiry-SOP",
+    "version": "1",
+    "title": "Mock-2-Service-Customer-Enquiry-SOP",
+    "document_reference": "Mock-2-Service-Customer-Enquiry-SOP-v1.md",
+    "roles": [
+      {
+        "name": "Mock-2-Service-Support-Agent",
+        "execution": "local_rules"
+      },
+      {
+        "name": "Mock-2-Service-Records-Agent",
+        "execution": "local_rules"
+      },
+      {
+        "name": "Mock-2-Service-Review-Agent",
+        "execution": "local_rules"
+      },
+      {
+        "name": "Mock-2-Service-Owner",
+        "execution": "human_operator"
+      }
+    ],
+    "steps": [
+      {
+        "id": "Mock-2-Service-SOP-01",
+        "title": "Confirm company and customer",
+        "owner_role": "Mock-2-Service-Support-Agent",
+        "check": "company_scope"
+      },
+      {
+        "id": "Mock-2-Service-SOP-02",
+        "title": "Retrieve current source facts",
+        "owner_role": "Mock-2-Service-Support-Agent",
+        "check": "source_facts"
+      },
+      {
+        "id": "Mock-2-Service-SOP-03",
+        "title": "Prepare the fact-backed response",
+        "owner_role": "Mock-2-Service-Support-Agent",
+        "check": "prepare_response"
+      },
+      {
+        "id": "Mock-2-Service-SOP-04",
+        "title": "Obtain the owner decision",
+        "owner_role": "Mock-2-Service-Owner",
+        "check": "approval_gate"
+      },
+      {
+        "id": "Mock-2-Service-SOP-05",
+        "title": "Record an approved response once",
+        "owner_role": "Mock-2-Service-Records-Agent",
+        "check": "record_once"
+      },
+      {
+        "id": "Mock-2-Service-SOP-06",
+        "title": "Review independent saved evidence",
+        "owner_role": "Mock-2-Service-Review-Agent",
+        "check": "review_evidence"
+      }
+    ]
+  }
+}

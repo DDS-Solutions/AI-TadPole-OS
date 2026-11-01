@@ -1,0 +1,360 @@
+> [!IMPORTANT]
+> **AI Context & Knowledge Heritage**
+> - **Subsystem**: Project Root / README
+> - **Architecture**: `@docs ARCHITECTURE:Documentation`
+> - **Failure Path**: Information drift, legacy terminology, or documentation mismatch.
+> - **Observability**: Traceability via `execution/parity_guard.py` (`[README]`)
+
+<div align="center">
+  <img src=".github/assets/Github Social Preview Tadpole OS_V2.png" width="1280" alt="Tadpole OS - Sovereign Intelligence" />
+
+  # 🐸 AI-Tadpole-OS
+  ### **Sovereign Intelligence. Deterministic Execution. Local-First Architecture.**
+
+  **Local-first architecture with configurable data-sovereignty controls for orchestrating autonomous multi-agent swarms.**
+
+  **Version**: 1.1.464
+
+  [![Rust](https://img.shields.io/badge/Rust-1.99+-zinc?style=for-the-badge&logo=rust&logoColor=white)](https://www.rust-lang.org/)
+  [![React](https://img.shields.io/badge/React-19.0-zinc?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
+  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4.0-zinc?style=for-the-badge&logo=tailwindcss&logoColor=06B6D4)](https://tailwindcss.com/)
+  [![Download Windows](https://img.shields.io/badge/Download-Windows_(.exe)-06B6D4?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/DDS-Solutions/AI-TadPole-OS/releases/latest)
+  [![Download macOS](https://img.shields.io/badge/Download-macOS_Universal_(.dmg)-000000?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/DDS-Solutions/AI-TadPole-OS/releases/latest)
+  [![CI Status](https://github.com/DDS-Solutions/AI-Tadpole-OS/actions/workflows/ci.yml/badge.svg)](https://github.com/DDS-Solutions/AI-Tadpole-OS/actions/workflows/ci.yml)
+   [![License](https://img.shields.io/badge/License-MIT-zinc?style=for-the-badge&logo=rust&logoColor=white)](LICENSE)
+
+  [📦 Download Desktop App](https://github.com/DDS-Solutions/AI-TadPole-OS/releases/latest) • [🚀 Start a Mission](docs/TEST_MISSIONS.md) • [🏗️ Architecture Hub](docs/ARCHITECTURE.md) • [🛡️ Security Model](docs/Security_Model.md) • [🌐 Product Website](https://dds-solutions.github.io/AI-Tadpole-OS-Marketing/) • [💬 Join Discussions](https://github.com/DDS-Solutions/AI-Tadpole-OS/discussions)
+
+  <br />
+  <a href=".github/assets/dashboard_preview.mp4">
+    <img src=".github/assets/dashboard_preview.png" width="1280" alt="Tadpole OS Dashboard Preview (Click to watch video)" />
+  </a>
+
+  ---
+</div>
+
+> [!IMPORTANT]
+> **Product Release Classification: Sovereign Developer Engine (Plane 1 GA)**
+> Tadpole OS 1.1 is released as a **Sovereign Local Multi-Agent Swarm Engine for Developers & Engineers**.
+> - **Plane 1 (Active & Production Ready)**: Full sovereign codebase lifecycle engine, local Axum + Tokio backend, LanceDB vector memory, AST Code Graphs, and local multi-agent swarms.
+> - **Plane 2 (Developer Sandbox & Scenario Preview)**: Company-agnostic SMB virtual employees (Shopify, QuickBooks, Gmail) are provided as a **Developer Sandbox & Scenario Preview**. In accordance with FR-11 security policy and [docs/specs/mock-smb-digital-twin.md](docs/specs/mock-smb-digital-twin.md), live customer data and live mutating connectors are fail-closed until multi-tenant backend isolation is deployed.
+
+AI-Tadpole-OS is a local-first runtime for orchestrating autonomous teams of AI agents. It supports local model endpoints and configurable cloud providers; prompts and context are sent to whichever provider is selected for a run. Configure the host network and providers for your data-handling requirements. The runtime does not provide a system-wide egress firewall.
+
+Designed as a company-agnostic engine for small to medium-sized businesses (SMBs), AI-Tadpole-OS combines agent orchestration with deterministic governance controls. The company-scoped Digital Twin runtime is planned; until it is implemented, use synthetic business inputs and stop at preview.
+
+---
+
+## 🛡️ Sovereignty starts with a Clone
+Owning a local Git clone gives you control over the source code and deployment choices. Data handling still depends on configured model providers, integrations, and host/network policy:
+- **Source Ownership**: You can inspect, modify, and run your copy of the code.
+- **Configurable model routing**: Use a local model endpoint when prompts must stay within your configured local boundary; cloud provider use sends request content to that provider.
+- **Offline deployment option**: A disconnected deployment requires local models, preinstalled dependencies, and host/network controls. The Privacy Shield is not a general network-egress firewall.
+- **Deterministic Control**: You own the code, the directives, and the domain knowledge.
+
+**Clone the Repo. Own your Intelligence. Develop and evaluate your own company workflows with synthetic inputs.**
+
+---
+## ⚠️ What's Missing from a Fresh Clone (And Why)
+> **Company-Agnostic by Design**: AI-Tadpole-OS provides the sovereign engine, security shield, vector RAG, and multi-agent DAG runner. To turn this generic engine into your specific **Company Digital Twin**, 7 organization-specific boundaries must be configured by your team:
+
+### 1. 👤 Employee-Agent Identity Mapping
+- **What's Missing**: Mappings between physical employees/roles, internal Active Directory/SSO credentials, role-based access control (RBAC) user bindings, and personal brand/tone calibrations.
+- **Why It's Missing**: **Privacy & Zero-Trust Security by Design**. AI-Tadpole-OS enforces strict PII protection and security boundaries (`IDENTITY.md`, Sapphire Shield). Storing human employee credentials or identity records in source control would violate privacy regulations (GDPR/ISO 27001) and risk data leaks.
+
+### 2. 🔌 Domain Knowledge Ingestion & Enterprise Connectors
+- **What's Missing**: Pre-configured live data pipes to your organization's internal databases, custom CRMs/ERPs (e.g. QuickBooks, SAP, Salesforce), internal SharePoint drives, or proprietary document stores.
+- **Why It's Missing**: Company-scoped connectors and storage boundaries are still planned. Local storage does not itself keep prompts local: cloud model providers and configured integrations receive the data sent to them. Use synthetic inputs for business workflows until the Plane 2 runtime is implemented, and enforce network egress policy outside the application when required.
+
+### 3. 🔑 Company Credentials & API Keys (`.env`)
+- **What's Missing**: Model provider API keys (OpenAI, Anthropic, Gemini, Groq), local LLM endpoints (Ollama), and neural authentication tokens.
+- **Why It's Missing**: **OBLITERATUS Security Hardening**. API keys and secrets are strictly git-ignored (`.gitignore`, `.env`). The repository provides `.env.example` so every user operates under a BYO (Bring Your Own) key model or runs entirely local models without exposing credentials.
+
+### 4. 📜 Proprietary Company SOPs & Directives
+- **What's Missing**: Your organization's custom internal operating procedures, proprietary business rules, and specialized regulatory execution flows.
+- **Why It's Missing**: **Decoupled Architecture (Engine vs. Content)**. The repository includes core system directives and 25 generic industry templates via [AI-Tadpole-OS-Industry-Templates](https://github.com/DDS-Solutions/AI-Tadpole-OS-Industry-Templates). Your team populates your own private `.agent/` or `directives/` directory to tailor the swarm's L1 Intent to your exact business logic.
+
+### 5. 💰 Financial Spending Authorities & Budget Caps
+- **What's Missing**: Agent-specific daily dollar spend limits, purchase order authorization thresholds, and human signature requirements for commercial transactions.
+- **Why It's Missing**: **Financial Risk Governance**. Every SMB operates under different financial authorization policies and signature limits. AI-Tadpole-OS provides the A2A double-entry ledger (`A2E-01`) and Sapphire Shield approval gates, but specific monetary limits must be defined per organization in your local config.
+
+### 6. 💬 Outbound Communication Channels & External Touchpoints
+- **What's Missing**: Organization credentials and company-scoped configuration for customer-facing workflows. Generic outward catalog routes exist, but they do not provide the pending Plane 2 company isolation or authorization boundary.
+- **Why It's Missing**: Customer-facing execution must wait for company-scoped authorization and storage. Configuring an external integration can transmit data to that service; review its boundary and credentials before use.
+
+### 7. 📊 Runtime Database State & Live Telemetry Traces
+- **What's Missing**: Populated SQLite database entries, active mission run histories, and generated temporary artifacts.
+- **Why It's Missing**: **Deterministic Fresh-Start Environment**. All local database files (`.tmp/`) and vector indexes are generated dynamically when running `npm run engine`. Shipping pre-populated database files would cause state corruption, schema drift, and merge conflicts across different developer environments.
+
+> [!TIP]
+> **🚀 Turning a Fresh Clone into a Live Business Node**:  
+> For the comprehensive production roadmap, the 6 required architectural shifts, and the operator's 7-step checklist to transition from synthetic preview to real-world company operations, consult the **[SMB Live Operations & Production Readiness Guide](docs/SMB_LIVE_OPERATION_GUIDE.md)**.
+
+---
+
+## 🏛️ Dual-Plane Sovereign Hierarchy & 3-Layer Architecture
+*Governed by [`directives/IDENTITY.md`](directives/IDENTITY.md), AI-Tadpole-OS defines a two-plane target architecture. Plane 1 is supported by the generic engine runner; the company-scoped Plane 2 runtime remains pending.*
+
+### Dual-Plane Sovereign Hierarchy (`Plane 1` & `Plane 2`)
+
+| Execution Plane | Primary Function | Core Capabilities & Assets |
+| :--- | :--- | :--- |
+| **Plane 1: Sovereign Codebase Lifecycle Engine** (`Engine-Maintenance`) | Recursively **knows, operates, diagnoses, fixes, maintains, and improves** the `AI-Tadpole-OS` codebase over time. | • Tree-sitter AST Symbol Graph & Blast-Radius Guard (`graph_query`)<br>• Active Documentation Guard ([`docs/ADG_V2.md`](docs/ADG_V2.md)) & [`execution/parity_guard.py`](execution/parity_guard.py)<br>• Self-Annealing Institutional Memory (`Agent 99` $\rightarrow$ [`directives/LONG_TERM_MEMORY.md`](directives/LONG_TERM_MEMORY.md)) |
+| **Plane 2: Company-Agnostic SMB AI Digital Twin** (`SMB-Digital-Twin`, planned) | Intended reusable business workflows. Company-scoped authorization, memory, storage, and live execution are not implemented. | • Voice, ingestion, and PII skills are guidance<br>• `OutwardGateway` and `CustomerCatalog` are current shared components, not isolated tenant workspaces<br>• See [`docs/specs/mock-smb-digital-twin.md`](docs/specs/mock-smb-digital-twin.md) and [`docs/SMB_LIVE_OPERATION_GUIDE.md`](docs/SMB_LIVE_OPERATION_GUIDE.md) for pending requirements & live migration |
+
+> [!IMPORTANT]
+> **🛡️ `FR-11` status**: The generic runner rejects only profiles whose stored `department` exactly matches `Plane 2: SMB-Digital-Twin` (case-insensitive); other labels do not activate the guard. This is a fail-closed gate, not a company-scoped runtime. Until that runtime exists, use synthetic input and stop business workflows at preview; do not import, store, publish, or execute live customer data through the generic runner. Plane 1 agents must keep company records and PII out of source control and `directives/LONG_TERM_MEMORY.md`.
+
+### The 3-Layer Deterministic Architecture
+*Why Tadpole OS is more reliable than a standard agent wrapper.*
+
+| Layer | Component | Purpose |
+| :--- | :--- | :--- |
+| **L1: Directive** | `directives/` | **Intent**: Human-defined SOPs and goals. Non-negotiable rules for the swarm across both execution planes. |
+| **L2: Orchestration** | `Agent 99` / Router | **Decision**: Dual-plane intelligent routing ([`intelligent-routing`](.agent/skills/intelligent-routing/SKILL.md)), self-correction, and wisdom extraction. |
+| **L3: Execution** | `execution/` & `server-rs/` | **Action**: Deterministic Python/Rust scripts and capability-gated tools. No "hallucinated" code execution. |
+
+---
+
+## 🧠 Feature Spotlight: Agent 99 (Self-Annealing)
+**The system that learns from its own history.**
+
+Tadpole OS doesn't just run tasks; it performs **Self-Annealing**. After every mission, **Agent 99** autonomously:
+1.  **Extracts Architectural Wisdom**: Analyzes logs to find what worked and what didn't.
+2.  **Updates Institutional Memory**: Writes learnings back to `LONG_TERM_MEMORY.md`.
+3.  **Refines Protocols**: Adjusts its own directives to prevent future drift.
+
+---
+
+## 🧩 Core Capability Pillars
+
+<details open>
+<summary><b>🖥️ 1. Reactive Interface & Observability</b></summary>
+
+Built for high-density swarm oversight with sub-millisecond telemetry.
+- **Detachable Portals**: Spread tactical sectors across multiple physical displays.
+- **10Hz Swarm Pulse**: Real-time MessagePack telemetry for agent performance.
+- **God-View Visualizer**: High-performance 2D Force-Graph of your agent hierarchy.
+- **Force-Graph View Mode HUD Toggle**: Switch between the standard **Codebase Symbols Graph** and the **Semantic OKF Graph** directly from the HUD. Employs a monochromatic Zinc theme to represent concepts and maps semantic colors (`cyber-green`, `cyber-amber`, `cyber-red`) strictly to live status and broken canonical links.
+- **Codebase Knowledge Graph HUD**: Traversal history stack with Back/Forward controls, and double-scale high-res canvas PNG exports.
+- **BFS Dependency Pathfinder**: Computes and highlights shortest dependency or call traces between symbols on the graph.
+- **Resilient Sanitizer**: Fault-tolerant client-side parsing utility ensuring data schema and referential integrity.
+- **Hardware Telemetry**: Real-time CPU, RAM, and Process load visualization.
+- **Mission Flight Recorder & Run History**: Forensic master-detail dossier for past and in-flight mission runs with cryptographic SHA-256 Merkle audit chains, visual CAS pre-mutation file diffs, spatial Memory Palace rooms, TrustGraph relations, and Agent 99 drift debriefs.
+</details>
+
+<details>
+<summary><b>🤖 2. Multi-Agent Swarm Orchestration & Persistence Engine</b></summary>
+
+Hierarchical coordination powered by a Rust-native engine with localized resource payments and transactional integrity.
+- **CEO/COO & Conductor DAG**: Strategic goal decomposition into topologically scheduled execution graphs (DAGs) using Kahn's/DFS sorting on step dependencies.
+- **Transactional Persistence Guard**: SQLite transactions wrap `save_agent_db` and `sync_manifests_for_agent` so their database updates commit or roll back together.
+- **Strict Corrupted State Fast-Failure**: Fail-fast JSON deserialization on agent loading (`parse_json_field` returning `Result<T, AppError>`) preventing silent data loss or lobotomization of agent skills and connector configs.
+- **Parallel Swarming & Context Sandboxing**: High-throughput sub-agent recruitment via `FuturesUnordered` with strategic observation sandboxing (`visible_transcript`) to isolate context.
+- **Builder-Debugger Pairing**: Automated active model slot swapping (Primary, Secondary, Tertiary) on tool compilation or execution failures.
+- **Agent-to-Agent (A2A) Economic Zone**: Localized service-to-service payment protocol using a Two-Phase Commit (2PC) ledger (prepare, commit, rollback locks), daily budget limit caps per economic zone, x402 challenge protocol, and standard A2A-compliant async mailboxes preserving model reasoning traces and file artifacts.
+- **Autonomic Fallback**: Self-healing quantization adjustment on hardware limits.
+</details>
+
+<details>
+<summary><b>🧠 3. Memory & Persistent RAG</b></summary>
+
+Split-brain architecture for semantic and relational data.
+- **LanceDB Vector Store**: Cross-session institutional knowledge with strict predicate parameter sanitization to prevent vector query injection.
+- **Transactional Dual-Write Atomicity**: Dual-write atomicity between SQLite and LanceDB (`add_entry`) with automatic transaction rollback on vector storage failure to eliminate orphaned "ghost" metadata entries.
+- **Bounded OKF Playbook Cache**: Maximum capacity bounded cache (`MAX_CACHE_ENTRIES = 256`) with automatic TTL eviction for `okf_gate.rs` preventing memory leaks in high-scale runs.
+- **Zero-Allocation Requirement Parser**: Hot-loop allocation-free requirement extraction using precomputed static matchers (`pattern_colon`, `pattern_space`).
+- **Open Knowledge Format (OKF) Support**: Standardized swarm insight persistence mapping the OKF draft specification, automatically parsing and writing structured metadata directly to SQLite database columns via type-safe `sqlx::FromRow` structs.
+- **$O(N)$ Linear Context Compactor**: Dialogue-level context compactor that performs history filtering in linear time instead of quadratic time, eliminating CPU overhead and UI freezing during long sessions.
+- **IKS Pagination & Filtering**: Standardized API pagination supporting dynamic offset/limit and concept-type query filters on `/v1/knowledge` routes.
+- **Mission Sandboxing**: Localized RAG scopes that cleanup automatically on completion.
+- **Hybrid Search**: Combines SQLite deterministic logs with high-dimensional embeddings.
+</details>
+
+<details>
+<summary><b>🛡️ 4. Security & Sovereign Compliance</b></summary>
+
+Zero-trust governance with human-in-the-loop gates.
+- **Sapphire Shield**: Flags `budget:spend` and `shell:execute` for manual approval.
+- **Privacy Shield**: Routes runner model calls to local providers and rejects selected named external MCP tools while enabled. It is not a general egress firewall; the global privacy monitor also sends periodic reachability probes. Use host/network controls for a true disconnected boundary.
+- **Decoupled Governance Architecture**: UI services (`workspace_service.ts`) isolated from raw state mutations with automatic optimistic state rollback on governance API failures.
+- **Audit trail**: The engine records selected actions and events in its audit and telemetry paths. Coverage is feature-specific; this is not a claim that every code path has been independently audited.
+- **Active Documentation Guard (ADG & ADG v2)**: Deterministic integrity engine. Combines AST symbol-to-docstring verification with ADG v2 3-layer claim governance (P-class prose, machine-derived `adg.manifest.json` witness map, and executable `tests/invariants/` test harness).
+- **Sovereign Compliance**: [`directives/IDENTITY.md`](directives/IDENTITY.md) defines policy for the active Plane 1 engine and planned Plane 2 business runtime. Company-scoped Plane 2 execution remains pending. Standards: ECC-ID, GxP, ISO 9001, ISO 42001, NIST AI-RMF, ALCOA+.
+</details>
+
+---
+
+## 🚀 Quick Start
+
+Get up and running in under 60 seconds with either the pre-compiled native desktop application or developer mode:
+
+### 📦 Option A: Native Desktop Application (Recommended)
+
+Download the self-contained desktop release bundle with embedded Rust runtime, zero prerequisites, and 1-click installation:
+
+- **[⬇️ Download Latest Windows Installer (.exe)](https://github.com/DDS-Solutions/AI-TadPole-OS/releases/latest)**: Direct access to `AI-Tadpole-OS_1.1.464_x64-setup.exe` under release **Assets**.
+- **[🍏 Download Latest macOS Universal (.dmg)](https://github.com/DDS-Solutions/AI-TadPole-OS/releases/latest)**: Fat binary package containing native slices for both **Apple Silicon (M1/M2/M3/M4)** and **Intel x86_64** Macs.
+- **[📦 GitHub Releases Bundle Hub](https://github.com/DDS-Solutions/AI-TadPole-OS/releases)**: Browse all releases, changelogs, standalone portable binaries (`tadpole-os.exe`), and Linux packages (`.deb`, `.AppImage`).
+
+> **How Releases Work on GitHub**:
+> 1. Visit **[AI-TadPole-OS Releases](https://github.com/DDS-Solutions/AI-TadPole-OS/releases/latest)**.
+> 2. Under the latest release tag (e.g., `v1.1.464`), expand the **Assets** section.
+> 3. Download the package for your platform:
+>    - **Windows**: `AI-Tadpole-OS_1.1.464_x64-setup.exe` (or standalone portable `.exe`)
+>    - **macOS**: `AI-Tadpole-OS_1.1.464_universal.dmg` (mount disk image and drag to `Applications`)
+>    - **Linux**: `.deb` (Ubuntu/Debian) or `.AppImage` (all distributions)
+> 4. Launch Tadpole OS — no Node.js or Rust build toolchain required!
+>
+> **macOS Gatekeeper Note**:
+> macOS builds use ad-hoc signing without Apple notarization. Gatekeeper may require approval in System Settings → Privacy & Security. For a trusted local build:
+> ```bash
+> xattr -cr /Applications/AI-Tadpole-OS.app
+> ```
+
+The current macOS changes still require a native build and installed runtime validation; configuration tests alone do not certify a release. See the [macOS verification checklist](docs/BLUEPRINT-universal-macos-build.md) before treating a package as validated.
+
+---
+
+### 🛠️ Option B: Developer Mode (Run from Source)
+
+For developers who wish to customize engine routes, develop agent skills, or run live AST symbol graph analysis:
+
+#### 1. Prerequisites
+- **Rust 1.85+** and **Node.js 22.22.2+ (22.x), 24.15.0+ (24.x), or 26+**
+- **Ollama** (for local models) or an **API Key** (OpenAI, Anthropic, Google, Groq).
+
+#### 2. Installation
+```bash
+# Clone and install dependencies
+git clone https://github.com/DDS-Solutions/AI-Tadpole-OS.git
+cd AI-Tadpole-OS
+npm install
+
+# Setup environment
+cp .env.example .env
+# Edit .env and set your NEURAL_TOKEN and API Keys
+```
+
+#### 3. Launch the Swarm
+```bash
+# Terminal A: Start the Rust Engine
+npm run engine
+
+# Terminal B: Start the React Dashboard
+npm run dev
+
+# Optional: Build Native macOS Universal Desktop DMG (.dmg)
+npm run tauri:build:macos
+```
+
+> [!NOTE]
+> **Engine Boot & Graph Indexing**: While the React Dashboard UI opens instantly via `npm run dev`, the Rust engine (`npm run engine`) and symbol graph indexer may take **60–120 seconds** to fully compile and initialize on first launch depending on hardware specs.
+
+The container build uses Node.js 24 to match the supported `package.json` runtime. Before starting the Compose monitoring stack, create a private `.secrets/prometheus-token` file containing the active engine access token without the `Bearer ` prefix, or set `TADPOLE_METRICS_TOKEN_FILE` to an existing private token file. Prometheus mounts that file and scrapes `/v1/engine/metrics`; see [security monitoring setup](docs/SECURITY.md#24-security-monitoring-monitoringrs).
+
+Playwright starts its backend with test-only access/admin tokens, an unseeded temporary database, and null provider execution. It refuses to reuse an engine already listening on port 8000. Temporary backend state remains in the operating system's temporary directory for failure inspection.
+
+---
+
+## 🛰️ Scalability & Topology: The Max-Scale Swarm
+*Visualizing what a Full-Capacity Swarm (10 Clusters, 25 Agents) looks like.*
+
+<details>
+<summary><b>View Swarm Hierarchy Diagram</b></summary>
+
+```mermaid
+graph TD
+    classDef cluster fill:#222,stroke:#444,stroke-width:2px,color:#fff;
+    classDef node fill:#333,stroke:#666,color:#eee;
+
+    subgraph Cluster0 ["Executive Core (Google)"]
+        CEO["ID 1: CEO (Google Gemini 3 Pro)"]
+    end
+
+    CEO -->|issue_alpha_directive| COO["ID 2: COO (Claude Opus 4.5)"]
+    CEO -->|delegate| CTO["ID 3: CTO (GPT-5.3 Codex)"]
+
+    subgraph Cluster1 ["Operations Hub (Anthropic)"]
+        COO --> Ops1["ID 22: HR Manager"]
+        COO --> Ops2["ID 10: Support Lead"]
+    end
+
+    subgraph Cluster2 ["Engineering Sector (Groq/OpenAI)"]
+        CTO --> Eng1["ID 7: DevOps"]
+        CTO --> Eng2["ID 8: Backend Dev"]
+    end
+
+    subgraph Cluster3 ["Marketing/Sales (Meta/xAI)"]
+        CEO --> CMO["ID 4: CMO"]
+        CMO --> Mark1["ID 17: Copywriter"]
+        CMO --> Mark2["ID 19: SEO Specialist"]
+    end
+
+    subgraph Cluster4 ["Security Center (Mistral)"]
+        Eng1 --> Sec1["ID 12: Security Auditor"]
+    end
+
+    CEO --> CMO
+    class Cluster0,Cluster1,Cluster2,Cluster3,Cluster4 cluster;
+    class CEO,COO,CTO,CMO,Ops1,Ops2,Eng1,Eng2,Mark1,Mark2,Sec1 node;
+```
+
+### Resource Allocation Matrix (Sample)
+| Cluster | Focus | Provider | Model Capacity |
+| :--- | :--- | :--- | :--- |
+| **Executive Core** | Strategic Direction | **Google** | Pro / Flash |
+| **Operations Hub** | Orchestration | **Anthropic** | Opus / Sonnet |
+| **Engineering Sector** | Implementation | **Groq / OpenAI** | Llama / Codex |
+| **Security Center** | Auditing | **Mistral** | Medium / Large |
+
+</details>
+
+---
+
+## 🏭 Industry-Specific Solutions & Swarm Templates
+Deploy specialized "One-Click" swarms across **25 industries** (including Field Services, Wholesale & Distribution, Healthcare, Legal, Manufacturing, Finance, and more), featuring two main swarm archetypes and compact starter teams:
+- **🧠 Knowledge Work Swarms**: Specialized for research analysis, policy indexing, case law synthesis, and document auditing.
+- **⚙️ Edge Operations Swarms**: Designed for physical logistics, inventory management, shipping/receiving audits, purchasing QA, and ISO 9000 quality assurance.
+- **🚀 Compact Starter Teams**: 3-agent swarms designed specifically for businesses with up to 25 seats for rapid, low-friction deployment.
+
+### 🛠️ The Swarm Architect & Curated Agent Catalog
+Design, customize, and export starter swarm templates using the external **[Swarm Architect Web Builder](https://dds-solutions.github.io/AI-Tadpole-OS-Industry-Templates/)**. Review and test exported templates before use; they are not production certification or an isolated Plane 2 runtime:
+
+- **Dual-Experience Builder**:
+  - **Guided Setup (Business Owners & Operators)**: A 4-step plain-language workflow. Describe your business and objectives to receive a deterministic team recommendation with clear operational boundaries (*What it reads, What it prepares, What requires approval*), connect verified business tools, review governance policies, and export a ready-to-run package.
+  - **Advanced Setup (Developers & Administrators)**: Granular technical control over agent runtime prompts (≤ 800 chars), LLM provider/model configurations, runtime capability IDs (`read_file`, `write_file`, `grep_search`, `execute_shell`, `search_web`), raw/structured playbook editors, and MCP connector parameters.
+- **Unified State & Bidirectional Switching**: Seamlessly toggle between Guided and Advanced modes at any point during customization without losing configuration state.
+- **Draft Session Recovery**: Non-sensitive blueprint drafts are automatically preserved in browser local storage with instant resume and discard controls.
+- **Curated 223-Agent Catalog**: Browse and deploy 223 specialized AI agent roles with validated compact personalities, domain guardrails, and human review requirements.
+- **Continuous AI-Tadpole-OS Contract Validation**: Live checking guarantees model inference compatibility, capability safety, workflow reference integrity, and agent-level `requires_oversight` enforcement.
+- **Institutional Knowledge Integration (OKF/IKS)**: Dual-format support for bundling Markdown SOPs (with YAML frontmatter) in `/knowledge/` or structured `knowledge.json` files for automated vector indexing during swarm installation.
+- **Model Context Protocol (MCP) Blueprints**: Standardized MCP data connector blueprints (`mcp-blueprints/`) for linking ERPs, CRMs, and internal databases with local credential isolation.
+- **Sapphire Shield Enforced Governance**: Multi-tier zero-trust boundaries including registry admission gates, Bandit static security analysis & ClamAV scans in CI, and offline builder archive validation.
+
+[👉 Open the Swarm Architect Web App](https://dds-solutions.github.io/AI-Tadpole-OS-Industry-Templates/) • [📦 Explore the Template GitHub Registry](https://github.com/DDS-Solutions/AI-Tadpole-OS-Industry-Templates)
+
+---
+
+## 🔱 Sovereign Cloning Protocol
+AI-Tadpole-OS is engineered to be cloned locally. By granting workspace permissions, your AI assistant can work with you on the codebase and its configuration. The company-scoped Digital Twin remains a planned feature; business workflows must stop at preview until its runtime is available:
+1. **Clone this Repository** locally to establish total data ownership and sovereignty.
+2. **Grant Workspace Access**: Allow your AI assistant to index local context, update directives, refine agent roles, monitor live telemetry streams while missions run (to catch errors, optimize performance, and identify enhancement opportunities), and continuously co-develop your operational stack.
+3. **Customize & Operate**: Tailor specialized agent swarms via SQLite and Swarm Templates, then deploy using your local deployment scripts (`deploy-bunker-1.ps1`) or standard production build commands (`npm run engine`).
+
+### 🌐 A2A Protocol & AI Agent Auto-Discovery for Cloners
+Cloning AI-Tadpole-OS also allows you to publish a public **A2A Company Agent Card** (`company-agent-card.json`) on the **Agent Web**:
+- **Offline Dev**: Serves locally out of the box on `http://localhost:8000/a2a/v1/company-agent-card.json`.
+- **Static Asset Location**: Static A2A assets are stored in `docs/public/` (`docs/public/a2a/v1/company-agent-card.json` and `docs/public/.well-known/agent.json`).
+- **1-Click Online Publishing**: Fork this repo, set **GitHub Pages** Source to **GitHub Actions** in `Settings -> Pages`, and the automated `Deploy VitePress Site` workflow automatically builds and hosts your agent card online at `https://<your-username>.github.io/<your-repo>/a2a/v1/company-agent-card.json`.
+- **Automatic AI Discovery**: External web agents, AI search engines, and crawlers automatically find your company agent card via global `/.well-known/agent.json`, HTML `<head>` meta tags, and `robots.txt` directives.
+
+
+
+<div align="center">
+  <sub>Built with ❤️ by the <b>DDS-Solutions</b> Team.</sub>
+  <br />
+  <sub>Licensed under MIT. Sovereign Intelligence for all.</sub>
+</div>
+
+[//]: # (Metadata: [README])

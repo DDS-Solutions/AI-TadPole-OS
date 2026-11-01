@@ -1,0 +1,149 @@
+---
+title: "Cost Monitoring"
+tier: "3"
+status: "reviewed"
+version: "1.2.0"
+last-verified: "2026-10-30"
+network-badge: "none"
+risk-tags:
+  - "RISK: MEDIUM"
+---
+
+# 💰 Cost Monitoring
+
+This page documents the cost-accounting dashboard for monitoring API expenses, token consumption, and query latency across all LLM providers.
+
+---
+
+## 1. Neural Footprint & Token Cost Monitoring (`Command_Table`)
+
+The `Command_Table` component is embedded in the **Oversight** page and provides a detailed breakdown of every LLM interaction.
+
+### 1.1 Interactive Elements
+
+- **[Table Row] Interaction Logs**
+  - *Default state*: Populated with recent prompt-response pairs.
+  - *Visible location*: Center region of the `Command_Table` panel.
+  - *Observable side effect*: Clicking a row expands the panel to show raw request and response body text.
+  - *Keyboard shortcut*: None.
+  - *Missing in build*: Always present.
+
+- **[Column Header] Latency Tracker**
+  - *Default state*: `0ms` (or latency of the most recent query).
+  - *Visible location*: Upper-right column header of `Command_Table`.
+  - *Observable side effect*: Displays execution durations in milliseconds to pinpoint slower local or cloud models.
+  - *Keyboard shortcut*: None.
+  - *Missing in build*: Always present.
+
+- **[Cell] Token Efficiency**
+  - *Default state*: `0 tokens` (accumulated).
+  - *Visible location*: Inside each query row of `Command_Table`.
+  - *Observable side effect*: Details prompt and response token lengths to help optimize prompt templates.
+  - *Keyboard shortcut*: None.
+  - *Missing in build*: Always present.
+
+---
+
+## 2. Budget Gauges & Cost Dashboard
+
+### 2.1 Interactive Elements
+
+- **[Gauge] Budget Quotas**
+  - *Default state*: `0.0` USD used.
+  - *Visible location*: Upper metrics grid of the Oversight dashboard.
+  - *Observable side effect*: Dynamically reflects real-time cumulative LLM API expenses against configured caps.
+  - *Keyboard shortcut*: None.
+  - *Missing in build*: Always present.
+
+- **[Gauge] Total Spend**
+  - *Default state*: `0.00` USD.
+  - *Visible location*: Oversight dashboard or Cost analytics panel.
+  - *Observable side effect*: Summarizes global API expenses across all agents and models.
+  - *Keyboard shortcut*: None.
+  - *Missing in build*: Always present.
+
+- **[Metric] Daily Burn Rate**
+  - *Default state*: `0.00` USD/day.
+  - *Visible location*: Upper row of the Cost dashboard metrics.
+  - *Observable side effect*: Projects expected daily spending based on recent model requests.
+  - *Keyboard shortcut*: None.
+  - *Missing in build*: Always present.
+
+- **[Table] Provider Cost Breakdown**
+  - *Default state*: Lists configured providers and their aggregated costs.
+  - *Visible location*: Lower panel of the Cost dashboard.
+  - *Observable side effect*: Allows operators to identify which LLM services are consuming the most tokens/credits.
+  - *Keyboard shortcut*: None.
+  - *Missing in build*: Always present.
+
+- **[Button] Export Cost Report**
+  - *Default state*: Enabled.
+  - *Visible location*: Top right of the Cost dashboard panel.
+  - *Observable side effect*: Triggers a download of cumulative cost telemetry as a CSV spreadsheet.
+  - *Keyboard shortcut*: None.
+  - *Missing in build*: Yes (planned control, missing in current build).
+
+- **[Selector] Date Range**
+  - *Default state*: `Last 30 Days`.
+  - *Visible location*: Top toolbar of the Cost dashboard.
+  - *Observable side effect*: Updates all gauges, graphs, and tables to reflect cost telemetry in the chosen time window.
+  - *Keyboard shortcut*: None.
+  - *Missing in build*: Always present.
+
+### 2.2 Per-Agent Budget Tracking & Custom Model Rates
+
+Each agent tracks its own cost accumulation via `RunContext.mission_state.current_cost_usd`. Cost computation is driven by `calculate_cost_with_custom_rates` in `server-rs/src/agent/rates.rs`:
+- **Custom Model Rates**: When a model in the Model Registry has configured `input_cost_per_m` (`$/M input tokens`) and `output_cost_per_m` (`$ /M output token`), expenditure is calculated exactly:
+  $$\text{Cost} = \left(\frac{\text{input\_tokens}}{1,000,000} \times \text{input\_cost\_per\_m}\right) + \left(\frac{\text{output\_tokens}}{1,000,000} \times \text{output\_cost\_per\_m}\right)$$
+- **Default Fallback**: If custom rates are unconfigured, the engine falls back to standard provider rate tables (e.g. OpenAI, Anthropic, Gemini, DeepSeek, Groq). Local models (Ollama) default to `$0.00`.
+- **Enforcement**: When cumulative cost exceeds `RunContext.mission_state.budget_usd`, the runner raises `BudgetExhausted` and the mission halts safely.
+
+---
+
+## 3. Cost Optimization Tips for SMBs
+
+| Strategy | Impact | How To |
+|----------|--------|--------|
+| **Use local models (Ollama)** | $0.00 per query | Install Ollama + `llama3:8b`, set `OLLAMA_HOST` |
+| **Lower reasoning depth** | Fewer tokens per turn | Set Mythos Reasoning Depth to 1-4 for simple tasks |
+| **Set tight budgets** | Prevents runaway spend | `DEFAULT_AGENT_BUDGET_USD=0.50` |
+| **Use auto-approve for reads** | Fewer manual approvals | Keep `AUTO_APPROVE_SAFE_SKILLS=true` |
+| **Review token efficiency** | Find wasteful prompts | Inspect `Command_Table` token counts per query |
+
+> [!TIP]
+> For a typical SMB running 10 tasks/day with a mix of local and cloud models, expect monthly cloud API costs of **$5–$50 USD** depending on model selection and task complexity.
+
+---
+
+## 4. Telemetry & Accumulation
+
+The engine tracks tokens globally via `GovernanceHub::tpm_accumulator` ([gov.rs:L38](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/state/hubs/gov.rs#L38)) (Tokens Per Minute), which feeds into the dashboard metrics:
+
+| Metric | Source | Description |
+|--------|--------|-------------|
+| TPM (Tokens Per Minute) | `GovernanceHub::tpm_accumulator` ([gov.rs:L38](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/server-rs/src/state/hubs/gov.rs#L38)) | Global token throughput counter |
+| Per-run cost | `RunContext.mission_state.current_cost_usd` | Cumulative cost for the active agent run |
+| Budget cap | `RunContext.mission_state.budget_usd` | Maximum spend allowed for the run |
+
+---
+
+## 5. Local-First Pledge
+
+> [!IMPORTANT]
+> **Local accounting is separate from provider traffic.** The engine records usage and budget state locally. When a cloud model provider is selected, request content and provider-side usage are handled by that provider. Local accounting does not establish a system-wide no-egress guarantee.
+
+---
+
+→ *See [[Approvals-&-Quotas|§2]] for budget enforcement and failure modes.*
+→ *See [[Configuration|§6]] for engine limit settings (`DEFAULT_AGENT_BUDGET_USD`, `MAX_TASK_LENGTH`).*
+→ *See [[LLM-Providers|§6]] for provider failover thresholds.*
+
+---
+
+**Complete Lexicon**: For the authoritative technical breakdown, see the main repository [`GLOSSARY.md`](https://github.com/DDS-Solutions/Tadpole-OS/blob/main/docs/GLOSSARY.md). Every `[[Glossary#term|term]]` link on this page resolves to an entry there.
+
+<!-- Last verified against commit b1c347b1 on 2026-06-11 -->
+[//]: # (wiki-page: Cost-Monitoring)
+
+
+[//]: # (Metadata: [wiki-security])

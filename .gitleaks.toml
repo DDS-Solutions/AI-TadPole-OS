@@ -1,0 +1,18 @@
+# Gitleaks Configuration — TadPole OS
+# Allowlists are limited to test fixtures. Production paths and secret
+# patterns are scanned. Do not add subsystem-wide path exemptions.
+
+title = "TadPole OS Gitleaks Config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Test fixtures and mocks only. Secret patterns are not allowlisted."
+paths = [
+    '''(?i).*\.test\.(ts|tsx|js|jsx)$''',
+    '''(?i)tests/.*''',
+    '''(?i)server-rs/src/.*/tests\.rs$''',
+    '''(?i)server-rs/src/.*_tests\.rs$''',
+    '''(?i)server-rs/src/state/mock\.rs$''',
+]

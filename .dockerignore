@@ -1,0 +1,56 @@
+# Build artifacts
+node_modules/
+target/
+src-tauri/target/
+server-rs/target/
+dist/
+
+# Version control
+.git/
+
+# IDE & OS
+.vscode/
+.idea/
+*.swp
+*.swo
+Thumbs.db
+.DS_Store
+
+# Deployment artifacts
+tadpole-deploy.tar
+
+# Debug artifacts
+*.log
+**/target/
+**/dist/
+**/node_modules/
+*.db
+*.db-*
+test_detail.txt
+test-output.txt
+fresh-test-results.json
+coverage_report.txt
+build_debug.log
+job_update.json
+job_atomic_update.json
+temp_agent_update.json
+temp_mission.json
+manual_mission.json
+tmp_*.py
+
+# Agent workspace and temp
+# .agent/ is required for bundling
+.cargo/
+.tmp/
+tmp/
+# workspaces/ is required for bundling data
+tests/
+test-results/
+coverage/
+playwright-report/
+
+# Environment
+.env
+.env.*
+!.env.example
+!.env.schema

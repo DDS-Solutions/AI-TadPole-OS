@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SubagentDirectiveSchema",
+  "description": "Schema enforcing structured handoffs between subagent personas and execution scripts in Tadpole OS.",
+  "type": "object",
+  "required": [
+    "agent_role",
+    "task_goal",
+    "input_artifacts",
+    "expected_outputs",
+    "verification_steps",
+    "risk_level"
+  ],
+  "properties": {
+    "agent_role": {
+      "type": "string",
+      "enum": [
+        "ARCHITECT",
+        "BACKEND_SPECIALIST",
+        "CODE_ARCHAEOLOGIST",
+        "COMPLIANCE_OFFICER",
+        "CUSTOMER_BACKEND_SPECIALIST",
+        "DATABASE_ARCHITECT",
+        "DEBUGGER",
+        "DEVOPS_ENGINEER",
+        "DOCUMENTATION_WRITER",
+        "EXPLORER_AGENT",
+        "FRONTEND_SPECIALIST",
+        "GAME_DEVELOPER",
+        "GROWTH_ENGINEER",
+        "INTEGRATION_AGENT",
+        "MOBILE_DEVELOPER",
+        "NEXUS_ENGINEER",
+        "ORCHESTRATOR",
+        "PENETRATION_TESTER",
+        "PERFORMANCE_OPTIMIZER",
+        "PRODUCT_MANAGER",
+        "PRODUCT_OWNER",
+        "PROJECT_PLANNER",
+        "QA_AUTOMATION_ENGINEER",
+        "QA_EXPERT",
+        "RELEASE_MANAGER",
+        "SECURITY_AUDITOR",
+        "SEO_SPECIALIST",
+        "SRE_ARCHITECT",
+        "TADPOLE_BACKEND_SPECIALIST",
+        "TADPOLE_FRONTEND_SPECIALIST",
+        "TEST_ENGINEER",
+        "UX_DESIGNER",
+        "backend-specialist",
+        "code-archaeologist",
+        "compliance-officer",
+        "customer-backend-specialist",
+        "database-architect",
+        "debugger",
+        "devops-engineer",
+        "documentation-writer",
+        "explorer-agent",
+        "frontend-specialist",
+        "game-developer",
+        "growth-engineer",
+        "mobile-developer",
+        "nexus-engineer",
+        "orchestrator",
+        "penetration-tester",
+        "performance-optimizer",
+        "product-manager",
+        "product-owner",
+        "project-planner",
+        "qa-automation-engineer",
+        "release-manager",
+        "security-auditor",
+        "seo-specialist",
+        "sre-architect",
+        "tadpole-backend-specialist",
+        "tadpole-frontend-specialist",
+        "test-engineer",
+        "ux-designer"
+      ]
+    },
+    "task_goal": {
+      "type": "string",
+      "minLength": 5
+    },
+    "input_artifacts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "expected_outputs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "verification_steps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": [
+        "LOW",
+        "MODERATE",
+        "HIGH",
+        "CRITICAL"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "$id": "https://tadpole-os.dev/schemas/subagent-directive.v2.json",
+  "version": "2.0.0"
+}

@@ -1,0 +1,34 @@
+# Ruff Configuration — TadPole OS
+# Standardizes static analysis and linting across Python execution and agent scripts.
+
+target-version = "py312"
+line-length = 120
+
+exclude = [
+    ".git",
+    ".tmp",
+    "scratch",
+    "node_modules",
+    "target",
+    "dist",
+    "build",
+    "__pycache__",
+]
+
+[lint]
+select = [
+    "E9",      # Syntax / fatal runtime errors
+    "F63",     # Invalid comparison operations
+    "F7",      # Syntax errors in docstrings / future imports
+    "F82",     # Undefined name in __all__
+    "F821",    # Undefined name (runtime NameError)
+    "E711",    # Comparison to None
+    "E712",    # Comparison to True/False
+    "E713",    # Test for membership should be 'not in'
+    "E714",    # Test for object identity should be 'is not'
+    "E721",    # Do not compare types, use isinstance()
+]
+
+ignore = [
+    "E501",    # Line too long (handled by formatter / long docstrings)
+]
