@@ -1,0 +1,37 @@
+{
+  "trace": {
+    "running": "Running...",
+    "span": "SPAN",
+    "stream_title": "OTel Trace Stream",
+    "waiting": "Waiting for Trace Context",
+    "waiting_hint": "Initiate a mission to capture hierarchical swarm telemetry.",
+    "input_label": "Message input",
+    "tooltip": "Deep-trace analysis of OTel spans, agent tool calls, and swarm-wide telemetry."
+  },
+  "trace_stream": {
+    "title": "Neural Waterfall",
+    "tooltip": "Real-time visualization of neural inference cycles and model token flow.",
+    "detach_tooltip": "Detach Trace Stream",
+    "recall_tooltip": "Recall Trace Stream"
+  },
+  "terminal": {
+    "tooltip": "System Console: Monitor events and issue neural directives via slash-commands.",
+    "label": "Tadpole Terminal",
+    "input_aria": "System Command Interface",
+    "toggle_aria": "Toggle terminal expansion",
+    "slide_up": "Slide Up",
+    "slide_down": "Slide Down",
+    "placeholder_command": "Executing command (e.g. /help)...",
+    "terminal_prompt": "sovereign:~$"
+  },
+  "system_log": {
+    "title": "System Event Log",
+    "tooltip": "Real-time event log streaming system events and agent lifecycle telemetry.",
+    "empty": "No system events recorded in the current session."
+  },
+  "terminal_prompt": "sovereign:~$",
+  "telemetry_graph": {
+    "aria_filter_mission": "Filter by Mission ID",
+    "aria_purge_trace": "Purge Telemetry Trace"
+  }
+}

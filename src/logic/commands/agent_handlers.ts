@@ -1,0 +1,279 @@
+/**
+ * @docs ARCHITECTURE:Core
+ *
+ * ### AI Assist Note
+ * - Review changes preserve origin security and propagate confirmed operation outcomes.
+ *
+ * ### AI Context Alignment
+ * - **Subsystem**: System Core / agent_handlers
+ * - **Primary Entrypoints**: `register_agent_commands`
+ *
+ * ### ⚠️ Invariants & Non-Negotiables
+ * - `[Structural]` Deterministic internal state integrity and strict interface contract compliance.
+ *
+ * ### 🔍 Debugging & Observability
+ * - **Local Errors**: none
+ * - **Telemetry Targets**: none declared
+ */
+
+import { event_bus } from '../../services/event_bus';
+import { agent_service } from '../../services/agent_service';
+import { agent_api_service } from '../../services/agent';
+import { system_api_service } from '../../services/system_api_service';
+import { resolve_agent_model_config } from '../../utils/model_utils';
+import { get_settings } from '../../stores/settings_store';
+import { use_sovereign_store } from '../../stores/sovereign_store';
+import { use_agent_store } from '../../stores/agent_store';
+import { command_registry } from './registry';
+import type { Command_Context } from './types';
+import { find_agent } from './utils';
+
+export function register_agent_commands() {
+    // ────────────── CONFIG ──────────────
+    command_registry.register({
+        command: '/config',
+        description: 'View agent configuration',
+        handler: async (ctx: Command_Context) => {
+            const agent = find_agent(ctx.args[0], ctx.agents);
+            if (!agent) return { should_clear_logs: false, handled: true };
+
+            event_bus.emit_log({
+                source: 'System',
+                text: [
+                    `⚙️ Config for ${agent.name}:`,
+                    `  Model: ${agent.model}`,
+                    `  Temperature: ${agent.model_config?.temperature ?? 'default'}`,
+                    `  Status: ${agent.status}`,
+                    `  Prompt: ${agent.model_config?.systemPrompt ? agent.model_config.systemPrompt.substring(0, 80) + '...' : '(none)'}`,
+                ].join('\n'),
+                severity: 'info'
+            });
+            return { should_clear_logs: false, handled: true };
+        }
+    });
+
+    // ────────────── PAUSE ──────────────
+    command_registry.register({
+        command: '/pause',
+        description: 'Pause an autonomous agent',
+        handler: async (ctx: Command_Context) => {
+            const agent = find_agent(ctx.args[0], ctx.agents);
+            if (!agent) return { should_clear_logs: false, handled: true };
+
+            const success = await agent_service.pause_agent(agent.id);
+            event_bus.emit_log({
+                source: 'System',
+                text: success
+                    ? `⏸️ Agent ${agent.name} paused via TadpoleOS.`
+                    : `⏸️ Agent ${agent.name} paused locally (TadpoleOS offline).`,
+                severity: 'warning'
+            });
+            return { should_clear_logs: false, handled: true };
+        }
+    });
+
+    // ────────────── RESUME ──────────────
+    command_registry.register({
+        command: '/resume',
+        description: 'Resume an autonomous agent or the engine dispatch (/resume [agent|engine])',
+        handler: async (ctx: Command_Context) => {
+            const target = (ctx.args[0] || '').trim().toLowerCase();
+            if (target === 'engine' || target === 'dispatch' || target === 'all') {
+                try {
+                    const result = await system_api_service.engine.resume_engine();
+                    event_bus.emit_log({
+                        source: 'System',
+                        text: result.dispatch_paused === false
+                            ? '▶️ Engine dispatch resumed successfully.'
+                            : '⚠️ Engine resume acknowledged, but dispatch state remains paused.',
+                        severity: result.dispatch_paused === false ? 'success' : 'warning'
+                    });
+                } catch (e: unknown) {
+                    event_bus.emit_log({
+                        source: 'System',
+                        text: `❌ Failed to resume engine dispatch: ${e instanceof Error ? e.message : String(e)}`,
+                        severity: 'error'
+                    });
+                }
+                return { should_clear_logs: false, handled: true };
+            }
+
+            const agent = find_agent(ctx.args[0], ctx.agents);
+            if (!agent) {
+                event_bus.emit_log({
+                    source: 'System',
+                    text: `⚠️ Unknown agent or target "${ctx.args[0]}". Use "/resume <agent_name>" or "/resume engine".`,
+                    severity: 'warning'
+                });
+                return { should_clear_logs: false, handled: true };
+            }
+
+            const success = await agent_service.resume_agent(agent.id);
+            event_bus.emit_log({
+                source: 'System',
+                text: success
+                    ? `▶️ Agent ${agent.name} resumed via TadpoleOS.`
+                    : `▶️ Agent ${agent.name} resumed locally (TadpoleOS offline).`,
+                severity: 'success'
+            });
+            return { should_clear_logs: false, handled: true };
+        }
+    });
+
+    // ────────────── SWITCH ──────────────
+    command_registry.register({
+        command: '/switch',
+        description: 'Switch active model slot [1-3]',
+        handler: async (ctx: Command_Context) => {
+            const agent = find_agent(ctx.args[0], ctx.agents);
+            const slot_str = ctx.args[1];
+            if (agent && slot_str) {
+                if (/^[1-3]$/.test(slot_str.trim())) {
+                    const slot = Number(slot_str.trim()) as 1 | 2 | 3;
+                    const saved = await agent_service.update_agent(agent.id, { active_model_slot: slot });
+                    event_bus.emit_log({
+                        source: 'System',
+                        text: saved ? `Agent ${agent.name} switched to Neural Slot ${slot}.` : `Failed to switch ${agent.name} to Neural Slot ${slot}.`,
+                        severity: saved ? 'success' : 'error'
+                    });
+                } else {
+                    event_bus.emit_log({ source: 'System', text: 'Invalid slot. Use 1, 2, or 3.', severity: 'error' });
+                }
+            } else {
+                event_bus.emit_log({ source: 'System', text: 'Usage: /switch <agent-name> <1|2|3>', severity: 'error' });
+            }
+            return { should_clear_logs: false, handled: true };
+        }
+    });
+
+    // ────────────── KILL ──────────────
+    command_registry.register({
+        command: '/kill',
+        description: 'Terminate an agent [/kill <agent> confirm]',
+        handler: async (ctx: Command_Context) => {
+            const agent = find_agent(ctx.args[0], ctx.agents);
+            if (!agent) return { should_clear_logs: false, handled: true };
+
+            const is_confirmed = ctx.args[1]?.toLowerCase() === 'confirm';
+            if (!is_confirmed) {
+                event_bus.emit_log({
+                    source: 'System',
+                    text: `⚠️ Terminating agent "${agent.name}" will permanently delete its state. Type "/kill ${ctx.args[0]} confirm" to proceed.`,
+                    severity: 'warning'
+                });
+                return { should_clear_logs: false, handled: true };
+            }
+
+            try {
+                const success = await agent_service.delete_agent(agent.id);
+                event_bus.emit_log({
+                    source: 'System',
+                    text: success
+                        ? `🛑 Agent ${agent.name} terminated and removed from swarm.`
+                        : `❌ Failed to terminate agent ${agent.name}.`,
+                    severity: success ? 'warning' : 'error'
+                });
+            } catch (err: unknown) {
+                const err_msg = err instanceof Error ? err.message : String(err);
+                event_bus.emit_log({
+                    source: 'System',
+                    text: `❌ Error terminating agent: ${err_msg}`,
+                    severity: 'error'
+                });
+            }
+            return { should_clear_logs: false, handled: true };
+        }
+    });
+
+    // ────────────── SEND ──────────────
+    command_registry.register({
+        command: '/send',
+        description: 'Inject message to agent directive pipeline',
+        handler: async (ctx: Command_Context) => {
+            let agent = find_agent(ctx.args[0], ctx.agents);
+            if (agent) {
+                const live_agent = use_agent_store.getState().agents.find(a => a.id === agent!.id || a.name === agent!.name);
+                if (live_agent) agent = live_agent;
+            }
+            if (!agent) return { should_clear_logs: false, handled: true };
+
+            // Synchronize UI chat state with targeted agent so incoming responses and telemetry are visible
+            const sovereign_state = use_sovereign_store.getState();
+            sovereign_state.set_selected_agent_id?.(agent.id);
+            sovereign_state.set_target_agent?.(agent.name);
+            sovereign_state.set_scope?.('agent');
+
+            const MAX_MSG_LENGTH = 4096;
+            let message = ctx.args.slice(1).join(' ');
+            if (!message) {
+                event_bus.emit_log({
+                    source: 'System',
+                    text: 'Usage: /send <agent-name> <message>',
+                    severity: 'error'
+                });
+                return { should_clear_logs: false, handled: true };
+            }
+
+            // Sanitize: strip control characters and enforce length limit
+            // eslint-disable-next-line no-control-regex
+            message = message.replace(/[\u0000-\u001F\u007F-\u009F]/g, '').trim();
+            if (message.length > MAX_MSG_LENGTH) {
+                event_bus.emit_log({
+                    source: 'System',
+                    text: `Message exceeds ${MAX_MSG_LENGTH} character limit (${message.length} chars). Please shorten it.`,
+                    severity: 'error'
+                });
+                return { should_clear_logs: false, handled: true };
+            }
+
+            const settings = get_settings();
+            const { model_id, provider } = resolve_agent_model_config(agent, settings.default_model);
+
+            event_bus.emit_log({
+                source: 'User',
+                text: `→ ${agent.name}: ${message}`,
+                severity: 'info'
+            });
+
+            setTimeout(() => {
+                const reply = `Neural Link: Routing directive to ${agent.name}...`;
+                event_bus.emit_log({
+                    source: 'System',
+                    text: reply,
+                    severity: 'info'
+                });
+                use_sovereign_store.getState().add_message({
+                    sender_id: 'system',
+                    sender_name: 'Neural System',
+                    agent_id: agent.id,
+                    text: reply,
+                    scope: 'agent'
+                });
+            }, 100);
+
+            agent_api_service.send_command(agent.id, message, model_id, provider, undefined, undefined, undefined, undefined, !!ctx.is_safe_mode)
+                .catch(err => {
+                    const err_msg = err instanceof Error ? err.message : String(err);
+                    const is_engine_stopped = err_msg.toLowerCase().includes('engine dispatch is stopped');
+                    const text = is_engine_stopped
+                        ? 'Neural link failed: Engine dispatch is stopped by emergency latch. Type "/resume engine" or open the Oversight Dashboard to resume.'
+                        : `Neural link failed: ${err_msg}`;
+
+                    event_bus.emit_log({
+                        source: 'System',
+                        text,
+                        severity: 'error'
+                    });
+                    use_sovereign_store.getState().add_message({
+                        sender_id: 'system',
+                        sender_name: 'Neural System',
+                        agent_id: agent.id,
+                        text,
+                        scope: 'agent'
+                    });
+                });
+
+            return { should_clear_logs: false, handled: true };
+        }
+    });
+}

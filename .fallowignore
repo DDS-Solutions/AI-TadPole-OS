@@ -1,0 +1,6 @@
+# Fallow Scanner Ignore Rules
+scripts/
+tests/
+dist/
+node_modules/
+.tmp/

@@ -1,0 +1,596 @@
+//! @docs ARCHITECTURE:Runner
+//!
+//! ### AI Context Alignment
+//! - **Subsystem**: Sovereign Engine / Agent Runner / lifecycle
+//!
+//! ### 🔍 Debugging & Observability
+//! - **Local Errors**: none
+//! - **Telemetry Targets**: `[Security]`
+//!
+//! ### AI Assist Note
+//! - Keep cancellation ownership and usage persistence aligned with the existing execution paths.
+//! - Child startup inherits the shared mission cap; only an explicit root request may change it.
+
+use crate::agent::types::TaskPayload;
+use crate::error::AppError;
+
+use super::AgentRunner;
+
+impl AgentRunner {
+    // ─────────────────────────────────────────────────────────
+    //  SETUP & VALIDATION
+    // ─────────────────────────────────────────────────────────
+
+    /// ### 🛡️ Sector Guard: setup_and_validate
+    /// Performs the critical pre-flight safety and tracing initialization for a
+    /// new agent mission branch.
+    ///
+    /// ### 🧬 Logic: Security & Observability
+    /// 1. **OTel Trace Propagation**: Injects the `traceparent` from the
+    ///    `TaskPayload` into the current `tracing::Span`. This ensures that
+    ///    swarm-to-swarm recruitment is perfectly visible in Jaeger/Honeycomb.
+    /// 2. **Injection Sanitization**: Scans the incoming message for prompt
+    ///    injection patterns (e.g., "Ignore all previous instructions") before
+    ///    passing it to the LLM core.
+    /// 3. **Validation Call**: Cascades into input constraint validation.
+    pub(crate) fn setup_and_validate(
+        &self,
+        agent_id: &str,
+        payload: &TaskPayload,
+    ) -> Result<(), AppError> {
+        let span = tracing::Span::current();
+
+        // Setup OTel Trace Propagation
+        if let Some(tp) = &payload.traceparent {
+            use opentelemetry::global;
+            use tracing_opentelemetry::OpenTelemetrySpanExt;
+
+            let mut extractor = std::collections::HashMap::new();
+            extractor.insert("traceparent".to_string(), tp.clone());
+            let parent_cx = global::get_text_map_propagator(|prop| prop.extract(&extractor));
+            let _ = span.set_parent(parent_cx);
+
+            // Parse trace_id directly from traceparent (00-traceid-spanid-01)
+            let parts: Vec<&str> = tp.split('-').collect();
+            if parts.len() >= 4 {
+                span.record("trace_id", parts[1]);
+            } else {
+                use opentelemetry::trace::TraceContextExt;
+                let cx = span.context();
+                let otel_span = cx.span();
+                let otel_trace_id = otel_span.span_context().trace_id().to_string();
+                span.record("trace_id", &otel_trace_id);
+            }
+        } else {
+            use opentelemetry::trace::TraceContextExt;
+            use tracing_opentelemetry::OpenTelemetrySpanExt;
+            let cx = span.context();
+            let otel_span = cx.span();
+            let otel_trace_id = otel_span.span_context().trace_id().to_string();
+            span.record("trace_id", &otel_trace_id);
+        }
+
+        // Core validation logic
+        self.validate_input(agent_id, payload)?;
+
+        // Security Sanitization
+        if let crate::agent::sanitizer::SanitizationResult::Alert(msg) =
+            crate::agent::sanitizer::Sanitizer::scan(&payload.message)
+        {
+            tracing::warn!("🛡️ [Security] Blocked potential injection: {}", msg);
+            let agent_name = self
+                .state
+                .registry
+                .agents
+                .get(agent_id)
+                .map(|a| a.identity.name.clone())
+                .unwrap_or_else(|| agent_id.to_string());
+            self.state.broadcast_agent(
+                &format!("🛡️ Security: {}", msg),
+                "error",
+                payload.cluster_id.clone(),
+                agent_id,
+                &agent_name,
+            );
+            return Err(AppError::BadRequest(format!("Security Violation: {}", msg)));
+        }
+
+        Ok(())
+    }
+
+    /// Validates input constraints before execution begins.
+    pub(crate) fn validate_input(
+        &self,
+        agent_id: &str,
+        payload: &TaskPayload,
+    ) -> Result<(), AppError> {
+        let max_task_length = self
+            .state
+            .governance
+            .max_task_length
+            .load(std::sync::atomic::Ordering::Relaxed);
+        for value in [payload.budget_usd, payload.sub_budget_usd]
+            .into_iter()
+            .flatten()
+        {
+            crate::security::metering::usd_to_micros(value)
+                .map_err(|error| AppError::BadRequest(error.to_string()))?;
+        }
+        if payload.message.len() > max_task_length {
+            return Err(AppError::BadRequest(format!(
+                "Task message too long ({} bytes, max {})",
+                payload.message.len(),
+                max_task_length
+            )));
+        }
+
+        let depth = payload.swarm_depth.unwrap_or(0);
+        let lineage = payload.swarm_lineage.as_deref().unwrap_or(&[]);
+
+        // CODE-01 FIX: Use iterator instead of to_string() allocation on hot path.
+        if lineage.iter().any(|id| id == agent_id) {
+            let path = lineage.join(" -> ");
+            return Err(AppError::BadRequest(format!("🐝 CIRCULAR RECURSION DETECTED: Agent '{}' is already overseeing your work in this mission branch (Lineage: {} -> {}). You are PROHIBITED from recruiting your own supervisors. Please resolve the task using your own tools or recruit a DIFFERENT specialized sub-agent ID that is not in your current lineage.", agent_id, path, agent_id)));
+        }
+
+        let max_swarm_depth = self
+            .state
+            .governance
+            .max_swarm_depth
+            .load(std::sync::atomic::Ordering::Relaxed);
+        if depth >= max_swarm_depth {
+            return Err(AppError::BadRequest(format!("🐝 Swarm depth limit exceeded (current depth: {})! To prevent infinite recursions, this agent cannot spawn more sub-agents.", depth)));
+        }
+
+        // Check max agents limit (only for new recruitment, not for existing agents)
+        if !self.state.registry.agents.contains_key(agent_id) {
+            let max_agents = self
+                .state
+                .governance
+                .max_agents
+                .load(std::sync::atomic::Ordering::Relaxed);
+            if self.state.registry.agents.len() as u32 >= max_agents {
+                return Err(AppError::BadRequest(format!(
+                    "🐝 Swarm agent limit reached (max: {}). New agent recruitment denied.",
+                    max_agents
+                )));
+            }
+        }
+
+        Ok(())
+    }
+
+    // ─────────────────────────────────────────────────────────
+    //  MISSION INITIALIZATION
+    // ─────────────────────────────────────────────────────────
+
+    /// ### 🧠 Orchestration: Mission Initialization (initialize_mission_state)
+    /// Atomically registers a new mission in the persistent database and
+    /// enforces the primary budget gates.
+    ///
+    /// ### 🧬 Logic: The Initialization Loop
+    /// 1. **Self-Healing Registry**: Guarantees that the agent node is synced
+    ///    from the in-memory registry to the SQLite database before execution.
+    /// 2. **Health Check**: Implements failure-rate throttling to prevent
+    ///    "Agent Breakdown" (degraded state where failure count > 5).
+    /// 3. **Budget Gate (SEC-02)**: Enforces the enterprise budget limit
+    ///    via the `BudgetGuard`. This prevents runaway costs from recursive
+    ///    swarm recruitment.
+    /// 4. **Mission Creation**: Generates the high-fidelity `Mission` record
+    ///    with an automated summary title derived from the payload message.
+    pub(crate) async fn initialize_mission_state(
+        &self,
+        agent_id: &str,
+        payload: &TaskPayload,
+    ) -> Result<crate::agent::types::Mission, AppError> {
+        // 🛡️ [Resilience] Ensure agent exists in database (auto-sync if only in registry)
+        let exists = sqlx::query_scalar::<_, i64>("SELECT 1 FROM agents WHERE id = ?1")
+            .bind(agent_id)
+            .fetch_optional(&self.state.resources.pool)
+            .await
+            .map_err(AppError::Sqlx)?
+            .is_some();
+
+        if !exists {
+            let agent_clone = self
+                .state
+                .registry
+                .agents
+                .get(agent_id)
+                .map(|entry| entry.value().clone());
+            if let Some(mut agent) = agent_clone {
+                let current_version = agent.version;
+                match crate::agent::persistence::save_agent_db(
+                    &self.state.resources.pool,
+                    &mut agent,
+                )
+                .await
+                {
+                    Ok(_) => {
+                        // Re-align memory registry with updated version
+                        if let Some(mut entry) = self.state.registry.agents.get_mut(agent_id) {
+                            let registry_agent = entry.value_mut();
+                            if registry_agent.version == current_version {
+                                *registry_agent = agent;
+                            } else {
+                                // Concurrency conflict: reload from DB
+                                if let Some(db_agent) = crate::agent::persistence::load_agents_db(
+                                    &self.state.resources.pool,
+                                )
+                                .await?
+                                .into_iter()
+                                .find(|a| a.identity.id == agent_id)
+                                {
+                                    *registry_agent = db_agent;
+                                }
+                            }
+                        }
+                    }
+                    Err(AppError::Conflict(_)) => {
+                        // Concurrency conflict: another thread already inserted it.
+                        // We reload the memory registry from DB to align it.
+                        if let Some(mut entry) = self.state.registry.agents.get_mut(agent_id) {
+                            if let Some(db_agent) = crate::agent::persistence::load_agents_db(
+                                &self.state.resources.pool,
+                            )
+                            .await?
+                            .into_iter()
+                            .find(|a| a.identity.id == agent_id)
+                            {
+                                *entry.value_mut() = db_agent;
+                            }
+                        }
+                    }
+                    Err(AppError::Sqlx(ref e)) if crate::db::is_sqlite_transient(e) => {
+                        // Concurrency lock: another thread was writing the agent simultaneously.
+                        // Wait briefly and reload from DB if available.
+                        tokio::time::sleep(tokio::time::Duration::from_millis(50)).await;
+                        if let Some(mut entry) = self.state.registry.agents.get_mut(agent_id) {
+                            if let Ok(agents) = crate::agent::persistence::load_agents_db(
+                                &self.state.resources.pool,
+                            )
+                            .await
+                            {
+                                if let Some(db_agent) =
+                                    agents.into_iter().find(|a| a.identity.id == agent_id)
+                                {
+                                    *entry.value_mut() = db_agent;
+                                }
+                            }
+                        }
+                    }
+                    Err(e) => return Err(e),
+                }
+            }
+        }
+
+        let depth = payload.swarm_depth.unwrap_or(0);
+        let _ = self
+            .state
+            .governance
+            .max_swarm_depth
+            .fetch_max(depth, std::sync::atomic::Ordering::Relaxed);
+
+        let mission_title = payload.message.chars().take(50).collect::<String>() + "...";
+
+        // 🏥 [Health Check] Failure Rate Throttling
+        if let Some(agent) = self.state.registry.agents.get(agent_id) {
+            if agent.value().health.failure_count >= 5 {
+                let last_fail = agent
+                    .value()
+                    .health
+                    .last_failure_at
+                    .unwrap_or_else(chrono::Utc::now);
+                let cooldown = chrono::Duration::minutes(15);
+                if chrono::Utc::now() - last_fail < cooldown {
+                    tracing::warn!(
+                        "🏥 [Health] Agent {} is degraded (Failure Count: {})",
+                        agent_id,
+                        agent.value().health.failure_count
+                    );
+                    let agent_name = agent.value().identity.name.clone();
+                    self.state.broadcast_agent(
+                        &format!(
+                            "🏥 Health: in self-heal cooldown (Failure Count: {}).",
+                            agent.value().health.failure_count
+                        ),
+                        "warning",
+                        payload.cluster_id.clone(),
+                        agent_id,
+                        &agent_name,
+                    );
+                    return Err(AppError::BadRequest(
+                        "Agent Degraded. Self-heal cooldown active.".to_string(),
+                    ));
+                }
+            }
+        }
+
+        // [Budget Gate] Persistent Budget Check (OpenFang Pattern)
+        let has_budget = self
+            .state
+            .security
+            .budget_guard
+            .check_budget(agent_id, 0.0)
+            .await?;
+        if !has_budget {
+            tracing::warn!(
+                "🛡️ [Governance] Agent {} persistent budget exhausted",
+                agent_id
+            );
+            let agent_name = self
+                .state
+                .registry
+                .agents
+                .get(agent_id)
+                .map(|a| a.identity.name.clone())
+                .unwrap_or_else(|| agent_id.to_string());
+            self.state.broadcast_agent(
+                "🛡️ Budget Guard: has exceeded its periodic quota.",
+                "error",
+                payload.cluster_id.clone(),
+                agent_id,
+                &agent_name,
+            );
+            return Err(AppError::Forbidden(
+                "Persistent Quota Exhausted. Check Security Dashboard.".to_string(),
+            ));
+        }
+
+        // Keep legacy agent-local budget for backward compatibility / double gating
+        let mut agent_budget = 0.0;
+        let mut agent_cost = 0.0;
+        if let Some(agent) = self.state.registry.agents.get(agent_id) {
+            agent_budget = agent.value().economics.budget_usd;
+            agent_cost = agent.value().economics.cost_usd;
+        }
+
+        if agent_budget > 0.0 && agent_cost >= agent_budget {
+            tracing::warn!(
+                "⚠️ [Governance] Agent {} local budget exhausted (${:.4}/${:.4})",
+                agent_id,
+                agent_cost,
+                agent_budget
+            );
+            return Err(AppError::Forbidden(format!(
+                "Local Agent Budget Exhausted (${:.4}/${:.4})",
+                agent_cost, agent_budget
+            )));
+        }
+
+        let mission_budget = if let Some(req_b) = payload.budget_usd.filter(|&b| b > 0.0) {
+            req_b
+        } else {
+            let quota = if let Some(ref custom_id) = payload.cluster_id {
+                sqlx::query_scalar::<_, i64>(
+                    "SELECT budget_usd FROM mission_quotas WHERE cluster_id = ?1",
+                )
+                .bind(custom_id)
+                .fetch_optional(&self.state.resources.pool)
+                .await
+                .ok()
+                .flatten()
+                .map(|q| (q as f64) / crate::agent::runner::context::MICRO_DOLLARS_PER_USD)
+            } else {
+                None
+            };
+            quota.filter(|&q| q > 0.0).unwrap_or_else(|| {
+                if agent_budget > 0.0 {
+                    (agent_budget - agent_cost).max(0.001)
+                } else {
+                    1.0
+                }
+            })
+        };
+
+        let mission = if let Some(ref custom_id) = payload.cluster_id {
+            if let Some(mut existing) =
+                crate::agent::mission::get_mission_by_id(&self.state.resources.pool, custom_id)
+                    .await?
+            {
+                if depth == 0
+                    && payload.budget_usd.is_some_and(|budget| budget > 0.0)
+                    && mission_budget != existing.budget_usd
+                {
+                    sqlx::query("UPDATE mission_history SET budget_usd = ?1 WHERE id = ?2")
+                        .bind(mission_budget)
+                        .bind(&existing.id)
+                        .execute(&self.state.resources.pool)
+                        .await?;
+                    existing.budget_usd = mission_budget;
+                }
+                existing
+            } else {
+                crate::agent::mission::create_mission_with_id(
+                    &self.state.resources.pool,
+                    custom_id,
+                    agent_id,
+                    &mission_title,
+                    mission_budget,
+                )
+                .await?
+            }
+        } else {
+            crate::agent::mission::create_mission(
+                &self.state.resources.pool,
+                agent_id,
+                &mission_title,
+                mission_budget,
+            )
+            .await?
+        };
+
+        crate::agent::mission::update_mission(
+            &self.state.resources.pool,
+            &mission.id,
+            crate::agent::types::MissionStatus::Active,
+            None,
+        )
+        .await?;
+        crate::agent::mission::log_step(
+            &self.state.resources.pool,
+            &mission.id,
+            agent_id,
+            "User",
+            &payload.message,
+            "info",
+            None,
+        )
+        .await?;
+
+        Ok(mission)
+    }
+}
+
+// Metadata: [lifecycle]
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::agent::types::TaskPayload;
+    use crate::state::AppState;
+    use std::sync::Arc;
+
+    #[tokio::test]
+    async fn child_start_preserves_explicit_shared_mission_budget() {
+        let state = Arc::new(AppState::new_minimal_mock().await);
+        let runner = AgentRunner::new(state.clone());
+        let mut agent = crate::agent::types::EngineAgent::default();
+        agent.identity.id = "budget-regression".into();
+        agent.economics.budget_usd = 100.0;
+        state
+            .registry
+            .agents
+            .insert(agent.identity.id.clone(), agent);
+        let mut root = TaskPayload {
+            message: "read file audit".into(),
+            cluster_id: Some("shared-budget-regression".into()),
+            budget_usd: Some(1.0),
+            ..Default::default()
+        };
+        let mission = runner
+            .initialize_mission_state("budget-regression", &root)
+            .await
+            .unwrap();
+        state
+            .security
+            .budget_guard
+            .update_mission_quota(&mission.id, 5.0, None)
+            .await
+            .unwrap();
+
+        for requested in [None, Some(3.0)] {
+            let child = TaskPayload {
+                budget_usd: requested,
+                swarm_depth: Some(1),
+                ..root.clone()
+            };
+            let shared = runner
+                .initialize_mission_state("budget-regression", &child)
+                .await
+                .unwrap();
+            assert_eq!(
+                shared.budget_usd, 1.0,
+                "Starting a child must preserve the root's explicit cap"
+            );
+            let ctx = runner
+                .resolve_agent_context("budget-regression", &child, &mission.id, 1, &[])
+                .await
+                .unwrap();
+            assert_eq!(
+                ctx.mission_state.budget_usd, 1.0,
+                "A larger default quota must not replace the mission cap"
+            );
+        }
+
+        root.budget_usd = None;
+        let resumed = runner
+            .initialize_mission_state("budget-regression", &root)
+            .await
+            .unwrap();
+        assert_eq!(
+            resumed.budget_usd, 1.0,
+            "An implicit resume must also preserve the cap"
+        );
+
+        for requested in [2.0, 0.25] {
+            root.budget_usd = Some(requested);
+            let changed = runner
+                .initialize_mission_state("budget-regression", &root)
+                .await
+                .unwrap();
+            assert_eq!(
+                changed.budget_usd, requested,
+                "An explicit root request may change its mission limit"
+            );
+            let ctx = runner
+                .resolve_agent_context("budget-regression", &root, &mission.id, 0, &[])
+                .await
+                .unwrap();
+            assert_eq!(ctx.mission_state.budget_usd, requested);
+        }
+
+        state
+            .security
+            .budget_guard
+            .update_mission_quota(&mission.id, 0.1, None)
+            .await
+            .unwrap();
+        let ctx = runner
+            .resolve_agent_context("budget-regression", &root, &mission.id, 0, &[])
+            .await
+            .unwrap();
+        assert_eq!(
+            ctx.mission_state.budget_usd, 0.1,
+            "A tighter persistent quota remains authoritative"
+        );
+    }
+
+    #[tokio::test]
+    async fn test_validate_input_recursion() {
+        let state = Arc::new(AppState::new_minimal_mock().await);
+        let runner = AgentRunner::new(state);
+
+        let agent_id = "agent-A";
+        let payload = TaskPayload {
+            message: "Hello".to_string(),
+            swarm_lineage: Some(vec!["agent-B".to_string(), "agent-A".to_string()]),
+            ..Default::default()
+        };
+
+        let result = runner.validate_input(agent_id, &payload);
+        assert!(result.is_err());
+        assert!(format!("{}", result.unwrap_err()).contains("CIRCULAR RECURSION"));
+    }
+
+    #[tokio::test]
+    async fn test_validate_input_depth() {
+        let state = Arc::new(AppState::new_minimal_mock().await);
+        let runner = AgentRunner::new(state);
+
+        let payload = TaskPayload {
+            message: "Hello".to_string(),
+            swarm_depth: Some(10), // Default max is usually 5 in mock
+            ..Default::default()
+        };
+
+        let result = runner.validate_input("some-agent", &payload);
+        assert!(result.is_err());
+        assert!(format!("{}", result.unwrap_err()).contains("depth limit exceeded"));
+    }
+
+    #[tokio::test]
+    async fn test_validate_input_length() {
+        let state = Arc::new(AppState::new_minimal_mock().await);
+        let runner = AgentRunner::new(state);
+
+        let payload = TaskPayload {
+            message: "A".repeat(100_000), // Default max is usually smaller
+            ..Default::default()
+        };
+
+        let result = runner.validate_input("some-agent", &payload);
+        assert!(result.is_err());
+        assert!(format!("{}", result.unwrap_err()).contains("message too long"));
+    }
+}

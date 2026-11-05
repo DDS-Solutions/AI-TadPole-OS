@@ -1,0 +1,49 @@
+---
+name: incident-response
+description: Workflow for handling Sev-1/Sev-2 production outages.
+---
+
+# Incident Response Protocol
+
+This workflow dictates how to handle high-priority production incidents. Speed and communication are the priorities.
+
+## Architecture
+
+```mermaid
+graph TD
+    A[Alert Triggered] --> T{Triage}
+    T -- "False Alarm" --> C[Close]
+    T -- "Sev-1/2" --> IC[Declare Incident]
+    IC --> W[War Room]
+    W --> D[Diagnosis]
+    D --> M[Mitigation]
+    M --> R[Resolution]
+    R --> PM[Post-Mortem]
+```
+
+### 1. Declare Incident & Assemble Team
+- Create a Slack channel `#incident-[id]`.
+- Assign an **Incident Commander (IC)**: Runs the call, manages comms.
+- Assign **Tech Leads**: Do the actual debugging.
+
+### 2. Diagnosis (The "Why")
+Use metrics, logs, and traces to identify the root cause. (See [debugging.md](file:///C:/Users/Home%20Office_PC/.gemini/antigravity/brain/465cc492-80ff-4ba3-a4e3-5706db959613/Tadpole-OS/src/data/knowledge/engineering/debugging.md)).
+
+### 3. Mitigation (The "Stop the Bleeding")
+Focus on restoring service, NOT fixing the bug.
+- Rollback recent changes.
+- Scale up resources.
+- Disable non-essential features (feature flags).
+
+### 4. Resolution (The "Fix")
+Once service is restored, implement the permanent fix.
+
+## When to Use
+- **Downtime**: System is unreachable.
+- **Data Loss**: Critical data integrity issues.
+- **Security Breach**: Active intrusion detected.
+
+## Operational Principles
+1. **Communicate**: Update status page every 30 mins, even if no update.
+2. **Don't Panic**: Follow the playbook.
+3. **Blameless Post-Mortems**: Focus on process improvement, not punishing individuals.
