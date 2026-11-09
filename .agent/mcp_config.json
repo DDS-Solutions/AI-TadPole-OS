@@ -1,0 +1,83 @@
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ],
+      "env": {
+        "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
+      }
+    },
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      }
+    },
+    "brave-search": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-brave-search"
+      ],
+      "env": {
+        "BRAVE_SEARCH_API_KEY": "${BRAVE_SEARCH_API_KEY}"
+      }
+    },
+    "google-sheets": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-google-sheets"
+      ]
+    },
+    "shadcn": {
+      "command": "npx",
+      "args": [
+        "shadcn@latest",
+        "mcp"
+      ]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-playwright"
+      ]
+    },
+    "pollywog": {
+      "command": "node",
+      "args": [
+        ".agent/pollywog-mcp/index.js"
+      ]
+    },
+    "gev": {
+      "mode": "prefer_http",
+      "http": {
+        "url": "http://127.0.0.1:3000/mcp",
+        "protocol_versions": [
+          "2026-07-28"
+        ],
+        "resource": "http://127.0.0.1:3000/mcp",
+        "headers": {
+          "Authorization": "${GEV_MCP_AUTHORIZATION}"
+        }
+      },
+      "stdio_fallback": {
+        "command": "pnpm",
+        "args": [
+          "--filter",
+          "@gev/ops-mcp",
+          "start"
+        ],
+        "cwd": "G:/AI-TadPole-Eye-View"
+      }
+    }
+  }
+}

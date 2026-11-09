@@ -1,0 +1,6 @@
+[env]
+# Point to the vendorized protoc binary on the new D: drive
+PROTOC = "D:\\TadpoleOS-Dev\\server-rs\\vendor\\protoc\\bin\\protoc.exe"
+
+# Point to the LLVM installation for bindgen (whisper-rs/ort requirement)
+LIBCLANG_PATH = "C:\\Program Files\\LLVM\\bin"
