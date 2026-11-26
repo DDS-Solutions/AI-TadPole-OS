@@ -1,0 +1,33 @@
+{
+  "entry": [
+    "src/main.tsx",
+    "src/index.html",
+    "scripts/**/*.cjs",
+    "scripts/**/*.js",
+    "scripts/**/*.mjs",
+    "scripts/**/*.ts",
+    "tests/**/*.cjs",
+    "tests/**/*.ts",
+    "src/contracts/**/*.ts",
+    "src/api/**/*.ts",
+    "src/services/**/*.ts",
+    "src/stores/**/*.ts"
+  ],
+  "ignorePatterns": [
+    "dist/**",
+    "node_modules/**",
+    "server-rs/**",
+    ".tmp/**",
+    ".agent/**"
+  ],
+  "rules": {
+    "unused-file": "error",
+    "unused-export": "off",
+    "unused-type": "off",
+    "unused-class-member": "off",
+    "unused-dev-dependency": "off",
+    "unused-optional-dependency": "off",
+    "circular-dependency": "off",
+    "duplicate-exports": "off"
+  }
+}

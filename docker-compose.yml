@@ -1,0 +1,97 @@
+services:
+  tadpole:
+    # Build from GHCR (Pre-compiled Image; pin TADPOLE_IMAGE_TAG or digest in production .env)
+    image: ghcr.io/dds-solutions/ai-tadpole-os:${TADPOLE_IMAGE_TAG:-v1.1.464}
+    container_name: tadpole-os
+    # SECURE BINDING:
+    # Default to loopback (127.0.0.1); set TADPOLE_BIND_HOST=0.0.0.0 or your Tailscale IP explicitly when remote access is required.
+    ports:
+      - "${TADPOLE_BIND_HOST:-127.0.0.1}:8000:8000"
+    environment:
+      # Inject necessary environment variables into the container
+      # Production security invariants: distinct NEURAL_TOKEN, NEURAL_ADMIN_TOKEN, and OVERSIGHT_PUBLIC_KEY are required.
+      - TADPOLE_ENV=production
+      - NEURAL_TOKEN=${NEURAL_TOKEN:?NEURAL_TOKEN must be set in .env}
+      - NEURAL_ADMIN_TOKEN=${NEURAL_ADMIN_TOKEN:?NEURAL_ADMIN_TOKEN must be set in .env}
+      - OVERSIGHT_PUBLIC_KEY=${OVERSIGHT_PUBLIC_KEY:?OVERSIGHT_PUBLIC_KEY must be set in .env}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - INCEPTION_API_KEY=${INCEPTION_API_KEY}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-}
+      - BIND_ADDRESS=0.0.0.0
+      - DATABASE_URL=sqlite:/app/data/state/tadpole.db
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    volumes:
+      # Mount the workspaces directory (sandboxed at data/workspaces)
+      - ./data/workspaces:/app/data/workspaces
+      # Persist the unified data directory (database, skills, workflows)
+      - ./data:/app/data
+      # Persist database backups
+      - ./backups:/app/backups
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-sf", "http://localhost:8000/v1/engine/health" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  prometheus:
+    image: prom/prometheus:v3.2.1
+    container_name: prometheus
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    secrets:
+      - tadpole_metrics_token
+    ports:
+      - "127.0.0.1:9090:9090"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+    depends_on:
+      - tadpole
+
+  grafana:
+    image: grafana/grafana:11.5.2
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_ADMIN_PASSWORD:?GF_ADMIN_PASSWORD must be set in .env}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./monitoring/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./monitoring/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/dashboards:/etc/grafana/dashboards:ro
+    ports:
+      - "127.0.0.1:3000:3000"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.66.0
+    container_name: jaeger
+    ports:
+      - "127.0.0.1:16686:16686"
+      - "127.0.0.1:4317:4317"
+      - "127.0.0.1:4318:4318"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+
+secrets:
+  tadpole_metrics_token:
+    file: ${TADPOLE_METRICS_TOKEN_FILE:-./.secrets/prometheus-token}

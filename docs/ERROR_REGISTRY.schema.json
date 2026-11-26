@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Tadpole OS Error Registry Schema",
+  "description": "Schema enforcing structural integrity, status codes, source attribution, and remediation guidance across all sovereign error codes.",
+  "type": "object",
+  "patternProperties": {
+    "^[A-Z0-9_]+$": {
+      "type": "object",
+      "required": ["type_uri", "source", "remediation"],
+      "properties": {
+        "type_uri": {
+          "type": "string",
+          "description": "Canonical RFC-7807 problem type URI."
+        },
+        "source": {
+          "type": "string",
+          "description": "Source file defining or emitting this error code."
+        },
+        "status": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 599,
+          "description": "Standard HTTP status code."
+        },
+        "statuses": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 599
+          },
+          "description": "Array of applicable HTTP status codes for multi-status errors."
+        },
+        "remediation": {
+          "type": "string",
+          "description": "Actionable guidance for autonomous agents or operators to recover from this error."
+        },
+        "recovery": {
+          "type": "string",
+          "description": "Specific recovery protocol or action mode."
+        },
+        "directive": {
+          "type": "string",
+          "description": "Direct link to IDENTITY.md Directive."
+        },
+        "code_pattern": {
+          "type": "string",
+          "description": "Dynamic template for parametrized error codes."
+        },
+        "type_uri_pattern": {
+          "type": "string",
+          "description": "Dynamic template for parametrized error URIs."
+        },
+        "behavior": {
+          "type": "string"
+        },
+        "escalation": {
+          "type": "string"
+        },
+        "triggers": {
+          "type": "string"
+        }
+      },
+      "oneOf": [
+        { "required": ["status"] },
+        { "required": ["statuses"] }
+      ],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

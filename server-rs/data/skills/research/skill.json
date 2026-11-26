@@ -1,0 +1,24 @@
+{
+    "schema_version": "1",
+    "name": "research",
+    "display_name": "Discovery & Research",
+    "description": "Fetch content from external URLs and perform deep research across the mission knowledge base.",
+    "version": "1.0.0",
+    "author": "tadpole-os",
+    "permissions": [
+        "network:outbound"
+    ],
+    "toolset_group": "research",
+    "danger_level": "low",
+    "requires_oversight": false,
+    "parameters": {
+        "url": {
+            "type": "string",
+            "required": true
+        }
+    },
+    "hooks": {
+        "before_execute": null,
+        "after_execute": null
+    }
+}

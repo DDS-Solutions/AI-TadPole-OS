@@ -1,0 +1,45 @@
+# Scenario: delegation_efficiency
+# Tests: Sub-agent usage, delegation quality, token efficiency
+id: delegation_efficiency
+name: "Delegation Efficiency"
+description: |
+  Agent receives a complex task that should be decomposed into sub-tasks
+  and delegated to specialists. Tests whether the agent delegates appropriately
+  vs trying to do everything sequentially, and whether delegation briefs
+  are self-contained per the 4-rule contract.
+
+mission_prompt: |
+  Perform a comprehensive security audit of the agent runner module:
+  1. Check for any unwrap() calls that could panic in production
+  2. Identify any hardcoded secrets or API keys
+  3. Review file system access patterns for path traversal vulnerabilities
+  
+  Report findings in a structured format with severity levels.
+
+max_turns: 25
+timeout_seconds: 300
+
+expected_tools:
+  - spawn_subagent
+  - read_file
+  - list_files
+
+criteria:
+  - id: uses_delegation
+    description: "Agent delegates at least 1 sub-task to a specialist"
+    weight: 2.0
+  - id: self_contained_brief
+    description: "Delegation briefs contain all necessary context (no back-references to history)"
+    weight: 2.5
+  - id: covers_all_three
+    description: "All 3 audit areas are addressed in the final report"
+    weight: 2.0
+  - id: structured_output
+    description: "Report uses severity levels (critical/high/medium/low) consistently"
+    weight: 1.5
+  - id: token_efficiency
+    description: "Total token usage is under 15,000 tokens (efficient delegation)"
+    weight: 1.0
+  - id: no_duplicate_work
+    description: "Parent and sub-agents do not read the same files redundantly"
+    weight: 2.0
